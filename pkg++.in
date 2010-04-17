@@ -23,15 +23,15 @@
 #  Adjusted for NuTyX 2009.1 by thierryn1 at hispeed dot ch
 
 info() {
-	echo "=======> $1"
+	echo -e "\033[32m=======> $1\033[00m"
 }
 
 warning() {
-	info "WARNING: $1" >&2
+	echo -e "\033[33m=======> WARNING: $1\033[00m" >&2
 }
 
 error() {
-	info "ERROR: $1" >&2
+	echo -e "\033[31m=======> ERROR: $1\033[00m" >&2
 }
 
 get_filename() {
