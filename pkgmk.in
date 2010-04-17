@@ -20,6 +20,7 @@
 #  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
 #  USA.
 #
+#  Adjusted for NuTyX 2009.1 by thierryn1 at hispeed dot ch
 
 info() {
 	echo "=======> $1"
@@ -282,13 +283,30 @@ compress_manpages() {
 
 	cd $PKG
 	
-	find . -type f -path "*/man/man*/*" | while read FILE; do
+	find . -type f -path "*/share/man/*" | while read FILE; do
 		if [ "$FILE" = "${FILE%%.gz}" ]; then
 			gzip -9 "$FILE"
 		fi
 	done
 	
-	find . -type l -path "*/man/man*/*" | while read FILE; do
+	find . -type l -path "*/share/man/*" | while read FILE; do
+		TARGET=`readlink -n "$FILE"`
+		TARGET="${TARGET##*/}"
+		TARGET="${TARGET%%.gz}.gz"
+		rm -f "$FILE"
+		FILE="${FILE%%.gz}.gz"
+		DIR=`dirname "$FILE"`
+
+		if [ -e "$DIR/$TARGET" ]; then
+			ln -sf "$TARGET" "$FILE"
+		fi
+	done
+	find . -type f -path "*/share/info/*" | while read FILE; do
+		if [ "$FILE" = "${FILE%%.gz}" ]; then
+			gzip -9 "$FILE"
+		fi
+	done
+	find . -type l -path "*/share/info/*" | while read FILE; do
 		TARGET=`readlink -n "$FILE"`
 		TARGET="${TARGET##*/}"
 		TARGET="${TARGET%%.gz}.gz"
@@ -375,6 +393,10 @@ build_package() {
 		
 		compress_manpages
 		
+		if [ "$PKGMK_KEEP_LOCALES" == "no" ]; then
+			remove_locale
+		fi
+
 		cd $PKG
 		info "Build result:"
 		tar czvvf $TARGET *
@@ -505,27 +527,44 @@ interrupted() {
 print_help() {
 	echo "usage: `basename $PKGMK_COMMAND` [options]"
 	echo "options:"
-	echo "  -i,   --install             build and install package"
-	echo "  -u,   --upgrade             build and install package (as upgrade)"
-	echo "  -r,   --recursive           search for and build packages recursively"
-	echo "  -d,   --download            download missing source file(s)"
-	echo "  -do,  --download-only       do not build, only download missing source file(s)"
-	echo "  -eo,  --extract-only        do not build, only extract source file(s)"
-	echo "  -utd, --up-to-date          do not build, only check if package is up to date"
-	echo "  -uf,  --update-footprint    update footprint using result from last build"
-	echo "  -if,  --ignore-footprint    build package without checking footprint"
-	echo "  -um,  --update-md5sum       update md5sum"
-	echo "  -im,  --ignore-md5sum       build package without checking md5sum"
-	echo "  -cm,  --check-md5sum        do not build, only check md5sum"
-	echo "  -ns,  --no-strip            do not strip executable binaries or libraries"
-	echo "  -f,   --force               build package even if it appears to be up to date"
-	echo "  -c,   --clean               remove package and downloaded files"
-	echo "  -kw,  --keep-work           keep temporary working directory"
-	echo "  -cf,  --config-file <file>  use alternative configuration file"
-	echo "  -v,   --version             print version and exit "
-	echo "  -h,   --help                print help and exit"
+	echo "  -i,   --install             compile et installe le paquet"
+	echo "  -u,   --upgrade             compile et installe le paquet  (met à jour)"
+	echo "  -r,   --recursive           recherche et compile les paquets de façon récursive"
+	echo "  -d,   --download            télécharge les fichiers sources manquants"
+	echo "  -do,  --download-only       télécharge uniquement les fichiers sources sans compiler"
+	echo "  -eo,  --extract-only        extrait uniquement les sources sans contruire"
+	echo "  -utd, --up-to-date          vérifie uniquement si le paquet est à jour"
+	echo "  -uf,  --update-footprint    met à jour la signature du paquet résultant de la dernière compilation"
+	echo "  -if,  --ignore-footprint    compile le paquet en ignorant la signature"
+	echo "  -um,  --update-md5sum       met à jour le md5sum"
+	echo "  -im,  --ignore-md5sum       compile le paquet en ignorant le  md5sum"
+	echo "  -cm,  --check-md5sum        vérifie seulement le md5sum"
+	echo "  -ns,  --no-strip            ne réduit pas les binairess ou librairies"
+	echo "  -f,   --force               force la compilation même si le paquet est à jour"
+	echo "  -c,   --clean               supprime le paquet et les sources"
+	echo "  -kw,  --keep-work           garde les dossiers de travail"
+	echo "	-kl,  --keep-locale         garde les autres locales que celles prédéfinies"
+	echo "  -cf,  --config-file <file>  utiliser un fichier de configuration spécifique"
+	echo "  -v,   --version             affiche uniquement la version "
+	echo "  -h,   --help                affiche uniquement l'aide"
 }
+remove_locale() {
+local DIR FILE
+	cd $PKG
+	find . -type d -path "*/share/locale/*" | while read FILE; do
+		if [ `basename $FILE` = $PKGMK_LOCALES ]; then
+			DIR=`dirname "$FILE"`
+			mv "$FILE" .
+			rm -rf $DIR
+			mkdir $DIR
+			mv `basename "$FILE"` $DIR/
+			break
+		else
+			rm -rf $FILE
+		fi
 
+	done
+}
 parse_options() {
 	while [ "$1" ]; do
 		case $1 in
@@ -562,6 +601,8 @@ parse_options() {
 				PKGMK_CLEAN="yes" ;;
 			-kw|--keep-work)
 				PKGMK_KEEP_WORK="yes" ;;
+			-kl|--keep-locale)
+				PKGMK_KEEP_LOCALES="yes" ;;
 			-cf|--config-file)
 				if [ ! "$2" ]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
@@ -679,9 +720,8 @@ PKGMK_NOSTRIP=".nostrip"
 
 PKGMK_SOURCE_MIRRORS=()
 PKGMK_SOURCE_DIR="$PWD"
-PKGMK_PACKAGE_DIR="$PWD"
 PKGMK_WORK_DIR="$PWD/work"
-
+PKGMK_PACKAGE_DIR="$PWD"
 PKGMK_INSTALL="no"
 PKGMK_RECURSIVE="no"
 PKGMK_DOWNLOAD="no"
@@ -697,6 +737,8 @@ PKGMK_IGNORE_MD5SUM="no"
 PKGMK_CHECK_MD5SUM="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
+PKGMK_KEEP_LOCALES="no"
+PKGMK_LOCALES="fr"
 
 main "$@"
 
