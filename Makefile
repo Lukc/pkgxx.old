@@ -2,6 +2,7 @@
 
 DESTDIR =
 BINDIR = /usr/bin
+SHAREDIR = /usr/share
 ETCDIR = /etc
 
 build: 
@@ -10,5 +11,6 @@ build:
 install: 
 	install -D -m0755 pkg++.in $(DESTDIR)$(BINDIR)/pkg++
 	install -D -m0644 pkg++.conf $(DESTDIR)$(ETCDIR)/pkg++.conf
+	@[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ] || mkdir -pv $(DESTDIR)$(SHAREDIR)/pkg++/includes
 
 # End of file
