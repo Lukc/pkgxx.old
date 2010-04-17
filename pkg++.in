@@ -34,7 +34,7 @@ error() {
 }
 
 get_filename() {
-	if [[ $1 =~ ^(http|https|ftp|file)://.*/(.+) ]]; then
+	if [[ $1 =~ ^(http|https|ftp|file|svn)://.*/(.+) ]]; then
 		echo "$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
 	else
 		echo $1
@@ -44,6 +44,11 @@ get_filename() {
 get_basename() {
 	local FILE="`echo $1 | sed 's|^.*://.*/||g'`"
 	echo $FILE
+}
+
+get_protocol() {
+	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
+	echo $PROTOCOL
 }
 
 check_pkgfile() {
@@ -89,56 +94,67 @@ check_file() {
 }
 
 download_file() {
-	info "Downloading '$1'."
-
-	if [ ! "`type -p wget`" ]; then
-		error "Command 'wget' not found."
-		exit 1
-	fi
-
-	LOCAL_FILENAME=`get_filename $1`
-	LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
-	DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
-		--directory-prefix=$PKGMK_SOURCE_DIR \
-		--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
-
-	if [ -f "$LOCAL_FILENAME_PARTIAL" ]; then
-		info "Partial download found, trying to resume"
-		RESUME_CMD="-c"
-	fi
-
-	error=1
-
-	BASENAME=`get_basename $1`
-	for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
-		REPO="`echo $REPO | sed 's|/$||'`"
-		wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
-		error=$?
-		if [ $error == 0 ]; then
-			break
+	info "Getting '$1'."
+	
+	PROTOCOL="`get_protocol $1`"
+	if [ "$PROTOCOL" = "http" ] || [ "$PROTOCOL" = "https" ] || [ "$PROTOCOL" = "ftp" ] || [ "$PROTOCOL" = "file" ]; then
+		if [ ! "`type -p wget`" ]; then
+			error "Command 'wget' not found."
+			exit 1
 		fi
-	done
-
-	if [ $error != 0 ]; then
-		while true; do
-			wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+		
+		LOCAL_FILENAME=`get_filename $1`
+		LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
+		DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
+			--directory-prefix=$PKGMK_SOURCE_DIR \
+			--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
+		
+		if [ -f "$LOCAL_FILENAME_PARTIAL" ]; then
+			info "Partial download found, trying to resume"
+			RESUME_CMD="-c"
+		fi
+		
+		error=1
+		
+		BASENAME=`get_basename $1`
+		for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
+			REPO="`echo $REPO | sed 's|/$||'`"
+			wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
 			error=$?
-			if [ $error != 0 ] && [ "$RESUME_CMD" ]; then
-				info "Partial download failed, restarting"
-				rm -f "$LOCAL_FILENAME_PARTIAL"
-				RESUME_CMD=""
-			else
+			if [ $error == 0 ]; then
 				break
 			fi
 		done
-	fi
+		
+		if [ $error != 0 ]; then
+			while true; do
+				wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+				error=$?
+				if [ $error != 0 ] && [ "$RESUME_CMD" ]; then
+					info "Partial download failed, restarting"
+					rm -f "$LOCAL_FILENAME_PARTIAL"
+					RESUME_CMD=""
+				else
+					break
+				fi
+			done
+		fi
+			
+		if [ $error != 0 ]; then
+			error "Downloading '$1' failed."
+			exit 1
+		fi
+			
+		mv -f "$LOCAL_FILENAME_PARTIAL" "$LOCAL_FILENAME"
 	
-	if [ $error != 0 ]; then
-		error "Downloading '$1' failed."
-		exit 1
+	elif [ "$PROTOCOL" = "svn" ]; then
+		cd $PKGMK_SOURCE_DIR
+		if cd $name 2&> /dev/null; then
+			svn up
+		else
+			svn co `echo $1 | sed -e "s|svn://|http://|"` $name
+		fi
 	fi
-	
-	mv -f "$LOCAL_FILENAME_PARTIAL" "$LOCAL_FILENAME"
 }
 
 download_source() {
@@ -181,7 +197,7 @@ unpack_source() {
 			*.lzma)
 				COMMAND="unlzma $LOCAL_FILENAME";;
 			*)
-				COMMAND="cp $LOCAL_FILENAME $SRC" ;;
+				COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
 		esac
 
 		echo "$COMMAND"
