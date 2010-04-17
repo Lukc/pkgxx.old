@@ -34,7 +34,7 @@ error() {
 }
 
 get_filename() {
-	if [[ $1 =~ ^(http|https|ftp|file|svn)://.*/(.+) ]]; then
+	if [[ $1 =~ ^(http|https|ftp|file|svn|git|hg)://.*/(.+) ]]; then
 		echo "$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
 	else
 		echo $1
@@ -154,6 +154,14 @@ download_file() {
 		else
 			svn co `echo $1 | sed -e "s|svn://|http://|"` $name
 		fi
+	elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "hg" ]; then
+		cd $PKGMK_SOURCE_DIR
+		if cd $name 2&> /dev/null; then
+			$PROTOCOL pull
+		else
+			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL://||"` $name
+		fi
+
 	fi
 }
 
@@ -162,12 +170,12 @@ download_source() {
 
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
-		if [ ! -e $LOCAL_FILENAME ]; then
+		if [ ! -e $LOCAL_FILENAME ] || [ "$version" = "devel" ]; then
 			if [ "$LOCAL_FILENAME" = "$FILE" ]; then
 				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
 				exit 1
-			else
-				if [ "$PKGMK_DOWNLOAD" = "yes" ]; then
+			else #FIXME: Ça pourrait être amélioré… il faudrait vérifier avec un get_protocol que $FILE est un dépôt de versionnement avant de relancer ça
+				if [ "$PKGMK_DOWNLOAD" = "yes" ] || [ "$version" = "devel" ]; then
 					download_file $FILE
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
@@ -693,7 +701,7 @@ main() {
 		exit 0
 	fi
 	
-	if [ "`build_needed`" = "no" ] && [ "$PKGMK_FORCE" = "no" ] && [ "$PKGMK_CHECK_MD5SUM" = "no" ]; then
+	if [ "`build_needed`" = "no" ] && [ "$PKGMK_FORCE" = "no" ] && [ "$PKGMK_CHECK_MD5SUM" = "no" ] && [ "$version" != "devel" ]; then
 		info "Package '$TARGET' is up to date."
 	else
 		download_source
