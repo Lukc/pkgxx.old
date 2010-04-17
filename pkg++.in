@@ -59,6 +59,12 @@ check_pkgfile() {
 	elif [ "`type -t build`" != "function" ]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
 		exit 1
+	elif [ -n "$ARCH" ] && echo $ARCH | grep -v -q "`uname -i`"; then
+		error "This package is not made to work on your harware."
+		exit 1
+	elif [ -n "$KERNEL" ] && echo $KERNEL | grep -v -q "`uname -s`"; then
+		error "This package is not made to work on your kernel."
+		exit 1
 	fi
 }
 
