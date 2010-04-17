@@ -708,11 +708,11 @@ trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
 
 export LC_ALL=POSIX
 
-readonly PKGMK_VERSION="#VERSION#"
+readonly PKGMK_VERSION="0.1-dev"
 readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
-PKGMK_CONFFILE="/etc/pkgmk.conf"
+PKGMK_CONFFILE="/etc/pkg++.conf"
 PKGMK_PKGFILE="Pkgfile"
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
