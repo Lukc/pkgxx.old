@@ -327,7 +327,7 @@ check_footprint() {
 				sed '/^---/d' | \
 				sed 's/^+/NEW       /g' | \
 				sed 's/^-/MISSING   /g' > $FILE.footprint.diff
-			if [ -s $FILE.footprint.diff ]; then
+			if [ -s $FILE.footprint.diff ] && [ "$version" != "devel" ]; then
 				error "Footprint mismatch found:"
 				cat $FILE.footprint.diff >&2
 				BUILD_SUCCESSFUL="no"
