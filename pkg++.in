@@ -152,7 +152,7 @@ download_file() {
 		if cd $name 2&> /dev/null; then
 			svn up
 		else
-			svn co `echo $1 | sed -e "s|svn://|http://|"` $name
+			svn co `echo $1 | sed -e "s|svn://||"` $name
 		fi
 	elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "hg" ]; then
 		cd $PKGMK_SOURCE_DIR
@@ -161,22 +161,26 @@ download_file() {
 		else
 			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL://||"` $name
 		fi
-
 	fi
 }
 
 download_source() {
 	local FILE LOCAL_FILENAME
-
+	
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
 		if [ ! -e $LOCAL_FILENAME ] || [ "$version" = "devel" ]; then
 			if [ "$LOCAL_FILENAME" = "$FILE" ]; then
 				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
 				exit 1
-			else #FIXME: Ça pourrait être amélioré… il faudrait vérifier avec un get_protocol que $FILE est un dépôt de versionnement avant de relancer ça
+			else
 				if [ "$PKGMK_DOWNLOAD" = "yes" ] || [ "$version" = "devel" ]; then
-					download_file $FILE
+					PROTOCOL="`get_protocol $FILE`"
+					if [ "$version" != "devel" ]; then
+						download_file $FILE
+					elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "svn" ] || [ "$PROTOCOL" = "hg" ]; then
+						download_file $FILE
+					fi
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
 					exit 1
