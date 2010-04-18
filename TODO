@@ -1,0 +1,20 @@
+
+===== TODO =====
+
+=== Devel ===
+
+ [ ]Utiliser sha1sum ou sha256sum au lieu de md5sum (ou des clefs GPG)
+ [ ]Modifier pkgmk.conf pour :
+  |-[v] Permettre la compilation parallèle
+  |-[ ] Permettre l'optimisation avec des exemples et un lien vers la documentation de Gentoo pour les CFLAGS
+ [ ] Faire des paquets compressés avec LZMA, XZ, voir même squashfs.
+ [ ] Changer l'extension .pkg.tar.gz en quelque chose comme .nutritive, mais uniquement *après* avoir fait la modification donnée ci dessus.
+ [X] Ajouter $NUTRITIVE_ARCH, requise pour certains scripts… (cf. Lukc)
+ [ ] Ajouter $NO_UNTAR dans les Pkgfile… très utiles, surtout pour le portage sur FreeBSD que je compte faire. (Patch proposé par Lukc.)
+ [~] Ajouter (pkg)include(), pour inclure des shémas de compilation par défaut, pour alléger les Pkgfiles et rendre la création de paquets plus simple… c'est particulièrement utile quand on doit en faire toute une série d'un coup et qui se compilent pareillement. (e17, FreeBSD, GNU, etc…)
+ [v] Ajouter des variables limitatives pour les architectures/noyau pour les Pkgfile… (exemple : On ne compile pas la FreeBSD-LibC sur Linux)
+ [~] Ajouter le support des url en git:, svn:, hg:, bzr:, etc.
+ [v] Ne pas vérifier les footprint pour les paquets dont la version est « devel »
+
+
+

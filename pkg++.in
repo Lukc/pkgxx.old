@@ -195,27 +195,31 @@ unpack_source() {
 	
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
-		case $LOCAL_FILENAME in
-			*.tar.gz|*.tar.Z|*.tgz)
-				COMMAND="tar -C $SRC --use-compress-program=gzip -xf $LOCAL_FILENAME" ;;
-			*.tar.bz2)
-				COMMAND="tar -C $SRC --use-compress-program=bzip2 -xf $LOCAL_FILENAME" ;;
-			*.zip)
-				COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
-			*.tar.xz|*.tar.lzma)
-				COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME" ;;
-			*.gz)
-				COMMAND="gunzip $LOCAL_FILENAME";;
-			*.lzma)
-				COMMAND="unlzma $LOCAL_FILENAME";;
-			*)
-				COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
-		esac
-
-		echo "$COMMAND"
-
-		$COMMAND
-
+		if [ "$KEEP_ARCHIVES" != "true" ]; then
+			case $LOCAL_FILENAME in
+				*.tar.gz|*.tar.Z|*.tgz)
+					COMMAND="tar -C $SRC --use-compress-program=gzip -xf $LOCAL_FILENAME" ;;
+				*.tar.bz2)
+					COMMAND="tar -C $SRC --use-compress-program=bzip2 -xf $LOCAL_FILENAME" ;;
+				*.zip)
+					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
+				*.tar.xz|*.tar.lzma)
+					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME" ;;
+				*.gz)
+					COMMAND="gunzip $LOCAL_FILENAME";;
+				*.lzma)
+					COMMAND="unlzma $LOCAL_FILENAME";;
+				*)
+					COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
+			esac
+	
+			echo "$COMMAND"
+	
+			$COMMAND
+		else
+			info "KEEP_ARCHIVES set to true in the Pkgfile: no archive extraction."
+		fi
+		
 		if [ $? != 0 ]; then
 			if [ "$PKGMK_KEEP_WORK" = "no" ]; then
 				rm -rf $PKGMK_WORK_DIR
