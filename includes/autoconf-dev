@@ -1,0 +1,17 @@
+#
+## Include for Autoconf in devel. softwares versions
+#
+# Need $name, $name, $release and $source
+# Can receive arguments from $AUTOGEN_OPTS, $CONFIGURE_OPTS and $MAKE_OPTS
+#
+
+build(){
+cd $name
+	./autogen.sh $AUTOGEN_OPTS
+	./configure --prefix=/usr $CONFIGURE_OPTS
+	make $MAKE_OPTS
+	make $MAKE_OPTS DESTDIR=$PKG install
+	if [ "`type -t post_build`" = "function" ]; then
+		post_build
+	fi
+}

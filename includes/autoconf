@@ -10,6 +10,7 @@ cd $name-$version
 	./configure --prefix=/usr $CONFIGURE_OPTS
 	make $MAKE_OPTS
 	make $MAKE_OPTS DESTDIR=$PKG install
-	[ "`type -t post_build`" = "function" ] && \
-	post_build
+	if [ "`type -t post_build`" = "function" ]; then
+		post_build
+	fi
 }
