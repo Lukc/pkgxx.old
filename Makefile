@@ -12,5 +12,6 @@ install:
 	install -D -m0755 pkg++.in $(DESTDIR)$(BINDIR)/pkg++
 	install -D -m0644 pkg++.conf $(DESTDIR)$(ETCDIR)/pkg++.conf
 	@[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ] || mkdir -pv $(DESTDIR)$(SHAREDIR)/pkg++/includes
+	install -D -m0644 includes/* $(DESTDIR)$(SHAREDIR)/pkg++/includes/
 
 # End of file

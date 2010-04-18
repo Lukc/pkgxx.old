@@ -643,12 +643,6 @@ main() {
 		exit 0
 	fi
 	
-	include(){
-		for INCLUDE in $@; do
-			. /usr/share/pkg++/$INCLUDE.include
-		done
-	}
-	
 	for FILE in $PKGMK_PKGFILE $PKGMK_CONFFILE; do
 		if [ ! -f $FILE ]; then
 			error "File '$FILE' not found."
@@ -660,6 +654,10 @@ main() {
 	check_directory "$PKGMK_SOURCE_DIR"
 	check_directory "$PKGMK_PACKAGE_DIR"
 	check_directory "`dirname $PKGMK_WORK_DIR`"
+	
+	for INCLUDE in $INCLUDES; do
+		. /usr/share/pkg++/includes/$INCLUDE
+	done
 	
 	check_pkgfile
 	

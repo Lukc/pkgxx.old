@@ -1,0 +1,15 @@
+#
+## Include for Autoconf
+#
+# Need $name, $version, $release and $source
+# Can receive arguments from $CONFIGURE_OPTS and $MAKE_OPTS
+#
+
+build(){
+cd $name-$version
+	./configure --prefix=/usr $CONFIGURE_OPTS
+	make $MAKE_OPTS
+	make $MAKE_OPTS DESTDIR=$PKG install
+	[ "`type -t post_build`" = "function" ] && \
+	post_build
+}
