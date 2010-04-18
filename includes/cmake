@@ -1,0 +1,15 @@
+#
+## Include for CMake
+#
+# Need $name, $version, $release and $source
+# Can receive arguments from $CMAKE_OPTS and $MAKE_OPTS
+#
+
+build() {
+cd $name-$version
+	cmake -DPREFIX=/usr $CMAKE_OPTS .
+	make $MAKE_OPTS
+	make DESTDIR=$PKG $MAKE_OPTS install
+}
+
+
