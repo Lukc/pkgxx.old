@@ -242,6 +242,18 @@ make_md5sum() {
 	fi
 }
 
+make_sha256sum() {
+	local FILE LOCAL_FILENAMES
+
+	if [ "$source" ]; then
+		for FILE in ${source[@]}; do
+			LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
+		done
+		
+		sha256sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+	fi
+}
+
 make_footprint() {
 	pkginfo --footprint $TARGET | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
