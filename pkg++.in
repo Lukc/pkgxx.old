@@ -312,6 +312,58 @@ check_md5sum() {
 	fi
 }
 
+check_sha256sum() {
+	local FILE="$PKGMK_WORK_DIR/.tmp"
+
+	cd $PKGMK_ROOT
+	
+	if [ -f $PKGMK_SHA256SUM ]; then
+		make_sha256sum > $FILE.sha256sum
+		sort -k 2 $PKGMK_SHA256SUM > $FILE.sha256sum.orig
+		diff -w -t -U 0 $FILE.sha256sum.orig $FILE.sha256sum | \
+			sed '/^@@/d' | \
+			sed '/^+++/d' | \
+			sed '/^---/d' | \
+			sed 's/^+/NEW       /g' | \
+			sed 's/^-/MISSING   /g' > $FILE.sha256sum.diff
+		if [ -s $FILE.sha256sum.diff ]; then
+			error "Sha256sum mismatch found:"
+			cat $FILE.sha256sum.diff >&2
+
+			if [ "$PKGMK_KEEP_WORK" = "no" ]; then
+				rm -rf $PKGMK_WORK_DIR
+			fi
+
+			if [ "$PKGMK_CHECK_SHA256SUM" = "yes" ]; then
+				error "Sha256sum not ok."
+				exit 1
+			fi
+
+			error "Building '$TARGET' failed."
+			exit 1
+		fi
+	else
+		if [ "$PKGMK_CHECK_SHA256SUM" = "yes" ]; then
+			if [ "$PKGMK_KEEP_WORK" = "no" ]; then
+				rm -rf $PKGMK_WORK_DIR
+			fi
+			info "Sha256sum not found."
+			exit 1
+		fi
+		
+		warning "Sha256sum not found, creating new."
+		make_sha256sum > $PKGMK_MD5SUM
+	fi
+
+	if [ "$PKGMK_CHECK_MD5SUM" = "yes" ]; then
+		if [ "$PKGMK_KEEP_WORK" = "no" ]; then
+			rm -rf $PKGMK_WORK_DIR
+		fi
+		info "Md5sum ok."
+		exit 0
+	fi
+}
+
 strip_files() {
 	local FILE FILTER
 	
@@ -400,9 +452,13 @@ make_work_dir() {
 	cd $PKGMK_ROOT
 	remove_work_dir
 	mkdir -p $SRC $PKG
-
+	
 	if [ "$PKGMK_IGNORE_MD5SUM" = "no" ]; then
 		check_md5sum
+	fi
+	
+	if [ "$PKGMK_IGNORE_SHA256SUM" = "no" ]; then
+		check_sha256sum
 	fi
 }
 
@@ -697,6 +753,14 @@ main() {
 		exit 0
 	fi
 	
+	if [ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]; then
+		download_source
+		check_file "$PKGMK_SHA256SUM"
+		make_sha256sum > $PKGMK_SHA256SUM
+		info "Sha256sum updated."
+		exit 0
+	fi
+	
 	if [ "$PKGMK_DOWNLOAD_ONLY" = "yes" ]; then
 		download_source
 		exit 0
@@ -745,6 +809,7 @@ PKGMK_CONFFILE="/etc/pkg++.conf"
 PKGMK_PKGFILE="Pkgfile"
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
+PKGMK_SHA256SUM=".sha256sum"
 PKGMK_NOSTRIP=".nostrip"
 
 PKGMK_SOURCE_MIRRORS=()
@@ -765,6 +830,9 @@ PKGMK_KEEP_WORK="no"
 PKGMK_UPDATE_MD5SUM="no"
 PKGMK_IGNORE_MD5SUM="no"
 PKGMK_CHECK_MD5SUM="no"
+PKGMK_UPDATE_SHA256SUM="no"
+PKGMK_IGNORE_SHA256SUM="no"
+PKGMK_CHECK_SHA256SUM="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
 
