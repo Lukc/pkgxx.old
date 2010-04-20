@@ -633,6 +633,9 @@ print_help() {
 	echo "  -um,  --update-md5sum       update md5sum"
 	echo "  -im,  --ignore-md5sum       build package without checking md5sum"
 	echo "  -cm,  --check-md5sum        do not build, only check md5sum"
+	echo "  -us,  --update-sha256sum    update sha256sum"
+	echo "  -is,  --ignore-sha256sum    build package without checking sha256sum"
+	echo "  -cs,  --check-sha256sum     do not build, only check sha256sum"
 	echo "  -ns,  --no-strip            do not strip executable binaries or libraries"
 	echo "  -f,   --force               build package even if it appears to be up to date"
 	echo "  -c,   --clean               remove package and downloaded files"
@@ -670,6 +673,12 @@ parse_options() {
 				PKGMK_IGNORE_MD5SUM="yes" ;;
 			-cm|--check-md5sum)
 				PKGMK_CHECK_MD5SUM="yes" ;;
+			-us|--update-sha256sum)
+				PKGMK_UPDATE_SHA256SUM="yes" ;;
+			-is|--ignore-sha256sum)
+				PKGMK_IGNORE_SHA256SUM="yes" ;;
+			-cs|--check-sha256sum)
+				PKGMK_CHECK_SHA256SUM="yes" ;;
 			-ns|--no-strip)
 				PKGMK_NO_STRIP="yes" ;;
 			-f|--force)
