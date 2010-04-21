@@ -352,7 +352,7 @@ check_sha256sum() {
 		fi
 		
 		warning "Sha256sum not found, creating new."
-		make_sha256sum > $PKGMK_MD5SUM
+		make_sha256sum > $PKGMK_SHA256SUM
 	fi
 
 	if [ "$PKGMK_CHECK_MD5SUM" = "yes" ]; then
