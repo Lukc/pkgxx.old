@@ -205,10 +205,6 @@ unpack_source() {
 					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
 				*.tar.xz|*.tar.lzma)
 					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME" ;;
-				*.gz)
-					COMMAND="gunzip $LOCAL_FILENAME";;
-				*.lzma)
-					COMMAND="unlzma $LOCAL_FILENAME";;
 				*)
 					COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
 			esac
