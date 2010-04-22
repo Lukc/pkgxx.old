@@ -825,7 +825,7 @@ trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
 
 export LC_ALL=POSIX
 
-readonly PKGMK_VERSION="0.5"
+readonly PKGMK_VERSION="0.5.1"
 readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
