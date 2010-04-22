@@ -166,6 +166,9 @@ download_file() {
 			$PROTOCOL pull
 		else
 			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL://||"` $name
+		if [ "$PROTOCOL" = "hg" ]; then
+			hg update
+		fi
 		fi
 	fi
 }
