@@ -164,11 +164,11 @@ download_file() {
 		cd $PKGMK_SOURCE_DIR
 		if cd $name 2&> /dev/null; then
 			$PROTOCOL pull
+			if [ "$PROTOCOL" = "hg" ]; then
+				hg update
+			fi
 		else
 			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL://||"` $name
-		if [ "$PROTOCOL" = "hg" ]; then
-			hg update
-		fi
 		fi
 	fi
 }
