@@ -243,7 +243,7 @@ make_md5sum() {
 			LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
 		done
 		
-		md5sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+		[ -n "$LOCAL_FILENAMES" ] && md5sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
 	fi
 }
 
@@ -255,7 +255,7 @@ make_sha256sum() {
 			LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
 		done
 		
-		sha256sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+		[ -n "$LOCAL_FILENAMES" ] && sha256sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
 	fi
 }
 
