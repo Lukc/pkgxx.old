@@ -71,6 +71,12 @@ check_pkgfile() {
 		error "This package is not made to work on your kernel."
 		exit 1
 	fi
+	if [ "$PKGMK_CHECK" = "yes" ]; then
+		if [ ! "`type -t check`" = "function" ]; then
+			warning "Function 'check' not specified in $PKGMK_PKGFILE."
+			PKGMK_CHECK="no"
+		fi
+	fi
 }
 
 check_directory() {
@@ -480,6 +486,16 @@ build_package() {
 	cd $SRC
 	(set -e -x ; build)
 	
+	if [ "$PKGMK_CHECK" = "yes" ]; then
+		info "Testing $TARGET."
+		if check; then
+			info "$TARGET successfully tested."
+		else
+			error "Tests of $TARGET failed."
+			exit 1
+		fi
+	fi
+	
 	if [ $? = 0 ]; then
 		if [ "$PKGMK_NO_STRIP" = "no" ]; then
 			strip_files
@@ -840,6 +856,7 @@ PKGMK_IGNORE_SHA256SUM="no"
 PKGMK_CHECK_SHA256SUM="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
+PKGMK_CHECK="no"
 
 main "$@"
 
