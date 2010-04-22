@@ -3,8 +3,8 @@
 
 === Devel ===
 
- [v]Utiliser sha1sum ou sha256sum au lieu de md5sum (ou des clefs GPG)
- [v]Modifier pkgmk.conf pour :
+ [v] Utiliser sha1sum ou sha256sum au lieu de md5sum (ou des clefs GPG)
+ [v] Modifier pkgmk.conf pour :
   |-[v] Permettre la compilation parallèle
   |-[v] Permettre l'optimisation avec des exemples et un lien vers la documentation de Gentoo pour les CFLAGS
  [ ] Faire des paquets compressés avec LZMA, XZ, voir même squashfs.
@@ -20,6 +20,6 @@
   |-[ ] cvs
   |-[ ] bzr
  [v] Ne pas vérifier les footprint pour les paquets dont la version est « devel »
-
+ [v] Permettre d'insérer des suites de test pour vérifier la validité des paquets.
 
 
