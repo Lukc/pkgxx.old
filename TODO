@@ -1,7 +1,7 @@
 
 ===== TODO =====
 
-=== Devel ===
+=== pkg++ ===
 
  [v] Utiliser sha1sum ou sha256sum au lieu de md5sum (ou des clefs GPG)
  [v] Modifier pkgmk.conf pour :
@@ -22,4 +22,12 @@
  [v] Ne pas vérifier les footprint pour les paquets dont la version est « devel »
  [v] Permettre d'insérer des suites de test pour vérifier la validité des paquets.
 
+=== Includes ===
+
+ [v] autoconf
+ [v] CMake
+ [v] Thèmes
+ [ ] Scons
+ [ ] Makefile uniquement
+ [ ] virtuel (pour les méta-paquets, par exemple)
 
