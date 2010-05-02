@@ -39,10 +39,11 @@ get_protocol() {
 }
 get_filename() {
 	if [[ $1 =~ ^(http|https|ftp|file|svn|git|hg)://.*/(.+) ]]; then
+		NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
 		if [[ `get_protocol $1` =~ (svn|git|hg) ]]; then
 			echo "$PKGMK_SOURCE_DIR/$name"
 		else
-			echo "$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
+			echo "$NORMAL_RETURN"
 		fi
 	else
 		echo $1
