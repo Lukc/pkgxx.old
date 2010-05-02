@@ -33,9 +33,17 @@ error() {
 	echo -e "\033[31m=======> ERROR: $1\033[00m" >&2
 }
 
+get_protocol() {
+	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
+	echo $PROTOCOL
+}
 get_filename() {
 	if [[ $1 =~ ^(http|https|ftp|file|svn|git|hg)://.*/(.+) ]]; then
-		echo "$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
+		if [[ `get_protocol $1` =~ (svn|git|hg) ]]; then
+			echo "$PKGMK_SOURCE_DIR/$name"
+		else
+			echo "$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
+		fi
 	else
 		echo $1
 	fi
@@ -44,11 +52,6 @@ get_filename() {
 get_basename() {
 	local FILE="`echo $1 | sed 's|^.*://.*/||g'`"
 	echo $FILE
-}
-
-get_protocol() {
-	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
-	echo $PROTOCOL
 }
 
 check_pkgfile() {
