@@ -718,7 +718,7 @@ parse_options() {
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
 				fi
 				PKGMK_PKGFILE="$2"
-				exit 0;;
+				shift;;
 			-v|--version)
 				echo "`basename $PKGMK_COMMAND` (pkgutils) $PKGMK_VERSION"
 				exit 0 ;;
