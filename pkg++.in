@@ -660,6 +660,7 @@ print_help() {
 	echo "  -c,   --clean               remove package and downloaded files"
 	echo "  -kw,  --keep-work           keep temporary working directory"
 	echo "  -cf,  --config-file <file>  use alternative configuration file"
+	echo "  -p    --pkgfile <file>      use a pkgfile other than \`$PKGMK_PKGFILE'"
 	echo "  -v,   --version             print version and exit "
 	echo "  -h,   --help                print help and exit"
 }
