@@ -1,0 +1,16 @@
+# Description: Enhanced version of pkgmk.
+# URL: http://lukc.upyum.com/git/index.cgi/pkg++/
+# Maintainer: Xytune team
+# Packager: Lukc (XMPP: lukc AT upyum DOT com ; SMTP: lukc AT linkmauve DOT fr)
+# Depends on: pkgutils
+
+name=pkg++
+version=0.5.1
+release=1
+source=(http://lukc.upyum.com/downloads/pkg++-0.5.1.tar.lzma)
+
+build(){
+tar vxf $name-$version.tar.lzma
+	make DESTDIR=$PKG all
+}
+
