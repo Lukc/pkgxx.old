@@ -5,9 +5,9 @@
 # Depends on: pkgutils
 
 name=pkg++
-version=0.5.1
+version=0.6
 release=1
-source=(http://lukc.upyum.com/downloads/pkg++-0.5.1.tar.lzma)
+source=(http://lukc.upyum.com/downloads/pkg++-0.6.tar.lzma)
 
 build(){
 	make DESTDIR=$PKG all
