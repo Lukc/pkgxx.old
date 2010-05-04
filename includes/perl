@@ -1,0 +1,15 @@
+#
+## Include for Perl
+#
+# Need $name, $version, $release and $source
+# Can receive arguments from $PERL_OPTS
+#
+
+build() {
+cd $name-$version
+	perl Makefile.PL $PERL_OPTS
+	make
+	make DESTDIR=$PKG install
+}
+
+
