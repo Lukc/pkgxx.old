@@ -491,7 +491,13 @@ build_package() {
 	unpack_source
 	
 	cd $SRC
+	if [ "`type -t pre_build`" = "function" ]; then
+		(set -e -x ; pre_build)
+	fi
 	(set -e -x ; build)
+	if [ "`type -t post_build`" = "function" ]; then
+		(set -e -x ; post_build)
+	fi
 	
 	if [ "$PKGMK_CHECK" = "yes" ]; then
 		info "Testing $TARGET."
