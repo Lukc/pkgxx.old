@@ -212,7 +212,7 @@ unpack_source() {
 			case $LOCAL_FILENAME in
 				*.tar.gz|*.tar.Z|*.tgz)
 					COMMAND="tar -C $SRC --use-compress-program=gzip -xf $LOCAL_FILENAME" ;;
-				*.tar.bz2)
+				*.tar.bz2|*.tbz2)
 					COMMAND="tar -C $SRC --use-compress-program=bzip2 -xf $LOCAL_FILENAME" ;;
 				*.zip)
 					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
