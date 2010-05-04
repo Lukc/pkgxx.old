@@ -1,0 +1,13 @@
+#
+## Include for Python
+#
+# Need $name, $version, $release and $source
+# Can receive arguments from $SETUP_OPTS
+#
+
+build() {
+cd $name-$version
+	python setup.py --home=$PKG --prefix=/usr $SETUP_OPTS install
+}
+
+
