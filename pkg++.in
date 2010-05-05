@@ -664,6 +664,7 @@ print_help() {
 	echo "  -ns,  --no-strip            do not strip executable binaries or libraries"
 	echo "  -f,   --force               build package even if it appears to be up to date"
 	echo "  -c,   --clean               remove package and downloaded files"
+	echo "  -cp   --check-pkgfile       only check \`$PKGMK_PKGFILE'"
 	echo "  -kw,  --keep-work           keep temporary working directory"
 	echo "  -cf,  --config-file <file>  use alternative configuration file"
 	echo "  -p,   --pkgfile <file>      use a pkgfile other than \`$PKGMK_PKGFILE'"
@@ -713,6 +714,8 @@ parse_options() {
 				PKGMK_CLEAN="yes" ;;
 			-kw|--keep-work)
 				PKGMK_KEEP_WORK="yes" ;;
+			-cp|--check-pkgfile)
+				PKGMK_CHECK_PKGFILE="yes";;
 			-cf|--config-file)
 				if [ ! "$2" ]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
@@ -763,13 +766,18 @@ main() {
 		. $FILE
 	done
 	
-	check_directory "$PKGMK_SOURCE_DIR"
-	check_directory "$PKGMK_PACKAGE_DIR"
-	check_directory "`dirname $PKGMK_WORK_DIR`"
-	
 	for INCLUDE in $INCLUDES; do
 		. /usr/share/pkg++/includes/$INCLUDE
 	done
+	
+	if [ "$PKGMK_CHECK_PKGFILE" = "yes" ]; then
+		check_pkgfile && info "$PKGMK_PKGFILE correctly checked."
+		exit $?
+	fi
+	
+	check_directory "$PKGMK_SOURCE_DIR"
+	check_directory "$PKGMK_PACKAGE_DIR"
+	check_directory "`dirname $PKGMK_WORK_DIR`"
 	
 	check_pkgfile
 	
@@ -876,6 +884,7 @@ PKGMK_CHECK_SHA256SUM="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
 PKGMK_CHECK="no"
+PKGMK_CHECK_PKGFILE="no"
 
 main "$@"
 
