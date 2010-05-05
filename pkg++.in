@@ -56,15 +56,13 @@ get_basename() {
 }
 
 check_arch(){
-	if [ -n "${arch[@]}" ]; then
+	if [ "${arch[@]}" ]; then
 		for ARCH in ${arch[@]}; do
 			case $ARCH in
 			no-arch)
 				return 0;;
 			$PKGMK_ARCH)
 				return 0;;
-			*)
-				;;
 			esac
 		done
 		return 1
@@ -74,7 +72,7 @@ check_arch(){
 }
 
 check_kernel(){
-	if [ -n "${kernel[@]}" ]; then
+	if [ "${kernel[@]}" ]; then
 		for KERNEL in ${kernel[@]}; do
 			case $KERNEL in
 			no-kernel)
