@@ -55,6 +55,24 @@ get_basename() {
 	echo $FILE
 }
 
+check_arch(){
+	if [ -n "${arch[@]}" ]; then
+		for ARCH in ${arch[@]}; do
+			case $ARCH in
+			no-arch)
+				return 0;;
+			$PKGMK_ARCH)
+				return 0;;
+			*)
+				;;
+			esac
+		done
+		return 1
+	else
+		return 0
+	fi
+}
+
 check_pkgfile() {
 	if [ ! "$name" ]; then
 		error "Variable 'name' not specified in $PKGMK_PKGFILE."
@@ -68,7 +86,7 @@ check_pkgfile() {
 	elif [ "`type -t build`" != "function" ]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
 		exit 1
-	elif [ -n "$ARCH" ] && echo $ARCH | grep -v -q "`uname -i`"; then
+	elif ! check_arch; then
 		error "This package is not made to work on your harware."
 		exit 1
 	elif [ -n "$KERNEL" ] && echo $KERNEL | grep -v -q "`uname -s`"; then
@@ -885,6 +903,9 @@ PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
 PKGMK_CHECK="no"
 PKGMK_CHECK_PKGFILE="no"
+
+PKGMK_ARCH="no-arch"
+PKGMK_KERNEL="no-kernel"
 
 main "$@"
 
