@@ -1,0 +1,14 @@
+#
+## Include for virtual packages
+#
+# Need $name, $version and $release
+#
+
+source=()
+
+build() {
+	mkdir $PKG
+	mkdir -p $PKG/etc
+}
+
+
