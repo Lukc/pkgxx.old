@@ -73,6 +73,24 @@ check_arch(){
 	fi
 }
 
+check_kernel(){
+	if [ -n "${kernel[@]}" ]; then
+		for KERNEL in ${kernel[@]}; do
+			case $KERNEL in
+			no-kernel)
+				return 0;;
+			$PKGMK_KERNEL)
+				return 0;;
+			*)
+				;;
+			esac
+		done
+		return 1
+	else
+		return 0
+	fi
+}
+
 check_pkgfile() {
 	if [ ! "$name" ]; then
 		error "Variable 'name' not specified in $PKGMK_PKGFILE."
@@ -89,7 +107,7 @@ check_pkgfile() {
 	elif ! check_arch; then
 		error "This package is not made to work on your harware."
 		exit 1
-	elif [ -n "$KERNEL" ] && echo $KERNEL | grep -v -q "`uname -s`"; then
+	elif ! check_kernel; then
 		error "This package is not made to work on your kernel."
 		exit 1
 	fi
