@@ -698,7 +698,7 @@ print_help() {
 	echo "  -ns,  --no-strip            do not strip executable binaries or libraries"
 	echo "  -f,   --force               build package even if it appears to be up to date"
 	echo "  -c,   --clean               remove package and downloaded files"
-	echo "  -cp   --check-pkgfile       only check \`$PKGMK_PKGFILE'"
+	echo "  -cp   --check-pkgfile       do not build, only check \`$PKGMK_PKGFILE'"
 	echo "  -kw,  --keep-work           keep temporary working directory"
 	echo "  -cf,  --config-file <file>  use alternative configuration file"
 	echo "  -p,   --pkgfile <file>      use a pkgfile other than \`$PKGMK_PKGFILE'"
