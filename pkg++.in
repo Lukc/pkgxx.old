@@ -805,8 +805,34 @@ main() {
 	done
 	
 	if [ "$PKGMK_CHECK_PKGFILE" = "yes" ]; then
-		check_pkgfile && info "$PKGMK_PKGFILE correctly checked."
-		exit $?
+		RETURN=0
+		if [ ! "$name" ]; then
+			error "Variable 'name' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ ! "$version" ]; then
+			error "Variable 'version' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ ! "$release" ]; then
+			error "Variable 'release' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ "`type -t pre_build`" != "function" ]; then
+			info "Function 'pre_build' not specified in $PKGMK_PKGFILE."
+		fi
+		if [ "`type -t build`" != "function" ]; then
+			error "Function 'build' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ "`type -t post_build`" != "function" ]; then
+			info "Function 'post_build' not specified in $PKGMK_PKGFILE."
+		fi
+		if [ "`type -t check`" != "function" ]; then
+			warning "Function 'check' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		exit $RETURN
 	fi
 	
 	check_directory "$PKGMK_SOURCE_DIR"
