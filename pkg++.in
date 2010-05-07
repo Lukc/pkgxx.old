@@ -800,7 +800,7 @@ main() {
 		. $FILE
 	done
 	
-	for INCLUDE in $INCLUDES; do
+	for INCLUDE in ${includes[@]}; do
 		. /usr/share/pkg++/includes/$INCLUDE
 	done
 	
