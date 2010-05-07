@@ -801,7 +801,7 @@ main() {
 	done
 	
 	for INCLUDE in ${includes[@]}; do
-		. /usr/share/pkg++/includes/$INCLUDE
+		. $PKGMK_INCLUDES_DIR/$INCLUDE
 	done
 	
 	if [ "$PKGMK_CHECK_PKGFILE" = "yes" ]; then
@@ -888,6 +888,7 @@ readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
 PKGMK_CONFFILE="/etc/pkg++.conf"
+PKGMK_INCLUDES_DIR="/usr/share/pkg++/includes"
 PKGMK_PKGFILE="Pkgfile"
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
