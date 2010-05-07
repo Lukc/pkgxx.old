@@ -7,9 +7,9 @@
 
 build() {
 cd $name-$version
-	cmake -DPREFIX=/usr $CMAKE_OPTS .
-	make $MAKE_OPTS
-	make DESTDIR=$PKG $MAKE_OPTS install
+	cmake -DPREFIX=/usr ${CMAKE_OPTS[@]} .
+	make ${MAKE_OPTS[@]}
+	make DESTDIR=$PKG ${MAKE_OPTS[@]} install
 }
 
 

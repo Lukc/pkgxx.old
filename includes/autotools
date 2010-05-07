@@ -7,7 +7,7 @@
 
 build(){
 cd $name-$version
-	./configure --prefix=/usr $CONFIGURE_OPTS
-	make $MAKE_OPTS
-	make $MAKE_OPTS DESTDIR=$PKG install
+	./configure --prefix=/usr ${CONFIGURE_OPTS[@]}
+	make ${MAKE_OPTS[@]}
+	make ${MAKE_OPTS[@]} DESTDIR=$PKG install
 }

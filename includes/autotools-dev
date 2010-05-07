@@ -7,8 +7,8 @@
 
 build(){
 cd $name
-	./autogen.sh $AUTOGEN_OPTS
-	./configure --prefix=/usr $CONFIGURE_OPTS
-	make $MAKE_OPTS
-	make $MAKE_OPTS DESTDIR=$PKG install
+	./autogen.sh ${AUTOGEN_OPTS[@]}
+	./configure --prefix=/usr ${CONFIGURE_OPTS[@]}
+	make ${MAKE_OPTS[@]}
+	make ${MAKE_OPTS[@]} DESTDIR=$PKG install
 }

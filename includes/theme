@@ -7,7 +7,7 @@
 
 build() {
 	mkdir -p $PKG/usr/share/themes/
-	cp -r $THEMES $PKG/usr/share/themes/
+	cp -r ${THEMES[@]} $PKG/usr/share/themes/
 }
 
 

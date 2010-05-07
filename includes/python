@@ -7,7 +7,7 @@
 
 build() {
 cd $name-$version
-	python setup.py build $BUILD_OPTS install --root=$PKG --prefix=/usr $INSTALL_OPTS
+	python setup.py build ${BUILD_OPTS[@]} install --root=$PKG --prefix=/usr ${INSTALL_OPTS[@]}
 }
 
 
