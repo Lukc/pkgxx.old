@@ -2,12 +2,12 @@
 ## Include for themes packages
 #
 # Need $name, $version, $release and $source
-# Can receive arguments from $THEME
+# Can receive arguments from $themes
 #
 
 build() {
 	mkdir -p $PKG/usr/share/themes/
-	cp -r ${THEMES[@]} $PKG/usr/share/themes/
+	cp -r ${themes[@]} $PKG/usr/share/themes/
 }
 
 

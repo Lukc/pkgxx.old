@@ -2,14 +2,14 @@
 ## Include for CMake
 #
 # Need $name, $version, $release and $source
-# Can receive arguments from $CMAKE_OPTS and $MAKE_OPTS
+# Can receive arguments from $cmake_opts and $make_opts
 #
 
 build() {
 cd $name-$version
-	cmake -DPREFIX=/usr ${CMAKE_OPTS[@]} .
-	make ${MAKE_OPTS[@]}
-	make DESTDIR=$PKG ${MAKE_OPTS[@]} install
+	cmake -DPREFIX=/usr ${cmake_opts[@]} .
+	pkgmake ${make_opts[@]}
+	pkgmake DESTDIR=$PKG ${make_opts[@]} install
 }
 
 
