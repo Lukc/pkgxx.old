@@ -56,8 +56,8 @@ get_basename() {
 }
 
 check_arch(){
-	if [ "${arch[@]}" ]; then
-		for ARCH in ${arch[@]}; do
+	if [ "${archs[@]}" ]; then
+		for ARCH in ${archs[@]}; do
 			case $ARCH in
 			no-arch)
 				return 0;;
@@ -72,8 +72,8 @@ check_arch(){
 }
 
 check_kernel(){
-	if [ "${kernel[@]}" ]; then
-		for KERNEL in ${kernel[@]}; do
+	if [ "${kernels[@]}" ]; then
+		for KERNEL in ${kernels[@]}; do
 			case $KERNEL in
 			no-kernel)
 				return 0;;
