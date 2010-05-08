@@ -769,7 +769,7 @@ parse_options() {
 				PKGMK_NOSTRIP="$DIR/.nostrip"
 				shift;;
 			-v|--version)
-				echo "`basename $PKGMK_COMMAND` (pkgutils) $PKGMK_VERSION"
+				echo "`basename $PKGMK_COMMAND` $PKGMK_VERSION"
 				exit 0 ;;
 			-h|--help)
 				print_help
@@ -909,7 +909,7 @@ trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
 
 export LC_ALL=POSIX
 
-readonly PKGMK_VERSION="0.5.1"
+readonly PKGMK_VERSION="0.5.2"
 readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
