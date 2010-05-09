@@ -17,7 +17,7 @@ if [[ -n "$1" ]]; then
 	maintainer="`echo $maintainer`"
 	url="`cat $1 | grep "\# URL:" | sed -e "s|\# URL:||"`"
 	url="`echo $url`"
-	depends="`cat $1 | grep "\# Depends of:" | sed -e "s|\# Depends of:||"`"
+	depends="`cat $1 | grep "\# Depends on:" | sed -e "s|\# Depends on:||"`"
 	depends="`echo $depends`"
 	echo "packager=\"$packager\""
 	echo "maintainer=\"$maintainer\""
