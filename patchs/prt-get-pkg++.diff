@@ -1,0 +1,59 @@
+--- prt-get-5.16/src/package.cpp	2008-06-24 12:46:22.000000000 +0200
++++ prt-get-new/src/package.cpp	2010-05-09 14:08:08.942967950 +0200
+@@ -192,6 +192,56 @@ void Package::load() const
+         } else if ( line.substr( 0, 8 ) == "release=" ) {
+             m_data->release = getValueBefore( getValue( line, '=' ), '#' );
+             m_data->release = stripWhiteSpace( m_data->release );
++        } else if ( line.substr( 0, 4 ) == "url=" ) {
++            m_data->url = getValueBefore( getValue( line, '=' ), '#' );
++            m_data->url = stripWhiteSpace( m_data->url );
++        } else if ( line.substr( 0, 11 ) == "maintainer=" ) {
++            m_data->maintainer = getValueBefore( getValue( line, '=' ), '#' );
++            if ( m_data->maintainer[0] == '"' ) {
++                StringHelper::replaceAll( m_data->maintainer, "\"", "" );
++            } else if ( m_data->maintainer[0] == '\'') {
++                StringHelper::replaceAll( m_data->maintainer, "'", "" );
++            }
++            m_data->maintainer = stripWhiteSpace( m_data->maintainer );
++        } else if ( line.substr( 0, 9 ) == "packager=" ) {
++            m_data->packager = getValueBefore( getValue( line, '=' ), '#' );
++            if ( m_data->packager[0] == '"' ) {
++                StringHelper::replaceAll( m_data->packager, "\"", "" );
++            } else if ( m_data->packager[0] == '\'') {
++                StringHelper::replaceAll( m_data->packager, "'", "" );
++            }
++            m_data->packager = stripWhiteSpace( m_data->packager );
++        } else if ( line.substr( 0, 12 ) == "description=" ) {
++            m_data->description = getValueBefore( getValue( line, '=' ), '#' );
++            if ( m_data->description[0] == '"' ) {
++                StringHelper::replaceAll( m_data->description, "\"", "" );
++            } else if ( m_data->description[0] == '\'') {
++                StringHelper::replaceAll( m_data->description, "'", "" );
++            }
++            m_data->description = stripWhiteSpace( m_data->description );
++        } else if ( line.substr( 0, 8 ) == "depends=" ) {
++            string depends = m_data->depends = getValueBefore( getValue( line, '=' ), '#' );
++            StringHelper::replaceAll( depends, " ", "," );
++            StringHelper::replaceAll( depends, ",,", "," );
++            StringHelper::replaceAll( depends, "(", "" );
++            StringHelper::replaceAll( depends, ")", "" );
++#if 0
++                    // remove commented out packages
++                    list<string> deps = StringHelper::split( depends, ',' );
++                    list<string>::iterator it = deps.begin();
++                    for ( ; it != deps.end(); ++it ) {
++                        if ( (*it)[0] == '#' ) {
++                            cerr << "Commented dep: " << *it << endl;
++                        } else {
++                            if ( it != deps.begin() ) {
++                                m_data->depends += ",";
++                            }
++                            m_data->depends += *it;
++                        }
++                    }
++#else
++                    m_data->depends = depends;
++#endif
+         } else if ( line[0] == '#' ) {
+             while ( !line.empty() &&
+                     ( line[0] == '#' || line[0] == ' ' || line[0] == '\t' ) ) {
