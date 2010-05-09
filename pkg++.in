@@ -810,6 +810,26 @@ main() {
 	
 	if [ "$PKGMK_CHECK_PKGFILE" = "yes" ]; then
 		RETURN=0
+		if [ ! "$description" ]; then
+			error "Variable 'description' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ ! "$url" ]; then
+			error "Variable 'url' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ ! "$packager" ]; then
+			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ ! "$maintainer" ]; then
+			error "Variable 'maintainer' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
+		if [ ! "$depends" ]; then
+			error "Variable 'depends' not specified in $PKGMK_PKGFILE."
+			RETURN=1
+		fi
 		if [ ! "$name" ]; then
 			error "Variable 'name' not specified in $PKGMK_PKGFILE."
 			RETURN=1
