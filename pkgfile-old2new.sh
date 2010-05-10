@@ -17,17 +17,28 @@ if [[ -n "$1" ]]; then
 	maintainer="`echo $maintainer`"
 	url="`cat $1 | grep "\# URL:" | sed -e "s|\# URL:||"`"
 	url="`echo $url`"
-	depends="`cat $1 | grep "\# Depends on:" | sed -e "s|\# Depends on:||"`"
+	depends="`cat $1 | grep "\# Depends on:" | sed -e "s|\# Depends on:||" | sed -e "s|,| |g"`"
 	depends="`echo $depends`"
 	echo "packager=\"$packager\""
 	echo "maintainer=\"$maintainer\""
 	echo "url=\"$url\""
 	echo "depends=($depends)"
-	echo "name=$name"
+	echo -e "\nname=$name"
 	echo "version=$version"
 	echo "release=$release"
 	echo "source=(${source[@]})"
-	type -a build | grep -v "$useless_type_return"
+	build_content="`type -a build | grep -v "$useless_type_return"`"
+	if [[ "$build_content" = "build () 
+{ 
+    cd \$name-\$version;
+    ./configure --prefix=/usr;
+    make;
+    make DESTDIR=\$PKG install
+}" ]]; then
+		echo -e "\nincludes=(autotools)"
+	else
+		type -a build | grep -v "$useless_type_return"
+	fi
 fi
 
 
