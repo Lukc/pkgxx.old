@@ -137,6 +137,18 @@ check_file() {
 	fi
 }
 
+list_includes() {
+	for include in `ls /usr/share/pkg++/includes/`; do
+		if grep -q "build()" /usr/share/pkg++/includes/$include; then
+			echo -e "\033[32m$include\033[00m"
+		elif grep -q "source=" /usr/share/pkg++/includes/$include; then
+			echo -e "\033[34m$include\033[00m"
+		else
+			echo -e "$include"
+		fi
+	done
+}
+
 download_file() {
 	info "Getting '$1'."
 	
@@ -702,6 +714,7 @@ print_help() {
 	echo "  -kw,  --keep-work           keep temporary working directory"
 	echo "  -cf,  --config-file <file>  use alternative configuration file"
 	echo "  -p,   --pkgfile <file>      use a pkgfile other than \`$PKGMK_PKGFILE'"
+	echo "  -li,  --list-includes       list all inclusion files available"
 	echo "  -v,   --version             print version and exit "
 	echo "  -h,   --help                print help and exit"
 }
@@ -768,6 +781,8 @@ parse_options() {
 				PKGMK_SHA256SUM="$DIR/.sha256sum"
 				PKGMK_NOSTRIP="$DIR/.nostrip"
 				shift;;
+			-li|--list-includes)
+				PKGMK_LIST_INCLUDES="yes";;
 			-v|--version)
 				echo "`basename $PKGMK_COMMAND` $PKGMK_VERSION"
 				exit 0 ;;
@@ -791,6 +806,11 @@ main() {
 		make $MAKE_OPTS $@
 	}
 	
+	if [ "$PKGMK_LIST_INCLUDES" = "yes" ]; then
+		list_includes
+		exit 0
+	fi
+		
 	if [ "$PKGMK_RECURSIVE" = "yes" ]; then
 		recursive "$@"
 		exit 0
