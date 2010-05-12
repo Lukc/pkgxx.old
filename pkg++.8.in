@@ -1,0 +1,121 @@
+.TH pkg++ 8 "" "0.6" ""
+.SH NAME
+pkg++ \- make software packages
+.SH SYNOPSIS
+\fBpkg++ [options]\fP
+.SH DESCRIPTION
+\fBpkg++\fP is a \fIpackage management\fP utility, which makes
+a software package. A \fIpackage\fP is an archive of files (.pkg.tar.gz)
+that can be installed using pkgadd(8).
+
+To prepare to use pkg++, you must write a file named \fIPkgfile\fP
+that describes how the package should be build. Once a suitable
+\fIPkgfile\fP file exists, each time you change some source files,
+you simply execute pkg++ to bring the package up to date. The pkg++
+program uses the \fIPkgfile\fP file and the last-modification
+times of the source files to decide if the package needs to be updated.
+
+Global build configuration is stored in \fI/etc/pkg++.conf\fP. This
+file is read by pkg++ at startup.
+.SH OPTIONS
+.TP
+.B "\-i, \-\-install"
+Install package using pkgadd(8) after successful build.
+.TP
+.B "\-u, \-\-upgrade"
+Install package as an upgrade using pkgadd(8) after successful build.
+.TP
+.B "\-r, \-\-recursive"
+Search for and build packages recursively.
+.TP
+.B "\-d, \-\-download"
+Download missing source file(s).
+.TP
+.B "\-do, \-\-download\-only"
+Do not build, only download missing source file(s).
+.TP
+.B "\-utd, \-\-up\-to\-date"
+Do not build, only check if the package is up to date.
+.TP
+.B "\-uf, \-\-update\-footprint"
+Update footprint and treat last build as successful.
+.TP
+.B "\-if, \-\-ignore\-footprint"
+Build package without checking footprint.
+.TP
+.B "\-um, \-\-update\-md5sum"
+Update md5sum using the current source files.
+.TP
+.B "\-im, \-\-ignore\-md5sum"
+Build package without checking md5sum first.
+.TP
+.B "\-um, \-\-update\-sha256sum"
+Update sha256sum using the current source files.
+.TP
+.B "\-im, \-\-ignore\-sha256sum"
+Build package without checking sha256sum first.
+.TP
+.B "\-ns, \-\-no\-strip"
+Do not strip executable binaries or libraries.
+.TP
+.B "\-f, \-\-force"
+Build package even if it appears to be up to date.
+.TP
+.B "\-c, \-\-clean"
+Remove the (previously built) package and the downloaded source files.
+.TP
+.B "\-kw, \-\-keep-work"
+Keep temporary working directory.
+.TP
+.B "\-cf, \-\-config\-file <file>"
+Use alternative configuration file (default is /etc/pkg++.conf).
+.TP
+.B "\-p, \-\-pkgfile <file>"
+Use alternative instructions file (default is Pkgfile).
+.TP
+.B "\-cp, \-\-check\-pkgfile"
+Only check if the Pkgfile is correct.
+.TP
+pkg++ will give you warnings if there are missing variables or functions that are of the new syntax, requiring a patched prt-get to work correctly with it.
+.TP
+.B "\-v, \-\-version"
+Print version and exit.
+.TP
+.B "\-h, \-\-help"
+Print help and exit.
+.SH FILES
+.TP
+.B "Pkgfile"
+Package build description.
+.TP
+.B ".footprint"
+Package footprint (used for regression testing).
+.TP
+.B ".md5sum"
+MD5 checksum of source files.
+.TP
+.B ".sha256sum"
+SHA256 checksum of source files.
+.TP
+.B "/etc/pkg++.conf"
+Global package make configuration.
+.SH SOFTWARES USED AND DEPENDENCIES
+.TP
+.B "bash"
+Command interpreter.
+.TP
+.B "wget"
+Used by pkg++ to download source code.
+.TP
+.B "git, svn and hg"
+Used by pkg++ to download versionned source code.
+.TP
+.B "coreutils"
+Used by pkg++ to make md5 and sha256 checksums, file copies, file moves, and a lot of text or files operations.
+.SH SEE ALSO
+pkg++.conf(5), pkgadd(8), pkgrm(8), pkginfo(8), rejmerge(8), wget(1)
+.SH COPYRIGHT
+pkg++ is based on pkgmk. All the modifications are Copyright (c) 2010 Vandervelden Luka and are under the same License.
+pkgmk (pkgutils) is Copyright (c) 2000-2005 Per Liden and Copyright (c) 2006-2007 CRUX team (http://crux.nu).
+pkgmk (pkgutils) is licensed through the GNU General Public License.
+Read the COPYING file for the complete license.
