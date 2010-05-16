@@ -62,6 +62,14 @@ if [[ -n "$1" ]]; then
     make DESTDIR=\$PKG install
 }" ]]; then
 		echo -e "\nincludes=(autotools)"
+	elif [[ "$build_content" = "build () 
+{ 
+    cd \$name-\$version;
+    cmake -DPREFIX=/usr;
+    make;
+    make DESTDIR=\$PKG install
+}" ]]; then
+		echo -e "\nincludes=(cmake)"
 	else
 		type -a build | grep -v "$useless_type_return"
 	fi
