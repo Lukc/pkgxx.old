@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #############################################################################
-#  Copyright (c) 2010 Luka Vandervelden                                     #
+#  Copyright © 2010 Luka Vandervelden                                       #
 #  Some rights reserved.                                                    #
 #                                                                           #
 # Redistribution and use in source and binary forms, with or without        #
