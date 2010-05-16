@@ -1,0 +1,8 @@
+#
+## Include for GNU softwares
+#
+# Need $name and $version
+#
+
+source=(${source[@]} ftp://ftp.gnu.org/gnu/$name/$name-$version/$name-$version.tar.bz2)
+
