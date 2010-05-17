@@ -810,7 +810,7 @@ main() {
 		for flag in ${USE[@]}; do
 			if [ "$flag" = "$1" ] || [ "$flag" = "+$1" ]; then
 				return 0
-			elif [ "$flag" = "-$1" ];
+			elif [ "$flag" = "-$1" ]; then
 				return 1
 			fi
 		done
