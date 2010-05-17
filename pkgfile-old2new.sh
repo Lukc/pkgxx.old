@@ -70,6 +70,12 @@ if [[ -n "$1" ]]; then
     make DESTDIR=\$PKG install
 }" ]]; then
 		echo -e "\nincludes=(cmake)"
+	elif [[ "$build_content" = "build () 
+{ 
+    cd \$name-\$version;
+    python setup.py install --root=\$PKG
+}" ]]; then
+		echo -e "\nincludes=(python)"
 	else
 		type -a build | grep -v "$useless_type_return"
 	fi
