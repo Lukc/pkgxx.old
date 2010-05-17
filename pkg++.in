@@ -806,6 +806,17 @@ main() {
 		make $MAKE_OPTS $@
 	}
 	
+	use() {
+		for flag in ${USE[@]}; do
+			if [ "$flag" = "$1" ] || [ "$flag" = "+$1" ]; then
+				return 0
+			elif [ "$flag" = "-$1" ];
+				return 1
+			fi
+		done
+		return 1
+	}
+	
 	if [ "$PKGMK_LIST_INCLUDES" = "yes" ]; then
 		list_includes
 		exit 0
@@ -816,7 +827,7 @@ main() {
 		exit 0
 	fi
 	
-	for FILE in $PKGMK_PKGFILE $PKGMK_CONFFILE; do
+	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
 		if [ ! -f $FILE ]; then
 			error "File '$FILE' not found."
 			exit 1
