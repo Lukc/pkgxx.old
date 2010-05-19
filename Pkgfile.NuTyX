@@ -11,6 +11,6 @@ source=(http://lukc.upyum.com/downloads/pkg++-0.6.tar.xz)
 
 build(){
 tar vxf $name-$version.tar.lzma
-	make DESTDIR=$PKG all
+	make DESTDIR=$PKG install
 }
 

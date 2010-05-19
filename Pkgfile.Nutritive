@@ -10,5 +10,5 @@ release=1
 source=(http://lukc.upyum.com/downloads/pkg++-0.6.tar.xz)
 
 build(){
-	make DESTDIR=$PKG all
+	make DESTDIR=$PKG install
 }

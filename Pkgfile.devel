@@ -12,5 +12,5 @@ source=(git://git://lukc.upyum.com/srv/git/pkg++.git)
 
 build(){
 	cd $name
-	make DESTDIR=$PKG all
+	make DESTDIR=$PKG install
 }
