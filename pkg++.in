@@ -897,10 +897,10 @@ main() {
 	check_pkgfile
 	
 	if [ "$version" = "devel" ] || [ "$version" = "dev" ]; then
-		version="devel-`date +%Y%m%d`"
+		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar.gz"
+	else
+		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar.gz"
 	fi
-	
-	TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar.gz"
 	
 	if [ "$PKGMK_CLEAN" = "yes" ]; then
 		clean
