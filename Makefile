@@ -22,8 +22,8 @@ includes:
 	@[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ] || mkdir -pv $(DESTDIR)$(SHAREDIR)/pkg++/includes
 	install -D -m0644 includes/* $(DESTDIR)$(SHAREDIR)/pkg++/includes/
 
-update: pkgxx includes doc
+update: pkgxx includes man
 
-install: pkgxx includes config doc
+install: pkgxx includes config man
 
 # End of file
