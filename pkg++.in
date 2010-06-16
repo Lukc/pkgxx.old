@@ -219,10 +219,12 @@ download_file() {
 					exit 0
 				fi
 			else
-				$PROTOCOL pull
-			fi
-			if [ "$PROTOCOL" = "hg" ]; then
-				hg update
+				if [ "`hg pull | tail -n 1`" = "no changes found" ] && [ "$PKGMK_FORCE" != "yes" ]; then
+					info "Already up-to-date."
+					exit 0
+				else
+					hg update
+				fi
 			fi
 		else
 			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL://||"` $name
