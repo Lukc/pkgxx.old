@@ -290,7 +290,9 @@ make_md5sum() {
 	
 	if [ "$source" ]; then
 		for FILE in ${source[@]}; do
-			LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
+			if [ ! -d "`get_filename $FILE`" ]; then
+				LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
+			fi
 		done
 		
 		[ -n "$LOCAL_FILENAMES" ] && md5sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
@@ -302,7 +304,9 @@ make_sha256sum() {
 
 	if [ "$source" ]; then
 		for FILE in ${source[@]}; do
-			LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
+			if [ ! -d "`get_filename $FILE`" ]; then
+				LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
+			fi
 		done
 		
 		[ -n "$LOCAL_FILENAMES" ] && sha256sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
