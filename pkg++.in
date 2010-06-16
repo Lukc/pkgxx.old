@@ -213,7 +213,14 @@ download_file() {
 	elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "hg" ]; then
 		cd $PKGMK_SOURCE_DIR
 		if cd $name 2&> /dev/null; then
-			$PROTOCOL pull
+			if [ "$PROTOCOL" = "git" ]; then
+				if [ "`git pull`" = "Already up-to-date." ] && [ "$PKGMK_FORCE" != "yes" ]; then
+					info "Already up-to-date."
+					exit 0
+				fi
+			else
+				$PROTOCOL pull
+			fi
 			if [ "$PROTOCOL" = "hg" ]; then
 				hg update
 			fi
