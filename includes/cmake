@@ -5,11 +5,22 @@
 # Can receive arguments from $cmake_opts and $make_opts
 #
 
-build() {
-cd $name-$version
-	cmake -DPREFIX=/usr ${cmake_opts[@]} .
-	pkgmake ${make_opts[@]}
-	pkgmake DESTDIR=$PKG ${make_opts[@]} install
-}
+if [[ "$separate_build_dir" = "yes" ]]; then
+	build() {
+	cd $name-$version
+		mkdir __build__
+		cd __build__
+		cmake -DPREFIX=/usr ${cmake_opts[@]} ..
+		pkgmake ${make_opts[@]}
+		pkgmake DESTDIR=$PKG ${make_opts[@]} install
+	}
 
+else
+	build() {
+	cd $name-$version
+		cmake -DPREFIX=/usr ${cmake_opts[@]} .
+		pkgmake ${make_opts[@]}
+		pkgmake DESTDIR=$PKG ${make_opts[@]} install
+	}
+fi
 

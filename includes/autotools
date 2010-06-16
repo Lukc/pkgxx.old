@@ -5,9 +5,20 @@
 # Can receive arguments from $configure_opts and $make_opts
 #
 
-build(){
-cd $name-$version
-	./configure --prefix=/usr ${configure_opts[@]}
-	pkgmake ${make_opts[@]}
-	pkgmake ${make_opts[@]} DESTDIR=$PKG install
-}
+if [[ "$$separate_build_dir" = "yes" ]]; then
+	build(){
+	cd $name-$version
+		mkdir __build__
+		cd __build__
+		../configure --prefix=/usr ${configure_opts[@]}
+		pkgmake ${make_opts[@]}
+		pkgmake ${make_opts[@]} DESTDIR=$PKG install
+	}
+else
+	build(){
+	cd $name-$version
+		./configure --prefix=/usr ${configure_opts[@]}
+		pkgmake ${make_opts[@]}
+		pkgmake ${make_opts[@]} DESTDIR=$PKG install
+	}
+fi
