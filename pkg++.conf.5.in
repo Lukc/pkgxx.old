@@ -1,0 +1,66 @@
+.TH pkg++.conf 5 "" "pkg++ #VERSION#" ""
+.SH NAME
+\fBpkg++.conf\fP \- Configuration file for pkg++.
+.SH DESCRIPTION
+\fBpkg++.conf\fP configures pkgutils package make, pkg++(8).
+.SH FILE FORMAT
+The file consists of a number of variable assignments of the form \fBoption\fP=\fBvalue\fP. Comments can be specified by putting a hash (#) symbol as the first character on the line.
+.SH DIRECTIVES
+.LP
+If some option is not used (commented out or not included in the configuration file at all) pkgmk will take a default action.
+.TP
+\fBexport CFLAGS='STRING'\fP
+Set C compiler options.
+.br
+Default: none
+.TP
+\fBexport CXXFLAGS='STRING'\fP
+Set C++ compiler options.
+.br
+Default: none
+.TP
+\fBPKGMK_SOURCE_MIRRORS=('STRING')\fP
+Set mirrors to check and download source archives from.
+.br
+Default: none
+.TP
+\fBPKGMK_SOURCE_DIR='STRING'\fP
+Set directory for downloaded source archives.
+.br
+Default: directory of Pkgfile.
+.TP
+\fBPKGMK_PACKAGE_DIR='STRING'\fR
+Set directory for built packages.
+.br
+Default: directory of Pkgfile.
+.TP
+\fBPKGMK_WORK_DIR='STRING'\fP
+Set directory for building packages.
+.br
+Default: '\fBfoo\fP/work', where \fBfoo\fP is the directory of the Pkgfile.
+.TP
+\fBPKGMK_WGET_OPTS='STRING'\fP
+Additional options for wget(1), which is used by pkgmk to download all files.
+.br
+.TP
+\fBPKGMK_DOWNLOAD='STRING'\fP
+If set to 'yes', pkgmk will download the source archives if necessary.
+.br
+Default: 'no'
+.TP
+\fBPKGMK_IGNORE_FOOTPRINT='STRING'\fP
+If set to 'yes', pkgmk will not perform a footprint check of the built package.
+.br
+Default: 'no'
+.TP
+\fBPKGMK_NO_STRIP='STRING'\fP
+If set to 'no', pkgmk will strip built binaries.
+.br
+Default: 'no'
+.SH SEE ALSO
+pkg++(8)
+.SH COPYRIGHT
+pkgmk (pkgutils) is Copyright (c) 2000-2005 Per Liden and Copyright (c) 2006-2008 CRUX team (http://crux.nu).
+pkgmk (pkgutils) is licensed through the GNU General Public License.
+pkg++ is licensed through the GNU General Public License.
+Read the COPYING file for the complete license.

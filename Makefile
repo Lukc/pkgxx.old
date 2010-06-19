@@ -14,6 +14,7 @@ config:
 
 man:
 	install -D -m0644 pkg++.8.in $(DESTDIR)$(MANDIR)/man8/pkg++.8
+	install -D -m0644 pkg++.conf.5.in $(DESTDIR)$(MANDIR)/man5/pkg++.conf.5
 
 pkgxx:
 	install -D -m0755 pkg++.in $(DESTDIR)$(BINDIR)/pkg++
