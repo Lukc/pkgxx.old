@@ -1,4 +1,4 @@
-# pkg++, a fork of pkgutils's pkgmk
+# pkg++, a fork of pkgutils' pkgmk
 
 DESTDIR =
 BINDIR = /usr/bin
@@ -6,10 +6,11 @@ SHAREDIR = /usr/share
 ETCDIR = /etc
 MANDIR = $(SHAREDIR)/man
 
-PKGXX_VERSION=0.6
+PKGXX_VERSION=0.7
 
 build: 
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.in > pkg++
+	bash ./config_pkgxx.sh
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.8.in > pkg++.8
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.conf.5.in > pkg++.conf.5
 
@@ -25,9 +26,9 @@ pkgxx:
 	@[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ] || mkdir -pv $(DESTDIR)$(SHAREDIR)/pkg++/includes
 	install -D -m0644 includes/* $(DESTDIR)$(SHAREDIR)/pkg++/includes/
 
-update: pkgxx man
+update: build pkgxx man
 
-install: pkgxx config man
+install: build pkgxx config man
 
 clean:
 	rm pkg++

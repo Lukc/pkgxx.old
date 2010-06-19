@@ -1024,8 +1024,8 @@ PKGMK_CLEAN="no"
 PKGMK_CHECK="no"
 PKGMK_CHECK_PKGFILE="no"
 
-PKGMK_ARCH="no-arch"
-PKGMK_KERNEL="no-kernel"
+PKGMK_ARCH="@ARCH@"
+PKGMK_KERNEL="@KERNEL@"
 
 main "$@"
 
