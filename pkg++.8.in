@@ -1,4 +1,4 @@
-.TH pkg++ 8 "" "0.6" ""
+.TH pkg++ 8 "" "@VERSION@" ""
 .SH NAME
 pkg++ \- make software packages
 .SH SYNOPSIS

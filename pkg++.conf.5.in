@@ -1,4 +1,4 @@
-.TH pkg++.conf 5 "" "pkg++ #VERSION#" ""
+.TH pkg++.conf 5 "" "pkg++ @VERSION@" ""
 .SH NAME
 \fBpkg++.conf\fP \- Configuration file for pkg++.
 .SH DESCRIPTION
