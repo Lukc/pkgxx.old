@@ -17,13 +17,11 @@ man:
 
 pkgxx:
 	install -D -m0755 pkg++.in $(DESTDIR)$(BINDIR)/pkg++
-
-includes:
 	@[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ] || mkdir -pv $(DESTDIR)$(SHAREDIR)/pkg++/includes
 	install -D -m0644 includes/* $(DESTDIR)$(SHAREDIR)/pkg++/includes/
 
-update: pkgxx includes man
+update: pkgxx man
 
-install: pkgxx includes config man
+install: pkgxx config man
 
 # End of file
