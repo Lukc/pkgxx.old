@@ -5,7 +5,7 @@
 # Can receive arguments from $autogen_opts, $configure_opts and $make_opts
 #
 
-if [[ "$$separate_build_dir" = "yes" ]]; then
+if [[ "$separate_build_dir" = "yes" ]]; then
         build(){
         cd $name
 		mkdir __build__
