@@ -38,7 +38,7 @@ get_protocol() {
 	echo $PROTOCOL
 }
 get_filename() {
-	if [[ $1 =~ ^(http|https|ftp|file|svn|git|hg)://.*/(.+) ]]; then
+	if [[ $1 =~ ^(http|https|ftp|file)://.*/(.+) ]] || [[ $1 =~ (svn|git|hg):*://.*/(.+) ]]; then
 		NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
 		if [[ `get_protocol $1` =~ (svn|git|hg) ]]; then
 			echo "$PKGMK_SOURCE_DIR/$name"
@@ -213,7 +213,7 @@ download_file() {
 				;;
 			esac
 		else
-			svn co `echo $1 | sed -e "s|svn://||"` $name
+			svn co `echo $1 | sed -e "s|svn:||"` $name
 		fi
 	elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "hg" ]; then
 		cd $PKGMK_SOURCE_DIR
@@ -232,7 +232,7 @@ download_file() {
 				fi
 			fi
 		else
-			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL://||"` $name
+			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL:||"` $name
 		fi
 	fi
 }
