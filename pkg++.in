@@ -38,9 +38,9 @@ get_protocol() {
 	echo $PROTOCOL
 }
 get_filename() {
-	if [[ $1 =~ ^(http|https|ftp|file)://.*/(.+) ]] || [[ $1 =~ (svn|git|hg):.*://.* ]]; then
+	if [[ $1 =~ ^(http|https|ftp|file)://.*/(.+) ]] || [[ $1 =~ (svn|git|hg|bzr):.*://.* ]]; then
 		NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
-		if [[ `get_protocol $1` =~ (svn|git|hg) ]]; then
+		if [[ `get_protocol $1` =~ (svn|git|hg|bzr) ]]; then
 			echo "$PKGMK_SOURCE_DIR/$name"
 		else
 			echo "$NORMAL_RETURN"
@@ -234,6 +234,16 @@ download_file() {
 		else
 			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL:||"` $name
 		fi
+	elif [ "$PROTOCOL" = "bzr" ]; then
+		cd $PKGMK_SOURCE_DIR
+		if cd $name 2&> /dev/null; then
+			if [[ "`bzr update 2>&1`" =~ "Tree is up to date at revision ".*" of branch ".* ]] && [ "$PKGMK_FORCE" != "yes" ]; then
+				info "Already up-to-date."
+				exit 0
+			fi
+		else
+			bzr branch `echo $1 | sed -e "s|$PROTOCOL:||"` $name
+		fi
 	fi
 }
 
@@ -251,7 +261,7 @@ download_source() {
 					PROTOCOL="`get_protocol $FILE`"
 					if [ "$version" != "devel" ]; then
 						download_file $FILE
-					elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "svn" ] || [ "$PROTOCOL" = "hg" ]; then
+					elif [ "$PROTOCOL" = "git" ] || [ "$PROTOCOL" = "svn" ] || [ "$PROTOCOL" = "hg" ] || [ "$PROTOCOL" = "bzr" ]; then
 						download_file $FILE
 					fi
 				else
