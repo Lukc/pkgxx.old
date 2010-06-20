@@ -38,7 +38,7 @@ get_protocol() {
 	echo $PROTOCOL
 }
 get_filename() {
-	if [[ $1 =~ ^(http|https|ftp|file)://.*/(.+) ]] || [[ $1 =~ (svn|git|hg):*://.*/(.+) ]]; then
+	if [[ $1 =~ ^(http|https|ftp|file)://.*/(.+) ]] || [[ $1 =~ (svn|git|hg):.*://.* ]]; then
 		NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
 		if [[ `get_protocol $1` =~ (svn|git|hg) ]]; then
 			echo "$PKGMK_SOURCE_DIR/$name"
