@@ -153,98 +153,100 @@ download_file() {
 	info "Getting '$1'."
 	
 	PROTOCOL="`get_protocol $1`"
-	if [[ "$PROTOCOL" = "http" ]] || [[ "$PROTOCOL" = "https" ]] || [[ "$PROTOCOL" = "ftp" ]] || [[ "$PROTOCOL" = "file" ]]; then
-		if [[ ! "`type -p wget`" ]]; then
-			error "Command 'wget' not found."
-			exit 1
-		fi
-		
-		LOCAL_FILENAME=`get_filename $1`
-		LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
-		DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
-			--directory-prefix=$PKGMK_SOURCE_DIR \
-			--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
-		
-		if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
-			info "Partial download found, trying to resume"
-			RESUME_CMD="-c"
-		fi
-		
-		error=1
-		
-		BASENAME=`get_basename $1`
-		for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
-			REPO="`echo $REPO | sed 's|/$||'`"
-			wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
-			error=$?
-			if [[ $error == 0 ]]; then
-				break
+	case $PROTOCOL in
+		"http"|"https"|"ftp"|"file")
+			if [[ ! "`type -p wget`" ]]; then
+				error "Command 'wget' not found."
+				exit 1
 			fi
-		done
-		
-		if [[ $error != 0 ]]; then
-			while true; do
-				wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+			
+			LOCAL_FILENAME=`get_filename $1`
+			LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
+			DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
+				--directory-prefix=$PKGMK_SOURCE_DIR \
+				--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
+			
+			if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
+				info "Partial download found, trying to resume"
+				RESUME_CMD="-c"
+			fi
+			
+			error=1
+			
+			BASENAME=`get_basename $1`
+			for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
+				REPO="`echo $REPO | sed 's|/$||'`"
+				wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
 				error=$?
-				if [[ $error != 0 ]] && [[ "$RESUME_CMD" ]]; then
-					info "Partial download failed, restarting"
-					rm -f "$LOCAL_FILENAME_PARTIAL"
-					RESUME_CMD=""
-				else
+				if [[ $error == 0 ]]; then
 					break
 				fi
 			done
-		fi
 			
-		if [[ $error != 0 ]]; then
-			error "Downloading '$1' failed."
-			exit 1
-		fi
-			
-		mv -f "$LOCAL_FILENAME_PARTIAL" "$LOCAL_FILENAME"
-	
-	elif [[ "$PROTOCOL" = "svn" ]]; then
-		cd $PKGMK_SOURCE_DIR
-		if cd $name 2&> /dev/null; then
-			case "`LANG=en_US.utf8 svn up`" in
-			'At revision '*'.')
-				info "Already up-to-date."
-				exit 0
-				;;
-			esac
-		else
-			svn co `echo $1 | sed -e "s|svn:||"` $name
-		fi
-	elif [[ "$PROTOCOL" = "git" ]] || [[ "$PROTOCOL" = "hg" ]]; then
-		cd $PKGMK_SOURCE_DIR
-		if cd $name 2&> /dev/null; then
-			if [[ "$PROTOCOL" = "git" ]]; then
-				if [[ "`git pull`" = "Already up-to-date." ]] && [[ "$PKGMK_FORCE" != "yes" ]]; then
+			if [[ $error != 0 ]]; then
+				while true; do
+					wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+					error=$?
+						if [[ $error != 0 ]] && [[ "$RESUME_CMD" ]]; then
+						info "Partial download failed, restarting"
+						rm -f "$LOCAL_FILENAME_PARTIAL"
+						RESUME_CMD=""
+					else
+							break
+					fi
+				done
+			fi
+				
+			if [[ $error != 0 ]]; then
+				error "Downloading '$1' failed."
+				exit 1
+			fi
+				
+			mv -f "$LOCAL_FILENAME_PARTIAL" "$LOCAL_FILENAME"
+		;;
+		"svn")
+			cd $PKGMK_SOURCE_DIR
+			if cd $name 2&> /dev/null; then
+				if [[ "`LANG=en_US.utf8 svn up`" =~ 'At revision '*'.' ]]; then
 					info "Already up-to-date."
 					exit 0
 				fi
 			else
-				if [[ "`hg pull | tail -n 1`" = "no changes found" ]] && [[ "$PKGMK_FORCE" != "yes" ]]; then
+				svn co `echo $1 | sed -e "s|svn:||"` $name
+			fi
+		;;
+		"git"|"hg")
+			cd $PKGMK_SOURCE_DIR
+			if cd $name 2&> /dev/null; then
+				if [[ "$PROTOCOL" = "git" ]]; then
+					if [[ "`git pull`" = "Already up-to-date." ]] && [[ "$PKGMK_FORCE" != "yes" ]]; then
+						info "Already up-to-date."
+						exit 0
+					fi
+				else
+					if [[ "`hg pull | tail -n 1`" = "no changes found" ]] && [[ "$PKGMK_FORCE" != "yes" ]]; then
+						info "Already up-to-date."
+						exit 0
+					else
+						hg update
+					fi
+				fi
+			else
+				$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL:||"` $name
+			fi
+		;;
+		"bzr")
+			cd $PKGMK_SOURCE_DIR
+			if cd $name 2&> /dev/null; then
+				if [[ "`bzr update 2>&1`" =~ "Tree is up to date at revision ".*" of branch ".* ]] && [[ "$PKGMK_FORCE" != "yes" ]]; then
 					info "Already up-to-date."
 					exit 0
-				else
-					hg update
 				fi
+			else
+				bzr branch `echo $1 | sed -e "s|$PROTOCOL:||"` $name
 			fi
-		else
-			$PROTOCOL clone `echo $1 | sed -e "s|$PROTOCOL:||"` $name
-		fi
-	elif [[ "$PROTOCOL" = "bzr" ]]; then
-		cd $PKGMK_SOURCE_DIR
-		if cd $name 2&> /dev/null; then
-			if [[ "`bzr update 2>&1`" =~ "Tree is up to date at revision ".*" of branch ".* ]] && [[ "$PKGMK_FORCE" != "yes" ]]; then
-				info "Already up-to-date."
-				exit 0
-			fi
-		else
-			bzr branch `echo $1 | sed -e "s|$PROTOCOL:||"` $name
-		fi
-	fi
+		;;
+	esac
 }
 
 download_source() {
