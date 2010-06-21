@@ -235,7 +235,7 @@ download_file() {
 						info "Already up-to-date."
 						exit 0
 					else
-						hg update
+						hg update > /dev/null
 					fi
 				fi
 			else
