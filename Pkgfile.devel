@@ -8,7 +8,7 @@
 name=pkg++
 version=devel
 release=1
-source=(git://git://lukc.upyum.com/srv/git/pkg++.git)
+source=(git://git://lukc.upyum.com/srv/git/pkgxx.git)
 
 build(){
 	cd $name

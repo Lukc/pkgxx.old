@@ -35,4 +35,10 @@ clean:
 	rm pkg++.8
 	rm pkg++.conf.5
 
+pkgfiles:
+	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
+	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" Pkgfile.Nutritive.in > Pkgfile.Nutritive
+	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" Pkgfile.NuTyX.in > Pkgfile.NuTyX
+	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" Pkgfile.devel.in > Pkgfile.devel
+
 # End of file
