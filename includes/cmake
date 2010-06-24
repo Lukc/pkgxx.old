@@ -10,7 +10,7 @@ if [[ "$separate_build_dir" = "yes" ]]; then
 	cd $name-$version
 		mkdir __build__
 		cd __build__
-		cmake -DPREFIX=/usr ${cmake_opts[@]} ..
+		cmake -DPREFIX=/usr -DCMAKE_INSTALL_DIR=/usr ${cmake_opts[@]} ..
 		pkgmake ${make_opts[@]}
 		pkgmake DESTDIR=$PKG ${make_opts[@]} install
 	}
@@ -18,7 +18,7 @@ if [[ "$separate_build_dir" = "yes" ]]; then
 else
 	build() {
 	cd $name-$version
-		cmake -DPREFIX=/usr ${cmake_opts[@]} .
+		cmake -DPREFIX=/usr -DCMAKE_INSTALL_DIR=/usr ${cmake_opts[@]} .
 		pkgmake ${make_opts[@]}
 		pkgmake DESTDIR=$PKG ${make_opts[@]} install
 	}
