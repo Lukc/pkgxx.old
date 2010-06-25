@@ -271,8 +271,11 @@ download_source() {
 					PROTOCOL="`get_protocol $FILE`"
 					if [[ "$version" != "devel" ]]; then
 						download_file $FILE
-					elif [[ "$PROTOCOL" = "git" ]] || [[ "$PROTOCOL" = "svn" ]] || [[ "$PROTOCOL" = "hg" ]] || [[ "$PROTOCOL" = "bzr" ]]; then
-						download_file $FILE
+					else
+						case $PROTOCOL in
+							git|svn|hg|bzr)
+								download_file $FILE;;
+						esac
 					fi
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
