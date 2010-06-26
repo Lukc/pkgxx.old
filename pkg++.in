@@ -268,15 +268,7 @@ download_source() {
 				exit 1
 			else
 				if [[ "$PKGMK_DOWNLOAD" = "yes" ]] || [[ "$version" = "devel" ]]; then
-					PROTOCOL="`get_protocol $FILE`"
-					if [[ "$version" != "devel" ]]; then
-						download_file $FILE
-					else
-						case $PROTOCOL in
-							git|svn|hg|bzr)
-								download_file $FILE;;
-						esac
-					fi
+					download_file $FILE
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
 					exit 1
