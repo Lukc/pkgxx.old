@@ -55,6 +55,25 @@ get_basename() {
 	echo $FILE
 }
 
+get_pkgfile() {
+	local PKGFILE=
+	if [[ -n `ls $PKGMK_PKGFILE-* 2>/dev/null` ]]; then
+		for file in $PKGMK_PKGFILE-*; do
+			if [[ "$file" =~ $PKGMK_PKGFILE-[0-9] ]]; then
+				PKGFILE=$file
+			fi
+		done
+		echo "$PKGFILE"
+	else
+		echo "$PKGMK_PKGFILE"
+	fi
+}
+
+get_metafile() {
+	local VERSION="`echo "$PKGMK_PKGFILE" | sed -e "s|.*-||"`"
+	echo ".$1-$VERSION"
+}
+
 check_arch(){
 	if [[ "${archs[@]}" ]]; then
 		for ARCH in ${archs[@]}; do
@@ -859,6 +878,13 @@ main() {
 		recursive "$@"
 		exit 0
 	fi
+	
+	PKGMK_PKGFILE="`get_pkgfile`"
+	
+	PKGMK_FOOTPRINT="`get_metafile footprint`"
+	PKGMK_MD5SUM="`get_metafile md5sum`"
+	PKGMK_SHA256SUM="`get_metafile sha256sum`"
+	PKGMK_NOSTRIP="`get_metafile nostrip`"
 	
 	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
 		if [[ ! -f $FILE ]]; then
