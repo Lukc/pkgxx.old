@@ -1,5 +1,5 @@
 #
-# /etc/pkgmk.conf: pkgmk(8) configuration
+# /etc/pkg++.conf: pkg++(8) configuration
 #
 
 # Pour l'optimisation, vous pouvez aller voir sur:
