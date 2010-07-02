@@ -25,7 +25,7 @@ PKGMK_WORK_DIR="/tmp/work-$name"
 # PKGMK_WGET_OPTS=""
 PKGMK_LOCALES="fr"
 
-PKGMK_ARCH="x86"
-PKGMK_KERNEL="Linux"
+PKGMK_ARCH=@ARCH@
+PKGMK_KERNEL=@KERNEL@
 
 # End of file

@@ -10,7 +10,9 @@ PKGXX_VERSION=0.7
 
 build: 
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.in > pkg++
-	bash ./config_pkgxx.sh
+	cp pkg++.conf.in pkg++.conf
+	bash ./config_pkgxx.sh pkg++
+	bash ./config_pkgxx.sh pkg++.conf
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.8.in > pkg++.8
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.conf.5.in > pkg++.conf.5
 
@@ -33,6 +35,7 @@ install: build pkgxx config man
 clean:
 	rm pkg++
 	rm pkg++.8
+	rm pkg++.conf
 	rm pkg++.conf.5
 
 pkgfiles:
