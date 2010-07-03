@@ -824,17 +824,6 @@ parse_options() {
 				fi
 				PKGMK_CONFFILE="$2"
 				shift ;;
-			-p|--pkgfile)
-				if [[ ! "$2" ]]; then
-					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
-				fi
-				DIR="`dirname $2`"
-				PKGMK_PKGFILE="$2"
-				PKGMK_FOOTPRINT="$DIR/.footprint"
-				PKGMK_MD5SUM="$DIR/.md5sum"
-				PKGMK_SHA256SUM="$DIR/.sha256sum"
-				PKGMK_NOSTRIP="$DIR/.nostrip"
-				shift;;
 			-li|--list-includes)
 				PKGMK_LIST_INCLUDES="yes";;
 			-v|--version)
