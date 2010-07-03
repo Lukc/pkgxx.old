@@ -744,7 +744,7 @@ interrupted() {
 }
 
 print_help() {
-	echo "usage: `basename $PKGMK_COMMAND` [options]"
+	echo "usage: `basename $PKGMK_COMMAND` [$PKGMK_PKGFILE_NAME] [options]"
 	echo "options:"
 	echo "  -i,   --install             build and install package"
 	echo "  -u,   --upgrade             build and install package (as upgrade)"
@@ -764,10 +764,9 @@ print_help() {
 	echo "  -ns,  --no-strip            do not strip executable binaries or libraries"
 	echo "  -f,   --force               build package even if it appears to be up to date"
 	echo "  -c,   --clean               remove package and downloaded files"
-	echo "  -cp   --check-pkgfile       do not build, only check \`$PKGMK_PKGFILE'"
+	echo "  -cp   --check-pkgfile       do not build, only check \`$PKGMK_PKGFILE_NAME'"
 	echo "  -kw,  --keep-work           keep temporary working directory"
 	echo "  -cf,  --config-file <file>  use alternative configuration file"
-	echo "  -p,   --pkgfile <file>      use a pkgfile other than \`$PKGMK_PKGFILE'"
 	echo "  -li,  --list-includes       list all inclusion files available"
 	echo "  -v,   --version             print version and exit "
 	echo "  -h,   --help                print help and exit"
