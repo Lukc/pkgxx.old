@@ -57,15 +57,17 @@ get_basename() {
 
 get_pkgfile() {
 	local PKGFILE=
-	if [[ -n `ls $PKGMK_PKGFILE-* 2>/dev/null` ]]; then
-		for file in $PKGMK_PKGFILE-*; do
-			if [[ "$file" =~ $PKGMK_PKGFILE-[0-9] ]]; then
+	if [[ -n "$PKGMK_PKGFILE" ]]; then
+		echo "$PKGMK_PKGFILE"
+	elif [[ -n `ls $PKGMK_PKGFILE_NAME-* 2>/dev/null` ]]; then
+		for file in $PKGMK_PKGFILE_NAME-*; do
+			if [[ "$file" =~ $PKGMK_PKGFILE_NAME-[0-9] ]]; then
 				PKGFILE=$file
 			fi
 		done
 		echo "$PKGFILE"
 	else
-		echo "$PKGMK_PKGFILE"
+		echo "$PKGMK_PKGFILE_NAME"
 	fi
 }
 
@@ -772,6 +774,7 @@ print_help() {
 }
 
 parse_options() {
+	local PKGFILE=""
 	while [[ "$1" ]]; do
 		case $1 in
 			-i|--install)
@@ -842,11 +845,19 @@ parse_options() {
 				print_help
 				exit 0 ;;
 			*)
-				echo "`basename $PKGMK_COMMAND`: invalid option $1"
-				exit 1 ;;
+				if [[ -n "$PKGFILE" ]]; then
+					echo "`basename $PKGMK_COMMAND`: only one $PKGMK_PKGFILE_NAME can be given"
+					exit 1
+				elif [[ -r "$1" ]]; then
+					PKGFILE="$1"
+				else
+					echo "`basename $PKGMK_COMMAND`: invalid option $1"
+					exit 1
+				fi ;;
 		esac
 		shift
 	done
+	PKGMK_PKGFILE="$PKGFILE"
 }
 
 main() {
@@ -1033,7 +1044,8 @@ readonly PKGMK_ROOT="$PWD"
 
 PKGMK_CONFFILE="/etc/pkg++.conf"
 PKGMK_INCLUDES_DIR="/usr/share/pkg++/includes"
-PKGMK_PKGFILE="Pkgfile"
+PKGMK_PKGFILE_NAME="Pkgfile"
+PKGMK_PKGFILE=""
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
 PKGMK_SHA256SUM=".sha256sum"
