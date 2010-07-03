@@ -72,8 +72,13 @@ get_pkgfile() {
 }
 
 get_metafile() {
-	local VERSION="`echo "$PKGMK_PKGFILE" | sed -e "s|.*-||"`"
-	echo ".$1-$VERSION"
+	local VERSION="`basename "$PKGMK_PKGFILE" | sed -e "s|$PKGMK_PKGFILE_NAME-||"`"
+	local DIR="`dirname "$PKGMK_PKGFILE"`"
+	if [[ "$VERSION" = `basename $PKGMK_PKGFILE` ]]; then
+		echo "$DIR/.$1"
+	else
+		echo "$DIR/.$1-$VERSION"
+	fi
 }
 
 check_arch(){
