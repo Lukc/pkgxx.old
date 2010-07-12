@@ -1,0 +1,21 @@
+#
+## Include for softwares in the enlightenment repository.
+#
+# Need $name, $release and $source
+# Can receive arguments from $e_name, $e_path, $autogen_opts and $make_opts
+#
+
+: ${e_name=$name}
+: ${e_path=trunk/$e_name}
+
+source=(${source[@]} svn:http://svn.enlightenment.org/svn/e/$e_path)
+version=devel
+
+build()
+{
+cd $name
+	./autogen.sh --prefix=/usr ${autogen_opts[@]}
+	pkgmake ${make_opts[@]}
+	pkgmake ${make_opts[@]} install DESTDIR=$PKG
+}
+
