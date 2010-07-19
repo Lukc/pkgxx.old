@@ -980,7 +980,6 @@ main() {
 		check_file "$PKGMK_MD5SUM"
 		make_md5sum > $PKGMK_MD5SUM
 		info "Md5sum updated."
-		exit 0
 	fi
 	
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]]; then
@@ -988,6 +987,8 @@ main() {
 		check_file "$PKGMK_SHA256SUM"
 		make_sha256sum > $PKGMK_SHA256SUM
 		info "Sha256sum updated."
+	fi
+	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]] || [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
 		exit 0
 	fi
 	
