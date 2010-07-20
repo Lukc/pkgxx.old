@@ -6,7 +6,7 @@ SHAREDIR = /usr/share
 ETCDIR = /etc
 MANDIR = $(SHAREDIR)/man
 
-PKGXX_VERSION=0.7.1
+PKGXX_VERSION=0.7.2
 
 build: 
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.in > pkg++
