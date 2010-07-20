@@ -5,8 +5,17 @@
 # Can receive arguments from $build_opts and $install_opts
 #
 
+case $version in
+	devel|dev|trunk)
+		: ${dirname:="$name"}
+	;;
+	*)
+		: ${dirname:="$name-$version"}
+	;;
+esac
+
 build() {
-cd $name-$version
+cd $dirname
 	python setup.py build ${build_opts[@]} install --root=$PKG --prefix=/usr ${install_opts[@]}
 }
 
