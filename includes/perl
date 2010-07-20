@@ -5,8 +5,17 @@
 # Can receive arguments from $perl_opts and $make_opts
 #
 
+case $version in
+	devel|dev|trunk)
+		: ${dirname:="$name"}
+	;;
+	*)
+		: ${dirname:="$name-$version"}
+	;;
+esac
+
 build() {
-cd $name-$version
+cd $dirname
 	perl Makefile.PL ${perl_opts[@]}
 	make ${make_opts[@]}
 	make DESTDIR=$PKG ${make_opts[@]} install
