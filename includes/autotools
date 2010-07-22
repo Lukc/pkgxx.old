@@ -3,6 +3,7 @@
 #
 # Need $name, $version, $release and $source
 # Can receive arguments from $configure_opts and $make_opts
+# $use_autogen can enable the ./autogen.sh command, which takes parameters from ${autogen_opts[@]}
 #
 
 case $version in
@@ -25,7 +26,7 @@ if [[ "$separate_build_dir" = "yes" ]]; then
 	cd $dirname
 		mkdir __build__
 		cd __build__
-		[[ "$use_autogen" = "yes" ]] && ../autogen.sh
+		[[ "$use_autogen" = "yes" ]] && ../autogen.sh ${autogen_opts[@]}
 		../configure --prefix=/usr ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
@@ -33,7 +34,7 @@ if [[ "$separate_build_dir" = "yes" ]]; then
 else
 	build(){
 	cd $dirname
-		[[ "$use_autogen" = "yes" ]] && ./autogen.sh
+		[[ "$use_autogen" = "yes" ]] && ./autogen.sh ${autogen_opts[@]}
 		./configure --prefix=/usr ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
