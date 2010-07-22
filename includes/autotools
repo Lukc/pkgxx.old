@@ -5,18 +5,35 @@
 # Can receive arguments from $configure_opts and $make_opts
 #
 
+case $version in
+	devel|dev|trunk)
+		: ${dirname:="$name"}
+		: ${use_autogen:="yes"}
+	;;
+	*)
+		: ${dirname:="$name-$version"}
+	;;
+esac
+
+case $use_autogen in
+	yes|no);;
+	*)use_autogen=no;;
+esac
+
 if [[ "$separate_build_dir" = "yes" ]]; then
 	build(){
-	cd $name-$version
+	cd $dirname
 		mkdir __build__
 		cd __build__
+		[[ "$use_autogen" = "yes" ]] && ../autogen.sh
 		../configure --prefix=/usr ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
 	}
 else
 	build(){
-	cd $name-$version
+	cd $dirname
+		[[ "$use_autogen" = "yes" ]] && ./autogen.sh
 		./configure --prefix=/usr ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
