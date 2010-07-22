@@ -170,10 +170,10 @@ check_command() {
 
 list_includes() {
 	for include in `ls /usr/share/pkg++/includes/`; do
-		if grep -q "build()" /usr/share/pkg++/includes/$include; then
-			echo -e "\033[32m$include\033[00m"
-		elif grep -q "source=" /usr/share/pkg++/includes/$include; then
+		if grep -q "source=" /usr/share/pkg++/includes/$include; then
 			echo -e "\033[34m$include\033[00m"
+		elif grep -q "build()" /usr/share/pkg++/includes/$include; then
+			echo -e "\033[32m$include\033[00m"
 		else
 			echo -e "$include"
 		fi
