@@ -105,8 +105,6 @@ check_kernel(){
 				return 0;;
 			$PKGMK_KERNEL)
 				return 0;;
-			*)
-				;;
 			esac
 		done
 		return 1
