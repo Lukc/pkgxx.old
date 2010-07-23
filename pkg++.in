@@ -21,6 +21,16 @@
 #  USA.
 #
 
+E_GENERAL=1
+E_PKGFILE=2
+E_DIR_PERM=3
+E_DOWNLOAD=4
+E_UNPACK=5
+E_CONTROL_SUM=6
+E_FOOTPRINT=7
+E_BUILD=8
+E_INSTALL=9
+
 info() {
 	echo -e "\033[32m=======> $1\033[00m"
 }
@@ -116,16 +126,16 @@ check_kernel(){
 check_pkgfile() {
 	if [[ ! "$name" ]]; then
 		error "Variable 'name' not specified in $PKGMK_PKGFILE."
-		exit 1
+		exit $E_PKGFILE
 	elif [[ ! "$version" ]]; then
 		error "Variable 'version' not specified in $PKGMK_PKGFILE."
-		exit 1
+		exit $E_PKGFILE
 	elif [[ ! "$release" ]]; then
 		error "Variable 'release' not specified in $PKGMK_PKGFILE."
-		exit 1
+		exit $E_PKGFILE
 	elif [[ "`type -t build`" != "function" ]]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
-		exit 1
+		exit $E_PKGFILE
 	elif ! check_arch; then
 		error "This package is not made to work on your harware."
 		exit 1
@@ -144,13 +154,13 @@ check_pkgfile() {
 check_directory() {
 	if [[ ! -d $1 ]]; then
 		error "Directory '$1' does not exist."
-		exit 1
+		exit $E_DIR_PERM
 	elif [[ ! -w $1 ]]; then
 		error "Directory '$1' not writable."
-		exit 1
+		exit $E_DIR_PERM
 	elif [[ ! -x $1 ]] || [[ ! -r $1 ]]; then
 		error "Directory '$1' not readable."
-		exit 1
+		exit $E_DIR_PERM
 	fi
 }
 
@@ -164,7 +174,7 @@ check_file() {
 check_command() {
 	if [[ -z "`type -p $1`" ]]; then
 		error "Command '$1' not found."
-		exit 1
+		exit $E_GENERAL
 	fi
 }
 
@@ -227,7 +237,7 @@ download_file() {
 				
 			if [[ $error != 0 ]]; then
 				error "Downloading '$1' failed."
-				exit 1
+				exit $E_DOWNLOAD
 			fi
 				
 			mv -f "$LOCAL_FILENAME_PARTIAL" "$LOCAL_FILENAME"
@@ -289,13 +299,13 @@ download_source() {
 		if [[ ! -e $LOCAL_FILENAME ]] || [[ "$version" = "devel" ]]; then
 			if [[ "$LOCAL_FILENAME" = "$FILE" ]]; then
 				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
-				exit 1
+				exit $E_DOWNLOAD
 			else
 				if [[ "$PKGMK_DOWNLOAD" = "yes" ]] || [[ "$version" = "devel" ]]; then
 					download_file $FILE
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
-					exit 1
+					exit $E_DOWNLOAD
 				fi
 			fi
 		fi
@@ -333,7 +343,7 @@ unpack_source() {
 				rm -rf $PKGMK_WORK_DIR
 			fi
 			error "Building '$TARGET' failed."
-			exit 1
+			exit $E_UNPACK
 		fi
 	done
 }
@@ -396,11 +406,11 @@ check_md5sum() {
 
 			if [[ "$PKGMK_CHECK_MD5SUM" = "yes" ]]; then
 				error "Md5sum not ok."
-				exit 1
+				exit $E_CONTROL_SUM
 			fi
 
 			error "Building '$TARGET' failed."
-			exit 1
+			exit $E_CONTROL_SUM
 		fi
 	else
 		if [[ "$PKGMK_CHECK_MD5SUM" = "yes" ]]; then
@@ -408,7 +418,7 @@ check_md5sum() {
 				rm -rf $PKGMK_WORK_DIR
 			fi
 			info "Md5sum not found."
-			exit 1
+			exit $E_CONTROL_SUM
 		fi
 		
 		warning "Md5sum not found, creating new."
@@ -448,11 +458,11 @@ check_sha256sum() {
 
 			if [[ "$PKGMK_CHECK_SHA256SUM" = "yes" ]]; then
 				error "Sha256sum not ok."
-				exit 1
+				exit $E_CONTROL_SUM
 			fi
 
 			error "Building '$TARGET' failed."
-			exit 1
+			exit $E_CONTROL_SUM
 		fi
 	else
 		if [[ "$PKGMK_CHECK_SHA256SUM" = "yes" ]]; then
@@ -460,7 +470,7 @@ check_sha256sum() {
 				rm -rf $PKGMK_WORK_DIR
 			fi
 			info "Sha256sum not found."
-			exit 1
+			exit $E_CONTROL_SUM
 		fi
 		
 		warning "Sha256sum not found, creating new."
