@@ -552,9 +552,14 @@ check_footprint() {
 				sed 's/^+/NEW       /g' | \
 				sed 's/^-/MISSING   /g' > $FILE.footprint.diff
 			if [[ -s $FILE.footprint.diff ]] && [[ "$version" != "devel" ]]; then
-				error "Footprint mismatch found:"
+				if [[ "$PKGMK_IGNORE_NEW" = "yes" ]] && \
+				   [[ -z "$(egrep -l ^MISSING $FILE.footprint.diff)" ]]; then
+					info "New files found:"
+				else
+					error "Footprint mismatch found:"
+					BUILD_SUCCESSFUL="no"
+				fi
 				cat $FILE.footprint.diff >&2
-				BUILD_SUCCESSFUL="no"
 			fi
 		else
 			warning "Footprint not found, creating new."
@@ -768,6 +773,7 @@ print_help() {
 	echo "  -utd, --up-to-date          do not build, only check if package is up to date"
 	echo "  -uf,  --update-footprint    update footprint using result from last build"
 	echo "  -if,  --ignore-footprint    build package without checking footprint"
+	echo "  -in,  --ignore-new          build package, ignore new files in a footprint missmatch"
 	echo "  -um,  --update-md5sum       update md5sum"
 	echo "  -im,  --ignore-md5sum       build package without checking md5sum"
 	echo "  -cm,  --check-md5sum        do not build, only check md5sum"
@@ -808,6 +814,8 @@ parse_options() {
 				PKGMK_UPDATE_FOOTPRINT="yes" ;;
 			-if|--ignore-footprint)
 				PKGMK_IGNORE_FOOTPRINT="yes" ;;
+			-in|--ignore-new)
+				PKGMK_IGNORE_NEW="yes" ;;
 			-um|--update-md5sum)
 				PKGMK_UPDATE_MD5SUM="yes" ;;
 			-im|--ignore-md5sum)
@@ -1066,6 +1074,7 @@ PKGMK_EXTRACT_ONLY="no"
 PKGMK_UP_TO_DATE="no"
 PKGMK_UPDATE_FOOTPRINT="no"
 PKGMK_IGNORE_FOOTPRINT="no"
+PKGMK_IGNORE_NEW="no"
 PKGMK_FORCE="no"
 PKGMK_KEEP_WORK="no"
 PKGMK_UPDATE_MD5SUM="no"

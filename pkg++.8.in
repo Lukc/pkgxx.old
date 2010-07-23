@@ -43,6 +43,9 @@ Update footprint and treat last build as successful.
 .B "\-if, \-\-ignore\-footprint"
 Build package without checking footprint.
 .TP
+.B "\-in, \-\-ignore\-new"
+Build package, ignore new files in a footprint missmatch.
+.TP
 .B "\-um, \-\-update\-md5sum"
 Update md5sum using the current source files.
 .TP
