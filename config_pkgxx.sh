@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+VERSION="$1"
 
 arch() {
 	arch="$(uname -m)"
@@ -27,6 +29,17 @@ kernel() {
 : ${ARCH:="`arch`"}
 : ${KERNEL:="`kernel`"}
 
-sed -i -e "s|@ARCH@|$ARCH|" $1
-sed -i -e "s|@KERNEL@|$KERNEL|" $1
+configure() {
+	sed -e "s|@ARCH@|$ARCH|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@KERNEL@|$KERNEL|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@VERSION@|$VERSION|" $1 > $1.tmp
+	mv $1.tmp $1
+}
+
+echo "#!/usr/bin/env bash" > "pkg++"
+gcc -E -x c -P -C "pkg++.in" >> "pkg++"
+cp "pkg++.conf.in" "pkg++.conf"
+configure pkg++
 
