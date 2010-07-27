@@ -325,6 +325,8 @@ unpack_source() {
 					COMMAND="tar -C $SRC --use-compress-program=bzip2 -xf $LOCAL_FILENAME" ;;
 				*.tar.xz|*.txz|*.tar.lzma)
 					COMMAND="tar -C $SRC --use-compress-program=xz -xf $LOCAL_FILENAME";;
+				*.tar)
+					COMMAND="tar -C $SRC -xf $LOCAL_FILENAME";;
 				*.zip)
 					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
 				*)
