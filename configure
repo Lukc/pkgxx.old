@@ -248,8 +248,8 @@ config:
 
 man:
 	@[ -d \$(DESTDIR)\$(MANDIR) ] || mkdir -pv \$(DESTDIR)\$(MANDIR)
-	install -m0644 pkg++.8 \$(DESTDIR)\$(MANDIR)/man8/pkg++.8
-	install -m0644 pkg++.conf.5 \$(DESTDIR)\$(MANDIR)/man5/pkg++.conf.5
+	install -m0644 pkg++.8.in \$(DESTDIR)\$(MANDIR)/man8/pkg++.8
+	install -m0644 pkg++.conf.5.in \$(DESTDIR)\$(MANDIR)/man5/pkg++.conf.5
 
 pkgxx:
 	@[ -d \$(DESTDIR)\$(BINDIR) ] || mkdir -pv \$(DESTDIR)\$(BINDIR)
