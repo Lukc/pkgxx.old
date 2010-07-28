@@ -248,8 +248,10 @@ config:
 
 man:
 	@[ -d \$(DESTDIR)\$(MANDIR) ] || mkdir -pv \$(DESTDIR)\$(MANDIR)
-	install -m0644 pkg++.8.in \$(DESTDIR)\$(MANDIR)/man8/pkg++.8
-	install -m0644 pkg++.conf.5.in \$(DESTDIR)\$(MANDIR)/man5/pkg++.conf.5
+	@[ -d \$(DESTDIR)\$(MANDIR)/man8 ] || mkdir -pv \$(DESTDIR)\$(MANDIR)/man8
+	@[ -d \$(DESTDIR)\$(MANDIR)/man5 ] || mkdir -pv \$(DESTDIR)\$(MANDIR)/man5
+	install -m0644 pkg++.8 \$(DESTDIR)\$(MANDIR)/man8/pkg++.8
+	install -m0644 pkg++.conf.5 \$(DESTDIR)\$(MANDIR)/man5/pkg++.conf.5
 
 pkgxx:
 	@[ -d \$(DESTDIR)\$(BINDIR) ] || mkdir -pv \$(DESTDIR)\$(BINDIR)
@@ -300,5 +302,9 @@ echo "#!/usr/bin/env bash" > "pkg++"
 cat "pkg++.tmp" >> "pkg++"
 rm pkg++.tmp &
 cp "pkg++.conf.in" "pkg++.conf"
-configure pkg++
+cp "pkg++.8.in" "pkg++.8"
+cp "pkg++.conf.5.in" "pkg++.conf.5"
+configure "pkg++"
+configure "pkg++.8"
+configure "pkg++.conf.5"
 
