@@ -10,5 +10,6 @@ release=1
 source=(http://lukc.upyum.com/downloads/$name-$version.tar.xz)
 
 build(){
+	./configure --with-bsdtar --with-curl
 	make DESTDIR=$PKG install
 }

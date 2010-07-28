@@ -1,4 +1,6 @@
 
+// vim: syntax=sh
+
 E_GENERAL=1
 E_PKGFILE=2
 E_DIR_PERM=3

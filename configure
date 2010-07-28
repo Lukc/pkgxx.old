@@ -1,0 +1,303 @@
+#!/usr/bin/env bash
+
+VERSION="0.7.3"
+
+arch () {
+	arch="$(uname -m)"
+	case ${arch} in
+		alpha|ia64|m68k|ppc|ppc64|x86_64) ;;
+		arm*) arch=arm ;;
+		i?86) arch=x86 ;;
+		mips*) arch=mips ;;
+		parisc*) arch=hppa ;;
+		"Power Macintosh") arch=ppc ;;
+		s390*) arch=s390 ;;
+		sh*) arch=sh ;;
+		sparc*) arch=sparc ;;
+		*)
+			echo "Nobody tested your architecture. Pease use --arch=<your arch> to set it manually. The default value would be $(uname -s)."
+			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
+		;;
+	esac
+	echo ${arch}
+}
+
+kernel () {
+	kernel="$(uname -s)"
+	case ${kernel} in
+		Linux|FreeBSD) ;;
+		*)
+			echo "Nobody tested your kernel. Please, use --kernel=<your kernel> to set it manually. The default value would be $(uname -s)."
+			echo "The only known values are, for now, Linux and FreeBSD."
+			exit 1
+		;;
+	esac
+	echo ${kernel}
+}
+
+checking_for () {
+	echo -n "Checking for $1... "
+}
+
+checking_for_bin () {
+	checking_for $1
+	for i in `echo "$PATH" | sed "s|:| |g"`; do
+		if [[ -x $i/$1 ]]; then
+			echo "yes"
+			return 0
+		fi
+	done
+	echo "no"
+	return 1
+}
+
+print_help () {
+	echo "\`configure' configures pkg++ $VERSION to adapt to many kinds of systems."
+	echo 
+	echo "Usage: ./configure [OPTION]... [VAR=VALUE]..."
+	echo 
+	echo "Defaults for the options are specified in brackets."
+	echo 
+	echo "Configuration:"
+	echo "  -h, --help              display this help and exit"
+	echo "  -V, --version           display version information and exit"
+	echo 
+	echo "Installation directories:"
+	echo "  --prefix=PREFIX         install architecture-independent files in PREFIX"
+	echo "                          [/usr]"
+	echo "  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX"
+	echo "                          [PREFIX]"
+	echo "By default, \`make install' will install all the files in"
+	echo "\`/usr/bin', \`/usr/lib' etc.  You can specify"
+	echo "an installation prefix other than \`/usr' using \`--prefix',"
+	echo "for instance \`--prefix=$HOME'."
+
+}
+
+PREFIX=/usr
+EPREFIX=$PREFIX
+
+USE_CURL=
+USE_GSED=
+USE_GFIND=
+USE_BSDTAR=
+USE_GTAR=
+
+for arg in $@; do
+	case $arg in
+		--help)
+			print_help
+			exit 0
+		;;
+		--with-*)
+			with="`echo "$arg" | sed "s|--with-||"`"
+			case $with in
+				curl)
+					USE_CURL=true
+				;;
+				bsdtar|libarchive)
+					USE_BSDTAR=true
+				;;
+				gtar|gnu-tar)
+					USE_GTAR=true
+				;;
+				gsed|gnu-sed)
+					USE_GSED=true
+				;;
+				gfind|gnu-find)
+					USE_GFIND=true
+				;;
+				*)
+					echo "Unknown package $without."
+					echo "Please make $0 --help for more informations."
+				;;
+			esac
+		;;
+		--without-*)
+			without="`echo "$arg" | sed "s|--without-||"`"
+			case $without in
+				curl)
+					USE_CURL=false
+				;;
+				bsdtar|libarchive)
+					USE_BSDTAR=false
+				;;
+				gtar|gnu-tar)
+					USE_GTAR=false
+				;;
+				gsed|gnu-sed)
+					USE_GSED=false
+				;;
+				gfind|gnu-find)
+					USE_GFIND=false
+				;;
+				*)
+					echo "Unknown package $without."
+					echo "Please make $0 --help for more informations."
+				;;
+			esac
+		;;
+		--prefix=*)
+			PREFIX="`echo "$arg" | sed "s|--prefix=||"`"
+		;;
+		--exec--prefix=*)
+			EPREFIX="`echo "$arg" | sed "s|--exec-prefix=||"`"
+		;;
+		*)
+			echo "Unknown parameter: $arg."
+			echo "Please make $0 --help for more informations."
+		;;
+	esac
+done
+
+if ! checking_for_bin gcc; then
+	echo "GCC is needed to configure and install pkg++, but not to use it."
+	exit 1
+fi
+
+checking_for "bash >= 4.1"
+if checking_for_bin bash &> /dev/null && (( `bash --version | head -n 1 | cut -d " " -f 4 | cut -d "." -f 1,2 | sed 's|\.|000|'` >= 40001 )); then
+	echo "yes"
+else
+	echo "no"
+	echo "You will need a recent enough bash version to use pkg++. Without bash, you will not be able to install or use pkg++."
+fi
+
+if checking_for_bin gtar; then
+	: ${USE_GTAR:=true}
+else
+	: ${USE_BSDTAR:=false}
+fi
+
+if checking_for_bin bsdtar; then
+	: ${USE_BSDTAR:=true}
+else
+	if ! $USE_GTAR; then
+		USE_BSDTAR=true
+		echo "You will need GNU tar or bsdtar to extract files and build packages."
+		echo "pkg++ will be configured to use bsdtar."
+	else
+		: ${USE_BSDTAR:=false}
+	fi
+fi
+
+if checking_for_bin curl; then
+	: ${USE_CURL:=true}
+else
+	: ${USE_CURL:=false}
+fi
+if ! checking_for_bin wget && ! $USE_CURL; then
+	echo "You will need wget or curl to be able to download files directly with pkg++."
+	echo "pkg++ will be configured to use wget."
+fi
+
+checking_for "GNU sed"
+if sed --version 2> /dev/null | grep -q "GNU" &> /dev/null; then
+	: ${USE_GSED:=true}
+	echo "yes"
+else
+	: ${USE_GSED:=false}
+	echo "no"
+fi
+
+checking_for "GNU find"
+if find --version 2> /dev/null | grep -q "GNU" &> /dev/null; then
+	: ${USE_GFIND:=true}
+	echo "yes"
+else
+	: ${USE_GFIND:=true}
+	echo "no"
+fi
+
+checking_for "arch"
+: ${ARCH:="`arch`"}
+echo "$ARCH"
+
+checking_for "kernel"
+: ${KERNEL:="`kernel`"}
+echo "$KERNEL"
+
+configure() {
+	sed -e "s|@ARCH@|$ARCH|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@KERNEL@|$KERNEL|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@VERSION@|$VERSION|" $1 > $1.tmp
+	mv $1.tmp $1
+}
+
+echo "Creation of \`Makefile'..."
+cat > Makefile << EOF
+# Begin of Makefile
+
+DESTDIR = 
+BINDIR = $PREFIX/bin
+SHAREDIR = $PREFIX/share
+ETCDIR = /etc
+MANDIR = \$(SHAREDIR)/man
+
+PKGXX_VERSION=$VERSION
+
+build:
+	@echo "Build ready, now type make install."
+
+config:
+	@[ -d \$(DESTDIR)\$(ETCDIR) ] || mkdir -pv \$(DESTDIR)\$(ETCDIR)
+	install -m0644 pkg++.conf \$(DESTDIR)\$(ETCDIR)/pkg++.conf
+
+man:
+	@[ -d \$(DESTDIR)\$(MANDIR) ] || mkdir -pv \$(DESTDIR)\$(MANDIR)
+	install -m0644 pkg++.8 \$(DESTDIR)\$(MANDIR)/man8/pkg++.8
+	install -m0644 pkg++.conf.5 \$(DESTDIR)\$(MANDIR)/man5/pkg++.conf.5
+
+pkgxx:
+	@[ -d \$(DESTDIR)\$(BINDIR) ] || mkdir -pv \$(DESTDIR)\$(BINDIR)
+	install -m0755 pkg++ \$(DESTDIR)\$(BINDIR)/pkg++
+	@[ -d \$(DESTDIR)\$(SHAREDIR)/pkg++/includes ] || mkdir -pv \$(DESTDIR)\$(SHAREDIR)/pkg++/includes
+	install -m0644 includes/* \$(DESTDIR)\$(SHAREDIR)/pkg++/includes/
+
+update: build pkgxx man
+
+install: build pkgxx config man
+
+clean:
+	rm -f pkg++
+	rm -f pkg++.8
+	rm -f pkg++.conf
+	rm -f pkg++.conf.5
+	rm -f Makefile
+
+pkgfiles:
+	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
+	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Nutritive.in > Pkgfile.Nutritive
+	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.NuTyX.in > Pkgfile.NuTyX
+	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.devel.in > Pkgfile.devel
+
+# End of file
+EOF
+
+echo "Configuration done."
+
+[[ -e pkg++ ]] && rm pkg++
+if $USE_CURL; then
+	echo "#define curl curl" >> pkg++
+fi
+if $USE_GSED; then
+	echo "#define gsed gsed" >> pkg++
+fi
+if $USE_GFIND; then
+	echo "#define gfind gfind" >> pkg++
+fi
+if $USE_GTAR && ! $USE_BSDTAR; then
+	echo "#define gtar gtar" >> pkg++
+else	# Same as “if $USE_BSDTAR”.
+	echo "#define bsdtar bsdtar" >> pkg++
+fi
+cat "pkg++.in" >> "pkg++"
+gcc -E -x c -P "pkg++" >> "pkg++.tmp"
+echo "#!/usr/bin/env bash" > "pkg++"
+cat "pkg++.tmp" >> "pkg++"
+rm pkg++.tmp &
+cp "pkg++.conf.in" "pkg++.conf"
+configure pkg++
+

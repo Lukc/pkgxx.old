@@ -10,7 +10,8 @@ release=1
 source=(http://lukc.upyum.com/downloads/$name-$version.tar.xz)
 
 build(){
-tar vxf $name-$version.tar.lzma
+tar vxf $name-$version.tar.xz
+	./configure --with-gtar --without-curl
 	make DESTDIR=$PKG install
 }
 
