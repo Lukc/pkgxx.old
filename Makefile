@@ -8,8 +8,10 @@ MANDIR = $(SHAREDIR)/man
 
 PKGXX_VERSION=0.7.2
 
+USE_CURL = no
+
 build: 
-	bash ./config_pkgxx.sh ${PKGXX_VERSION}
+	USE_CURL=$(USE_CURL) bash ./config_pkgxx.sh ${PKGXX_VERSION}
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.8.in > pkg++.8
 	sed -e "s|@VERSION@|${PKGXX_VERSION}|g" pkg++.conf.5.in > pkg++.conf.5
 

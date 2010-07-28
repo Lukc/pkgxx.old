@@ -38,8 +38,15 @@ configure() {
 	mv $1.tmp $1
 }
 
+[[ -e pkg++ ]] && rm pkg++
+if [[ "$USE_CURL" = "yes" ]]; then
+	echo "#define curl curl" >> pkg++
+fi
+cat "pkg++.in" >> "pkg++"
+gcc -E -x c -P -C "pkg++" >> "pkg++.tmp"
 echo "#!/usr/bin/env bash" > "pkg++"
-gcc -E -x c -P -C "pkg++.in" >> "pkg++"
+cat "pkg++.tmp" >> "pkg++"
+rm pkg++.tmp &
 cp "pkg++.conf.in" "pkg++.conf"
 configure pkg++
 

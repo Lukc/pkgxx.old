@@ -174,17 +174,29 @@ download_file() {
 	PROTOCOL="`get_protocol $1`"
 	case $PROTOCOL in
 		"http"|"https"|"ftp"|"file")
+			#if defined curl
+			check_command "curl"
+			#else
 			check_command "wget"
+			#endif
 			
 			LOCAL_FILENAME=`get_filename $1`
 			LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
+			#if defined curl
+			DOWNLOAD_OPTS=""
+			#else
 			DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
 				--directory-prefix=$PKGMK_SOURCE_DIR \
 				--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
+			#endif
 			
 			if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
 				info "Partial download found, trying to resume"
+				#if defined curl
+				RESUME_CMD="-C $LOCAL_FILENAME_PARTIAL"
+				#else
 				RESUME_CMD="-c"
+				#endif
 			fi
 			
 			error=1
@@ -192,7 +204,11 @@ download_file() {
 			BASENAME=`get_basename $1`
 			for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
 				REPO="`echo $REPO | sed 's|/$||'`"
+				#if defined curl
+				curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $REPO/$BASENAME > $LOCAL_FILENAME_PARTIAL
+				#else
 				wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
+				#endif
 				error=$?
 				if [[ $error == 0 ]]; then
 					break
@@ -201,7 +217,11 @@ download_file() {
 			
 			if [[ $error != 0 ]]; then
 				while true; do
+					#if defined curl
+					curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $1 > $LOCAL_FILENAME_PARTIAL
+					#else
 					wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+					#endif
 					error=$?
 						if [[ $error != 0 ]] && [[ "$RESUME_CMD" ]]; then
 						info "Partial download failed, restarting"
