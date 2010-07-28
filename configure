@@ -163,7 +163,8 @@ else
 	echo "You will need a recent enough bash version to use pkg++. Without bash, you will not be able to install or use pkg++."
 fi
 
-if checking_for_bin gtar; then
+checking_for "GNU tar"
+if checking_for_bin gtar &> /dev/null || tar --version | grep -q "GNU"; then
 	: ${USE_GTAR:=true}
 else
 	: ${USE_BSDTAR:=false}
