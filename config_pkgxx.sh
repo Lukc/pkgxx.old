@@ -43,7 +43,7 @@ if [[ "$USE_CURL" = "yes" ]]; then
 	echo "#define curl curl" >> pkg++
 fi
 cat "pkg++.in" >> "pkg++"
-gcc -E -x c -P -C "pkg++" >> "pkg++.tmp"
+gcc -E -x c -P "pkg++" >> "pkg++.tmp"
 echo "#!/usr/bin/env bash" > "pkg++"
 cat "pkg++.tmp" >> "pkg++"
 rm pkg++.tmp &
