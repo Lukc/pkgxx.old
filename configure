@@ -82,6 +82,7 @@ USE_GSED=
 USE_GFIND=
 USE_BSDTAR=
 USE_GTAR=
+GTAR_NAME=
 
 for arg in $@; do
 	case $arg in
@@ -164,10 +165,17 @@ else
 fi
 
 checking_for "GNU tar"
-if checking_for_bin gtar &> /dev/null || tar --version | grep -q "GNU"; then
+if checking_for_bin gtar &> /dev/null; then
+	GTAR_NAME="`type -p gtar`"
 	: ${USE_GTAR:=true}
+	echo "yes"
+elif tar --version | grep -q "GNU"; then
+	GTAR_NAME="`type -p tar`"
+	: ${USE_GTAR:=true}
+	echo "yes"
 else
 	: ${USE_BSDTAR:=false}
+	echo "no"
 fi
 
 if checking_for_bin bsdtar; then
@@ -206,7 +214,7 @@ if find --version 2> /dev/null | grep -q "GNU" &> /dev/null; then
 	: ${USE_GFIND:=true}
 	echo "yes"
 else
-	: ${USE_GFIND:=true}
+	: ${USE_GFIND:=false}
 	echo "no"
 fi
 
@@ -291,16 +299,16 @@ fi
 if $USE_GFIND; then
 	echo "#define gfind gfind" >> pkg++
 fi
-if $USE_GTAR && ! $USE_BSDTAR; then
-	echo "#define gtar gtar" >> pkg++
-else	# Same as “if $USE_BSDTAR”.
+if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
+	echo "#define gtar $GTAR_NAME" >> pkg++
+else
 	echo "#define bsdtar bsdtar" >> pkg++
 fi
 cat "pkg++.in" >> "pkg++"
 gcc -E -x c -P "pkg++" >> "pkg++.tmp"
 echo "#!/usr/bin/env bash" > "pkg++"
 cat "pkg++.tmp" >> "pkg++"
-rm pkg++.tmp &
+rm pkg++.tmp
 cp "pkg++.conf.in" "pkg++.conf"
 cp "pkg++.8.in" "pkg++.8"
 cp "pkg++.conf.5.in" "pkg++.conf.5"
