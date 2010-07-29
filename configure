@@ -314,5 +314,6 @@ cp "pkg++.8.in" "pkg++.8"
 cp "pkg++.conf.5.in" "pkg++.conf.5"
 configure "pkg++"
 configure "pkg++.8"
+configure "pkg++.conf"
 configure "pkg++.conf.5"
 
