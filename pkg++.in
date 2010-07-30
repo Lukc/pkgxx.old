@@ -185,7 +185,7 @@ download_file() {
 			LOCAL_FILENAME=`get_filename $1`
 			LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
 			#if defined curl
-			DOWNLOAD_OPTS=""
+			DOWNLOAD_OPTS="-f"
 			#else
 			DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
 				--directory-prefix=$PKGMK_SOURCE_DIR \
