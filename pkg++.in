@@ -610,7 +610,7 @@ make_work_dir() {
 	fi
 	
 	if [[ "$PKGMK_IGNORE_SHA256SUM" = "no" ]]; then
-		if [[ -n "`type -p $1`" ]]; then
+		if [[ -n "`type -p sha256sum`" ]]; then
 			check_sha256sum
 		else
 			warning "'sha256sum' command not found. sha256sum verification ignored."
