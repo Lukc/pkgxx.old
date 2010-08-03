@@ -10,6 +10,7 @@ E_CONTROL_SUM=6
 E_FOOTPRINT=7
 E_BUILD=8
 E_INSTALL=9
+E_INVALID_DOWNLOAD_TOOL=10
 
 info() {
 	echo -e "\033[32m=======> $1\033[00m"
@@ -21,6 +22,17 @@ warning() {
 
 error() {
 	echo -e "\033[31m=======> ERROR: $1\033[00m" >&2
+}
+
+has() {
+	item="$1"
+	shift 1
+	for t_item in $@; do
+		if [[ "$item" = "$t_item" ]]; then
+			return 0
+		fi
+	done
+	return 1
 }
 
 get_protocol() {
@@ -158,6 +170,14 @@ check_command() {
 	fi
 }
 
+check_config() {
+	if ! has $DOWNLOAD_TOOL ${PKGMK_DOWNLOAD_TOOLS[@]}; then
+		error "$DOWNLOAD_TOOL is not a valid download tool. Please, edit your config file."
+		echo "Valid values are: ${PKGMK_DOWNLOAD_TOOLS[@]}."
+		exit $E_INVALID_DOWNLOAD_TOOL
+	fi
+}
+
 list_includes() {
 	for include in `ls /usr/share/pkg++/includes/`; do
 		if grep -q "source=" /usr/share/pkg++/includes/$include; then
@@ -176,29 +196,30 @@ download_file() {
 	PROTOCOL="`get_protocol $1`"
 	case $PROTOCOL in
 		"http"|"https"|"ftp"|"file")
-			#if defined curl
-			check_command "curl"
-			#else
-			check_command "wget"
-			#endif
+			if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
+				check_command "curl"
+			elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
+				check_command "wget"
+			fi
 			
 			LOCAL_FILENAME=`get_filename $1`
 			LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
-			#if defined curl
-			DOWNLOAD_OPTS="-f -L"
-			#else
-			DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
-				--directory-prefix=$PKGMK_SOURCE_DIR \
-				--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
-			#endif
+			
+			if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
+				DOWNLOAD_OPTS="-f -L"
+			elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
+				DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
+					--directory-prefix=$PKGMK_SOURCE_DIR \
+					--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
+			fi
 			
 			if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
 				info "Partial download found, trying to resume"
-				#if defined curl
-				RESUME_CMD="-C $LOCAL_FILENAME_PARTIAL"
-				#else
-				RESUME_CMD="-c"
-				#endif
+				if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
+					RESUME_CMD="-C $LOCAL_FILENAME_PARTIAL"
+				elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
+					RESUME_CMD="-c"
+				fi
 			fi
 			
 			error=1
@@ -206,11 +227,11 @@ download_file() {
 			BASENAME=`get_basename $1`
 			for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
 				REPO="`echo $REPO | sed 's|/$||'`"
-				#if defined curl
-				curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $REPO/$BASENAME > $LOCAL_FILENAME_PARTIAL
-				#else
-				wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
-				#endif
+				if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
+					curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $REPO/$BASENAME > $LOCAL_FILENAME_PARTIAL
+				elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
+					wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
+				fi
 				error=$?
 				if [[ $error == 0 ]]; then
 					break
@@ -219,11 +240,11 @@ download_file() {
 			
 			if [[ $error != 0 ]]; then
 				while true; do
-					#if defined curl
-					curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $1 > $LOCAL_FILENAME_PARTIAL
-					#else
-					wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
-					#endif
+					if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
+						curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $1 > $LOCAL_FILENAME_PARTIAL
+					elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
+						wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+					fi
 					error=$?
 						if [[ $error != 0 ]] && [[ "$RESUME_CMD" ]]; then
 						info "Partial download failed, restarting"
@@ -943,6 +964,8 @@ main() {
 		. $FILE
 	done
 	
+	check_config
+	
 	for INCLUDE in ${includes[@]}; do
 		. $PKGMK_INCLUDES_DIR/$INCLUDE
 	done
@@ -1119,6 +1142,13 @@ PKGMK_CHECK_PKGFILE="no"
 
 PKGMK_ARCH="@ARCH@"
 PKGMK_KERNEL="@KERNEL@"
+
+readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
+#if defined curl
+DOWNLOAD_TOOL="curl"
+#else // wget is the default download tool used.
+DOWNLOAD_TOOL="wget"
+#fi
 
 main "$@"
 
