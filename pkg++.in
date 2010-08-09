@@ -685,6 +685,23 @@ build_package() {
 		compress_manpages
 		
 		cd $PKG
+		#if defined debian
+		// I don’t know how to have a footprint with .deb packages…
+		info "Debian package construction."
+		mkdir DEBIAN
+		[[ -e DEBIAN/control ]] && rm DEBIAN/control
+		echo "Package: $name" >> DEBIAN/control
+		echo "Version: $version" >> DEBIAN/control
+		echo "Architecture: $PKGMK_ARCH" >> DEBIAN/control
+		echo "Maintainer: $maintainer" >> DEBIAN/control
+		echo "Description: $description" >> DEBIAN/control
+		echo "Depends: ${depends[@]}" >> DEBIAN/control
+		echo "Homepage: $url" >> DEBIAN/control
+		echo >> DEBIAN/control
+		cd ..
+		dpkg-deb --build $PKG
+		mv pkg.deb $TARGET
+		#else
 		info "Build result:"
 		tar cvvf ${TARGET%.$EXT} *
 		
@@ -702,6 +719,7 @@ build_package() {
 				lzop -Uf ${TARGET%.$EXT}
 			;;
 		esac
+		#endif
 		
 		if [[ $? = 0 ]]; then
 			BUILD_SUCCESSFUL="yes"
@@ -734,11 +752,15 @@ install_package() {
 	
 	info "Installing '$TARGET'."
 	
+	#if defined debian
+	COMMAND="dpkg -i $TARGET"
+	#else
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
 		COMMAND="pkgadd $TARGET"
 	else
 		COMMAND="pkgadd -u $TARGET"
 	fi
+	#endif
 	
 	cd $PKGMK_ROOT
 	echo "$COMMAND"
@@ -980,6 +1002,14 @@ main() {
 		. $FILE
 	done
 	
+	#if defined debian
+	if [[ "$PKGMK_ARCH" = x86 ]]; then
+		PKGMK_ARCH="i386"
+	elif [[ "$PKGMK_ARCH" = x86_64 ]]; then
+		PKGMK_ARCH="amd64"
+	fi
+	#endif
+	
 	check_config
 	
 	for INCLUDE in ${includes[@]}; do
@@ -1043,6 +1073,13 @@ main() {
 	
 	check_pkgfile
 	
+	#if defined debian
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.deb"
+	else
+		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.deb"
+	fi
+	#else
 	case $PKGMK_COMPRESSION_MODE in
 	gz|bz2|xz|lzo)
 		EXT="$PKGMK_COMPRESSION_MODE"
@@ -1063,6 +1100,7 @@ main() {
 	if [[ -n "$EXT" ]]; then
 		TARGET="$TARGET.$EXT"
 	fi
+	#endif
 	
 	if [[ "$PKGMK_CLEAN" = "yes" ]]; then
 		clean
@@ -1158,15 +1196,27 @@ PKGMK_DOWNLOAD_ONLY="no"
 PKGMK_EXTRACT_ONLY="no"
 PKGMK_UP_TO_DATE="no"
 PKGMK_UPDATE_FOOTPRINT="no"
+#if defined debian
+PKGMK_IGNORE_FOOTPRINT="yes"
+#else
 PKGMK_IGNORE_FOOTPRINT="no"
+#endif
 PKGMK_IGNORE_NEW="no"
 PKGMK_FORCE="no"
 PKGMK_KEEP_WORK="no"
 PKGMK_UPDATE_MD5SUM="no"
+#if defined debian
+PKGMK_IGNORE_MD5SUM="yes"
+#else
 PKGMK_IGNORE_MD5SUM="no"
+#endif
 PKGMK_CHECK_MD5SUM="no"
 PKGMK_UPDATE_SHA256SUM="no"
+#if defined debian
+PKGMK_IGNORE_SHA256SUM="yes"
+#else
 PKGMK_IGNORE_SHA256SUM="no"
+#endif
 PKGMK_CHECK_SHA256SUM="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"

@@ -83,6 +83,7 @@ USE_GFIND=
 USE_BSDTAR=
 USE_GTAR=
 GTAR_NAME=
+MAKE_DEB=
 
 for arg in $@; do
 	case $arg in
@@ -108,6 +109,9 @@ for arg in $@; do
 				gfind|gnu-find)
 					USE_GFIND=true
 				;;
+				dpkg|deb|debian)
+					MAKE_DEB=true
+				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -131,6 +135,9 @@ for arg in $@; do
 				;;
 				gfind|gnu-find)
 					USE_GFIND=false
+				;;
+				dpkg|deb|debian)
+					MAKE_DEB=false
 				;;
 				*)
 					echo "Unknown package $without."
@@ -218,6 +225,15 @@ else
 	echo "no"
 fi
 
+if checking_for_bin "dpkg"; then
+	: ${MAKE_DEB:="true"}
+else
+	if [[ "$MAKE_DEB" = true ]]; then
+		echo "You will need dpkg to build Debian packages." >&2
+	fi
+	: ${MAKE_DEB:="false"}
+fi
+
 checking_for "arch"
 : ${ARCH:="`arch`"}
 echo "$ARCH"
@@ -303,6 +319,9 @@ if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
 	echo "#define gtar $GTAR_NAME" >> pkg++
 else
 	echo "#define bsdtar bsdtar" >> pkg++
+fi
+if $MAKE_DEB; then
+	echo "#define debian debian" >> pkg++
 fi
 cat "pkg++.in" >> "pkg++"
 gcc -E -x c -P "pkg++" >> "pkg++.tmp"
