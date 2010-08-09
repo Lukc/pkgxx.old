@@ -686,7 +686,22 @@ build_package() {
 		
 		cd $PKG
 		info "Build result:"
-		tar czvvf $TARGET *
+		tar cvvf ${TARGET%.$EXT} *
+		
+		case $PKGMK_COMPRESSION_MODE in
+			gz)
+				gzip -f ${TARGET%.$EXT}
+			;;
+			bz2)
+				bzip2 -f ${TARGET%.$EXT}
+			;;
+			xz)
+				xz -f ${TARGET%.$EXT}
+			;;
+			lzo)
+				lzop -Uf ${TARGET%.$EXT}
+			;;
+		esac
 		
 		if [[ $? = 0 ]]; then
 			BUILD_SUCCESSFUL="yes"
@@ -921,6 +936,7 @@ parse_options() {
 
 main() {
 	local FILE TARGET
+	export EXT=""
 	
 	parse_options "$@"
 	
@@ -1027,10 +1043,25 @@ main() {
 	
 	check_pkgfile
 	
+	case $PKGMK_COMPRESSION_MODE in
+	gz|bz2|xz|lzo)
+		EXT="$PKGMK_COMPRESSION_MODE"
+		;;
+	none);;
+	*)
+		error "Compression mode '$PKGMK_COMPRESSION_MODE' not supported"
+		exit 1
+		;;
+	esac
+	
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar.gz"
+		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar.gz"
+		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar"
+	fi
+	
+	if [[ -n "$EXT" ]]; then
+		TARGET="$TARGET.$EXT"
 	fi
 	
 	if [[ "$PKGMK_CLEAN" = "yes" ]]; then
@@ -1118,6 +1149,8 @@ PKGMK_SOURCE_DIR="$PWD"
 PKGMK_PACKAGE_DIR="$PWD"
 PKGMK_WORK_DIR="$PWD/work"
 
+PKGMK_COMPRESSION_MODE="gz"
+
 PKGMK_INSTALL="no"
 PKGMK_RECURSIVE="no"
 PKGMK_DOWNLOAD="no"
@@ -1148,7 +1181,7 @@ readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
 DOWNLOAD_TOOL="curl"
 #else // wget is the default download tool used.
 DOWNLOAD_TOOL="wget"
-#fi
+#endif
 
 main "$@"
 
