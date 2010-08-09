@@ -695,7 +695,15 @@ build_package() {
 		echo "Architecture: $PKGMK_ARCH" >> DEBIAN/control
 		echo "Maintainer: $maintainer" >> DEBIAN/control
 		echo "Description: $description" >> DEBIAN/control
-		echo "Depends: ${depends[@]}" >> DEBIAN/control
+		echo -n "Depends: " >> DEBIAN/control
+		for n in ${!depends[*]}; do
+			if [[ -n "${depends[$(($n+1))]}" ]]; then
+				echo -n "${depends[$n]},">> DEBIAN/control
+			else
+				echo -n "${depends[$n]}">> DEBIAN/control
+			fi
+		done
+		echo >> DEBIAN/control
 		echo "Homepage: $url" >> DEBIAN/control
 		echo >> DEBIAN/control
 		cd ..
