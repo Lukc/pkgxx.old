@@ -37,6 +37,8 @@ if [[ -n "$1" ]]; then
 	die "$1 doesn't exist or is not readable."
 	. $1
 	useless_type_return="`type -a build | tac | tail -n 1`"
+	description="`cat $1 | grep "\# Description:" | sed -e "s|\# Description:||"`"
+	description="`echo $description`"
 	packager="`cat $1 | grep "\# Packager:" | sed -e "s|\# Packager:||"`"
 	packager="`echo $packager`"
 	maintainer="`cat $1 | grep "\# Maintainer:" | sed -e "s|\# Maintainer:||"`"
@@ -45,6 +47,7 @@ if [[ -n "$1" ]]; then
 	url="`echo $url`"
 	depends="`cat $1 | grep "\# Depends on:" | sed -e "s|\# Depends on:||" | sed -e "s|,| |g"`"
 	depends="`echo $depends`"
+	echo "description=\"$description\""
 	echo "packager=\"$packager\""
 	echo "maintainer=\"$maintainer\""
 	echo "url=\"$url\""
