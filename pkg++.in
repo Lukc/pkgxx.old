@@ -685,8 +685,9 @@ build_package() {
 		compress_manpages
 		
 		cd $PKG
+		info "Build result:"
 		#if defined debian
-		// I don’t know how to have a footprint with .deb packages…
+		// I don’t know how to have a correct footprint with .deb packages…
 		info "Debian package construction."
 		mkdir DEBIAN
 		[[ -e DEBIAN/control ]] && rm DEBIAN/control
@@ -709,8 +710,12 @@ build_package() {
 		cd ..
 		dpkg-deb --build $PKG
 		mv pkg.deb $TARGET
+		dpkg -c $TARGET /* dpkg can show the content of a package. It’s
+				 * not a Crux valid footprint, so it is only
+				 * displayed after a successful build, and not
+				 * used for footprints. Using it for footprints
+				 * is in TODO. */
 		#else
-		info "Build result:"
 		tar cvvf ${TARGET%.$EXT} *
 		
 		case $PKGMK_COMPRESSION_MODE in
