@@ -688,12 +688,12 @@ build_package() {
 		info "Build result:"
 		#if defined debian
 		// I don’t know how to have a correct footprint with .deb packages…
-		info "Debian package construction."
+		// Maybe a day, It will use only dpkg footprints for the Debian version…
 		mkdir DEBIAN
 		[[ -e DEBIAN/control ]] && rm DEBIAN/control
 		echo "Package: $name" >> DEBIAN/control
 		echo "Version: $version" >> DEBIAN/control
-		if [[ "$arch" = "no-arch" ]] && [[ "$kernel" = "no-kernel" ]]; then
+		if [[ "$arch" = "no-arch" ]] || [[ "$kernel" = "no-kernel" ]]; then
 			echo "Architecture: all" >> DEBIAN/control
 		else
 			echo "Architecture: $PKGMK_ARCH" >> DEBIAN/control
