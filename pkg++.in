@@ -206,7 +206,7 @@ download_file() {
 			LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
 			
 			if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
-				DOWNLOAD_OPTS="-f -L"
+				DOWNLOAD_OPTS="-f -L --insecure"
 			elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
 				DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
 					--directory-prefix=$PKGMK_SOURCE_DIR \
