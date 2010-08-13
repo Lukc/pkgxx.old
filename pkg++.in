@@ -687,6 +687,10 @@ build_package() {
 		cd $PKG
 		info "Build result:"
 		#if defined debian
+		if [[ "$(cd $pkg ; find . | wc -l)" = 1 ]]; then
+			error "Building '$TARGET' failed."
+			exit 1
+		fi
 		// I don’t know how to have a correct footprint with .deb packages…
 		// Maybe a day, It will use only dpkg footprints for the Debian version…
 		mkdir DEBIAN
