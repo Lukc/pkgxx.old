@@ -1,0 +1,13 @@
+
+// vim: syntax=sh
+
+: ${prefix:="/usr"}
+: ${bindir:="/usr/bin"}
+: ${libdir:="/usr/lib"}
+: ${sharedir:="/usr/share"}
+#if defined crux
+: ${mandir:="/usr/man"}
+#else
+: ${mandir:="/usr/share/man"}
+#endif
+

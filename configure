@@ -300,7 +300,9 @@ pkgxx:
 	@[ -d \$(DESTDIR)\$(BINDIR) ] || mkdir -pv \$(DESTDIR)\$(BINDIR)
 	install -m0755 pkg++ \$(DESTDIR)\$(BINDIR)/pkg++
 	@[ -d \$(DESTDIR)\$(SHAREDIR)/pkg++/includes ] || mkdir -pv \$(DESTDIR)\$(SHAREDIR)/pkg++/includes
+	@[ -d \$(DESTDIR)\$(SHAREDIR)/pkg++/includes/defaults ] || mkdir -pv \$(DESTDIR)\$(SHAREDIR)/pkg++/defaults
 	install -m0644 includes/* \$(DESTDIR)\$(SHAREDIR)/pkg++/includes/
+	install -m0644 defaults/prefixes \$(DESTDIR)\$(SHAREDIR)/pkg++/defaults/prefixes
 
 update: build pkgxx man
 
@@ -312,6 +314,7 @@ clean:
 	rm -f pkg++.conf
 	rm -f pkg++.conf.5
 	rm -f Makefile
+	rm -f defaults/prefixes
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
@@ -344,6 +347,7 @@ if $MAKE_DEB; then
 fi
 cat "pkg++.in" >> "pkg++"
 gcc -E -x c -P "pkg++" >> "pkg++.tmp"
+gcc -E -x c -P "defaults/prefixes.in" >> "defaults/prefixes"
 echo "#!/usr/bin/env bash" > "pkg++"
 cat "pkg++.tmp" >> "pkg++"
 rm pkg++.tmp

@@ -1015,6 +1015,21 @@ main() {
 	PKGMK_SHA256SUM="`get_metafile sha256sum`"
 	PKGMK_NOSTRIP="`get_metafile nostrip`"
 	
+	for DIR in ${PKGMK_DEFAULTS_DIRS[@]}; do
+		/*
+		 * They could potencially have not been created.
+		 */
+		if [[ -d $DIR ]] && [[ -n $(ls $DIR/) ]]; then
+		/*
+		 * The quotes are here to avoid the C preprocessor to treat the
+		 * "/*" like a begin of comment.
+		 */
+			for FILE in $DIR"/"*; do
+				. $FILE
+			done
+		fi
+	done
+	
 	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
 		if [[ ! -f $FILE ]]; then
 			error "File '$FILE' not found."
@@ -1195,6 +1210,7 @@ readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
 PKGMK_CONFFILE="/etc/pkg++.conf"
+PKGMK_DEFAULTS_DIRS=(/usr/share/pkg++/defaults /etc/pkg++)
 PKGMK_INCLUDES_DIR="/usr/share/pkg++/includes"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
