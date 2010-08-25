@@ -724,7 +724,19 @@ build_package() {
 				 * used for footprints. Using it for footprints
 				 * is in TODO. */
 		#else
-		tar cvvf ${TARGET%.$EXT} *
+		#if defined gtar
+			tar cvvf ${TARGET%.$EXT} *
+		#else
+			bsdtar cf ${TARGET%.$EXT} *
+		/*
+		 * bsdtar cvvf doesn’t give enough informations about the 
+		 * saved files. So we create the archive and then we give to 
+		 * the user a files list.
+		 * Note: this list is different from the one given by GNU tar
+		 *       with cvv.
+		 */
+			bsdtar tvf ${TARGET%.$EXT}
+		#endif
 		
 		case $PKGMK_COMPRESSION_MODE in
 			gz)
