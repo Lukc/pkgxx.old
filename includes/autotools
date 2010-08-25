@@ -4,7 +4,8 @@
 # Need $name, $version, $release and $source
 # Can receive arguments from $configure_opts and $make_opts
 # $use_autogen can enable the ./autogen.sh command, which takes parameters from ${autogen_opts[@]}
-#
+# $use_configure can disable the ./configure command if set to anything other than "yes".
+# 
 
 case $version in
 	devel|dev|trunk)
@@ -21,13 +22,15 @@ case $use_autogen in
 	*)use_autogen=no;;
 esac
 
+: ${use_configure:=yes}
+
 if [[ "$separate_build_dir" = "yes" ]]; then
 	build(){
 	cd $dirname
 		mkdir __build__
 		cd __build__
 		[[ "$use_autogen" = "yes" ]] && ../autogen.sh ${autogen_opts[@]}
-		../configure --prefix=/usr ${configure_opts[@]}
+		[[ "$use_configure" = "yes" ]] && ../configure --prefix=/usr ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
 	}
@@ -35,7 +38,7 @@ else
 	build(){
 	cd $dirname
 		[[ "$use_autogen" = "yes" ]] && ./autogen.sh ${autogen_opts[@]}
-		./configure --prefix=/usr ${configure_opts[@]}
+		[[ "$use_configure" = "yes" ]] && ./configure --prefix=/usr ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
 	}
