@@ -67,6 +67,16 @@ print_help () {
 	echo "                          [/usr]"
 	echo "  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX"
 	echo "                          [PREFIX]"
+	echo 
+	echo "Optional Features:"
+	echo "  --without-curl             Disable cURL support."
+	echo "  --without-wget             Disable wget support. [UNRECOMMENDED]"
+	echo "  --with-dpkg                Disable pkgutils support and add dpkg support. [UNCOMPLETE]"
+	echo "  --with-bsdtar              Use bsdtar instead of GNU tar for compression/decompression."
+	echo "  --with-gtar                Use GNU tar instead of bsdtar for compression/decompression."
+	echo "  --without-gsed             Use non-GNU sed. Slower but usable on non-GNU userlands."
+	echo "  --without-gfind            Use non-GNU find. Slower but usable on non-GNU userlands."
+	echo 
 	echo "By default, \`make install' will install all the files in"
 	echo "\`/usr/bin', \`/usr/lib' etc.  You can specify"
 	echo "an installation prefix other than \`/usr' using \`--prefix',"
