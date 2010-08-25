@@ -21,3 +21,20 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, 
 USA.
 
+       Includes file
+    ===================
+
+Copyright (c) 2010 Luka Vandervelden
+
+All the include files are under a two clauses BSD licence.
+See the file BSD for the exact text of this licence.
+
+       Pkgfiles
+    ==============
+
+Copyright (c) 2010 Luka Vandervelden
+
+All the official recipes and Pkgfiles of pkg++ are under a 
+two clauses BSD licence.
+See the file BSD for the exact text of this licence.
+
