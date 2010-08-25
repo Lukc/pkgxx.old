@@ -271,50 +271,72 @@ configure() {
 }
 
 echo "Creation of \`Makefile'..."
+DIR () {
+	echo "@echo -e \"  \033[34mMKDIR\033[00m        \033[37m$1\033[00m\";[ -d \$(DESTDIR)/$1 ] || mkdir -p \$(DESTDIR)/$1"
+}
+INSTALL () {
+	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$2"
+}
+REMOVE () {
+	echo "@echo -e \"  \033[33mREMOVE\033[00m       \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1"
+}
+RULE () {
+	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
+}
+INSTALLING="@"
 cat > Makefile << EOF
 # Begin of Makefile
 
 DESTDIR = 
-BINDIR = $PREFIX/bin
+BINDIR = $EPREFIX/bin
 SHAREDIR = $PREFIX/share
 ETCDIR = /etc
 MANDIR = \$(SHAREDIR)/man
 
 PKGXX_VERSION=$VERSION
 
-build:
-	@echo "Build ready, now type make install."
+help:
+	@echo "The available rules for this Makefile are:"
+	`RULE "config   " "Install the configuration files of pkg++."`
+	`RULE "man      " "Install the manual pages of pkg++."`
+	`RULE "pkgxx    " "Install pkgxx, it's include files and the defaults file."`
+	`RULE "update   " "Make the man and pkgxx rules."`
+	`RULE "install  " "Nake the man, pkgxx and config rules."`
+	`RULE "clean    " "Remove configured files."`
 
 config:
-	@[ -d \$(DESTDIR)\$(ETCDIR) ] || mkdir -pv \$(DESTDIR)\$(ETCDIR)
-	install -m0644 pkg++.conf \$(DESTDIR)\$(ETCDIR)/pkg++.conf
+	`DIR \$\(ETCDIR\)`
+	`INSTALL 0644 pkg++.conf \$\(ETCDIR\)`
 
 man:
-	@[ -d \$(DESTDIR)\$(MANDIR) ] || mkdir -pv \$(DESTDIR)\$(MANDIR)
-	@[ -d \$(DESTDIR)\$(MANDIR)/man8 ] || mkdir -pv \$(DESTDIR)\$(MANDIR)/man8
-	@[ -d \$(DESTDIR)\$(MANDIR)/man5 ] || mkdir -pv \$(DESTDIR)\$(MANDIR)/man5
-	install -m0644 pkg++.8 \$(DESTDIR)\$(MANDIR)/man8/pkg++.8
-	install -m0644 pkg++.conf.5 \$(DESTDIR)\$(MANDIR)/man5/pkg++.conf.5
+	`DIR \$\(MANDIR\)`
+	`DIR \$\(MANDIR\)/man8`
+	`DIR \$\(MANDIR\)/man5`
+	`INSTALL 0644 pkg++.8 \$\(MANDIR\)/man8`
+	`INSTALL 0644 pkg++.conf.5 \$\(MANDIR\)/man5`
 
 pkgxx:
-	@[ -d \$(DESTDIR)\$(BINDIR) ] || mkdir -pv \$(DESTDIR)\$(BINDIR)
-	install -m0755 pkg++ \$(DESTDIR)\$(BINDIR)/pkg++
-	@[ -d \$(DESTDIR)\$(SHAREDIR)/pkg++/includes ] || mkdir -pv \$(DESTDIR)\$(SHAREDIR)/pkg++/includes
-	@[ -d \$(DESTDIR)\$(SHAREDIR)/pkg++/includes/defaults ] || mkdir -pv \$(DESTDIR)\$(SHAREDIR)/pkg++/defaults
-	install -m0644 includes/* \$(DESTDIR)\$(SHAREDIR)/pkg++/includes/
-	install -m0644 defaults/prefixes \$(DESTDIR)\$(SHAREDIR)/pkg++/defaults/prefixes
+	`DIR \$\(BINDIR\)`
+	`DIR \$\(SHAREDIR\)/pkg++/includes`
+	`DIR \$\(SHAREDIR\)/pkg++/defaults`
+	`INSTALL 0755 pkg++ \$\(BINDIR\)`
+	`for include in $(ls includes/); do
+		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++
+		echo -ne "\t"
+	done`
+	`INSTALL 0644 defaults/prefixes \$\(SHAREDIR\)/pkg++`
 
-update: build pkgxx man
+update: pkgxx man
 
-install: build pkgxx config man
+install: pkgxx config man
 
 clean:
-	rm -f pkg++
-	rm -f pkg++.8
-	rm -f pkg++.conf
-	rm -f pkg++.conf.5
-	rm -f Makefile
-	rm -f defaults/prefixes
+	`REMOVE pkg++`
+	`REMOVE pkg++.8`
+	`REMOVE pkg++.conf`
+	`REMOVE pkg++.conf.5`
+	`REMOVE Makefile`
+	`REMOVE defaults/prefixes`
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
