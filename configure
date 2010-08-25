@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-VERSION="0.7.3"
+REVISION="`git rev-list --all | wc -l`"
+VERSION="0.7.4-devel-$REVISION"
 
 arch () {
 	arch="$(uname -m)"
