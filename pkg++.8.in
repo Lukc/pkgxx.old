@@ -73,9 +73,6 @@ Keep temporary working directory.
 .B "\-cf, \-\-config\-file <file>"
 Use alternative configuration file (default is /etc/pkg++.conf).
 .TP
-.B "\-p, \-\-pkgfile <file>"
-Use alternative instructions file (default is Pkgfile).
-.TP
 .B "\-cp, \-\-check\-pkgfile"
 Only check if the Pkgfile is correct.
 .TP
