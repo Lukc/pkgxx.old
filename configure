@@ -403,8 +403,6 @@ pkgfiles:
 # End of file
 EOF
 
-echo "Configuration done."
-
 [[ -e pkg++ ]] && rm pkg++
 if $USE_CURL; then
 	echo "#define curl curl" >> pkg++
@@ -454,4 +452,6 @@ configure "pkg++"
 configure "pkg++.8"
 configure "pkg++.conf"
 configure "pkg++.conf.5"
+
+echo "Configuration done."
 
