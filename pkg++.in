@@ -405,9 +405,31 @@ make_sha256sum() {
 }
 
 make_footprint() {
+	#if defined fpm
+	/*
+	 * FIXME: Using three “grep” is not very clean. It should be possible
+	 *        to use a pattern instead.
+	 */
+	tar tvvJf $TARGET | \
+		sed "s|  *|	|g" | \
+		cut -d "	" -f 1,2,6 | \
+		grep -v "\.PKGINFO" | \
+		grep -v "\.FILELIST" | \
+		grep -v "\.CHANGELOG" | \
+		sed "s|\./\.CHANGELOG||" | \
+		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		sort -k 3
+	#else
+	/*
+	 * This is exactly the same thing, but pkginfo can do the work faster.
+	 * However, pkginfo is not available everywhere and for any type of 
+	 * package, so pkg++ must be able do to without it on any distribution
+	 * that doesn’t use the pkgutils.
+	 */
 	pkginfo --footprint $TARGET | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
+	#endif
 }
 
 check_md5sum() {
@@ -1384,7 +1406,7 @@ PKGMK_DOWNLOAD_ONLY="no"
 PKGMK_EXTRACT_ONLY="no"
 PKGMK_UP_TO_DATE="no"
 PKGMK_UPDATE_FOOTPRINT="no"
-#if defined debian || defined fpm
+#if defined debian
 PKGMK_IGNORE_FOOTPRINT="yes"
 #else
 PKGMK_IGNORE_FOOTPRINT="no"
