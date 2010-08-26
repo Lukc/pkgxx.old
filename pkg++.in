@@ -419,6 +419,19 @@ make_footprint() {
 		sed "s|\./\.CHANGELOG||" | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
+	#elif defined debian
+	/*
+	 * This is a very dirty method to remove the first line of dpkg’s 
+	 * output using “tail”.
+	 */
+	local footprint=`
+	dpkg -c $TARGET | \
+		sed "s|  *|\t|g" | \
+		cut -d "	" -f 1,2,6 | \
+		sed "s|\./||;s|	->	.*||" | \
+		sort -k 3`
+	local lines=`echo "$footprint" | wc -l`
+	echo "$footprint" | tail -n $(($lines-1))
 	#else
 	/*
 	 * This is exactly the same thing, but pkginfo can do the work faster.
@@ -1406,11 +1419,7 @@ PKGMK_DOWNLOAD_ONLY="no"
 PKGMK_EXTRACT_ONLY="no"
 PKGMK_UP_TO_DATE="no"
 PKGMK_UPDATE_FOOTPRINT="no"
-#if defined debian
-PKGMK_IGNORE_FOOTPRINT="yes"
-#else
 PKGMK_IGNORE_FOOTPRINT="no"
-#endif
 PKGMK_IGNORE_NEW="no"
 PKGMK_FORCE="no"
 PKGMK_KEEP_WORK="no"
