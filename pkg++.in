@@ -419,7 +419,7 @@ make_footprint() {
 		sed "s|\./\.CHANGELOG||" | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
-	#elif defined debian
+	#elif defined dpkg
 	/*
 	 * This is a very dirty method to remove the first line of dpkg’s 
 	 * output using “tail”.
@@ -816,7 +816,7 @@ build_package() {
 		
 		cd $PKG
 		info "Build result:"
-		#if defined debian
+		#if defined dpkg
 		if [[ "$(cd $pkg ; find . | wc -l)" = 1 ]]; then
 			error "Building '$TARGET' failed."
 			exit 1
@@ -938,7 +938,7 @@ install_package() {
 	
 	info "Installing '$TARGET'."
 	
-	#if defined debian
+	#if defined dpkg
 	COMMAND="dpkg -i $TARGET"
 	#elif defined fpm
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
@@ -1213,7 +1213,7 @@ main() {
 		. $FILE
 	done
 	
-	#if defined debian
+	#if defined dpkg
 	if [[ "$PKGMK_ARCH" = x86 ]]; then
 		PKGMK_ARCH="i386"
 	elif [[ "$PKGMK_ARCH" = x86_64 ]]; then
@@ -1284,7 +1284,7 @@ main() {
 	
 	check_pkgfile
 	
-	#if defined debian
+	#if defined dpkg
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.deb"
 	else

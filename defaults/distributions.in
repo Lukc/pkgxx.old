@@ -1,0 +1,42 @@
+
+distribution=@DISTRIBUTION@
+package_manager=@PACKAGE_MANAGER@
+kernel=@KERNEL@
+arch=@ARCH@
+
+#if defined pacmang2
+FPM=true
+#else
+FPM=false
+#endif
+
+#if defined dpkg
+DPKG=true
+#else
+DPKG=false
+#endif
+
+#if defined crux
+Crux=true
+#else
+Crux=false
+#endif
+
+#if defined debian
+Debian=true
+#else
+Debian=false
+#endif
+
+#if defined frugalware
+Frugalware=true
+#else
+Frugalware=false
+#endif
+
+#if defined freebsd
+FreeBSD=true
+#else
+FreeBSD=false
+#endif
+

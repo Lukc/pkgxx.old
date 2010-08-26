@@ -103,6 +103,8 @@ GTAR_NAME=
 MAKE_DEB=
 MAKE_FPM=
 
+DISTRIBUTION=
+
 for arg in $@; do
 	case $arg in
 		--help)
@@ -266,16 +268,13 @@ else
 	: ${MAKE_DEB:="false"}
 fi
 
-checking_for "Frugalware"
-if [[ -e /etc/frugalware-release ]]; then
+if checking_for_bin "pacman-g2"; then
 	: ${MAKE_FPM:="true"}
-	echo "yes"
 else
-	echo "no"
-	if [[ "$MAKE_FPM" = true ]]; then
-		echo "You will need pacman-g2 and maybe some other tools to use fpm packages." >&2
-	fi
 	: ${MAKE_FPM:="false"}
+	if [[ "$MAKE_FPM" = true ]]; then
+		echo "You will need pacman-g2 to install fpm packages." >&2
+	fi
 fi
 
 checking_for "arch"
@@ -286,12 +285,40 @@ checking_for "kernel"
 : ${KERNEL:="`kernel`"}
 echo "$KERNEL"
 
+checking_for "distribution"
+if grep -q CRUX /etc/issue; then
+	: ${DISTRIBUTION:="Crux"}
+elif [[ -e /etc/frugalware-release ]]; then
+	: ${DISTRIBUTION:="Frugalware"}
+	echo "Frugalware"
+elif $MAKE_DEB; then # We should find another way to know if we are on Debian…
+	: ${DISTRIBUTION:="Debian"}
+elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
+	: ${DISTRIBUTION:="FreeBSD"}
+else
+	: ${DISTRIBUTION:="Unknown"}
+	echo "Unknown"
+fi
+echo $DISTRIBUTION
+
+if $MAKE_FPM; then
+	PACKAGE_MANAGER="pacman-g2"
+elif $MAKE_DEB; then
+	PACKAGE_MANAGER="dpkg"
+else
+	PACKAGE_MANAGER="pkgutils"
+fi
+
 configure() {
 	sed -e "s|@ARCH@|$ARCH|" $1 > $1.tmp
 	mv $1.tmp $1
 	sed -e "s|@KERNEL@|$KERNEL|" $1 > $1.tmp
 	mv $1.tmp $1
 	sed -e "s|@VERSION@|$VERSION|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@DISTRIBUTION@|$DISTRIBUTION|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@PACKAGE_MANAGER@|$PACKAGE_MANAGER|" $1 > $1.tmp
 	mv $1.tmp $1
 }
 
@@ -308,7 +335,6 @@ REMOVE () {
 RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
 }
-INSTALLING="@"
 cat > Makefile << EOF
 # Begin of Makefile
 
@@ -344,12 +370,16 @@ pkgxx:
 	`DIR \$\(BINDIR\)`
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
+	`DIR \$\(ETCDIR\)/pkg++`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
 	`for include in $(ls includes/); do
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++
 		echo -ne "\t"
 	done`
-	`INSTALL 0644 defaults/prefixes \$\(SHAREDIR\)/pkg++`
+	@mv defaults/prefixes		prefixes
+	@mv defaults/distributions	distributions
+	`INSTALL 0644 prefixes		\$\(ETCDIR\)/pkg++`
+	`INSTALL 0644 distributions	\$\(ETCDIR\)/pkg++`
 
 update: pkgxx man
 
@@ -360,8 +390,9 @@ clean:
 	`REMOVE pkg++.8`
 	`REMOVE pkg++.conf`
 	`REMOVE pkg++.conf.5`
+	`REMOVE distributions`
+	`REMOVE prefixes`
 	`REMOVE Makefile`
-	`REMOVE defaults/prefixes`
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
@@ -389,15 +420,30 @@ if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
 else
 	echo "#define bsdtar bsdtar" >> pkg++
 fi
-if $MAKE_DEB; then
-	echo "#define debian debian" >> pkg++
-fi
 if $MAKE_FPM; then
 	echo "#define fpm fpm" >> pkg++
+	MAKE_DEB=false
 fi
+if $MAKE_DEB; then
+	echo "#define dpkg dpkg" >> pkg++
+fi
+case $DISTRIBUTION in
+	Debian)		echo "#define debian debian"		>> defaults/distributions ;;
+	Frugalware)	echo "#define frugalware frugalware"	>> defaults/distributions ;;
+	Crux)		echo "#define crux crux"		>> defaults/distributions ;;
+esac
+case $PACKAGE_MANAGER in
+	dpkg)		echo "#define dpkg dpkg"		>> defaults/distributions ;;
+	pacman-g2)	echo "#define pacmang2 pacmang2"	>> defaults/distributions ;;
+	pkgutils)	echo "#define pkgutils pkgutils"	>> defaults/distributions ;;
+esac
 cat "pkg++.in" >> "pkg++"
+cat "defaults/distributions.in" >> "defaults/distributions"
 gcc -E -x c -P "pkg++" >> "pkg++.tmp"
 gcc -E -x c -P "defaults/prefixes.in" >> "defaults/prefixes"
+gcc -E -x c -P "defaults/distributions" >> "defaults/distributions.tmp"
+configure "defaults/distributions.tmp"
+mv defaults/distributions.tmp defaults/distributions
 echo "#!/usr/bin/env bash" > "pkg++"
 cat "pkg++.tmp" >> "pkg++"
 rm pkg++.tmp
