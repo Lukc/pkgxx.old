@@ -1415,18 +1415,12 @@ PKGMK_IGNORE_NEW="no"
 PKGMK_FORCE="no"
 PKGMK_KEEP_WORK="no"
 PKGMK_UPDATE_MD5SUM="no"
-#if defined debian || defined fpm
 PKGMK_IGNORE_MD5SUM="yes"
-#else
 PKGMK_IGNORE_MD5SUM="no"
-#endif
 PKGMK_CHECK_MD5SUM="no"
 PKGMK_UPDATE_SHA256SUM="no"
-#if defined debian || defined fpm
 PKGMK_IGNORE_SHA256SUM="yes"
-#else
 PKGMK_IGNORE_SHA256SUM="no"
-#endif
 PKGMK_CHECK_SHA256SUM="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
