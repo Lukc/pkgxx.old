@@ -338,7 +338,11 @@ unpack_source() {
 	
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
-		if [[ "$KEEP_ARCHIVES" != "true" ]]; then
+		/*
+		 * $keep_archives can be set to true or yes in Pkgfiles. If so,
+		 * pkg++ doesn’t extract any archive nor uncompress any file.
+		 */
+		if ! [[ "$no_extraction" =~ ("true"|"yes") ]]; then
 			case $LOCAL_FILENAME in
 				#if defined gtar
 				*.tar.gz|*.tar.Z|*.tgz)
@@ -358,12 +362,10 @@ unpack_source() {
 				*)
 					COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
 			esac
-	
+			
 			echo "$COMMAND"
-	
+			
 			$COMMAND
-		else
-			info "KEEP_ARCHIVES set to true in the Pkgfile: no archive extraction."
 		fi
 		
 		if [[ $? != 0 ]]; then
