@@ -20,6 +20,12 @@ arch () {
 			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
 		;;
 	esac
+	if $MAKE_FPM; then
+		case ${arch} in
+			x86) arch=i686;;
+			x86_64) arch=amd64;;
+		esac
+	fi
 	echo ${arch}
 }
 
@@ -95,6 +101,7 @@ USE_BSDTAR=
 USE_GTAR=
 GTAR_NAME=
 MAKE_DEB=
+MAKE_FPM=
 
 for arg in $@; do
 	case $arg in
@@ -123,6 +130,9 @@ for arg in $@; do
 				dpkg|deb|debian)
 					MAKE_DEB=true
 				;;
+				fpm|frugalware)
+					MAKE_FPM=true
+				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -149,6 +159,9 @@ for arg in $@; do
 				;;
 				dpkg|deb|debian)
 					MAKE_DEB=false
+				;;
+				fpm|frugalware)
+					MAKE_FPM=false
 				;;
 				*)
 					echo "Unknown package $without."
@@ -251,6 +264,18 @@ else
 		echo "You will need dpkg to build Debian packages." >&2
 	fi
 	: ${MAKE_DEB:="false"}
+fi
+
+checking_for "Frugalware"
+if [[ -e /etc/frugalware-release ]]; then
+	: ${MAKE_FPM:="true"}
+	echo "yes"
+else
+	echo "no"
+	if [[ "$MAKE_FPM" = true ]]; then
+		echo "You will need pacman-g2 and maybe some other tools to use fpm packages." >&2
+	fi
+	: ${MAKE_FPM:="false"}
 fi
 
 checking_for "arch"
@@ -366,6 +391,9 @@ else
 fi
 if $MAKE_DEB; then
 	echo "#define debian debian" >> pkg++
+fi
+if $MAKE_FPM; then
+	echo "#define fpm fpm" >> pkg++
 fi
 cat "pkg++.in" >> "pkg++"
 gcc -E -x c -P "pkg++" >> "pkg++.tmp"
