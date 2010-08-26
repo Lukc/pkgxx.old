@@ -905,6 +905,12 @@ install_package() {
 	
 	#if defined debian
 	COMMAND="dpkg -i $TARGET"
+	#elif defined fpm
+	if [[ "$PKGMK_INSTALL" = "install" ]]; then
+		COMMAND="pacman-g2 -A $TARGET"
+	else
+		COMMAND="pacman-g2 -U $TARGET"
+	fi
 	#else
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
 		COMMAND="pkgadd $TARGET"
