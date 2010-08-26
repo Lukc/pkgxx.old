@@ -699,7 +699,11 @@ make_pacman_pkginfo() {
 	 * line per architecture.
 	 */
 	if has no-arch ${archs[@]}; then
-		
+		/*
+		 * FIXME: To correct later.
+		 * Note: any may work on Arch.
+		 */
+		echo "arch = $PKGMK_ARCH"
 	else
 		/*
 		 * We admit here that $PKGMK_ARCH has been adapted before and 
