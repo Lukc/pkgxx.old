@@ -23,7 +23,13 @@ arch () {
 	if $MAKE_FPM; then
 		case ${arch} in
 			x86) arch=i686;;
+		esac
+	fi
+	if $MAKE_DEB; then
+		case ${arch} in
+			x86) arch=i386;;
 			x86_64) arch=amd64;;
+			arm) arch=armel;;
 		esac
 	fi
 	echo ${arch}
