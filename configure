@@ -335,7 +335,7 @@ INSTALL () {
 	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$2"
 }
 REMOVE () {
-	echo "@echo -e \"  \033[33mREMOVE\033[00m       \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1"
+	echo "@echo -e \"  \033[33mREMOVE\033[00m       \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
 }
 RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
@@ -398,6 +398,8 @@ clean:
 	`REMOVE pkg++.conf`
 	`REMOVE pkg++.conf.5`
 	`REMOVE Makefile`
+	`REMOVE defaults/distributions`
+	`REMOVE defaults/prefixes`
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
