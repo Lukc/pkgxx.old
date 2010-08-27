@@ -296,7 +296,6 @@ if grep -q CRUX /etc/issue; then
 	: ${DISTRIBUTION:="Crux"}
 elif [[ -e /etc/frugalware-release ]]; then
 	: ${DISTRIBUTION:="Frugalware"}
-	echo "Frugalware"
 elif $MAKE_DEB; then # We should find another way to know if we are on Debian…
 	: ${DISTRIBUTION:="Debian"}
 elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
@@ -386,6 +385,8 @@ pkgxx:
 	@mv defaults/distributions	distributions
 	`INSTALL 0644 prefixes		\$\(ETCDIR\)/pkg++`
 	`INSTALL 0644 distributions	\$\(ETCDIR\)/pkg++`
+	@rm prefixes
+	@rm distributions
 
 update: pkgxx man
 
@@ -396,8 +397,6 @@ clean:
 	`REMOVE pkg++.8`
 	`REMOVE pkg++.conf`
 	`REMOVE pkg++.conf.5`
-	`REMOVE distributions`
-	`REMOVE prefixes`
 	`REMOVE Makefile`
 
 pkgfiles:
