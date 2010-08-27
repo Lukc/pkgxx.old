@@ -302,7 +302,6 @@ elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
 	: ${DISTRIBUTION:="FreeBSD"}
 else
 	: ${DISTRIBUTION:="Unknown"}
-	echo "Unknown"
 fi
 echo $DISTRIBUTION
 
