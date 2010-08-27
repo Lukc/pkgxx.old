@@ -873,6 +873,7 @@ build_package() {
 				tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
 			#else
 				bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+				bsdtar tvf ${TARGET%.$EXT}
 			#endif
 		#else
 			#if defined gtar
