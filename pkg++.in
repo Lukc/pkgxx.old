@@ -776,6 +776,46 @@ make_pacman_pkginfo() {
 }
 #endif
 
+#if defined rpm
+make_rpm_spec() {
+	: ${license:="Unknown"}
+	: ${buildroot:="$prefix"}
+	/* Using a lot of echos is not adapted, here. */
+	cat << EOF
+Summary:   $description
+Name:      $name
+Version:   $version
+Release:   $release
+License:   $license
+Packager:  $packager
+Group:     ${groups[@]}
+BuildRoot: $buildroot
+Requires:  ${depends[@]}
+
+%description
+EOF
+	echo "$description"
+	echo 
+	echo "%files"
+	cd $PKG
+	for file in `find . | \
+		sed "s|\.||"`
+	do
+		if [[ -d $file ]]; then
+			echo "%dir $file"
+		fi
+	done
+	for file in `find . | \
+		sed "s|\.||"`
+	do
+		if ! [[ -d $file ]]; then
+			echo "$file"
+		fi
+	done
+}
+
+#endif
+
 build_package() {
 	local BUILD_SUCCESSFUL="no"
 	
@@ -855,6 +895,14 @@ build_package() {
 				 * displayed after a successful build, and not
 				 * used for footprints. Using it for footprints
 				 * is in TODO. */
+		#elif defined rpm
+		make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
+		rpmbuild --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
+		mv /usr/src/rpm/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
+		(cd $PKG;find . | sed "s|\.||")
+		/*
+		 * We really should do it another way.
+		 */
 		#else
 			#if defined fpm
 			/*
@@ -943,6 +991,12 @@ install_package() {
 	
 	#if defined dpkg
 	COMMAND="dpkg -i $TARGET"
+	#elif defined rpm
+	if [[ "$PKGMK_INSTALL" = "install" ]]; then
+		COMMAND="rpm --nodeps -i $TARGET"
+	else
+		COMMAND="rpm --nodeps -F $TARGET"
+	fi
 	#elif defined fpm
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
 		COMMAND="pacman-g2 -A $TARGET"
@@ -1189,7 +1243,7 @@ main() {
 	PKGMK_SHA256SUM="`get_metafile sha256sum`"
 	PKGMK_NOSTRIP="`get_metafile nostrip`"
 	
-	#if defined fpm
+	#if defined fpm || defined rpm
 	export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	#endif
 	
@@ -1292,6 +1346,12 @@ main() {
 		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.deb"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.deb"
+	fi
+	#elif defined rpm
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.rpm"
+	else
+		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
 	fi
 	#elif defined fpm
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
@@ -1422,16 +1482,18 @@ PKGMK_DOWNLOAD_ONLY="no"
 PKGMK_EXTRACT_ONLY="no"
 PKGMK_UP_TO_DATE="no"
 PKGMK_UPDATE_FOOTPRINT="no"
+#if defined rpm
+PKGMK_IGNORE_FOOTPRINT="yes"
+#else
 PKGMK_IGNORE_FOOTPRINT="no"
+#endif
 PKGMK_IGNORE_NEW="no"
 PKGMK_FORCE="no"
 PKGMK_KEEP_WORK="no"
 PKGMK_UPDATE_MD5SUM="no"
-PKGMK_IGNORE_MD5SUM="yes"
 PKGMK_IGNORE_MD5SUM="no"
 PKGMK_CHECK_MD5SUM="no"
 PKGMK_UPDATE_SHA256SUM="no"
-PKGMK_IGNORE_SHA256SUM="yes"
 PKGMK_IGNORE_SHA256SUM="no"
 PKGMK_CHECK_SHA256SUM="no"
 PKGMK_NO_STRIP="no"

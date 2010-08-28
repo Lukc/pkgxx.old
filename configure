@@ -20,7 +20,7 @@ arch () {
 			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
 		;;
 	esac
-	if $MAKE_FPM; then
+	if $MAKE_FPM || $MAKE_RPM; then
 		case ${arch} in
 			x86) arch=i686;;
 		esac
@@ -108,6 +108,7 @@ USE_GTAR=
 GTAR_NAME=
 MAKE_DEB=
 MAKE_FPM=
+MAKE_RPM=
 
 DISTRIBUTION=
 
@@ -141,6 +142,9 @@ for arg in $@; do
 				fpm|frugalware)
 					MAKE_FPM=true
 				;;
+				rpm)
+					MAKE_RPM=true
+				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -170,6 +174,9 @@ for arg in $@; do
 				;;
 				fpm|frugalware)
 					MAKE_FPM=false
+				;;
+				rpm)
+					MAKE_RPM=false
 				;;
 				*)
 					echo "Unknown package $without."
@@ -274,6 +281,15 @@ else
 	: ${MAKE_DEB:="false"}
 fi
 
+if checking_for_bin "rpm"; then
+	: ${MAKE_RPM:="true"}
+else
+	if [[ "$MAKE_RPM" = true ]]; then
+		echo "You will need RPM to build RPM packages." >&2
+	fi
+	: ${MAKE_RPM:="false"}
+fi
+
 if checking_for_bin "pacman-g2"; then
 	: ${MAKE_FPM:="true"}
 else
@@ -296,6 +312,8 @@ if grep -q CRUX /etc/issue; then
 	: ${DISTRIBUTION:="Crux"}
 elif [[ -e /etc/frugalware-release ]]; then
 	: ${DISTRIBUTION:="Frugalware"}
+elif [[ -e /etc/mandriva-release ]]; then
+	: ${DISTRIBUTION:="Mandriva"}
 elif $MAKE_DEB; then # We should find another way to know if we are on Debian…
 	: ${DISTRIBUTION:="Debian"}
 elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
@@ -426,6 +444,11 @@ else
 fi
 if $MAKE_FPM; then
 	echo "#define fpm fpm" >> pkg++
+	MAKE_DEB=false
+	MAKE_RPM=false
+fi
+if $MAKE_RPM; then
+	echo "#define rpm rpm" >> pkg++
 	MAKE_DEB=false
 fi
 if $MAKE_DEB; then
