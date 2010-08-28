@@ -314,6 +314,8 @@ elif [[ -e /etc/frugalware-release ]]; then
 	: ${DISTRIBUTION:="Frugalware"}
 elif [[ -e /etc/mandriva-release ]]; then
 	: ${DISTRIBUTION:="Mandriva"}
+elif [[ -e /etc/arch-release ]]; then
+	: ${DISTRIBUTION:="Arch"}
 elif $MAKE_DEB; then # We should find another way to know if we are on Debian…
 	: ${DISTRIBUTION:="Debian"}
 elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
@@ -458,6 +460,9 @@ case $DISTRIBUTION in
 	Debian)		echo "#define debian debian"		>> defaults/distributions ;;
 	Frugalware)	echo "#define frugalware frugalware"	>> defaults/distributions ;;
 	Crux)		echo "#define crux crux"		>> defaults/distributions ;;
+	Mandriva)	echo "#define mandriva mandriva"	>> defaults/distributions ;;
+	Arch)		echo "#define arch arch"		>> defaults/distributions ;;
+	Slackware)	echo "#define slackware slackware"	>> defaults/distributions ;;
 esac
 case $PACKAGE_MANAGER in
 	dpkg)		echo "#define dpkg dpkg"		>> defaults/distributions ;;

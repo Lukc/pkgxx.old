@@ -40,3 +40,20 @@ FreeBSD=true
 FreeBSD=false
 #endif
 
+#if defined mandriva
+Mandriva=true
+#else
+Mandriva=false
+#endif
+
+#if defined arch
+Arch=true
+#else
+Arch=false
+#endif
+
+#if defined slackware
+Slackware=true
+#else
+Slackware=false
+#endif
