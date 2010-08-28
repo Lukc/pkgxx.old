@@ -1335,6 +1335,19 @@ main() {
 		exit $RETURN
 	fi
 	
+	#if defined rpm
+	check_command rpm
+	check_command rpmbuild
+	#elif defined dpkg
+	check_command dpkg
+	#endif
+	/*
+	 * We don’t need to check for pacman-g2, because it is not needed to 
+	 * build the package, like rpmbuild and dpkg are. However, the user
+	 * will get an error if using the option -i or -u and pacman-g2 is not
+	 * installed.
+	 */
+	
 	check_directory "$PKGMK_SOURCE_DIR"
 	check_directory "$PKGMK_PACKAGE_DIR"
 	check_directory "`dirname $PKGMK_WORK_DIR`"
