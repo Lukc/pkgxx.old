@@ -39,6 +39,7 @@ kernel () {
 	kernel="$(uname -s)"
 	case ${kernel} in
 		Linux|FreeBSD) ;;
+		CYGWIN*) kernel=Cygwin ;;
 		*)
 			echo "Nobody tested your kernel. Please, use --kernel=<your kernel> to set it manually. The default value would be $(uname -s)."
 			echo "The only known values are, for now, Linux and FreeBSD."
