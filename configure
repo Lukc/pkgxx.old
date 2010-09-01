@@ -110,6 +110,7 @@ GTAR_NAME=
 MAKE_DEB=
 MAKE_FPM=
 MAKE_RPM=
+MAKE_SLACK=
 
 DISTRIBUTION=
 
@@ -146,6 +147,9 @@ for arg in $@; do
 				rpm)
 					MAKE_RPM=true
 				;;
+				pkgtools|slackware)
+					MAKE_SLACK=true
+				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -178,6 +182,9 @@ for arg in $@; do
 				;;
 				rpm)
 					MAKE_RPM=false
+				;;
+				pkgtools|slackware)
+					MAKE_SLACK=false
 				;;
 				*)
 					echo "Unknown package $without."
@@ -273,6 +280,18 @@ else
 	echo "no"
 fi
 
+checking_for "pkgtools"
+if checking_for_bin "installpkg" &> /dev/null && checking_for_pin "removepkg" &> /dev/null; then
+	echo "yes"
+	: ${MAKE_SLACK:="true"}
+else
+	echo "no"
+	if [[ "$MAKE_SLACK" = true ]]; then
+		echo "You will need the pkgtools to install you packages." >&2
+	fi
+	: ${MAKE_SLACK:="false"}
+fi
+
 if checking_for_bin "dpkg"; then
 	: ${MAKE_DEB:="true"}
 else
@@ -317,6 +336,8 @@ elif [[ -e /etc/mandriva-release ]]; then
 	: ${DISTRIBUTION:="Mandriva"}
 elif [[ -e /etc/arch-release ]]; then
 	: ${DISTRIBUTION:="Arch"}
+elif $MAKE_SLACK; then
+	: ${DISTRIBUTION:="Slackware"}
 elif $MAKE_DEB; then # We should find another way to know if we are on Debian…
 	: ${DISTRIBUTION:="Debian"}
 elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
@@ -449,13 +470,19 @@ if $MAKE_FPM; then
 	echo "#define fpm fpm" >> pkg++
 	MAKE_DEB=false
 	MAKE_RPM=false
+	MAKE_SLACK=false
 fi
 if $MAKE_RPM; then
 	echo "#define rpm rpm" >> pkg++
 	MAKE_DEB=false
+	MAKE_SLACK=false
 fi
 if $MAKE_DEB; then
 	echo "#define dpkg dpkg" >> pkg++
+	MAKE_SLACK=false
+fi
+if $MAKE_SLACK; then
+	echo '#define pkgtools pkgtools' >> pkg++
 fi
 case $DISTRIBUTION in
 	Debian)		echo "#define debian debian"		>> defaults/distributions ;;
@@ -469,6 +496,7 @@ case $PACKAGE_MANAGER in
 	dpkg)		echo "#define dpkg dpkg"		>> defaults/distributions ;;
 	pacman-g2)	echo "#define pacmang2 pacmang2"	>> defaults/distributions ;;
 	pkgutils)	echo "#define pkgutils pkgutils"	>> defaults/distributions ;;
+	pkgtools)	echo "#define pkgtools pkgtools"	>> defaults/distributions ;;
 esac
 cat "pkg++.in" >> "pkg++"
 cat "defaults/distributions.in" >> "defaults/distributions"

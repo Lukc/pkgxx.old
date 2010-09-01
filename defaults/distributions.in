@@ -16,6 +16,18 @@ DPKG=true
 DPKG=false
 #endif
 
+#if defined rpm
+RPM=true
+#else
+RPM=false
+#endif
+
+#if defined pkgtools
+PKGTOOLS=true
+#else
+PKGTOOLS=false
+#endif
+
 #if defined crux
 Crux=true
 #else
