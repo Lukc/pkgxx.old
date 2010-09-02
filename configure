@@ -20,12 +20,12 @@ arch () {
 			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
 		;;
 	esac
-	if $MAKE_FPM || $MAKE_RPM; then
+	if [[ $PACKAGE_MANAGER =~ (pacman-g2|rpm) ]]; then
 		case ${arch} in
 			x86) arch=i686;;
 		esac
 	fi
-	if $MAKE_DEB; then
+	if [[ $PACKAGE_MANAGER = dpkg ]]; then
 		case ${arch} in
 			x86) arch=i386;;
 			x86_64) arch=amd64;;
@@ -47,6 +47,52 @@ kernel () {
 		;;
 	esac
 	echo ${kernel}
+}
+
+package_manager () {
+	pm=
+	if checking_for_bin "dpkg" &> /dev/null; then
+		: ${pm:=dpkg}
+	elif checking_for_bin "rpm" &> /dev/null; then
+		: ${pm:=rpm}
+	elif checking_for_bin "pacman-g2" &> /dev/null; then
+		: ${pm:=pacman-g2}
+	elif checking_for_bin "installpkg" &> /dev/null \
+		&& checking_for_bin "updatepkg" \
+		&& checking_for_bin "makepkg";
+	then
+		: ${pm:=pkgtools}
+	elif checking_for_bin "pkgadd" &> /dev/null \
+		&& checking_for_bin "pkginfo" &> /dev/null \
+		&& checking_for_bin "pkgrm" &> /dev/null;
+	then
+		: ${pm:=pkgutils}
+	else
+		: ${pm="Unknown"}
+	fi
+	echo ${pm}
+}
+
+distribution () {
+	if grep -q CRUX /etc/issue &>/dev/null; then
+		: ${DISTRIBUTION:="Crux"}
+	elif [[ -e /etc/frugalware-release ]]; then
+		: ${DISTRIBUTION:="Frugalware"}
+	elif [[ -e /etc/mandriva-release ]]; then
+		: ${DISTRIBUTION:="Mandriva"}
+	elif [[ -e /etc/arch-release ]]; then
+		: ${DISTRIBUTION:="Arch"}
+	elif [[ $PACKAGE_MANAGER = pkgtools ]]; then
+		: ${DISTRIBUTION:="Slackware"}
+	elif [[ $PACKAGE_MANAGER = dpkg ]] && checking_for_bin "apt-get" &> /dev/null;
+	then
+		: ${DISTRIBUTION:="Debian"}
+	elif [[ "$KERNEL" = FreeBSD ]]; then
+		: ${DISTRIBUTION:="FreeBSD"}
+	else
+		: ${DISTRIBUTION:="Unknown"}
+	fi
+	echo $DISTRIBUTION
 }
 
 checking_for () {
@@ -107,12 +153,6 @@ USE_GFIND=
 USE_BSDTAR=
 USE_GTAR=
 GTAR_NAME=
-MAKE_DEB=
-MAKE_FPM=
-MAKE_RPM=
-MAKE_SLACK=
-
-DISTRIBUTION=
 
 for arg in $@; do
 	case $arg in
@@ -138,18 +178,6 @@ for arg in $@; do
 				gfind|gnu-find)
 					USE_GFIND=true
 				;;
-				dpkg|deb|debian)
-					MAKE_DEB=true
-				;;
-				fpm|frugalware)
-					MAKE_FPM=true
-				;;
-				rpm)
-					MAKE_RPM=true
-				;;
-				pkgtools|slackware)
-					MAKE_SLACK=true
-				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -174,18 +202,6 @@ for arg in $@; do
 				gfind|gnu-find)
 					USE_GFIND=false
 				;;
-				dpkg|deb|debian)
-					MAKE_DEB=false
-				;;
-				fpm|frugalware)
-					MAKE_FPM=false
-				;;
-				rpm)
-					MAKE_RPM=false
-				;;
-				pkgtools|slackware)
-					MAKE_SLACK=false
-				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -195,8 +211,20 @@ for arg in $@; do
 		--prefix=*)
 			PREFIX="`echo "$arg" | sed "s|--prefix=||"`"
 		;;
-		--exec--prefix=*)
+		--exec-prefix=*)
 			EPREFIX="`echo "$arg" | sed "s|--exec-prefix=||"`"
+		;;
+		--package-manager=*)
+			PACKAGE_MANAGER="`echo "$arg" | sed "s|--package-manager=||"`"
+		;;
+		--arch=*)
+			ARCHITECTURE="`echo "$arg" | sed "s|--arch=||"`"
+		;;
+		--kernel=*)
+			KERNEL="`echo "$arg" | sed "s|--kernel=||"`"
+		;;
+		--distribution=*)
+			DISTRIBUTION="`echo "$arg" | sed "s|--distribution=||"`"
 		;;
 		*)
 			echo "Unknown parameter: $arg."
@@ -204,6 +232,11 @@ for arg in $@; do
 		;;
 	esac
 done
+
+: ${PACKAGE_MANAGER:=`package_manager`}
+: ${KERNEL:=`kernel`}
+: ${ARCHITECTURE:=`arch`}
+: ${DISTRIBUTION:=`distribution`}
 
 if ! checking_for_bin gcc; then
 	echo "GCC is needed to configure and install pkg++, but not to use it."
@@ -283,80 +316,55 @@ fi
 checking_for "pkgtools"
 if checking_for_bin "installpkg" &> /dev/null && checking_for_pin "removepkg" &> /dev/null; then
 	echo "yes"
-	: ${MAKE_SLACK:="true"}
+	: ${PACKAGE_MANAGER:=pkgtools}
 else
 	echo "no"
-	if [[ "$MAKE_SLACK" = true ]]; then
+	if [[ $PACKAGE_MANAGER = pkgtools ]]; then
 		echo "You will need the pkgtools to install you packages." >&2
 	fi
-	: ${MAKE_SLACK:="false"}
 fi
 
 if checking_for_bin "dpkg"; then
-	: ${MAKE_DEB:="true"}
+	: ${PACKAGE_MANAGER:=dpkg}
 else
-	if [[ "$MAKE_DEB" = true ]]; then
+	if [[ $PACKAGE_MANAGER = dpkg ]]; then
 		echo "You will need dpkg to build Debian packages." >&2
 	fi
-	: ${MAKE_DEB:="false"}
 fi
 
 if checking_for_bin "rpm"; then
-	: ${MAKE_RPM:="true"}
+	: ${PACKAGE_MANAGER:=rpm}
 else
-	if [[ "$MAKE_RPM" = true ]]; then
-		echo "You will need RPM to build RPM packages." >&2
+	if [[ $PACKAGE_MANAGER = rpm ]]; then
+		echo "You will need RPM to build and install RPM packages." >&2
 	fi
-	: ${MAKE_RPM:="false"}
 fi
 
 if checking_for_bin "pacman-g2"; then
-	: ${MAKE_FPM:="true"}
+	: ${PACKAGE_MANAGER:=pacman-g2}
 else
-	: ${MAKE_FPM:="false"}
-	if [[ "$MAKE_FPM" = true ]]; then
+	if [[ $PACKAGE_MANAGER = pacman-g2 ]]; then
 		echo "You will need pacman-g2 to install fpm packages." >&2
 	fi
 fi
 
-checking_for "arch"
-: ${ARCH:="`arch`"}
-echo "$ARCH"
-
-checking_for "kernel"
-: ${KERNEL:="`kernel`"}
-echo "$KERNEL"
-
-checking_for "distribution"
-if grep -q CRUX /etc/issue &>/dev/null; then
-	: ${DISTRIBUTION:="Crux"}
-elif [[ -e /etc/frugalware-release ]]; then
-	: ${DISTRIBUTION:="Frugalware"}
-elif [[ -e /etc/mandriva-release ]]; then
-	: ${DISTRIBUTION:="Mandriva"}
-elif [[ -e /etc/arch-release ]]; then
-	: ${DISTRIBUTION:="Arch"}
-elif $MAKE_SLACK; then
-	: ${DISTRIBUTION:="Slackware"}
-elif $MAKE_DEB; then # We should find another way to know if we are on Debian…
-	: ${DISTRIBUTION:="Debian"}
-elif [[ "$KERNEL" = FreeBSD ]]; then # … or on FreeBSD.
-	: ${DISTRIBUTION:="FreeBSD"}
-else
-	: ${DISTRIBUTION:="Unknown"}
+if ! [[ $PACKAGE_MANAGER =~ (dpkg|rpm|pkgtools|pkgutils|pacman-g2) ]]; then
+	cat << EOF >&2
+Your package manager is not known. If you want pkg++ to be built for a 
+particular package manager, use the --package-manager=<your-package-manager> 
+flag to the configure script.
+EOF
+	exit 1
 fi
-echo $DISTRIBUTION
 
-if $MAKE_FPM; then
-	PACKAGE_MANAGER="pacman-g2"
-elif $MAKE_DEB; then
-	PACKAGE_MANAGER="dpkg"
-else
-	PACKAGE_MANAGER="pkgutils"
-fi
+echo "Summary:"
+echo "  Architecture:           $ARCHITECTURE"
+echo "  Kernel:                 $KERNEL"
+echo "  Distribution:           $DISTRIBUTION"
+echo "  Package manager:        $PACKAGE_MANAGER"
 
 configure() {
-	sed -e "s|@ARCH@|$ARCH|" $1 > $1.tmp
+	sed -e "s|@ARCH@|$ARCHITECTURE|" $1 > $1.tmp
 	mv $1.tmp $1
 	sed -e "s|@KERNEL@|$KERNEL|" $1 > $1.tmp
 	mv $1.tmp $1
@@ -466,24 +474,7 @@ if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
 else
 	echo "#define bsdtar bsdtar" >> pkg++
 fi
-if $MAKE_FPM; then
-	echo "#define fpm fpm" >> pkg++
-	MAKE_DEB=false
-	MAKE_RPM=false
-	MAKE_SLACK=false
-fi
-if $MAKE_RPM; then
-	echo "#define rpm rpm" >> pkg++
-	MAKE_DEB=false
-	MAKE_SLACK=false
-fi
-if $MAKE_DEB; then
-	echo "#define dpkg dpkg" >> pkg++
-	MAKE_SLACK=false
-fi
-if $MAKE_SLACK; then
-	echo '#define pkgtools pkgtools' >> pkg++
-fi
+
 case $DISTRIBUTION in
 	Debian)		echo "#define debian debian"		>> defaults/distributions ;;
 	Frugalware)	echo "#define frugalware frugalware"	>> defaults/distributions ;;
@@ -492,11 +483,28 @@ case $DISTRIBUTION in
 	Arch)		echo "#define arch arch"		>> defaults/distributions ;;
 	Slackware)	echo "#define slackware slackware"	>> defaults/distributions ;;
 esac
+
 case $PACKAGE_MANAGER in
-	dpkg)		echo "#define dpkg dpkg"		>> defaults/distributions ;;
-	pacman-g2)	echo "#define pacmang2 pacmang2"	>> defaults/distributions ;;
-	pkgutils)	echo "#define pkgutils pkgutils"	>> defaults/distributions ;;
-	pkgtools)	echo "#define pkgtools pkgtools"	>> defaults/distributions ;;
+	dpkg)
+		echo "#define dpkg dpkg"		>> defaults/distributions
+		echo "#define dpkg dpkg"		>> pkg++
+	;;
+	pacman-g2)
+		echo "#define pacmang2 pacmang2"	>> defaults/distributions
+		echo "#define fpm fpm"			>> pkg++
+	;;
+	pkgutils)
+		echo "#define pkgutils pkgutils"	>> defaults/distributions
+		echo "#define pkgutils pkgutils"	>> pkg++
+	;;
+	pkgtools)
+		echo "#define pkgtools pkgtools"	>> defaults/distributions
+		echo '#define pkgtools pkgtools'	>> pkg++
+	;;
+	rpm)
+		echo "#define rpm rpm"			>> defaults/distributions
+		echo "#define rpm rpm"			>> pkg++
+	;;
 esac
 cat "pkg++.in" >> "pkg++"
 cat "defaults/distributions.in" >> "defaults/distributions"
