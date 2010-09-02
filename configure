@@ -328,7 +328,7 @@ checking_for "kernel"
 echo "$KERNEL"
 
 checking_for "distribution"
-if grep -q CRUX /etc/issue; then
+if grep -q CRUX /etc/issue &>/dev/null; then
 	: ${DISTRIBUTION:="Crux"}
 elif [[ -e /etc/frugalware-release ]]; then
 	: ${DISTRIBUTION:="Frugalware"}
