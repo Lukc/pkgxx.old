@@ -947,8 +947,8 @@ build_package() {
 				 * is in TODO. */
 		#elif defined rpm
 		make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
-		rpmbuild --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
-		mv /usr/src/rpm/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
+		rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
+		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
 		rpm -qvlp $TARGET
 		#elif defined pkgtools
 		mkdir $PKG/install
