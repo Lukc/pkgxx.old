@@ -1,10 +1,13 @@
 
 // vim: syntax=sh
 
+: ${sysconfdir:="/etc"}
+: ${localstatedir:="/var"}
 : ${prefix:="/usr"}
 : ${bindir:="/usr/bin"}
 : ${libdir:="/usr/lib"}
 : ${sharedir:="/usr/share"}
+: ${datadir:="/usr/share"}
 #if defined crux
 : ${mandir:="/usr/man"}
 #else
