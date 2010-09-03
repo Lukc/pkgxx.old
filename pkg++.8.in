@@ -113,7 +113,7 @@ Used by pkg++ to download versionned source code.
 .B "coreutils"
 Used by pkg++ to make md5 and sha256 checksums, file copies, file moves, and a lot of text or files operations.
 .SH SEE ALSO
-pkg++.conf(5), pkgadd(8), pkgrm(8), pkginfo(8), rejmerge(8), wget(1)
+pkg++.conf(5), pkgfile(5), pkgadd(8), pkgrm(8), pkginfo(8), rejmerge(8), wget(1)
 .SH COPYRIGHT
 pkg++ is based on pkgmk. All the modifications are Copyright (c) 2010 Vandervelden Luka and are under the same License.
 pkgmk (pkgutils) is Copyright (c) 2000-2005 Per Liden and Copyright (c) 2006-2007 CRUX team (http://crux.nu).

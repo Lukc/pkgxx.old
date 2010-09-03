@@ -419,6 +419,7 @@ man:
 	`DIR \$\(MANDIR\)/man5`
 	`INSTALL 0644 pkg++.8 \$\(MANDIR\)/man8`
 	`INSTALL 0644 pkg++.conf.5 \$\(MANDIR\)/man5`
+	`INSTALL 0644 pkgfile.5 \$\(MANDIR\)/man5`
 
 pkgxx:
 	`DIR \$\(BINDIR\)`
@@ -523,6 +524,7 @@ configure "pkg++"
 configure "pkg++.8"
 configure "pkg++.conf"
 configure "pkg++.conf.5"
+configure "pkgfile.5"
 
 echo "Configuration done."
 

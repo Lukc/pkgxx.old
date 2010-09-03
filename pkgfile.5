@@ -1,0 +1,73 @@
+.TH Pkgfile 5 "" "pkg++ 0.7.4-devel-201" ""
+.SH NAME
+\fBPkgfile\fP \- Recipe for pkg++.
+.SH DESCRIPTION
+A \fBPkgfile\fP is the recipe that contains build instructions for pkg++(8).
+.SH FILE FORMAT
+The file is a shell script sourced by pkg++.
+It contains variables that give some informations about the package and instructions to build the package.
+.SH VARIABLES
+.TP
+\fBname=STRING\fP
+Set the name of the package.
+.br
+Default: none
+.br
+This option is needed in any Pkgfile.
+.TP
+\fBversion=STRING\fP
+Set the version of the packaged software.
+.br
+Default: none
+.br
+This option is needed in any Pkgfile.
+.TP
+\fBrelease=INTEGER\fP
+Set the version of the recipe itself.
+.br
+Default: none
+.br
+This option is needed in any Pkgfile.
+.TP
+\fBsource=('URL' 'FILE' 'REPOSITORY')\fP
+Set the sources of the packaged software.
+The sources are usually fetched on the (S)FTP or (S)HTTP protocols.
+A file can also by included here, with `foo' or `file://foo'.
+You can also fetch the latest sources from a git, subversion or mercurial repository.
+You juste need to use the form `scm:url'.
+An example for that is `git:git://git.wmfs.info/wmfs.git'.
+.br
+This option is needed in any Pkgfile, but can be empty.
+.TP
+\fBpackager=STRING\fP
+Set the packager, the writer of the recipe.
+.br
+This option can be needed to create some packages, but has no influence for Crux and deb packages creation.
+.TP
+\fBmaintainer=STRING\fP
+Set the maintainer of the package and the recipe.
+.br
+This option can be needed to create some packages, but has no influence for Crux packages creation.
+.TP
+\fBdescription=STRING\fP
+Set the description of the packaged software.
+.br
+This option can be needed to create some packages, but has no influence for Crux packages creation.
+.TP
+\fBurl=STRING\fP
+Set the URL of the homepage of the packaged software.
+.br
+This option can be needed to create some packages, but has no influence for Crux packages creation.
+.TP
+\fBdepends=(STRING STRING)\fP
+Set the dependencies of the packages.
+.br
+This option can be needed to create some packages, but has no influence for Crux packages creation.
+.TP
+.SH SEE ALSO
+pkg++.conf(5), pkg++(8)
+.SH COPYRIGHT
+pkg++ is based on pkgmk. All the modifications are Copyright (c) 2010 Vandervelden Luka and are under the same License.
+pkgmk (pkgutils) is Copyright (c) 2000-2005 Per Liden and Copyright (c) 2006-2008 CRUX team (http://crux.nu).
+pkgmk (pkgutils) is licensed through the GNU General Public License.
+Read the COPYING file for the complete license.
