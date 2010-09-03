@@ -16,7 +16,7 @@ esac
 
 build() {
 cd $dirname
-	python setup.py build ${build_opts[@]} install --root=$PKG --prefix=/usr ${install_opts[@]}
+	python setup.py build ${build_opts[@]} install --root=$PKG --prefix=$prefix ${install_opts[@]}
 }
 
 

@@ -8,7 +8,7 @@ source=()
 
 build() {
 	mkdir $PKG
-	mkdir -p $PKG/etc
+	mkdir -p $PKG$sysconfdir
 }
 
 

@@ -14,7 +14,7 @@ version=devel
 build()
 {
 cd $name
-	./autogen.sh --prefix=/usr ${autogen_opts[@]}
+	./autogen.sh --prefix=$prefix ${autogen_opts[@]}
 	pkgmake ${make_opts[@]}
 	pkgmake ${make_opts[@]} install DESTDIR=$PKG
 }
