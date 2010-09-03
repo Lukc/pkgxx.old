@@ -10,10 +10,12 @@
 #+ compilés pour un processeur et avec des optimisations connus, afin de
 #+ pouvoir les partager.
 
-export CFLAGS="-O2 -march=i686 -pipe"
+export CFLAGS="-O2 -march=@MARCH@ -pipe"
 export CXXFLAGS="$CFLAGS"
 
 export MAKE_OPTS="-j2"
+
+export USE=(nls)
 
 # PKGMK_SOURCE_MIRRORS=()
 PKGMK_SOURCE_DIR="/srv/sources"
