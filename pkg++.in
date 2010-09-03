@@ -35,6 +35,22 @@ has() {
 	return 1
 }
 
+pkgmake() {
+	make $MAKE_OPTS $@
+}
+
+use() {
+	local return=1
+	for flag in ${USE[@]}; do
+		if [[ "$flag" = "$1" ]] || [[ "$flag" = "+$1" ]]; then
+			return=0
+		elif [[ "$flag" = "-$1" ]]; then
+			return=1
+		fi
+	done
+	return $return
+}
+
 get_protocol() {
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
 	echo $PROTOCOL
@@ -1272,21 +1288,6 @@ main() {
 	export EXT=""
 	
 	parse_options "$@"
-	
-	pkgmake() {
-		make $MAKE_OPTS $@
-	}
-	
-	use() {
-		for flag in ${USE[@]}; do
-			if [[ "$flag" = "$1" ]] || [[ "$flag" = "+$1" ]]; then
-				return 0
-			elif [[ "$flag" = "-$1" ]]; then
-				return 1
-			fi
-		done
-		return 1
-	}
 	
 	if [[ "$PKGMK_LIST_INCLUDES" = "yes" ]]; then
 		list_includes
