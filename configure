@@ -153,6 +153,7 @@ USE_GFIND=
 USE_BSDTAR=
 USE_GTAR=
 GTAR_NAME=
+GMAKE_PATH=
 
 for arg in $@; do
 	case $arg in
@@ -313,6 +314,30 @@ else
 	echo "no"
 fi
 
+checking_for "GNU Make"
+CONTINUE=true
+for i in `echo "$PATH" | sed "s|:| |g"`; do
+	if [[ -x $i/make ]]; then
+		if $i/make --version 2> /dev/null | grep -q "GNU Make"; then
+			GMAKE_PATH="$i/make"
+		fi
+	elif [[ -x $i/gmake ]]; then
+		if $i/gmake --version 2> /dev/null | grep -q "GNU Make"; then
+			GMAKE_PATH="$i/gmake"
+		fi
+	fi
+done
+if [[ -n "$GMAKE_PATH" ]]; then
+	echo "yes"
+else
+	echo "no"
+	echo "You need GNU Make to build most packages." >&2
+	echo "pkg++ can not be built if GNU Make is not present.." >&2
+	echo "If GNU Make is installed but not found, try to add it's path in \$PATH. The 
+\$PATH variable just need to be temporary adapted." >&2
+	exit 1
+fi
+
 checking_for "pkgtools"
 if checking_for_bin "installpkg" &> /dev/null && checking_for_pin "removepkg" &> /dev/null; then
 	echo "yes"
@@ -381,6 +406,8 @@ configure() {
 	sed -e "s|@PACKAGE_MANAGER@|$PACKAGE_MANAGER|" $1 > $1.tmp
 	mv $1.tmp $1
 	sed -e "s|@MARCH@|$CC_MARCH|" $1 > $1.tmp
+	mv $1.tmp $1
+	sed -e "s|@GMAKE@|$GMAKE_PATH|" $1 > $1.tmp
 	mv $1.tmp $1
 }
 

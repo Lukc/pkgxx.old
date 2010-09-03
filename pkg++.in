@@ -36,7 +36,7 @@ has() {
 }
 
 pkgmake() {
-	make $MAKE_OPTS $@
+	@GMAKE@ $MAKE_OPTS $@
 }
 
 use() {
