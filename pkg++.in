@@ -847,10 +847,12 @@ License:   $license
 Packager:  $packager
 Group:     ${groups[@]}
 BuildRoot: $buildroot
-Requires:  ${depends[@]}
-
-%description
 EOF
+	if [[ -n "${depends[@]}" ]]; then
+		echo "Requires:  ${depends[@]}"
+	fi
+	echo 
+	echo "%description"
 	echo "$description"
 	echo 
 	echo "%files"
