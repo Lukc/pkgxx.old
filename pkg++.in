@@ -1416,6 +1416,9 @@ main() {
 	check_directory "$PKGMK_SOURCE_DIR"
 	check_directory "$PKGMK_PACKAGE_DIR"
 	check_directory "`dirname $PKGMK_WORK_DIR`"
+	#if defined rpm
+	check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$arch"
+	#endif
 	
 	check_pkgfile
 	
