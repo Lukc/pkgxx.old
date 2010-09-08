@@ -862,12 +862,7 @@ EOF
 	do
 		if [[ -d $file ]]; then
 			echo "%dir $file"
-		fi
-	done
-	for file in `find . | \
-		sed "s|\.||"`
-	do
-		if ! [[ -d $file ]]; then
+		else
 			echo "$file"
 		fi
 	done
