@@ -64,8 +64,8 @@ make_footprint() {
 	#elif defined rpm
 	rpm -qvlp $TARGET | \
 		sed "s|  *|\t|g" | \
-		cut -d "	" -f 1,3,4,9 | \
-		sed "s|	|/|;s|	|/|;s|/|	|" | \
+		cut -d "	" -f 1,3,4,9,10,11 | \
+		sed "s|/||;s|	|/|;s|	|/|;s|/|	|;s|	->	| -> |" | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#else
