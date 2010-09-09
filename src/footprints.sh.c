@@ -18,7 +18,7 @@ make_footprint() {
 	#else
 	bsdtar tvJf $TARGET | \
 		sed "s|  *|	|g" | \
-		cut -d "	" -f 1,3,4,9 | \
+		cut -d "	" -f 1,3,4,9,10,11 | \
 		sed "s|	|/|;s|	|/|;s|/|	|" | \
 		grep -v "\.PKGINFO" | \
 		grep -v "\.FILELIST" | \
@@ -40,7 +40,7 @@ make_footprint() {
 	#else
 	bsdtar tvvJf $TARGET | \
 		sed "s|  *|	|g" | \
-		cut -d "	" -f 1,3,4,9 | \
+		cut -d "	" -f 1,3,4,9,10,11 | \
 		sed "s| |/|;s|  |/|;s|/|	|" | \
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
@@ -56,8 +56,8 @@ make_footprint() {
 	local footprint=`
 	dpkg -c $TARGET | \
 		sed "s|  *|\t|g" | \
-		cut -d "	" -f 1,2,6 | \
-		sed "s|\./||;s|	->	.*||" | \
+		cut -d "	" -f 1,2,6,7,8 | \
+		sed "s|\./||" | \
 		sort -k 3`
 	local lines=`echo "$footprint" | wc -l`
 	echo "$footprint" | tail -n $(($lines-1))
