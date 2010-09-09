@@ -141,7 +141,6 @@ print_help () {
 	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
 	echo "  --mandir=DIR               man documentation [SHAREDIR/man]"
 	echo "  --sysconfdir=DIR           read-only single-machine data [/etc]"
-	echo "  "
 	echo 
 	echo "System Informations:"
 	echo "  --package-manager=         Choose the package manager to use behind pkg++."
