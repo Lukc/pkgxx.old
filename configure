@@ -114,7 +114,7 @@ checking_for_bin () {
 print_help () {
 	echo "\`configure' configures pkg++ $VERSION to adapt to many kinds of systems."
 	echo 
-	echo "Usage: ./configure [OPTION]... [VAR=VALUE]..."
+	echo "Usage: ./configure [OPTION]..."
 	echo 
 	echo "Defaults for the options are specified in brackets."
 	echo 
@@ -137,6 +137,18 @@ print_help () {
 	echo "  --without-gsed             Use non-GNU sed. Slower but usable on non-GNU userlands."
 	echo "  --without-gfind            Use non-GNU find. Slower but usable on non-GNU userlands."
 	echo 
+	echo "Fine tuning of the installation directories:"
+	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
+	echo "  --mandir=DIR               man documentation [SHAREDIR/man]"
+	echo "  --sysconfdir=DIR           read-only single-machine data [/etc]"
+	echo "  "
+	echo 
+	echo "System Informations:"
+	echo "  --package-manager=         Choose the package manager to use behind pkg++."
+	echo "  --distribution=            Set the distribution's name."
+	echo "  --arch=                    Set the architecture's name."
+	echo "  --kernel=                  Set the kernel's name."
+	echo 
 	echo "By default, \`make install' will install all the files in"
 	echo "\`/usr/bin', \`/usr/lib' etc.  You can specify"
 	echo "an installation prefix other than \`/usr' using \`--prefix',"
@@ -154,8 +166,12 @@ GMAKE_PATH=
 
 for arg in $@; do
 	case $arg in
-		--help)
+		-h|--help)
 			print_help
+			exit 0
+		;;
+		-V|--version)
+			echo "pkg++ $VERSION"
 			exit 0
 		;;
 		--with-*)
