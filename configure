@@ -518,6 +518,7 @@ clean:
 	`REMOVE Makefile`
 	`REMOVE defaults/distributions`
 	`REMOVE defaults/prefixes`
+	`REMOVE src/config.sh.h`
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
@@ -527,23 +528,23 @@ pkgfiles:
 
 # End of file
 EOF
-
-[[ -e pkg++ ]] && rm pkg++
-if $USE_CURL; then
-	echo "#define curl curl" >> pkg++
-fi
-if $USE_GSED; then
-	echo "#define gsed gsed" >> pkg++
-fi
-if $USE_GFIND; then
-	echo "#define gfind gfind" >> pkg++
-fi
-if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
-	echo "#define gtar $GTAR_NAME" >> pkg++
-else
-	echo "#define bsdtar bsdtar" >> pkg++
-fi
-
+( cd src 
+	echo > config.sh.h
+	if $USE_CURL; then
+		echo "#define curl curl" >> config.sh.h
+	fi
+	if $USE_GSED; then
+		echo "#define gsed gsed" >> config.sh.h
+	fi
+	if $USE_GFIND; then
+		echo "#define gfind gfind" >> config.sh.h
+	fi
+	if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
+		echo "#define gtar $GTAR_NAME" >> config.sh.h
+	else
+		echo "#define bsdtar bsdtar" >> config.sh.h
+	fi
+)
 case $DISTRIBUTION in
 	Debian)		echo "#define debian debian"		>> defaults/distributions ;;
 	Frugalware)	echo "#define frugalware frugalware"	>> defaults/distributions ;;
@@ -556,28 +557,30 @@ esac
 case $PACKAGE_MANAGER in
 	dpkg)
 		echo "#define dpkg dpkg"		>> defaults/distributions
-		echo "#define dpkg dpkg"		>> pkg++
+		echo "#define dpkg dpkg"		>> src/config.sh.h
 	;;
 	pacman-g2)
 		echo "#define pacmang2 pacmang2"	>> defaults/distributions
-		echo "#define fpm fpm"			>> pkg++
+		echo "#define fpm fpm"			>> src/config.sh.h
 	;;
 	pkgutils)
 		echo "#define pkgutils pkgutils"	>> defaults/distributions
-		echo "#define pkgutils pkgutils"	>> pkg++
+		echo "#define pkgutils pkgutils"	>> src/config.sh.h
 	;;
 	pkgtools)
 		echo "#define pkgtools pkgtools"	>> defaults/distributions
-		echo '#define pkgtools pkgtools'	>> pkg++
+		echo '#define pkgtools pkgtools'	>> src/config.sh.h
 	;;
 	rpm)
 		echo "#define rpm rpm"			>> defaults/distributions
-		echo "#define rpm rpm"			>> pkg++
+		echo "#define rpm rpm"			>> src/config.sh.h
 	;;
 esac
-cat "pkg++.in" >> "pkg++"
+( cd src
+	gcc -E -x c -P "main.sh.c" >> "pkg++.tmp"
+	mv pkg++.tmp ../pkg++.tmp
+)
 cat "defaults/distributions.in" >> "defaults/distributions"
-gcc -E -x c -P "pkg++" >> "pkg++.tmp"
 gcc -E -x c -P "defaults/prefixes.in" >> "defaults/prefixes"
 gcc -E -x c -P "defaults/distributions" >> "defaults/distributions.tmp"
 configure "defaults/distributions.tmp"
