@@ -61,27 +61,27 @@ check_pkgfile() {
 
 check_directory() {
 	if [[ ! -d $1 ]]; then
-		error "Directory  does not exist."
+		error "Directory $1 does not exist."
 		exit $E_DIR_PERM
 	elif [[ ! -w $1 ]]; then
-		error "Directory  not writable."
+		error "Directory $1 not writable."
 		exit $E_DIR_PERM
 	elif [[ ! -x $1 ]] || [[ ! -r $1 ]]; then
-		error "Directory  not readable."
+		error "Directory $1 not readable."
 		exit $E_DIR_PERM
 	fi
 }
 
 check_file() {
 	if [[ -e $1 ]] && [[ ! -w $1 ]]; then
-		error "File  is not writable."
+		error "File $1 is not writable."
 		exit 1
 	fi
 }
 
 check_command() {
 	if [[ -z "`type -p $1`" ]]; then
-		error "Command  not found."
+		error "Command $1 not found."
 		exit $E_GENERAL
 	fi
 }
