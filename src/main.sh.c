@@ -17,8 +17,8 @@
 #include "manpages.sh.c"
 #include "work.sh.c"
 
-#if defined fpm
-#	include "pacman-g2.sh.c"
+#if defined pacman
+#	include "pacman.sh.c"
 #endif
 
 #if defined rpm
@@ -99,7 +99,7 @@ main() {
 	PKGMK_SHA256SUM="`get_metafile sha256sum`"
 	PKGMK_NOSTRIP="`get_metafile nostrip`"
 	
-	#if defined fpm || defined rpm
+	#if defined pacman || defined rpm
 	export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	#endif
 	
@@ -225,13 +225,17 @@ main() {
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
 	fi
-	#elif defined fpm
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.fpm"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.fpm"
-	fi
+	#elif defined pacman
+	#if defined pacmang2
 	EXT="fpm"
+	#else
+	EXT="pkg.tar.xz"
+	#endif
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.$EXT"
+	else
+		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.$EXT"
+	fi
 	#elif defined pkgtools
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
@@ -347,7 +351,7 @@ PKGMK_SOURCE_DIR="$PWD"
 PKGMK_PACKAGE_DIR="$PWD"
 PKGMK_WORK_DIR="$PWD/work"
 
-#if defined fpm
+#if defined pacman
 PKGMK_COMPRESSION_MODE="xz"
 #else
 PKGMK_COMPRESSION_MODE="gz"

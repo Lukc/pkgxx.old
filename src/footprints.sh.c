@@ -1,6 +1,6 @@
 
 make_footprint() {
-	#if defined fpm
+	#if defined pacman
 	/*
 	 * FIXME: Using three “grep” is not very clean. It should be possible
 	 *        to use a pattern instead.

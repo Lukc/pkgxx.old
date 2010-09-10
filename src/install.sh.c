@@ -12,12 +12,20 @@ install_package() {
 	else
 		COMMAND="rpm --nodeps -F $TARGET"
 	fi
-	#elif defined fpm
-	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		COMMAND="pacman-g2 -A $TARGET"
-	else
-		COMMAND="pacman-g2 -U $TARGET"
-	fi
+	#elif defined pacman
+		#if defined pacmang2
+		if [[ "$PKGMK_INSTALL" = "install" ]]; then
+			COMMAND="pacman-g2 -A $TARGET"
+		else
+			COMMAND="pacman-g2 -U $TARGET"
+		fi
+		#else
+		if [[ "$PKGMK_INSTALL" = "install" ]]; then
+			COMMAND="pacman -A $TARGET"
+		else
+			COMMAND="pacman -U $TARGET"
+		fi
+		#endif
 	#elif defined pkgtools
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
 		COMMAND="installpkg $TARGET"

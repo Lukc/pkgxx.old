@@ -4,10 +4,16 @@ package_manager=@PACKAGE_MANAGER@
 kernel=@KERNEL@
 arch=@ARCH@
 
-#if defined pacmang2
-FPM=true
+#if defined pacman
+PACMAN=true
 #else
-FPM=false
+PACMAN=false
+#endif
+
+#if defined pacmang2
+PACMAN_G2=true
+#else
+PACMAN_G2=false
 #endif
 
 #if defined dpkg
@@ -38,6 +44,12 @@ Crux=false
 Debian=true
 #else
 Debian=false
+#endif
+
+#if defined arch
+Arch=true
+#else
+Arch=false
 #endif
 
 #if defined frugalware

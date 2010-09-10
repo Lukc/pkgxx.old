@@ -95,7 +95,7 @@ build_package() {
 			tar tvJf $TARGET
 		)
 		#else
-			#if defined fpm
+			#if defined pacman
 			/*
 			 * Frugalware’s packages are very close from Crux’s 
 			 * ones. The only difference is the presence of some 
@@ -144,7 +144,7 @@ build_package() {
 				lzop -Uf ${TARGET%.$EXT}
 			;;
 		esac
-		#if defined fpm
+		#if defined pacman
 		mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
 		#endif
 		#endif

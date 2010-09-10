@@ -57,6 +57,8 @@ package_manager () {
 		: ${pm:=rpm}
 	elif checking_for_bin "pacman-g2" &> /dev/null; then
 		: ${pm:=pacman-g2}
+	elif checking_for_bin "pacman" &> /dev/null; then
+		: ${pm:=pacman}
 	elif checking_for_bin "installpkg" &> /dev/null \
 		&& checking_for_bin "updatepkg" \
 		&& checking_for_bin "makepkg";
@@ -392,6 +394,13 @@ else
 	fi
 fi
 
+if checking_for_bin "pacman"; then
+	: ${PACKAGE_MANAGER:=pacman}
+else
+	if [[ $PACKAGE_MANAGER = pacman ]]; then
+		echo "You will need pacman to install your packages." >&2
+	fi
+fi
 if checking_for_bin "pacman-g2"; then
 	: ${PACKAGE_MANAGER:=pacman-g2}
 else
@@ -400,7 +409,7 @@ else
 	fi
 fi
 
-if ! [[ $PACKAGE_MANAGER =~ (dpkg|rpm|pkgtools|pkgutils|pacman-g2) ]]; then
+if ! [[ $PACKAGE_MANAGER =~ (dpkg|rpm|pkgtools|pkgutils|pacman(|-g2)) ]]; then
 	cat << EOF >&2
 Your package manager is not known. If you want pkg++ to be built for a 
 particular package manager, use the --package-manager=<your-package-manager> 
@@ -559,9 +568,15 @@ case $PACKAGE_MANAGER in
 		echo "#define dpkg dpkg"		>> defaults/distributions
 		echo "#define dpkg dpkg"		>> src/config.sh.h
 	;;
+	pacman)
+		echo "#define pacman pacman"		>> defaults/distributions
+		echo "#define pacman pacman"		>> src/config.sh.h
+	;;
 	pacman-g2)
+		echo "#define pacman pacman"		>> defaults/distributions
 		echo "#define pacmang2 pacmang2"	>> defaults/distributions
-		echo "#define fpm fpm"			>> src/config.sh.h
+		echo "#define pacman pacman"		>> src/config.sh.h
+		echo "#define pacmang2 pacmang2"	>> src/config.sh.h
 	;;
 	pkgutils)
 		echo "#define pkgutils pkgutils"	>> defaults/distributions
