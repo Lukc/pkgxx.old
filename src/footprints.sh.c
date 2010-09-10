@@ -38,10 +38,10 @@ make_footprint() {
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#else
-	bsdtar tvvJf $TARGET | \
+	bsdtar tvJf $TARGET | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
-		sed "s| |/|;s|  |/|;s|/|	|" | \
+		sed "s|	|/|;s|	|/|;s|/|	|" | \
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
 		grep -v "drwxr-xr-x	root/root	install/" | \
