@@ -80,12 +80,20 @@ build_package() {
 		#elif defined pkgtools
 		mkdir $PKG/install
 		make_slackspec > $PKG/install/slack-desc
-			#if defined gtar
-			tar cvvJf $TARGET *
-			#else
-			bsdtar cJf $TARGET *
-			bsdtar tvJf $TARGET
-			#endif
+		(
+			cd $PKG
+			/*
+			 * We create the package using makepkg. Doing this way
+			 * avoid some warnings. We redirect makepkg’s output to
+			 * /dev/null to skip it’s verbosity.
+			 */
+			makepkg -l y -c n $TARGET &> /dev/null
+			/*
+			 * As makepkg is redirected to /dev/null, we print the 
+			 * content of the package with tar.
+			 */
+			tar tvJf $TARGET
+		)
 		#else
 			#if defined fpm
 			/*

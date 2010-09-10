@@ -32,20 +32,24 @@ make_footprint() {
 	tar tvvJf $TARGET | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,2,6 | \
+		grep -v -e "\./$" | \
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
-		grep -v "drwxr-xr-x	root/root	install/" | \
-		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		grep -v "drwxr-xr-x	root/root	./install/" | \
+		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|\./||" | \
 		sort -k 3
 	#else
 	bsdtar tvJf $TARGET | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
 		sed "s|	|/|;s|	|/|;s|/|	|" | \
+		grep -v -e "\./$" | \
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
-		grep -v "drwxr-xr-x	root/root	install/" | \
-		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		grep -v "drwxr-xr-x	root/root	./install/" | \
+		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|\./||" | \
 		sort -k 3
 	#endif
 	#elif defined dpkg
