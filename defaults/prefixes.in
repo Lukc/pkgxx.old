@@ -8,7 +8,7 @@
 : ${libdir:="/usr/lib"}
 : ${sharedir:="/usr/share"}
 : ${datadir:="/usr/share"}
-#if defined crux
+#if defined crux || defined slackware
 : ${mandir:="/usr/man"}
 #else
 : ${mandir:="/usr/share/man"}
