@@ -494,9 +494,9 @@ man:
 	`DIR \$\(MANDIR\)`
 	`DIR \$\(MANDIR\)/man8`
 	`DIR \$\(MANDIR\)/man5`
-	`INSTALL 0644 pkg++.8 \$\(MANDIR\)/man8`
-	`INSTALL 0644 pkg++.conf.5 \$\(MANDIR\)/man5`
-	`INSTALL 0644 pkgfile.5 \$\(MANDIR\)/man5`
+	`INSTALL 0644 man/pkg++.8 \$\(MANDIR\)/man8`
+	`INSTALL 0644 man/pkg++.conf.5 \$\(MANDIR\)/man5`
+	`INSTALL 0644 man/pkgfile.5 \$\(MANDIR\)/man5`
 
 pkgxx:
 	`DIR \$\(BINDIR\)`
@@ -521,9 +521,10 @@ install: pkgxx config man
 
 clean:
 	`REMOVE pkg++`
-	`REMOVE pkg++.8`
 	`REMOVE pkg++.conf`
-	`REMOVE pkg++.conf.5`
+	`REMOVE man/pkg++.8`
+	`REMOVE man/pkg++.conf.5`
+	`REMOVE man/pkgfile.5`
 	`REMOVE Makefile`
 	`REMOVE defaults/distributions`
 	`REMOVE defaults/prefixes`
@@ -604,13 +605,14 @@ echo "#!/usr/bin/env bash" > "pkg++"
 cat "pkg++.tmp" >> "pkg++"
 rm pkg++.tmp
 cp "pkg++.conf.in" "pkg++.conf"
-cp "pkg++.8.in" "pkg++.8"
-cp "pkg++.conf.5.in" "pkg++.conf.5"
+cp man/{"pkg++.8.in","pkg++.8"}
+cp man/{"pkg++.conf.5.in","pkg++.conf.5"}
+cp man/{"pkgfile.5.in","pkgfile.5"}
+configure "man/pkg++.8"
+configure "man/pkg++.conf.5"
+configure "man/pkgfile.5"
 configure "pkg++"
-configure "pkg++.8"
 configure "pkg++.conf"
-configure "pkg++.conf.5"
-configure "pkgfile.5"
 
 echo "Configuration done."
 

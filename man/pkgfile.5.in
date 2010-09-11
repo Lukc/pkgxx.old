@@ -1,4 +1,4 @@
-.TH Pkgfile 5 "" "pkg++ 0.7.4-devel-201" ""
+.TH Pkgfile 5 "" "pkg++ @VERSION@" ""
 .SH NAME
 \fBPkgfile\fP \- Recipe for pkg++.
 .SH DESCRIPTION
