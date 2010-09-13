@@ -53,19 +53,29 @@ make_pacman_pkginfo() {
 	 * no-arch, in which case we write here all known architectures. One 
 	 * line per architecture.
 	 */
+	#if defined pacmang2
+	/*
+	 * We admit here that $PKGMK_ARCH has been adapted before and
+	 * is now conform to Frugalware’s standards.
+	 */
+	echo "arch = $PKGMK_ARCH"
+	#else
+	/*
+	 * If we use pacman and not pacman-g2, we can create a noarch package.
+	 */
 	if has no-arch ${archs[@]}; then
 		/*
-		 * FIXME: To correct later.
-		 * Note: any may work on Arch.
+		 * We use “any” to have a noarch package on Arch.
 		 */
-		echo "arch = $PKGMK_ARCH"
+		echo "arch = any"
 	else
 		/*
 		 * We admit here that $PKGMK_ARCH has been adapted before and 
-		 * is now conform to Frugalware’s standards.
+		 * is now conform to Arch’s standards.
 		 */
 		echo "arch = $PKGMK_ARCH"
 	fi
+	#endif
 	/*
 	 * It is possible to keep licence names in the package…
 	 */
