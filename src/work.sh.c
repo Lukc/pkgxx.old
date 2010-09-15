@@ -2,6 +2,7 @@
 make_work_dir() {
 	export PKG="$PKGMK_WORK_DIR/pkg"
 	export SRC="$PKGMK_WORK_DIR/src"
+	export WORK="$PKGMK_WORK_DIR"
 	umask 022
 	
 	cd $PKGMK_ROOT
