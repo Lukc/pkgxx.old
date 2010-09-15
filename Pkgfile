@@ -1,0 +1,37 @@
+description="Portable package builder."
+url=http://devel.upyum.com/cgit.cgi/pkgxx
+packager="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
+maintainer="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
+depends=(bash $package_manager)
+
+name=pkg++
+version=devel
+release=1
+source=(git:git://devel.upyum.com/pkgxx.git)
+
+case $distribution in
+	Mandriva|Fedora|SuSE) : ${package_manager:=rpm} ;;
+	Arch)		: ${package_manager:=pacman}	;;
+	Frugalware)	: ${package_manager:=pacman-g2}	;;
+	Debian)		: ${package_manager:=dpkg}	;;
+	Slackware)	: ${package_manager:=pkgtools}	;;
+	*)		: ${package_manager:=pkgutils}	;;
+esac
+
+if use gtar; then
+	configure_opts=(--with-gtar --without-bsdtar)
+else
+	configure_opts=(--without-gtar --with-bsdtar)
+fi
+if use wget || ! use curl; then
+	configure_opts=(--with-wget --without-curl)
+else
+	configure_opts=(--without-wget --with-curl)
+fi
+
+build(){
+	cd $name
+	./configure --package-manager=$package_manager \
+	            ${configure_opts[@]}
+	pkgmake DESTDIR=$PKG install
+}
