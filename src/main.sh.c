@@ -196,6 +196,8 @@ main() {
 	check_command rpmbuild
 	#elif defined dpkg
 	check_command dpkg
+	#elif defined pkgtools
+	check_command makepkg
 	#endif
 	/*
 	 * We don’t need to check for pacman-g2, because it is not needed to 
