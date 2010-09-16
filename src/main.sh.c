@@ -239,6 +239,9 @@ main() {
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.$EXT"
 	fi
 	#elif defined pkgtools
+	if has no-arch ${archs[@]}; then
+		PKGMK_ARCH=noarch
+	fi
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
 	else
