@@ -2,8 +2,6 @@
 install_package() {
 	local COMMAND
 	
-	info "Installing '$TARGET'."
-	
 	#if defined dpkg
 	COMMAND="dpkg -i $TARGET"
 	#elif defined rpm
@@ -39,6 +37,8 @@ install_package() {
 		COMMAND="pkgadd -u $TARGET"
 	fi
 	#endif
+	
+	info "Installing '$TARGET'."
 	
 	cd $PKGMK_ROOT
 	echo "$COMMAND"
