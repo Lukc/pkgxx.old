@@ -4,13 +4,16 @@
 : ${sysconfdir:="/etc"}
 : ${localstatedir:="/var"}
 : ${prefix:="/usr"}
-: ${bindir:="/usr/bin"}
-: ${libdir:="/usr/lib"}
-: ${sharedir:="/usr/share"}
-: ${datadir:="/usr/share"}
+: ${eprefix:="$prefix"}
+: ${bindir:="$eprefix/bin"}
+: ${libdir:="$prefix/lib"}
+: ${libexecdir:="$eprefix/libexec"}
+: ${sharedir:="$prefix/share"}
+: ${datadir:="$prefix/share"}
+: ${docdir:="$data/doc/$name-$version"}
 #if defined crux || defined slackware
-: ${mandir:="/usr/man"}
+: ${mandir:="$prefix/man"}
 #else
-: ${mandir:="/usr/share/man"}
+: ${mandir:="$sharedir/man"}
 #endif
 
