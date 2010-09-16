@@ -24,8 +24,7 @@ arch () {
 		case ${arch} in
 			x86) arch=i686;;
 		esac
-	fi
-	if [[ $PACKAGE_MANAGER = dpkg ]]; then
+	elif [[ $PACKAGE_MANAGER = dpkg ]]; then
 		case ${arch} in
 			x86) arch=i386;;
 			x86_64) arch=amd64;;
