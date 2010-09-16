@@ -36,5 +36,5 @@ build(){
 	cd $name
 	./configure --package-manager=$package_manager \
 	            ${configure_opts[@]}
-	pkgmake DESTDIR=$PKG install
+	pkgmake -B DESTDIR=$PKG install
 }
