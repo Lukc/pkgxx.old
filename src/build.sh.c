@@ -50,7 +50,7 @@ build_package() {
 		[[ -e DEBIAN/control ]] && rm DEBIAN/control
 		echo "Package: $name" >> DEBIAN/control
 		echo "Version: $version" >> DEBIAN/control
-		if [[ "$arch" = "no-arch" ]] || [[ "$kernel" = "no-kernel" ]]; then
+		if has no-arch ${archs[@]}; then
 			echo "Architecture: all" >> DEBIAN/control
 		else
 			echo "Architecture: $PKGMK_ARCH" >> DEBIAN/control
