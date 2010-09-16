@@ -7,6 +7,8 @@ depends=(bash $package_manager)
 name=pkg++
 version=devel
 release=1
+arch=(no-arch)
+kernel=(no-kernel)
 source=(git:git://devel.upyum.com/pkgxx.git)
 
 case $distribution in
@@ -15,6 +17,7 @@ case $distribution in
 	Frugalware)	: ${package_manager:=pacman-g2}	;;
 	Debian)		: ${package_manager:=dpkg}	;;
 	Slackware)	: ${package_manager:=pkgtools}	;;
+	"")						;;
 	*)		: ${package_manager:=pkgutils}	;;
 esac
 
