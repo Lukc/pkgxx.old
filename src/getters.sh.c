@@ -4,13 +4,25 @@ get_protocol() {
 	echo $PROTOCOL
 }
 get_filename() {
-	if [[ $1 =~ ^(http|https|ftp|file):\/\/.*/(.+) ]] || [[ $1 =~ (svn|git|hg|bzr):.*:\/\/.* ]]; then
-		NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
-		if [[ `get_protocol $1` =~ (svn|git|hg|bzr) ]]; then
-			echo "$PKGMK_SOURCE_DIR/$name"
-		else
-			echo "$NORMAL_RETURN"
-		fi
+	if
+		[[ $1 =~ ^(http|https|ftp):\/\/.*/(.+) ]] || \
+		[[ $1 =~ file:\/\/.* ]] || \
+		[[ $1 =~ (svn|git|hg|bzr):.*:\/\/.* ]]
+	then
+		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
+		local PROTOCOL="`get_protocol $1`"
+		case $PROTOCOL in
+			svn|git|hg|bzr)
+				echo "$PKGMK_SOURCE_DIR/$name"
+			;;
+			file)
+				echo -n "$PKGMK_SOURCE_DIR/"
+				echo "$1" | sed -e "s|file://||"
+			;;
+			*)
+				echo "$NORMAL_RETURN"
+			;;
+		esac
 	else
 		echo $1
 	fi
