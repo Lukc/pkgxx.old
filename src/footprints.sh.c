@@ -66,12 +66,23 @@ make_footprint() {
 	local lines=`echo "$footprint" | wc -l`
 	echo "$footprint" | tail -n $(($lines-1))
 	#elif defined rpm
-	rpm -qvlp $TARGET | \
+	local FILE
+	local IFS="
+"
+	for LINE in $(rpm -qvlp $TARGET | \
 		sed "s|  *|\t|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
 		sed "s|/||;s|	|/|;s|	|/|;s|/|	|;s|	->	| -> |" | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
-		sort -k 3
+		sort -k 3)
+	do
+		FILE="`echo "$LINE" | cut -d '	' -f 3`"
+		if [[ -d $PKG/$FILE ]]; then
+			echo "$LINE/"
+		else
+			echo "$LINE"
+		fi
+	done
 	#else
 	/*
 	 * This is exactly the same thing, but pkginfo can do the work faster.
