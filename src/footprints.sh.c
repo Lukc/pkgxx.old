@@ -57,12 +57,14 @@ make_footprint() {
 	 * This is a very dirty method to remove the first line of dpkg’s 
 	 * output using “tail”.
 	 */
-	local footprint=`
+	local footprint=$(
 	dpkg -c $TARGET | \
 		sed "s|  *|\t|g" | \
-		cut -d "	" -f 1,2,6,7,8 | \
-		sed "s|\./||" | \
-		sort -k 3`
+		cut -d "	" -f 1,2,6,7,8,9 | \
+		sed -e "s|\./||" \
+		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|	link	to	| -> |" | \
+		sort -k 3)
 	local lines=`echo "$footprint" | wc -l`
 	echo "$footprint" | tail -n $(($lines-1))
 	#elif defined rpm
