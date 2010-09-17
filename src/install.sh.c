@@ -18,11 +18,11 @@ install_package() {
 			COMMAND="pacman-g2 -U $TARGET"
 		fi
 		#else
-		if [[ "$PKGMK_INSTALL" = "install" ]]; then
-			COMMAND="pacman -A $TARGET"
-		else
-			COMMAND="pacman -U $TARGET"
-		fi
+		/*
+		 * The correct parameter for pacman is always -U, even if the
+		 * package has never been installed.
+		 */
+		COMMAND="pacman -U $TARGET"
 		#endif
 	#elif defined pkgtools
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
