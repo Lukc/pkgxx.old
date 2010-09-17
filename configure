@@ -274,7 +274,7 @@ fi
 
 checking_for "bash >= 4.1"
 BASH_VERSION=$(bash --version | head -n 1 | cut -d ' ' -f 4 | sed 's|(.*||')
-if	checking_for_bin bash &> /dev/null; then
+if checking_for_bin bash &> /dev/null; then
 	if	(( `echo $BASH_VERSION | cut -d . -f 1` >= 4 )) && \
 		(( `echo $BASH_VERSION | cut -d . -f 2` >= 1 ));
 	then
