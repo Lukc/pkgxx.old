@@ -34,10 +34,21 @@
 #include "opts.sh.c"
 
 recursive() {
+	/*
+	 * This function is used with the -r option to rebuild/install/update
+	 * all packages in the directory and all it’s subdirectories.
+	 */
 	local ARGS FILE DIR
 	
+	/*
+	 * Hey, we don’t want to make a recursive fail.
+	 */
 	ARGS=`echo "$@" | sed -e "s/--recursive//g" -e "s/-r//g"`
 	
+	/*
+	 * Now, for each directory that contains a Pkgfile, we move to it and
+	 * we launch pkg++ again, with it’s args.
+	 */
 	for FILE in `find $PKGMK_ROOT -name $PKGMK_PKGFILE_NAME | sort`; do
 		DIR="`dirname $FILE`/"
 		if [[ -d $DIR ]]; then
@@ -49,13 +60,23 @@ recursive() {
 }
 
 clean() {
+	/*
+	 * clean() removes the sources in $PKGMK_SOURCE_DIR and the package, if
+	 * it is in $PKGMK_PACKAGE_DIR.
+	 */
 	local FILE LOCAL_FILENAME
 	
+	/*
+	 * First we remove the package.
+	 */
 	if [[ -f $TARGET ]]; then
 		info "Removing $TARGET"
 		rm -f $TARGET
 	fi
 	
+	/*
+	 * And then we remove all the source files.
+	 */
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
 		if [[ -e $LOCAL_FILENAME ]] && [[ "$LOCAL_FILENAME" != "$FILE" ]]; then
@@ -66,6 +87,10 @@ clean() {
 }
 
 interrupted() {
+	/*
+	 * This function is called in case of interruption.
+	 * It cleans the work dir and ends pkg++.
+	 */
 	echo ""
 	error "Interrupted."
 	
@@ -77,21 +102,36 @@ interrupted() {
 }
 
 main() {
+	/*
+	 * Oh yeah, pkg++ begins here. \o/
+	 */
 	local FILE TARGET
 	export EXT=""
 	
+	/*
+	 * We parse the options.
+	 */
 	parse_options "$@"
 	
+	/*
+	 * If --list-includes or -li,  we just list the includes.
+	 */
 	if [[ "$PKGMK_LIST_INCLUDES" = "yes" ]]; then
 		list_includes
 		exit 0
 	fi
-		
+	
+	/*
+	 * Use pkg++ recursively with --recursive or -r.
+	 */
 	if [[ "$PKGMK_RECURSIVE" = "yes" ]]; then
 		recursive "$@"
 		exit 0
 	fi
 	
+	/*
+	 * Some very used file names.
+	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
 	PKGMK_FOOTPRINT="`get_metafile footprint`"
@@ -99,10 +139,20 @@ main() {
 	PKGMK_SHA256SUM="`get_metafile sha256sum`"
 	PKGMK_NOSTRIP="`get_metafile nostrip`"
 	
+	/*
+	 * We need to define a group, with pacman and rpm. If we don’t give 
+	 * them a group, they will attack us, kill baby cats and won’t make the
+	 * package.
+	 * Note: We don’t need to check if another group has been already 
+	 *       declared, because the Pkgfile is sourced later.
+	 */
 	#if defined pacman || defined rpm
 	export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	#endif
 	
+	/*
+	 * The defaults files. Each file in each dir is sourced.
+	 */
 	for DIR in ${PKGMK_DEFAULTS_DIRS[@]}; do
 		/*
 		 * They could potencially have not been created.
@@ -118,6 +168,12 @@ main() {
 		fi
 	done
 	
+	/*
+	 * Configuration file and Pkgfile are sourced.
+	 * Note: The configuration file is sourced twice, to allow users to 
+	 *       change configuration depending on the package. And probably
+	 *       for something else, but I don’t remember what.
+	 */
 	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
 		if [[ ! -f $FILE ]]; then
 			error "File '$FILE' not found."
@@ -126,6 +182,10 @@ main() {
 		. $FILE
 	done
 	
+	/*
+	 * TODO: Remove this useless thing. It should have been corrected at 
+	 *       the ./configure step.
+	 */
 	#if defined dpkg
 	if [[ "$PKGMK_ARCH" = x86 ]]; then
 		PKGMK_ARCH="i386"
@@ -134,12 +194,24 @@ main() {
 	fi
 	#endif
 	
+	/*
+	 * Bah, just in case the configuration is not usable.
+	 */
 	check_config
 	
+	/*
+	 * We source any file that has been included with ${includes[ ]}.
+	 */
 	for INCLUDE in ${includes[@]}; do
 		. $PKGMK_INCLUDES_DIR/$INCLUDE
 	done
 	
+	/*
+	 * If -cp or --check-pkgfile, we just check the quality of the recipe.
+	 * TODO: Put this in a function somewhere else.
+	 * TODO: Check for licenses.
+	 * TODO: (0.9/0.10) Check for long descriptions.
+	 */
 	if [[ "$PKGMK_CHECK_PKGFILE" = "yes" ]]; then
 		RETURN=0
 		if [[ ! "$description" ]]; then
@@ -174,6 +246,12 @@ main() {
 			error "Variable 'release' not specified in $PKGMK_PKGFILE."
 			RETURN=1
 		fi
+		/*
+		 * pre_build() and post_build() are not mandatory. They are 
+		 * only used to help packagers that want to use include files
+		 * but for who they are uncomplete.
+		 * build() however is mandatory.
+		 */
 		if [[ "`type -t pre_build`" != "function" ]]; then
 			info "Function 'pre_build' not specified in $PKGMK_PKGFILE."
 		fi
@@ -185,12 +263,20 @@ main() {
 			info "Function 'post_build' not specified in $PKGMK_PKGFILE."
 		fi
 		if [[ "`type -t check`" != "function" ]]; then
+			/*
+			 * check() should be given in recipes, to allow a user
+			 * to know if everything will work.
+			 */
 			warning "Function 'check' not specified in $PKGMK_PKGFILE."
 			RETURN=1
 		fi
 		exit $RETURN
 	fi
 	
+	/*
+	 * It is very important to check that the tools we will use are here, 
+	 * because we don’t want to be alone and miserably fail. 
+	 */
 	#if defined rpm
 	check_command rpm
 	check_command rpmbuild
@@ -200,21 +286,31 @@ main() {
 	check_command makepkg
 	#endif
 	/*
-	 * We don’t need to check for pacman-g2, because it is not needed to 
+	 * We don’t need to check for pacman{,-g2}, because it is not needed to
 	 * build the package, like rpmbuild and dpkg are. However, the user
-	 * will get an error if using the option -i or -u and pacman-g2 is not
-	 * installed.
+	 * will get an error if using the option -i or -u and pacman{,-g2} is 
+	 * not installed.
 	 */
 	
+	/*
+	 * It would be sad to try working on directories we don’t own.
+	 */
 	check_directory "$PKGMK_SOURCE_DIR"
 	check_directory "$PKGMK_PACKAGE_DIR"
 	check_directory "`dirname $PKGMK_WORK_DIR`"
 	#if defined rpm
+	/*
+	 * RPM is worse, it needs it’s own tree inside the package dir.
+	 */
 	check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$arch"
 	#endif
 	
 	check_pkgfile
 	
+	/*
+	 * Targets definitions, depending of package manager used.
+	 * Note: devel and standard versions always have different targets.
+	 */
 	#if defined dpkg
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.deb"
@@ -228,6 +324,9 @@ main() {
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
 	fi
 	#elif defined pacman
+	/*
+	 * The extension change between pacman and pacman-g2.
+	 */
 	#if defined pacmang2
 	EXT="fpm"
 	#else
@@ -248,6 +347,9 @@ main() {
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$PKGMK_ARCH-$release.txz"
 	fi
 	#else
+	/*
+	 * Pkgutils users will be able to choose their compression method.
+	 */
 	case $PKGMK_COMPRESSION_MODE in
 	gz|bz2|xz|lzo)
 		EXT="$PKGMK_COMPRESSION_MODE"
@@ -270,16 +372,25 @@ main() {
 	fi
 	#endif
 	
+	/*
+	 * If we just want to remove the already made package and the sources…
+	 */
 	if [[ "$PKGMK_CLEAN" = "yes" ]]; then
 		clean
 		exit 0
 	fi
 	
+	/*
+	 * … or if we just want to update the footprint…
+	 */
 	if [[ "$PKGMK_UPDATE_FOOTPRINT" = "yes" ]]; then
 		update_footprint
 		exit 0
 	fi
 	
+	/*
+	 * … or the md5sum…
+	 */
 	if [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
 		download_source
 		check_file "$PKGMK_MD5SUM"
@@ -287,21 +398,33 @@ main() {
 		info "Md5sum updated."
 	fi
 	
+	/*
+	 * … or the sha256sum.
+	 */
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]]; then
 		download_source
 		check_file "$PKGMK_SHA256SUM"
 		make_sha256sum > $PKGMK_SHA256SUM
 		info "Sha256sum updated."
 	fi
+	/*
+	 * And if we checked any control sum, then we exit.
+	 */
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]] || [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
 		exit 0
 	fi
 	
+	/*
+	 * For those who need to get sources. Maybe they will build later.
+	 */
 	if [[ "$PKGMK_DOWNLOAD_ONLY" = "yes" ]]; then
 		download_source
 		exit 0
 	fi
 	
+	/*
+	 * Uh… for those who need to only extract the sources ?
+	 */
 	if [[ "$PKGMK_EXTRACT_ONLY" = "yes" ]]; then
 		download_source
 		make_work_dir
@@ -310,6 +433,9 @@ main() {
 		exit 0
 	fi
 	
+	/*
+	 * Sometimes it is usefull to know what has still to be built.
+	 */
 	if [[ "$PKGMK_UP_TO_DATE" = "yes" ]]; then
 		if [[ "`build_needed`" = "yes" ]]; then
 			info "Package '$TARGET' is not up to date."
@@ -319,6 +445,10 @@ main() {
 		exit 0
 	fi
 	
+	/*
+	 * Basic users (n00bs) don’t need to rebuild a package that is
+	 * available in the package dir.
+	 */
 	if [[ "`build_needed`" = "no" ]] && [[ "$PKGMK_FORCE" = "no" ]] && [[ "$PKGMK_CHECK_MD5SUM" = "no" ]] && [[ "$version" != "devel" ]]; then
 		info "Package '$TARGET' is up to date."
 	else
@@ -326,21 +456,40 @@ main() {
 		build_package
 	fi
 	
+	/*
+	 * To install or not to install, that is the (last) question.
+	 */
 	if [[ "$PKGMK_INSTALL" != "no" ]]; then
 		install_package
 	fi
 	
+	/*
+	 * Must I really comment that ?
+	 */
 	exit 0
 }
 
+/*
+ * Interrupting pkg++ while building would be a very bad thing. trap redirects
+ * interruptions to interrupted().
+ */
 trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
 
+/*
+ * Don’t want to manage other locales.
+ */
 export LC_ALL=POSIX
 
+/*
+ * Some RO functions that will never be modified during the execution.
+ */
 readonly PKGMK_VERSION="@VERSION@"
 readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
+/*
+ * Default dirs and files names.
+ */
 PKGMK_CONFFILE="@SYSCONFDIR@/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(@SHAREDIR@/pkg++/defaults @SYSCONFDIR@/pkg++)
 PKGMK_INCLUDES_DIR="@SHAREDIR@/pkg++/includes"
@@ -359,9 +508,15 @@ PKGMK_WORK_DIR="$PWD/work"
 #if defined pacman
 PKGMK_COMPRESSION_MODE="xz"
 #else
+/*
+ * The other sucks enough to have a bad default value. :D
+ */
 PKGMK_COMPRESSION_MODE="gz"
 #endif
 
+/*
+ * Pkg++ can receive many instructions.
+ */
 PKGMK_INSTALL="no"
 PKGMK_RECURSIVE="no"
 PKGMK_DOWNLOAD="no"
@@ -390,7 +545,7 @@ PKGMK_KERNEL="@KERNEL@"
 readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
 #if defined curl
 DOWNLOAD_TOOL="curl"
-#else // wget is the default download tool used.
+#else /* wget is the default download tool used. */
 DOWNLOAD_TOOL="wget"
 #endif
 
