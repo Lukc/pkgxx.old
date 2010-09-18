@@ -1,5 +1,8 @@
 
 make_md5sum() {
+	/*
+	 * MD5 sucks, but is here for Crux’s compatibility.
+	 */
 	local FILE LOCAL_FILENAMES
 	
 	if [[ "$source" ]]; then
@@ -14,6 +17,9 @@ make_md5sum() {
 }
 
 make_sha256sum() {
+	/*
+	 * SHA256 is much better, but few ports already uses it.
+	 */
 	local FILE LOCAL_FILENAMES
 
 	if [[ "$source" ]]; then
@@ -28,6 +34,10 @@ make_sha256sum() {
 }
 
 check_md5sum() {
+	/*
+	 * We compare the new md5sums to the old ones. If there is a 
+	 * difference, then we print an error.
+	 */
 	local FILE="$PKGMK_WORK_DIR/.tmp"
 
 	cd $PKGMK_ROOT
@@ -80,6 +90,9 @@ check_md5sum() {
 }
 
 check_sha256sum() {
+	/*
+	 * Same thing, for SHA256.
+	 */
 	local FILE="$PKGMK_WORK_DIR/.tmp"
 
 	cd $PKGMK_ROOT
