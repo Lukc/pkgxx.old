@@ -1,11 +1,14 @@
 
 unpack_source() {
+	/*
+	 * unpack_source() unpacks any file in ${source[ ]}.
+	 */
 	local FILE LOCAL_FILENAME COMMAND
 	
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
 		/*
-		 * $keep_archives can be set to true or yes in Pkgfiles. If so,
+		 * $no_extraction can be set to true or yes in Pkgfiles. If so,
 		 * pkg++ doesn’t extract any archive nor uncompress any file.
 		 */
 		if ! [[ "$no_extraction" =~ ("true"|"yes") ]]; then
@@ -29,11 +32,17 @@ unpack_source() {
 					COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
 			esac
 			
+			/*
+			 * Just to inform the user.
+			 */
 			echo "$COMMAND"
 			
 			$COMMAND
 		fi
 		
+		/*
+		 * If we failed… we abord everything and remove the work dir.
+		 */
 		if [[ $? != 0 ]]; then
 			if [[ "$PKGMK_KEEP_WORK" = "no" ]]; then
 				rm -rf $PKGMK_WORK_DIR

@@ -1,4 +1,9 @@
 
+/*
+ * What to say ? The three functions are used to display informations. They can
+ * be redeclared in the config file.
+ */
+
 info() {
 	echo -e "\033[32m=======> $1\033[00m"
 }

@@ -1,9 +1,15 @@
 
 get_protocol() {
+	/*
+	 * It just returns what is before the first “:”.
+	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
 	echo $PROTOCOL
 }
 get_filename() {
+	/*
+	 * Returns the name of the file/directory, even in an URL.
+	 */
 	if
 		[[ $1 =~ ^(http|https|ftp):\/\/.*/(.+) ]] || \
 		[[ $1 =~ file:\/\/.* ]] || \
@@ -29,11 +35,17 @@ get_filename() {
 }
 
 get_basename() {
+	/*
+	 * Returns something. Probably the complete path of a file on a server.
+	 */
 	local FILE="`echo $1 | sed 's|^.*://.*/||g'`"
 	echo $FILE
 }
 
 get_pkgfile() {
+	/*
+	 * Returns the name of the Pkgfile.
+	 */
 	local PKGFILE=
 	if [[ -n "$PKGMK_PKGFILE" ]]; then
 		echo "$PKGMK_PKGFILE"
@@ -50,6 +62,9 @@ get_pkgfile() {
 }
 
 get_metafile() {
+	/*
+	 * Returns the name of any metafile.
+	 */
 	local VERSION="`basename "$PKGMK_PKGFILE" | sed -e "s|$PKGMK_PKGFILE_NAME-||"`"
 	local DIR="`dirname "$PKGMK_PKGFILE"`"
 	if [[ "$VERSION" = `basename $PKGMK_PKGFILE` ]]; then
