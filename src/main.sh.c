@@ -38,7 +38,7 @@ recursive() {
 	
 	ARGS=`echo "$@" | sed -e "s/--recursive//g" -e "s/-r//g"`
 	
-	for FILE in `find $PKGMK_ROOT -name $PKGMK_PKGFILE | sort`; do
+	for FILE in `find $PKGMK_ROOT -name $PKGMK_PKGFILE_NAME | sort`; do
 		DIR="`dirname $FILE`/"
 		if [[ -d $DIR ]]; then
 			info "Entering directory '$DIR'."
