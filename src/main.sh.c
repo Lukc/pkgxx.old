@@ -183,18 +183,6 @@ main() {
 	done
 	
 	/*
-	 * TODO: Remove this useless thing. It should have been corrected at 
-	 *       the ./configure step.
-	 */
-	#if defined dpkg
-	if [[ "$PKGMK_ARCH" = x86 ]]; then
-		PKGMK_ARCH="i386"
-	elif [[ "$PKGMK_ARCH" = x86_64 ]]; then
-		PKGMK_ARCH="amd64"
-	fi
-	#endif
-	
-	/*
 	 * Bah, just in case the configuration is not usable.
 	 */
 	check_config
