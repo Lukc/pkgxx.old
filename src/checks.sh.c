@@ -1,5 +1,9 @@
 
 check_arch(){
+	/*
+	 * Returns true if the package can be built on the actual architecture.
+	 * It uses $PKGMK_ARCH and ${archs[ ]}.
+	 */
 	if [[ "${archs[@]}" ]]; then
 		for ARCH in ${archs[@]}; do
 			case $ARCH in
@@ -16,6 +20,9 @@ check_arch(){
 }
 
 check_kernel(){
+	/*
+	 * Exactly the same thing than check_arch(), but for kernels.
+	 */
 	if [[ "${kernels[@]}" ]]; then
 		for KERNEL in ${kernels[@]}; do
 			case $KERNEL in
@@ -32,6 +39,9 @@ check_kernel(){
 }
 
 check_pkgfile() {
+	/*
+	 * We check if the recipe is valid and usable.
+	 */
 	if [[ ! "$name" ]]; then
 		error "Variable 'name' not specified in $PKGMK_PKGFILE."
 		exit $E_PKGFILE
@@ -60,6 +70,9 @@ check_pkgfile() {
 }
 
 check_directory() {
+	/*
+	 * Checks if the directory exists, is readable and writable.
+	 */
 	if [[ ! -d $1 ]]; then
 		error "Directory $1 does not exist."
 		exit $E_DIR_PERM
@@ -73,6 +86,10 @@ check_directory() {
 }
 
 check_file() {
+	/*
+	 * Checks if a file exists, and if it doesn’t exist, if it is possible
+	 * to create it.
+	 */
 	if [[ -e $1 ]] && [[ ! -w $1 ]]; then
 		error "File $1 is not writable."
 		exit 1
@@ -80,6 +97,9 @@ check_file() {
 }
 
 check_command() {
+	/*
+	 * Checks if a command is available.
+	 */
 	if [[ -z "`type -p $1`" ]]; then
 		error "Command $1 not found."
 		exit $E_GENERAL
@@ -87,6 +107,9 @@ check_command() {
 }
 
 check_config() {
+	/*
+	 * Checks the usability of the configuration.
+	 */
 	if ! has $DOWNLOAD_TOOL ${PKGMK_DOWNLOAD_TOOLS[@]}; then
 		error "$DOWNLOAD_TOOL is not a valid download tool. Please, edit your config file."
 		echo "Valid values are: ${PKGMK_DOWNLOAD_TOOLS[@]}."
