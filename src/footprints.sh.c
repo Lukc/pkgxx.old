@@ -13,6 +13,7 @@ make_footprint() {
 		grep -v "\.FILELIST" | \
 		grep -v "\.CHANGELOG" | \
 		sed -e "s|\./\.CHANGELOG||" \
+		    -e "s|	->	| -> |" \
 		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#else
@@ -24,6 +25,7 @@ make_footprint() {
 		grep -v "\.FILELIST" | \
 		grep -v "\.CHANGELOG" | \
 		sed -e "s|\./\.CHANGELOG||" \
+		    -e "s|	->	| -> |" \
 		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#endif
@@ -37,6 +39,7 @@ make_footprint() {
 		grep -v "doinst.sh" | \
 		grep -v "drwxr-xr-x	root/root	./install/" | \
 		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|	->	| -> |" \
 		    -e "s|\./||" | \
 		sort -k 3
 	#else
@@ -49,6 +52,7 @@ make_footprint() {
 		grep -v "doinst.sh" | \
 		grep -v "drwxr-xr-x	root/root	./install/" | \
 		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|	->	| -> |" \
 		    -e "s|\./||" | \
 		sort -k 3
 	#endif
