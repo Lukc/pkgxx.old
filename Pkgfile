@@ -1,5 +1,5 @@
 description="Portable package builder."
-url=http://devel.upyum.com/cgit.cgi/pkgxx
+url=http://devel.upyum.com/cgit.cgi/pkg++
 packager="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
 maintainer="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
 depends=(bash $package_manager)
