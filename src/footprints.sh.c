@@ -12,8 +12,8 @@ make_footprint() {
 		grep -v "\.PKGINFO" | \
 		grep -v "\.FILELIST" | \
 		grep -v "\.CHANGELOG" | \
-		sed "s|\./\.CHANGELOG||" | \
-		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		sed -e "s|\./\.CHANGELOG||" \
+		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#else
 	bsdtar tvJf $TARGET | \
@@ -23,8 +23,8 @@ make_footprint() {
 		grep -v "\.PKGINFO" | \
 		grep -v "\.FILELIST" | \
 		grep -v "\.CHANGELOG" | \
-		sed "s|\./\.CHANGELOG||" | \
-		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		sed -e "s|\./\.CHANGELOG||" \
+		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#endif
 	#elif defined pkgtools
@@ -74,8 +74,8 @@ make_footprint() {
 	for LINE in $(rpm -qvlp $TARGET | \
 		sed "s|  *|\t|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
-		sed "s|/||;s|	|/|;s|	|/|;s|/|	|;s|	->	| -> |" | \
-		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		sed -e "s|/||;s|	|/|;s|	|/|;s|/|	|;s|	->	| -> |" \
+		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3)
 	do
 		FILE="`echo "$LINE" | cut -d '	' -f 3`"
