@@ -125,7 +125,18 @@ check_config() {
  * TODO: (0.9/0.10) Check for long descriptions.
  */
 check_new_pkgfile () {
+	/*
+	 * $RETURN will store the error code returned by pkg++ at the end of 
+	 * the check.
+	 */
 	RETURN=0
+	/*
+	 * $description, $url, $packager, $maintainer and $depends are not 
+	 * really Crux-compliant™. However, it is very useful and important
+	 * for some package managers, such as dpkg, rpm, pacman or other. So we
+	 * print an error here, but pkg++ will run even if these variables are 
+	 * not declared in the Pkgfile.
+	 */
 	if [[ ! "$description" ]]; then
 		error "Variable 'description' not specified in $PKGMK_PKGFILE."
 		RETURN=1
