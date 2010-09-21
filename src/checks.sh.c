@@ -122,7 +122,6 @@ check_config() {
  * that were not included in Crux’s pkgmk.
  * It gives many informations about the recipe itself, and so is very usefull
  * for packagers.
- * TODO: Check for licenses.
  * TODO: (0.9/0.10) Check for long descriptions.
  */
 check_new_pkgfile () {
@@ -158,6 +157,15 @@ check_new_pkgfile () {
 	if [[ ! "$release" ]]; then
 		error "Variable 'release' not specified in $PKGMK_PKGFILE."
 		RETURN=1
+	fi
+	if [[ ! "$license" ]]; then
+		/*
+		 * License can be considered as only useful with unfree 
+		 * softwares or particulary restrictive licenses. As it is not
+		 * used by many package managers, we just print a warning and
+		 * don’t return any error code.
+		 */
+		warning "Variable 'license' not specified in $PKGMK_PKGFILE."
 	fi
 	/*
 	 * pre_build() and post_build() are not mandatory. They are 
