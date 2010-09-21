@@ -105,7 +105,7 @@ main() {
 	/*
 	 * Oh yeah, pkg++ begins here. \o/
 	 */
-	local FILE TARGET
+	local FILE TARGET ARCH
 	export EXT=""
 	
 	/*
@@ -236,6 +236,27 @@ main() {
 	check_pkgfile
 	
 	/*
+	 * No-arch packages must be of the form -noarch, instead of being of 
+	 * the form -x86 or whatever.
+	 * Note: pacman-g2 doesn’t support — for now — noarch packages, but 
+	 *       pacman does.
+	 * Note: If pacmang2 is defined, pacman is also defined. So we need to
+	 *       check for the two.
+	 */
+	#if ! defined pacmang2 && \
+	    defined pacman || \
+	    defined dpkg   || \
+	    defined rpm    || \
+	    defined pkgtools
+	if has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
+		ARCH=noarch
+	else
+		ARCH="$PKGMK_ARCH"
+	fi
+	#else
+	ARCH="$PKGMK_ARCH"
+	#endif
+	/*
 	 * Targets definitions, depending of package manager used.
 	 * Note: devel and standard versions always have different targets.
 	 */
@@ -247,9 +268,9 @@ main() {
 	fi
 	#elif defined rpm
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.rpm"
+		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.rpm"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
+		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.rpm"
 	fi
 	#elif defined pacman
 	/*
@@ -261,18 +282,15 @@ main() {
 	EXT="pkg.tar.xz"
 	#endif
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.$EXT"
+		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.$EXT"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.$EXT"
+		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.$EXT"
 	fi
 	#elif defined pkgtools
-	if has no-arch ${archs[@]}; then
-		PKGMK_ARCH=noarch
-	fi
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
+		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$ARCH-$release.txz"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$PKGMK_ARCH-$release.txz"
+		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$ARCH-$release.txz"
 	fi
 	#else
 	/*
