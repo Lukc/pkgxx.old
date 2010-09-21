@@ -262,9 +262,9 @@ main() {
 	 */
 	#if defined dpkg
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.deb"
+		TARGET="$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$ARCH.deb"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.deb"
+		TARGET="$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$ARCH.deb"
 	fi
 	#elif defined rpm
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
