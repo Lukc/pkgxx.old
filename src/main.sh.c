@@ -361,7 +361,7 @@ main() {
 	fi
 	
 	/*
-	 * For those who need to get sources. Maybe they will build later.
+	 * For those who need to only get sources. Maybe they will build later.
 	 */
 	if [[ "$PKGMK_DOWNLOAD_ONLY" = "yes" ]]; then
 		download_source
