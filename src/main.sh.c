@@ -196,69 +196,9 @@ main() {
 	
 	/*
 	 * If -cp or --check-pkgfile, we just check the quality of the recipe.
-	 * TODO: Put this in a function somewhere else.
-	 * TODO: Check for licenses.
-	 * TODO: (0.9/0.10) Check for long descriptions.
 	 */
 	if [[ "$PKGMK_CHECK_PKGFILE" = "yes" ]]; then
-		RETURN=0
-		if [[ ! "$description" ]]; then
-			error "Variable 'description' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$url" ]]; then
-			error "Variable 'url' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$packager" ]]; then
-			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$maintainer" ]]; then
-			error "Variable 'maintainer' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$depends" ]]; then
-			error "Variable 'depends' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$name" ]]; then
-			error "Variable 'name' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$version" ]]; then
-			error "Variable 'version' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ ! "$release" ]]; then
-			error "Variable 'release' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		/*
-		 * pre_build() and post_build() are not mandatory. They are 
-		 * only used to help packagers that want to use include files
-		 * but for who they are uncomplete.
-		 * build() however is mandatory.
-		 */
-		if [[ "`type -t pre_build`" != "function" ]]; then
-			info "Function 'pre_build' not specified in $PKGMK_PKGFILE."
-		fi
-		if [[ "`type -t build`" != "function" ]]; then
-			error "Function 'build' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		if [[ "`type -t post_build`" != "function" ]]; then
-			info "Function 'post_build' not specified in $PKGMK_PKGFILE."
-		fi
-		if [[ "`type -t check`" != "function" ]]; then
-			/*
-			 * check() should be given in recipes, to allow a user
-			 * to know if everything will work.
-			 */
-			warning "Function 'check' not specified in $PKGMK_PKGFILE."
-			RETURN=1
-		fi
-		exit $RETURN
+		check_new_pkgfile
 	fi
 	
 	/*
