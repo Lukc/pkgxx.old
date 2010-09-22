@@ -100,7 +100,11 @@ build_package() {
 		mkdir DEBIAN
 		[[ -e DEBIAN/control ]] && rm DEBIAN/control
 		echo "Package: $name" >> DEBIAN/control
-		echo "Version: $version" >> DEBIAN/control
+		if [[ "$version" =~ (devel|dev|trunk) ]]; then
+			echo "Version: 999.`date +%Y%m%d`" >> DEBIAN/control
+		else
+			echo "Version: $version" >> DEBIAN/control
+		fi
 		if has no-arch ${archs[@]}; then
 			echo "Architecture: all" >> DEBIAN/control
 		else
