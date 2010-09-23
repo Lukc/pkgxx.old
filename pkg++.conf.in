@@ -2,13 +2,11 @@
 # /etc/pkg++.conf: pkg++(8) configuration
 #
 
-# Pour l'optimisation, vous pouvez aller voir sur:
-# http://fr.gentoo-wiki.com/wiki/Cflags_sûr
-# Il est *fortement déconseillé* de changer son CHOST, ainsi que d'utiliser
-#+ -march=native. L'activer est peut-être bien sur un système de type Gentoo,
-#+ mais sur un système de type Crux, il est préférable d'avoir des paquets
-#+ compilés pour un processeur et avec des optimisations connus, afin de
-#+ pouvoir les partager.
+# For optimisation with CFLAGS, you can see 
+# http://en.gentoo-wiki.com/wiki/Safe_Cflags
+# It is *strongly recommended* to use a known -march= and not -march=native,
+# because your package will be optimised for an unknown processor, which would
+# be a problem to share them.
 
 export CFLAGS="-O2 -march=@MARCH@ -pipe"
 export CXXFLAGS="$CFLAGS"
