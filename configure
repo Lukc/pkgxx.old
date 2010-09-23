@@ -20,7 +20,7 @@ arch () {
 			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
 		;;
 	esac
-	if [[ $PACKAGE_MANAGER =~ (pacman-g2|rpm) ]]; then
+	if [[ $PACKAGE_MANAGER =~ (pacman|pacman-g2|rpm) ]]; then
 		case ${arch} in
 			x86) arch=i686;;
 		esac
