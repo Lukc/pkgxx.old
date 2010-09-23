@@ -29,6 +29,7 @@ PKGMK_WORK_DIR="/tmp/work-$name"
 # PKGMK_CURL_OPTS=""
 # PKGMK_COMPRESSION_MODE="gz"
 
+# These variables will be used for the packages construction.
 PKGMK_ARCH=@ARCH@
 PKGMK_KERNEL=@KERNEL@
 
