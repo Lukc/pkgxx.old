@@ -193,7 +193,7 @@ for arg in $@; do
 					USE_GFIND=true
 				;;
 				*)
-					echo "Unknown package $without."
+					echo "Unknown package $with."
 					echo "Please make $0 --help for more informations."
 				;;
 			esac
