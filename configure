@@ -425,7 +425,7 @@ echo "  Package manager:        $PACKAGE_MANAGER"
 
 case $ARCHITECTURE in
 	x86)		CC_MARCH=i686		;;
-	x86_64|amd64)	CC_MARCH=k8		;;
+	x86_64|amd64)	CC_MARCH=x86-64		;;
 	*)		CC_MARCH=$ARCHITECTURE	;;
 esac
 
