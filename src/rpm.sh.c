@@ -3,16 +3,18 @@ make_rpm_spec() {
 	: ${license:="Unknown"}
 	: ${buildroot:="$prefix"}
 	/* Using a lot of echos is not adapted, here. */
-	cat << EOF
-Summary:   $description
-Name:      $name
-Version:   $version
-Release:   $release
-License:   $license
-Packager:  $packager
-Group:     ${groups[@]}
-BuildRoot: $buildroot
-EOF
+	echo "Summary:   $description"
+	echo "Name:      $name"
+	if [[ "$version" =~ (devel|dev|trunk) ]]; then
+		echo "Version:   999.`date +%Y%m%d`"
+	else
+		echo "Version:   $version"
+	fi
+	echo "Release:   $release"
+	echo "License:   $license"
+	echo "Packager:  $packager"
+	echo "Group:     ${groups[@]}"
+	echo "BuildRoot: $buildroot"
 	if [[ -n "${depends[@]}" ]]; then
 		echo "Requires:  ${depends[@]}"
 	fi

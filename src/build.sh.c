@@ -133,7 +133,11 @@ build_package() {
 		 */
 		make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
 		rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
-		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
+		if [[ "$version" =~ (devel|dev|trunk) ]]; then
+			mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
+		else
+			mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
+		fi
 		rpm -qvlp $TARGET
 		#elif defined pkgtools
 		mkdir $PKG/install
