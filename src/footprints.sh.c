@@ -8,7 +8,7 @@ make_footprint() {
 	#if defined gtar
 	tar tvvJf $TARGET | \
 		sed "s|  *|	|g" | \
-		cut -d "	" -f 1,2,6 | \
+		cut -d "	" -f 1,2,6,7,8 | \
 		grep -v "\.PKGINFO" | \
 		grep -v "\.FILELIST" | \
 		grep -v "\.CHANGELOG" | \
@@ -33,7 +33,7 @@ make_footprint() {
 	#if defined gtar
 	tar tvvJf $TARGET | \
 		sed "s|  *|	|g" | \
-		cut -d "	" -f 1,2,6 | \
+		cut -d "	" -f 1,2,6,7,8 | \
 		grep -v -e "\./$" | \
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
