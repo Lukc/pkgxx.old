@@ -16,7 +16,11 @@ make_pacman_pkginfo() {
 	 * repositories.
 	 */
 	echo "pkgname = $name"
-	echo "pkgver = $version-$release"
+	if [[ "$version" =~ (devel|dev|trunk) ]]; then
+		echo "pkgver = 999.`date +%Y%m%d`-$release"
+	else
+		echo "pkgver = $version-$release"
+	fi
 	/*
 	 * Description and URL are not mandatory.
 	 */
