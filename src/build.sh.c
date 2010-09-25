@@ -101,7 +101,7 @@ build_package() {
 		[[ -e DEBIAN/control ]] && rm DEBIAN/control
 		echo "Package: $name" >> DEBIAN/control
 		if [[ "$version" =~ (devel|dev|trunk) ]]; then
-			echo "Version: 999.`date +%Y%m%d`" >> DEBIAN/control
+			echo "Version: 999.`date +%Y%m%d`-$release" >> DEBIAN/control
 		else
 			echo "Version: $version" >> DEBIAN/control
 		fi
