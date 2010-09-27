@@ -26,7 +26,7 @@ make_footprint() {
 		grep -v "\.CHANGELOG" | \
 		sed -e "s|\./\.CHANGELOG||" \
 		    -e "s|	->	| -> |" \
-		    -e "s|	link	to	| -> |" | \
+		    -e "s|	link	to	| -> |" \
 		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
 	#endif
@@ -53,7 +53,7 @@ make_footprint() {
 		grep -v "doinst.sh" | \
 		grep -v "drwxr-xr-x	root/root	./install/" | \
 		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-		    -e "s|	link	to	| -> |" | \
+		    -e "s|	link	to	| -> |" \
 		    -e "s|	->	| -> |" \
 		    -e "s|\./||" | \
 		sort -k 3
