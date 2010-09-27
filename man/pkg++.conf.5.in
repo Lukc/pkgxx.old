@@ -62,6 +62,11 @@ Default: 'no'
 Option to select the mode used to compress the packages. Valid strings are gz, bz2, xz, lzo and none.
 .br
 Default: 'gz'
+.TP
+\fBPKGMK_MAN_COMPRESSION='STRING'\fP
+Option to select the compression of the packaged man pages. Valid strings are gz and bz2.
+.br
+Default: 'bz2'
 .SH SEE ALSO
 pkg++(8)
 .SH COPYRIGHT

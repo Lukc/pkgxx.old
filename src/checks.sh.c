@@ -115,6 +115,11 @@ check_config() {
 		echo "Valid values are: ${PKGMK_DOWNLOAD_TOOLS[@]}."
 		exit $E_INVALID_DOWNLOAD_TOOL
 	fi
+	if ! [[ "$PKGMK_MAN_COMPRESSION" =~ ("gz"|"bz2") ]]; then
+		error "$PKGMK_MAN_COMPRESSION is not a valid man pages compression. Please, edit your config file."
+		echo "Valid values are: gz bz2."
+		exit $E_INVALID_MAN_COMPRESSION
+	fi
 }
 
 /*

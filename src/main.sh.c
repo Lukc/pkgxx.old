@@ -459,6 +459,7 @@ PKGMK_COMPRESSION_MODE="xz"
  */
 PKGMK_COMPRESSION_MODE="gz"
 #endif
+PKGMK_MAN_COMPRESSION="gz"
 
 /*
  * Pkg++ can receive many instructions.
