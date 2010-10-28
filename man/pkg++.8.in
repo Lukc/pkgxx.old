@@ -22,6 +22,9 @@ file is read by pkg++ at startup.
 .B "\-i, \-\-install"
 Install package using pkgadd(8) after successful build.
 .TP
+.B "\-in, \-\-interactive"
+For each particular use flag in the package, ask if we must or not use it.
+.TP
 .B "\-u, \-\-upgrade"
 Install package as an upgrade using pkgadd(8) after successful build.
 .TP
