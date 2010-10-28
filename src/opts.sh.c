@@ -3,6 +3,7 @@ print_help() {
 	echo "usage: `basename $PKGMK_COMMAND` [$PKGMK_PKGFILE_NAME] [options]"
 	echo "options:"
 	echo "  -i,   --install             build and install package"
+	echo "  -in,  --interactive         ask for use(s) when possible"
 	echo "  -u,   --upgrade             build and install package (as upgrade)"
 	echo "  -r,   --recursive           search for and build packages recursively"
 	echo "  -d,   --download            download missing source file(s)"
@@ -35,6 +36,8 @@ parse_options() {
 		case $1 in
 			-i|--install)
 				PKGMK_INSTALL="install" ;;
+			-in|--interactive)
+				PKGMK_INTERACTIVE="yes" ;;
 			-u|--upgrade)
 				PKGMK_INSTALL="upgrade" ;;
 			-r|--recursive)

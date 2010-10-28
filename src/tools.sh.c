@@ -38,3 +38,35 @@ use() {
 	return $return
 }
 
+iuse() {
+	/*
+	 * Function allowing to change a use flag in interactive mode.
+	 */
+	local ANSWER=
+	local use="$1"
+	local desc="$2"
+	if [[ "$PKGMK_INTERACTIVE" = "yes" ]]; then
+		while [[ ! "$ANSWER" =~ (YES|yes|Y|y|NO|no|N|n) ]]; do
+			ask ANSWER "Do you want to enable use flag \`$use'? [y/n/?]"
+				case $ANSWER in
+				YES|yes|Y|y)
+					export USE=(${USE[@]} +$use)
+				;;
+				NO|no|N|n)
+					export USE=(${USE[@]} -$use)
+				;;
+				\?)
+					if [[ -n "$desc" ]]; then
+						info "$use - $desc"
+					else
+						info "There is no available information about use flag \`$1'"
+					fi
+				;;
+				*)
+					error "Please, answer by \`yes', \`y', \`no' or \`n'."
+				;;
+			esac
+		done
+	fi
+}
+

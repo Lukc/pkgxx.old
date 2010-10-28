@@ -465,6 +465,7 @@ PKGMK_MAN_COMPRESSION="gz"
  * Pkg++ can receive many instructions.
  */
 PKGMK_INSTALL="no"
+PKGMK_INTERACTIVE="no"
 PKGMK_RECURSIVE="no"
 PKGMK_DOWNLOAD="no"
 PKGMK_DOWNLOAD_ONLY="no"

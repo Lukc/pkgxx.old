@@ -16,3 +16,14 @@ error() {
 	echo -e "\033[31m=======> ERROR: $1\033[00m" >&2
 }
 
+/*
+ * Use this *only* in interactive mode. Any other use could destroy the world.
+ */
+
+ask() {
+	local variable="$1"
+	shift 1
+	echo -e "\033[37m=======> $@\033[00m"
+	read "$variable"
+}
+
