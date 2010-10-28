@@ -47,7 +47,7 @@ iuse() {
 	local desc="$2"
 	if [[ "$PKGMK_INTERACTIVE" = "yes" ]]; then
 		while [[ ! "$ANSWER" =~ (YES|yes|Y|y|NO|no|N|n) ]]; do
-			ask ANSWER "Do you want to enable use flag \`$use'? [y/n/?]"
+			ask ANSWER "[$name] Do you want to enable use flag \`$use'? [y/n/?]"
 				case $ANSWER in
 				YES|yes|Y|y)
 					export USE=(${USE[@]} +$use)
