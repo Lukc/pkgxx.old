@@ -51,6 +51,14 @@ check_pkgfile() {
 	elif [[ ! "$release" ]]; then
 		error "Variable 'release' not specified in $PKGMK_PKGFILE."
 		exit $E_PKGFILE
+	#if defined rpm
+	elif [[ ! "$description" ]]; then
+		error "Variable 'description' not specified in $PKGMK_PKGFILE."
+		exit $E_PKGFILE
+	elif [[ ! "$packager" ]]; then
+		error "Variable 'packager' not specified in $PKGMK_PKGFILE."
+		exit $E_PKGFILE
+	#endif
 	elif [[ "`type -t build`" != "function" ]]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
 		exit $E_PKGFILE
