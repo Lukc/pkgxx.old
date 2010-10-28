@@ -64,10 +64,10 @@ check_pkgfile() {
 		exit $E_PKGFILE
 	elif ! check_arch; then
 		error "This package is not made to work on your harware."
-		exit 1
+		exit $E_BAD_ARCH
 	elif ! check_kernel; then
 		error "This package is not made to work on your kernel."
-		exit 1
+		exit $E_BAD_KERNEL
 	fi
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
 		if [[ ! "`type -t check`" = "function" ]]; then
