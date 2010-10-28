@@ -6,7 +6,7 @@ make_rpm_spec() {
 	echo "Summary:   $description"
 	echo "Name:      $name"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		echo "Version:   999.`date +%Y%m%d`-$release"
+		echo "Version:   999.`date +%Y%m%d`"
 	else
 		echo "Version:   $version"
 	fi
