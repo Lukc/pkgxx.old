@@ -24,6 +24,7 @@ ask() {
 	local variable="$1"
 	shift 1
 	echo -e "\033[37m=======> $@\033[00m"
+	echo -n " > "
 	read "$variable"
 }
 
