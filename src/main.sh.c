@@ -81,7 +81,11 @@ clean() {
 		LOCAL_FILENAME=`get_filename $FILE`
 		if [[ -e $LOCAL_FILENAME ]] && [[ "$LOCAL_FILENAME" != "$FILE" ]]; then
 			info "Removing $LOCAL_FILENAME"
-			rm -f $LOCAL_FILENAME
+			if [[ -d $LOCAL_FILENAME ]]; then
+				rm -r -f $LOCAL_FILENAME
+			else
+				rm -f $LOCAL_FILENAME
+			fi
 		fi
 	done
 }
