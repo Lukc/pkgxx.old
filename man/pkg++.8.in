@@ -78,8 +78,8 @@ Use alternative configuration file (default is /etc/pkg++.conf).
 .TP
 .B "\-cp, \-\-check\-pkgfile"
 Only check if the Pkgfile is correct.
-.TP
-pkg++ will give you warnings if there are missing variables or functions that are of the new syntax, requiring a patched prt-get to work correctly with it.
+
+pkg++ will give you warnings if there are missing variables or functions that are of the new syntax. These Pkgfiles require on Crux/pkgutils a patched prt-get to work correctly with it.
 .TP
 .B "\-v, \-\-version"
 Print version and exit.
