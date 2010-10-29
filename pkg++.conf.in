@@ -16,8 +16,8 @@ export MAKE_OPTS="-j2"
 export USE=(nls)
 
 # PKGMK_SOURCE_MIRRORS=()
-PKGMK_SOURCE_DIR="/srv/sources"
-PKGMK_PACKAGE_DIR="/srv/local"
+PKGMK_SOURCE_DIR="/var/cache/pkg++/sources"
+PKGMK_PACKAGE_DIR="/var/cache/pkg++/packages"
 PKGMK_WORK_DIR="/tmp/work-$name"
 # PKGMK_DOWNLOAD="no"
 # PKGMK_IGNORE_FOOTPRINT="no"
