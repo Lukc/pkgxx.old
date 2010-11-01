@@ -431,16 +431,16 @@ export LC_ALL=POSIX
 /*
  * Some RO functions that will never be modified during the execution.
  */
-readonly PKGMK_VERSION="@VERSION@"
+readonly PKGMK_VERSION=_VERSION
 readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 
 /*
  * Default dirs and files names.
  */
-PKGMK_CONFFILE="@SYSCONFDIR@/pkg++.conf"
-PKGMK_DEFAULTS_DIRS=(@SHAREDIR@/pkg++/defaults @SYSCONFDIR@/pkg++)
-PKGMK_INCLUDES_DIR="@SHAREDIR@/pkg++/includes"
+PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
+PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++)
+PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_FOOTPRINT=".footprint"
