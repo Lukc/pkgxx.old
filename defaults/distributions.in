@@ -1,8 +1,8 @@
 
-distribution=@DISTRIBUTION@
-package_manager=@PACKAGE_MANAGER@
-kernel=@KERNEL@
-arch=@ARCH@
+distribution=_DISTRIBUTION
+package_manager=_PACKAGE_MANAGER
+kernel=_KERNEL
+arch=_ARCH
 
 #if defined pacman
 PACMAN=true

@@ -429,6 +429,42 @@ case $ARCHITECTURE in
 	*)		CC_MARCH=$ARCHITECTURE	;;
 esac
 
+CPPFLAGS="$CPPFLAGS -D_ARCH=\"$ARCHITECTURE\" -D_KERNEL=\"$KERNEL\" $CPPFLAGS"
+CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
+
+case $DISTRIBUTION in
+	Debian)		CPPFLAGS="$CPPFLAGS -Ddebian"	;;
+	Frugalware)	CPPFLAGS="$CPPFLAGS -Dfrugalware"	;;
+	Crux)		CPPFLAGS="$CPPFLAGS -Dcrux"		;;
+	Mandriva)	CPPFLAGS="$CPPFLAGS -Dmandriva"		;;
+	Arch)		CPPFLAGS="$CPPFLAGS -Darch"		;;
+	Slackware)	CPPFLAGS="$CPPFLAGS -Dslackware"	;;
+esac
+
+case $PACKAGE_MANAGER in
+	pacman-g2)
+		CPPFLAGS="$CPPFLAGS -Dpacmang2"
+	;;
+	*)
+		CPPFLAGS="$CPPFLAGS -D$PACKAGE_MANAGER"
+	;;
+esac
+
+if $USE_CURL; then
+	CPPFLAGS="$CPPFLAGS -Dcurl"
+fi
+if $USE_GSED; then
+	CPPFLAGS="$CPPFLAGS -Dgsed"
+fi
+if $USE_GFIND; then
+	CPPFLAGS="$CPPFLAGS -Dgfind"
+fi
+if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
+	CPPFLAGS="$CPPFLAGS -Dgtar=$GTAR_NAME"
+else
+	CPPFLAGS="$CPPFLAGS -Dbsdtar"
+fi
+
 configure() {
 	sed -e "s|@ARCH@|$ARCHITECTURE|" $1 > $1.tmp
 	mv $1.tmp $1
@@ -488,11 +524,22 @@ help:
 	`RULE "install  " "Nake the man, pkgxx and config rules."`
 	`RULE "clean    " "Remove configured files."`
 
-config:
+defaults/prefixes:
+	gcc -E -x c -P $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
+
+defaults/distributions:
+	gcc -E -x c -P $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
+
+pkgxx: defaults/prefixes defaults/distributions
+	cpp -E -x c -P $CPPFLAGS "src/main.sh.c" > "pkg++.tmp"
+	echo "#!/usr/bin/env bash" > pkg++
+	cat pkg++.tmp >> pkg++
+
+config-install:
 	`DIR \$\(ETCDIR\)`
 	`INSTALL 0644 pkg++.conf \$\(ETCDIR\)`
 
-man:
+man-install:
 	`DIR \$\(MANDIR\)`
 	`DIR \$\(MANDIR\)/man8`
 	`DIR \$\(MANDIR\)/man5`
@@ -500,7 +547,7 @@ man:
 	`INSTALL_F 0644 man/pkg++.conf.5 pkg++.conf.5 \$\(MANDIR\)/man5`
 	`INSTALL_F 0644 man/pkgfile.5 pkgfile.5 \$\(MANDIR\)/man5`
 
-pkgxx:
+pkgxx-install: pkgxx
 	`DIR \$\(BINDIR\)`
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
@@ -517,12 +564,13 @@ pkgxx:
 	@rm prefixes
 	@rm distributions
 
-update: pkgxx man
+update: pkgxx-install man-install
 
-install: pkgxx config man
+install: pkgxx-install config-install man-install
 
 clean:
 	`REMOVE pkg++`
+	`REMOVE pkg++.tmp`
 	`REMOVE pkg++.conf`
 	`REMOVE man/pkg++.8`
 	`REMOVE man/pkg++.conf.5`
@@ -540,72 +588,7 @@ pkgfiles:
 
 # End of file
 EOF
-( cd src 
-	echo > config.sh.h
-	if $USE_CURL; then
-		echo "#define curl curl" >> config.sh.h
-	fi
-	if $USE_GSED; then
-		echo "#define gsed gsed" >> config.sh.h
-	fi
-	if $USE_GFIND; then
-		echo "#define gfind gfind" >> config.sh.h
-	fi
-	if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
-		echo "#define gtar $GTAR_NAME" >> config.sh.h
-	else
-		echo "#define bsdtar bsdtar" >> config.sh.h
-	fi
-)
-case $DISTRIBUTION in
-	Debian)		echo "#define debian debian"		>> defaults/distributions ;;
-	Frugalware)	echo "#define frugalware frugalware"	>> defaults/distributions ;;
-	Crux)		echo "#define crux crux"		>> defaults/distributions ;;
-	Mandriva)	echo "#define mandriva mandriva"	>> defaults/distributions ;;
-	Arch)		echo "#define arch arch"		>> defaults/distributions ;;
-	Slackware)	echo "#define slackware slackware"	>> defaults/distributions ;;
-esac
 
-case $PACKAGE_MANAGER in
-	dpkg)
-		echo "#define dpkg dpkg"		>> defaults/distributions
-		echo "#define dpkg dpkg"		>> src/config.sh.h
-	;;
-	pacman)
-		echo "#define pacman pacman"		>> defaults/distributions
-		echo "#define pacman pacman"		>> src/config.sh.h
-	;;
-	pacman-g2)
-		echo "#define pacman pacman"		>> defaults/distributions
-		echo "#define pacmang2 pacmang2"	>> defaults/distributions
-		echo "#define pacman pacman"		>> src/config.sh.h
-		echo "#define pacmang2 pacmang2"	>> src/config.sh.h
-	;;
-	pkgutils)
-		echo "#define pkgutils pkgutils"	>> defaults/distributions
-		echo "#define pkgutils pkgutils"	>> src/config.sh.h
-	;;
-	pkgtools)
-		echo "#define pkgtools pkgtools"	>> defaults/distributions
-		echo '#define pkgtools pkgtools'	>> src/config.sh.h
-	;;
-	rpm)
-		echo "#define rpm rpm"			>> defaults/distributions
-		echo "#define rpm rpm"			>> src/config.sh.h
-	;;
-esac
-( cd src
-	gcc -E -x c -P "main.sh.c" >> "pkg++.tmp"
-	mv pkg++.tmp ../pkg++.tmp
-)
-cat "defaults/distributions.in" >> "defaults/distributions"
-gcc -E -x c -P "defaults/prefixes.in" >> "defaults/prefixes"
-gcc -E -x c -P "defaults/distributions" >> "defaults/distributions.tmp"
-configure "defaults/distributions.tmp"
-mv defaults/distributions.tmp defaults/distributions
-echo "#!/usr/bin/env bash" > "pkg++"
-cat "pkg++.tmp" >> "pkg++"
-rm pkg++.tmp
 cp "pkg++.conf.in" "pkg++.conf"
 cp man/{"pkg++.8.in","pkg++.8"}
 cp man/{"pkg++.conf.5.in","pkg++.conf.5"}
@@ -613,7 +596,6 @@ cp man/{"pkgfile.5.in","pkgfile.5"}
 configure "man/pkg++.8"
 configure "man/pkg++.conf.5"
 configure "man/pkgfile.5"
-configure "pkg++"
 configure "pkg++.conf"
 
 echo "Configuration done."

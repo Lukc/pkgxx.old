@@ -1,8 +1,6 @@
 
 // vim: syntax=sh
 
-#include "config.sh.h"
-
 #include "error.sh.h"
 #include "display.sh.c"
 #include "getters.sh.c"
@@ -491,8 +489,8 @@ PKGMK_CLEAN="no"
 PKGMK_CHECK="no"
 PKGMK_CHECK_PKGFILE="no"
 
-PKGMK_ARCH="@ARCH@"
-PKGMK_KERNEL="@KERNEL@"
+PKGMK_ARCH=_ARCH
+PKGMK_KERNEL=_KERNEL
 
 readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
 #if defined curl

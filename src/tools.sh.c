@@ -19,7 +19,7 @@ pkgmake() {
 	 * That avoids to use a non-gnu make, which could cause problems on 
 	 * some ports.
 	 */
-	@GMAKE@ $MAKE_OPTS $@
+	GMAKE $MAKE_OPTS $@
 }
 
 use() {
