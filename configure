@@ -466,25 +466,17 @@ else
 fi
 
 configure() {
-	sed -e "s|@ARCH@|$ARCHITECTURE|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@KERNEL@|$KERNEL|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@VERSION@|$VERSION|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@DISTRIBUTION@|$DISTRIBUTION|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@PACKAGE_MANAGER@|$PACKAGE_MANAGER|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@MARCH@|$CC_MARCH|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@GMAKE@|$GMAKE_PATH|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@PREFIX@|$PREFIX|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@SHAREDIR@|$SHAREDIR|" $1 > $1.tmp
-	mv $1.tmp $1
-	sed -e "s|@SYSCONFDIR@|$SYSCONFDIR|" $1 > $1.tmp
+	sed -e "s|@ARCH@|$ARCHITECTURE|"\
+		-e "s|@KERNEL@|$KERNEL|"\
+		-e "s|@VERSION@|$VERSION|"\
+		-e "s|@DISTRIBUTION@|$DISTRIBUTION|"\
+		-e "s|@PACKAGE_MANAGER@|$PACKAGE_MANAGER|"\
+		-e "s|@MARCH@|$CC_MARCH|"\
+		-e "s|@GMAKE@|$GMAKE_PATH|"\
+		-e "s|@PREFIX@|$PREFIX|"\
+		-e "s|@SHAREDIR@|$SHAREDIR|"\
+		-e "s|@SYSCONFDIR@|$SYSCONFDIR|"\
+		 $1 > $1.tmp
 	mv $1.tmp $1
 }
 
