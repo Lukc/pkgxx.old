@@ -435,36 +435,36 @@ CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACK
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
 
 case $DISTRIBUTION in
-	Debian)		CPPFLAGS="$CPPFLAGS -Ddebian"	;;
-	Frugalware)	CPPFLAGS="$CPPFLAGS -Dfrugalware"	;;
-	Crux)		CPPFLAGS="$CPPFLAGS -Dcrux"		;;
-	Mandriva)	CPPFLAGS="$CPPFLAGS -Dmandriva"		;;
-	Arch)		CPPFLAGS="$CPPFLAGS -Darch"		;;
-	Slackware)	CPPFLAGS="$CPPFLAGS -Dslackware"	;;
+	Debian)		CPPFLAGS="$CPPFLAGS -Ddebian=debian"		;;
+	Frugalware)	CPPFLAGS="$CPPFLAGS -Dfrugalware=frugalware"	;;
+	Crux)		CPPFLAGS="$CPPFLAGS -Dcrux=crux"		;;
+	Mandriva)	CPPFLAGS="$CPPFLAGS -Dmandriva=mandriva"	;;
+	Arch)		CPPFLAGS="$CPPFLAGS -Darch=arch"		;;
+	Slackware)	CPPFLAGS="$CPPFLAGS -Dslackware=slackware"	;;
 esac
 
 case $PACKAGE_MANAGER in
 	pacman-g2)
-		CPPFLAGS="$CPPFLAGS -Dpacmang2"
+		CPPFLAGS="$CPPFLAGS -Dpacmang2=pacmang2"
 	;;
 	*)
-		CPPFLAGS="$CPPFLAGS -D$PACKAGE_MANAGER"
+		CPPFLAGS="$CPPFLAGS -D$PACKAGE_MANAGER=$PACKAGE_MANAGER"
 	;;
 esac
 
 if $USE_CURL; then
-	CPPFLAGS="$CPPFLAGS -Dcurl"
+	CPPFLAGS="$CPPFLAGS -Dcurl=curl"
 fi
 if $USE_GSED; then
-	CPPFLAGS="$CPPFLAGS -Dgsed"
+	CPPFLAGS="$CPPFLAGS -Dgsed=sed"
 fi
 if $USE_GFIND; then
-	CPPFLAGS="$CPPFLAGS -Dgfind"
+	CPPFLAGS="$CPPFLAGS -Dgfind=find"
 fi
 if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
 	CPPFLAGS="$CPPFLAGS -Dgtar=$GTAR_NAME"
 else
-	CPPFLAGS="$CPPFLAGS -Dbsdtar"
+	CPPFLAGS="$CPPFLAGS -Dbsdtar=bsdtar"
 fi
 
 configure() {
