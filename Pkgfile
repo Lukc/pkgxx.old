@@ -2,7 +2,6 @@ description="Portable package builder."
 url=http://devel.upyum.com/cgit.cgi/pkg++
 packager="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
 maintainer="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
-depends=(bash $package_manager)
 
 name=pkg++
 version=devel
@@ -20,6 +19,8 @@ case $distribution in
 	"")						;;
 	*)		: ${package_manager:=pkgutils}	;;
 esac
+
+depends=(bash $package_manager)
 
 if use gtar; then
 	configure_opts=(--with-gtar --without-bsdtar)
