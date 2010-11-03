@@ -6,6 +6,7 @@
 : ${prefix:="/usr"}
 : ${eprefix:="$prefix"}
 : ${bindir:="$eprefix/bin"}
+: ${sbindir:="$eprefix/sbin"}
 : ${libdir:="$prefix/lib"}
 : ${libexecdir:="$eprefix/libexec"}
 : ${sharedir:="$prefix/share"}
