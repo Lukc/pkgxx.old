@@ -24,13 +24,27 @@ esac
 
 : ${use_configure:=yes}
 
+configure_opts=(
+	--prefix=$prefix
+	--exec-prefix=$eprefix
+	--bindir=$bindir
+	--sbindir=$sbindir
+	--libexecdir=$libexecdir
+	--sysconfdir=$sysconfdir
+	--localstatedir=$localstatedir
+	--libdir=$libdir
+	--datarootdir=$sharedir
+	--mandir=$mandir
+	${configure_opts[@]}
+)
+
 if [[ "$separate_build_dir" = "yes" ]]; then
 	build(){
 	cd $dirname
 		mkdir __build__
 		cd __build__
 		[[ "$use_autogen" = "yes" ]] && ../autogen.sh ${autogen_opts[@]}
-		[[ "$use_configure" = "yes" ]] && ../configure --prefix=$prefix ${configure_opts[@]}
+		[[ "$use_configure" = "yes" ]] && ../configure ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
 	}
@@ -38,7 +52,7 @@ else
 	build(){
 	cd $dirname
 		[[ "$use_autogen" = "yes" ]] && ./autogen.sh ${autogen_opts[@]}
-		[[ "$use_configure" = "yes" ]] && ./configure --prefix=$prefix ${configure_opts[@]}
+		[[ "$use_configure" = "yes" ]] && ./configure ${configure_opts[@]}
 		pkgmake ${make_opts[@]}
 		pkgmake ${make_opts[@]} DESTDIR=$PKG install
 	}
