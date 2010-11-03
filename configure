@@ -446,7 +446,7 @@ esac
 
 case $PACKAGE_MANAGER in
 	pacman-g2)
-		CPPFLAGS="$CPPFLAGS -Dpacman=pacman-g2 -Dpacmang2=pacman-g2"
+		CPPFLAGS="$CPPFLAGS -Dpacman=pacman -Dpacmang2=pacman-g2"
 	;;
 	*)
 		CPPFLAGS="$CPPFLAGS -D$PACKAGE_MANAGER=$PACKAGE_MANAGER"
