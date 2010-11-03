@@ -24,9 +24,11 @@ unpack_source() {
 					COMMAND="tar -C $SRC -xf $LOCAL_FILENAME";;
 				*.zip)
 					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
-				#else
+				#elif defined bsdtar
 				*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma|*.zip|*.rpm)
 					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME" ;;
+				#else
+				#	bad_tar
 				#endif
 				*)
 					COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;

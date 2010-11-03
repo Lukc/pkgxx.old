@@ -184,14 +184,16 @@ build_package() {
 			 */
 			#if defined gtar
 				tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-			#else
+			#elif defined bsdtar
 				bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
 				bsdtar tvf ${TARGET%.$EXT}
+			#else
+			#	error No valid tar defined.
 			#endif
 		#else
 			#if defined gtar
 				tar cvvf ${TARGET%.$EXT} *
-			#else
+			#elif defined bsdtar
 				bsdtar cf ${TARGET%.$EXT} *
 		/*
 		 * bsdtar cvvf doesn’t give enough informations about the 
@@ -201,6 +203,8 @@ build_package() {
 		 *       with cvv.
 		 */
 				bsdtar tvf ${TARGET%.$EXT}
+			#else
+			#	error No valid tar defined.
 			#endif
 		#endif
 		/*

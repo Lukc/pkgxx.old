@@ -16,7 +16,7 @@ make_footprint() {
 		    -e "s|	->	| -> |" \
 		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
-	#else
+	#elif defined bsdtar
 	bsdtar tvJf $TARGET | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
@@ -29,6 +29,8 @@ make_footprint() {
 		    -e "s|	link	to	| -> |" \
 		    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
+	#else
+	#	error No valid tar defined.
 	#endif
 	#elif defined pkgtools
 	#if defined gtar
@@ -43,7 +45,7 @@ make_footprint() {
 		    -e "s|	->	| -> |" \
 		    -e "s|\./||" | \
 		sort -k 3
-	#else
+	#elif defind bsdtar
 	bsdtar tvJf $TARGET | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
@@ -57,6 +59,8 @@ make_footprint() {
 		    -e "s|	->	| -> |" \
 		    -e "s|\./||" | \
 		sort -k 3
+	#else
+	#	error No valid tar defined.
 	#endif
 	#elif defined dpkg
 	/*
