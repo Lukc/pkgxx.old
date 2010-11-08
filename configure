@@ -510,6 +510,8 @@ MANDIR = $MANDIR
 
 PKGXX_VERSION=$VERSION
 
+build: pkgxx
+
 help:
 	@echo "The available rules for this Makefile are:"
 	`RULE "config   " "Install the configuration files of pkg++."`
