@@ -140,6 +140,7 @@ main() {
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
+	PKGMK_CHANGELOG="`get_metafile ChangeLog | sed -e "s|\.ChangeLog|ChangeLog|"`"
 	PKGMK_FOOTPRINT="`get_metafile footprint`"
 	PKGMK_MD5SUM="`get_metafile md5sum`"
 	PKGMK_SHA256SUM="`get_metafile sha256sum`"
@@ -456,6 +457,7 @@ PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
+PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
 PKGMK_SHA256SUM=".sha256sum"
