@@ -79,7 +79,8 @@ make_footprint() {
 	echo "$footprint" | tail -n $(($lines-1))
 	#elif defined rpm
 	local FILE
-	local IFS="`echo -e \n`"
+	local IFS="
+"
 	for LINE in $(rpm -qvlp $TARGET | \
 		sed "s|  *|\t|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
