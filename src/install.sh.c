@@ -30,6 +30,8 @@ install_package() {
 	else
 		COMMAND="upgradepkg $TARGET"
 	fi
+	#elif defined nhopkg
+	COMMAND="nhopkg -i $TARGET"
 	#else
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
 		COMMAND="pkgadd $TARGET"

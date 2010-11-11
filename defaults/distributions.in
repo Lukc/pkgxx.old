@@ -34,6 +34,12 @@ PKGTOOLS=true
 PKGTOOLS=false
 #endif
 
+#if defined nhopkg
+NHOPKG=true
+#else
+NHOPKG=false
+#endif
+
 #if defined crux
 Crux=true
 #else

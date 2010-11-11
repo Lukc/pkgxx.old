@@ -20,7 +20,7 @@ arch () {
 			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
 		;;
 	esac
-	if [[ $PACKAGE_MANAGER =~ (pacman|pacman-g2|rpm) ]]; then
+	if [[ $PACKAGE_MANAGER =~ (pacman|pacman-g2|rpm|nhopkg) ]]; then
 		case ${arch} in
 			x86) arch=i686;;
 		esac
@@ -58,6 +58,8 @@ package_manager () {
 		: ${pm:=pacman-g2}
 	elif checking_for_bin "pacman" &> /dev/null; then
 		: ${pm:=pacman}
+	elif checking_for_bin "nhopkg" &> /dev/null; then
+		: ${pm:=nhopkg}
 	elif checking_for_bin "installpkg" &> /dev/null \
 		&& checking_for_bin "updatepkg" \
 		&& checking_for_bin "makepkg";
@@ -408,7 +410,7 @@ else
 	fi
 fi
 
-if ! [[ $PACKAGE_MANAGER =~ (dpkg|rpm|pkgtools|pkgutils|pacman(|-g2)) ]]; then
+if ! [[ $PACKAGE_MANAGER =~ (dpkg|rpm|pkgtools|pkgutils|pacman(|-g2)|nhopkg) ]]; then
 	cat << EOF >&2
 Your package manager is not known. If you want pkg++ to be built for a 
 particular package manager, use the --package-manager=<your-package-manager> 

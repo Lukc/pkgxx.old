@@ -95,6 +95,31 @@ make_footprint() {
 			echo "$LINE"
 		fi
 	done
+	#elif defined nhopkg
+	#if defined gtar
+	tar xf $TARGET data.tar.bz2
+	tar tvvjf data.tar.bz2 | \
+		sed "s|  *|	|g" | \
+		cut -d "	" -f 1,2,6,7,8 | \
+		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|	->	| -> |" \
+		    -e "s|\./||" | \
+		sort -k 3
+	#elif defined bsdtar
+	bsdtar xf $TARGET data.tar.bz2
+	bsdtar tvjf data.tar.bz2 | \
+		sed "s|  *|	|g" | \
+		cut -d "	" -f 1,3,4,9,10,11 | \
+		sed "s|	|/|;s|	|/|;s|/|	|" | \
+		sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+		    -e "s|	link	to	| -> |" \
+		    -e "s|	->	| -> |" \
+		    -e "s|\./||" | \
+		sort -k 3
+	#else
+	#	error No valid tar defined.
+	#endif
+	rm data.tar.bz2
 	#else
 	/*
 	 * This is exactly the same thing, but pkginfo can do the work faster.

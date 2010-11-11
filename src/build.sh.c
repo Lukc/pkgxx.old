@@ -156,8 +156,7 @@ build_package() {
 			 */
 			tar tvJf $TARGET
 		)
-		#else
-			#if defined pacman
+		#elif defined pacman
 			/*
 			 * Frugalware’s packages are very close from Crux’s 
 			 * ones. The only difference is the presence of some 
@@ -190,6 +189,11 @@ build_package() {
 			#else
 			#	error No valid tar defined.
 			#endif
+		#elif defined nhopkg
+			size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+			tar cvvjf data.tar.bz2 *
+			make_nhoid > nhoid
+			tar cf $TARGET nhoid data.tar.bz2
 		#else
 			#if defined gtar
 				tar cvvf ${TARGET%.$EXT} *
@@ -206,7 +210,6 @@ build_package() {
 			#else
 			#	error No valid tar defined.
 			#endif
-		#endif
 		/*
 		 * pkgutils users have the choice of the compression method.
 		 * Now this choice will affect their fate.
@@ -225,12 +228,12 @@ build_package() {
 				lzop -Uf ${TARGET%.$EXT}
 			;;
 		esac
+		#endif
 		#if defined pacman
 		/*
 		 * I don’t remember why, but there was a problem with pacmen.
 		 */
 		mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
-		#endif
 		#endif
 		
 		if [[ $? = 0 ]]; then

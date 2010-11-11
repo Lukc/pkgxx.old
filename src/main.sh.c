@@ -27,6 +27,10 @@
 #	include "pkgtools.sh.c"
 #endif
 
+#if defined nhopkg
+#	include "nhopkg.sh.c"
+#endif
+
 #include "build.sh.c"
 #include "install.sh.c"
 #include "opts.sh.c"
@@ -148,7 +152,9 @@ main() {
 	 * Note: We don’t need to check if another group has been already 
 	 *       declared, because the Pkgfile is sourced later.
 	 */
-	#if defined pacman || defined rpm
+	#if defined pacman \
+	|| defined rpm \
+	|| defined nhopkg
 	export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	#endif
 	
@@ -249,7 +255,8 @@ main() {
 	    defined pacman || \
 	    defined dpkg   || \
 	    defined rpm    || \
-	    defined pkgtools
+	    defined pkgtools || \
+	    defined nhopkg
 	if has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
 		ARCH=noarch
 	else
@@ -293,6 +300,12 @@ main() {
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$ARCH-$release.txz"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$ARCH-$release.txz"
+	fi
+	#elif defined nhopkg
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release.nho"
+	else
+		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release.nho"
 	fi
 	#else
 	/*
