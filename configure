@@ -550,7 +550,8 @@ pkgxx-install: pkgxx
 	`DIR \$\(BINDIR\)`
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
-	`DIR \$\(ETCDIR\)/pkg++`
+	`DIR \$\(ETCDIR\)/pkg++/defaults`
+	`DIR \$\(ETCDIR\)/pkg++/uses`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
 	`for include in $(ls includes/); do
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++
@@ -558,10 +559,11 @@ pkgxx-install: pkgxx
 	done`
 	@mv defaults/prefixes		prefixes
 	@mv defaults/distributions	distributions
-	`INSTALL 0644 prefixes		\$\(ETCDIR\)/pkg++`
-	`INSTALL 0644 distributions	\$\(ETCDIR\)/pkg++`
+	`INSTALL 0644 prefixes		\$\(ETCDIR\)/pkg++/defaults`
+	`INSTALL 0644 distributions	\$\(ETCDIR\)/pkg++/defaults`
 	@rm prefixes
 	@rm distributions
+	`INSTALL 0644 uses		\$\(SHAREDIR\)/pkg++`
 
 update: pkgxx-install man-install
 

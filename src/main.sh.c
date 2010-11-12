@@ -453,7 +453,7 @@ readonly PKGMK_ROOT="$PWD"
  * Default dirs and files names.
  */
 PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
-PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++)
+PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
