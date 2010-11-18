@@ -98,39 +98,12 @@ build_package() {
 		 * We don’t want to know how deb are done, they are, that’s 
 		 * enough.
 		 */
-		// FIXME: Move that code in another function, in another file.
-		//        It is very unclean, now, and will be difficult to 
-		//        maintain if nothing is done…
-		mkdir DEBIAN
-		[[ -e DEBIAN/control ]] && rm DEBIAN/control
-		echo "Package: $name" >> DEBIAN/control
-		if [[ "$version" =~ (devel|dev|trunk) ]]; then
-			echo "Version: 999.`date +%Y%m%d`-$release" >> DEBIAN/control
-		else
-			echo "Version: $version" >> DEBIAN/control
-		fi
-		if has no-arch ${archs[@]}; then
-			echo "Architecture: all" >> DEBIAN/control
-		else
-			echo "Architecture: $PKGMK_ARCH" >> DEBIAN/control
-		fi
-		echo "Maintainer: $maintainer" >> DEBIAN/control
-		echo "Description: $description" >> DEBIAN/control
-		echo -n "Depends: " >> DEBIAN/control
-		for n in ${!depends[*]}; do
-			if [[ -n "${depends[$(($n+1))]}" ]]; then
-				echo -n "${depends[$n]},">> DEBIAN/control
-			else
-				echo -n "${depends[$n]}">> DEBIAN/control
-			fi
-		done
-		echo >> DEBIAN/control
-		echo "Homepage: $url" >> DEBIAN/control
-		echo >> DEBIAN/control
-		cd ..
-		dpkg-deb --build $PKG
-		mv pkg.deb $TARGET
-		dpkg -c $TARGET
+				mkdir DEBIAN
+				make_debian_control > DEBIAN/control
+				cd ..
+				dpkg-deb --build $PKG
+				mv pkg.deb $TARGET
+				dpkg -c $TARGET
 			;;
 			rpm)
 		/*

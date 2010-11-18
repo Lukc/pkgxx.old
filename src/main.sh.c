@@ -15,6 +15,7 @@
 #include "manpages.sh.c"
 #include "work.sh.c"
 
+#include "dpkg.sh.c"
 #include "pacman.sh.c"
 #include "rpm.sh.c"
 #include "pkgtools.sh.c"
