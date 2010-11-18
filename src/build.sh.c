@@ -98,6 +98,9 @@ build_package() {
 		 * We don’t want to know how deb are done, they are, that’s 
 		 * enough.
 		 */
+		// FIXME: Move that code in another function, in another file.
+		//        It is very unclean, now, and will be difficult to 
+		//        maintain if nothing is done…
 		mkdir DEBIAN
 		[[ -e DEBIAN/control ]] && rm DEBIAN/control
 		echo "Package: $name" >> DEBIAN/control
@@ -133,32 +136,32 @@ build_package() {
 		/*
 		 * If there is a problem, it’s RPM’s fault.
 		 */
-		make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
-		rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
-		if [[ "$version" =~ (devel|dev|trunk) ]]; then
-			mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
-		else
-			mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
-		fi
-		rpm -qvlp $TARGET
+				make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
+				rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
+				if [[ "$version" =~ (devel|dev|trunk) ]]; then
+					mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
+				else
+					mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
+				fi
+				rpm -qvlp $TARGET
 			;;
 			pkgtools)
-		mkdir $PKG/install
-		make_slackspec > $PKG/install/slack-desc
-		(
-			cd $PKG
+				mkdir $PKG/install
+				make_slackspec > $PKG/install/slack-desc
+				(
+					cd $PKG
 			/*
 			 * We create the package using makepkg. Doing this way
 			 * avoid some warnings. We redirect makepkg’s output to
 			 * /dev/null to skip it’s verbosity.
 			 */
-			makepkg -l y -c n $TARGET &> /dev/null
+					makepkg -l y -c n $TARGET &> /dev/null
 			/*
 			 * As makepkg is redirected to /dev/null, we print the 
 			 * content of the package with tar.
 			 */
-			tar tvJf $TARGET
-		)
+					tar tvJf $TARGET
+				)
 			;;
 			pacman|pacman-g2)
 			/*
@@ -171,40 +174,40 @@ build_package() {
 			/*
 			 * We get the size of the future package’s content.
 			 */
-			size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+					size="`du -cb . | tail -n 1 | awk '{print $1}'`"
 			/*
 			 * We write the files list in the future package.
 			 */
-			find . | sed "s|\./||" | sort > .FILELIST
+					find . | sed "s|\./||" | sort > .FILELIST
 			/*
 			 * We write all other informations in the package.
 			 */
-			make_pacman_pkginfo > .PKGINFO
-			unset size
+					make_pacman_pkginfo > .PKGINFO
+					unset size
 			// FIXME: What about the Changelog ? :/
 			/*
 			 * And then we build the package.
 			 */
-			#if defined gtar
-				tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-			#elif defined bsdtar
-				bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-				bsdtar tvf ${TARGET%.$EXT}
-			#else
-			#	error No valid tar defined.
-			#endif
+					#if defined gtar
+						tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+					#elif defined bsdtar
+						bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+						bsdtar tvf ${TARGET%.$EXT}
+					#else
+					#	error No valid tar defined.
+					#endif
 			;;
 			nhopkg)
-			size="`du -cb . | tail -n 1 | awk '{print $1}'`"
-			tar cvvjf data.tar.bz2 *
-			make_nhoid > nhoid
-			tar cf $TARGET nhoid data.tar.bz2
+					size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+					tar cvvjf data.tar.bz2 *
+					make_nhoid > nhoid
+					tar cf $TARGET nhoid data.tar.bz2
 			;;
 			pkgutils)
-			#if defined gtar
-				tar cvvf ${TARGET%.$EXT} *
-			#elif defined bsdtar
-				bsdtar cf ${TARGET%.$EXT} *
+					#if defined gtar
+						tar cvvf ${TARGET%.$EXT} *
+					#elif defined bsdtar
+						bsdtar cf ${TARGET%.$EXT} *
 		/*
 		 * bsdtar cvvf doesn’t give enough informations about the 
 		 * saved files. So we create the archive and then we give to 
@@ -212,28 +215,28 @@ build_package() {
 		 * Note: this list is different from the one given by GNU tar
 		 *       with cvv.
 		 */
-				bsdtar tvf ${TARGET%.$EXT}
-			#else
-			#	error No valid tar defined.
-			#endif
+						bsdtar tvf ${TARGET%.$EXT}
+					#else
+					#	error No valid tar defined.
+					#endif
 		/*
 		 * pkgutils users have the choice of the compression method.
 		 * Now this choice will affect their fate.
 		 */
-		case $PKGMK_COMPRESSION_MODE in
-			gz)
-				gzip -f ${TARGET%.$EXT}
-			;;
-			bz2)
-				bzip2 -f ${TARGET%.$EXT}
-			;;
-			xz)
-				xz -f ${TARGET%.$EXT}
-			;;
-			lzo)
-				lzop -Uf ${TARGET%.$EXT}
-			;;
-		esac
+				case $PKGMK_COMPRESSION_MODE in
+					gz)
+						gzip -f ${TARGET%.$EXT}
+					;;
+					bz2)
+						bzip2 -f ${TARGET%.$EXT}
+					;;
+					xz)
+						xz -f ${TARGET%.$EXT}
+					;;
+					lzo)
+						lzop -Uf ${TARGET%.$EXT}
+					;;
+				esac
 			;;
 		esac
 		if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then

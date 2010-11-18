@@ -260,72 +260,72 @@ main() {
 	 */
 	case $PKGMK_PACKAGE_MANAGER in
 		dpkg)
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$ARCH.deb"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$ARCH.deb"
-	fi
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$ARCH.deb"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$ARCH.deb"
+			fi
 		;;
 		rpm)
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.rpm"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.rpm"
-	fi
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.rpm"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.rpm"
+			fi
 		;;
 		pacman|pacman-g2)
 	/*
 	 * The extension change between pacman and pacman-g2.
 	 */
-	if [[ "PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
-		EXT="fpm"
-	else
-		EXT="pkg.tar.xz"
-	fi
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.$EXT"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.$EXT"
-	fi
+			if [[ "PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
+				EXT="fpm"
+			else
+				EXT="pkg.tar.xz"
+			fi
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.$EXT"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.$EXT"
+			fi
 		;;
 		pkgtools)
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$ARCH-$release.txz"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$ARCH-$release.txz"
-	fi
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$ARCH-$release.txz"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$ARCH-$release.txz"
+			fi
 		;;
 		nhopkg)
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release.nho"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release.nho"
-	fi
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release.nho"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release.nho"
+			fi
 		;;
 		pkgutils)
 	/*
 	 * Pkgutils users will be able to choose their compression method.
 	 */
-	case $PKGMK_COMPRESSION_MODE in
-	gz|bz2|xz|lzo)
-		EXT="$PKGMK_COMPRESSION_MODE"
-		;;
-	none);;
-	*)
-		error "Compression mode '$PKGMK_COMPRESSION_MODE' not supported"
-		exit 1
-		;;
-	esac
-	
-	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar"
-	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar"
-	fi
-	
-	if [[ -n "$EXT" ]]; then
-		TARGET="$TARGET.$EXT"
-	fi
+			case $PKGMK_COMPRESSION_MODE in
+			gz|bz2|xz|lzo)
+				EXT="$PKGMK_COMPRESSION_MODE"
+				;;
+			none);;
+			*)
+				error "Compression mode '$PKGMK_COMPRESSION_MODE' not supported"
+				exit 1
+				;;
+			esac
+			
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar"
+			fi
+			
+			if [[ -n "$EXT" ]]; then
+				TARGET="$TARGET.$EXT"
+			fi
 		;;
 	esac
 	

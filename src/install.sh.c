@@ -4,14 +4,14 @@ install_package() {
 	
 	case $PKGMK_PACKAGE_MANAGER in
 		dpkg)
-	COMMAND="dpkg -i $TARGET"
+			COMMAND="dpkg -i $TARGET"
 		;;
 		rpm)
-	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		COMMAND="rpm --nodeps -i $TARGET"
-	else
-		COMMAND="rpm --nodeps -F $TARGET"
-	fi
+			if [[ "$PKGMK_INSTALL" = "install" ]]; then
+				COMMAND="rpm --nodeps -i $TARGET"
+			else
+				COMMAND="rpm --nodeps -F $TARGET"
+			fi
 		;;
 		pacman|pacman-g2)
 			if [[ "$PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
@@ -29,21 +29,21 @@ install_package() {
 			fi
 		;;
 		pkgtools)
-	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		COMMAND="installpkg $TARGET"
-	else
-		COMMAND="upgradepkg $TARGET"
-	fi
+			if [[ "$PKGMK_INSTALL" = "install" ]]; then
+				COMMAND="installpkg $TARGET"
+			else
+				COMMAND="upgradepkg $TARGET"
+			fi
 		;;
 		nhopkg)
-	COMMAND="nhopkg -i $TARGET"
+			COMMAND="nhopkg -i $TARGET"
 		;;
 		pkgutils)
-	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		COMMAND="pkgadd $TARGET"
-	else
-		COMMAND="pkgadd -u $TARGET"
-	fi
+			if [[ "$PKGMK_INSTALL" = "install" ]]; then
+				COMMAND="pkgadd $TARGET"
+			else
+				COMMAND="pkgadd -u $TARGET"
+			fi
 		;;
 	esac
 	
