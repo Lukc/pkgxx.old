@@ -31,5 +31,6 @@ PKGMK_WORK_DIR="/tmp/work-$name"
 # These variables will be used for the packages construction.
 PKGMK_ARCH=@ARCH@
 PKGMK_KERNEL=@KERNEL@
+PKGMK_PACKAGE_MANAGER=@PACKAGE_MANAGER@
 
 # End of file
