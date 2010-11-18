@@ -92,7 +92,8 @@ build_package() {
 		 * We think again to the poor user.
 		 */
 		info "Build result:"
-		#if defined dpkg
+		case $PKGMK_PACKAGE_MANAGER in
+			dpkg)
 		/*
 		 * We don’t want to know how deb are done, they are, that’s 
 		 * enough.
@@ -127,7 +128,8 @@ build_package() {
 		dpkg-deb --build $PKG
 		mv pkg.deb $TARGET
 		dpkg -c $TARGET
-		#elif defined rpm
+			;;
+			rpm)
 		/*
 		 * If there is a problem, it’s RPM’s fault.
 		 */
@@ -139,7 +141,8 @@ build_package() {
 			mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
 		fi
 		rpm -qvlp $TARGET
-		#elif defined pkgtools
+			;;
+			pkgtools)
 		mkdir $PKG/install
 		make_slackspec > $PKG/install/slack-desc
 		(
@@ -156,7 +159,8 @@ build_package() {
 			 */
 			tar tvJf $TARGET
 		)
-		#elif defined pacman
+			;;
+			pacman|pacman-g2)
 			/*
 			 * Frugalware’s packages are very close from Crux’s 
 			 * ones. The only difference is the presence of some 
@@ -189,12 +193,14 @@ build_package() {
 			#else
 			#	error No valid tar defined.
 			#endif
-		#elif defined nhopkg
+			;;
+			nhopkg)
 			size="`du -cb . | tail -n 1 | awk '{print $1}'`"
 			tar cvvjf data.tar.bz2 *
 			make_nhoid > nhoid
 			tar cf $TARGET nhoid data.tar.bz2
-		#else
+			;;
+			pkgutils)
 			#if defined gtar
 				tar cvvf ${TARGET%.$EXT} *
 			#elif defined bsdtar
@@ -228,13 +234,14 @@ build_package() {
 				lzop -Uf ${TARGET%.$EXT}
 			;;
 		esac
-		#endif
-		#if defined pacman
+			;;
+		esac
+		if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then
 		/*
 		 * I don’t remember why, but there was a problem with pacmen.
 		 */
 		mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
-		#endif
+		fi
 		
 		if [[ $? = 0 ]]; then
 			BUILD_SUCCESSFUL="yes"

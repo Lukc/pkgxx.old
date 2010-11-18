@@ -51,14 +51,6 @@ check_pkgfile() {
 	elif [[ ! "$release" ]]; then
 		error "Variable 'release' not specified in $PKGMK_PKGFILE."
 		exit $E_PKGFILE
-	#if defined rpm
-	elif [[ ! "$description" ]]; then
-		error "Variable 'description' not specified in $PKGMK_PKGFILE."
-		exit $E_PKGFILE
-	elif [[ ! "$packager" ]]; then
-		error "Variable 'packager' not specified in $PKGMK_PKGFILE."
-		exit $E_PKGFILE
-	#endif
 	elif [[ "`type -t build`" != "function" ]]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
 		exit $E_PKGFILE
@@ -68,6 +60,18 @@ check_pkgfile() {
 	elif ! check_kernel; then
 		error "This package is not made to work on your kernel."
 		exit $E_BAD_KERNEL
+	fi
+	/*
+	 * These vars are vital for RPM to build a package.
+	 */
+	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
+		if [[ ! "$description" ]]; then
+			error "Variable 'description' not specified in $PKGMK_PKGFILE."
+			exit $E_PKGFILE
+		elif [[ ! "$packager" ]]; then
+			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
+			exit $E_PKGFILE
+		fi
 	fi
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
 		if [[ ! "`type -t check`" = "function" ]]; then

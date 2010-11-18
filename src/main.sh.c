@@ -15,21 +15,10 @@
 #include "manpages.sh.c"
 #include "work.sh.c"
 
-#if defined pacman
-#	include "pacman.sh.c"
-#endif
-
-#if defined rpm
-#	include "rpm.sh.c"
-#endif
-
-#if defined pkgtools
-#	include "pkgtools.sh.c"
-#endif
-
-#if defined nhopkg
-#	include "nhopkg.sh.c"
-#endif
+#include "pacman.sh.c"
+#include "rpm.sh.c"
+#include "pkgtools.sh.c"
+#include "nhopkg.sh.c"
 
 #include "build.sh.c"
 #include "install.sh.c"
@@ -153,11 +142,9 @@ main() {
 	 * Note: We don’t need to check if another group has been already 
 	 *       declared, because the Pkgfile is sourced later.
 	 */
-	#if defined pacman \
-	|| defined rpm \
-	|| defined nhopkg
-	export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
-	#endif
+	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman(|-g2)|rpm|nhopkg) ]]; then
+		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
+	fi
 	
 	/*
 	 * The defaults files. Each file in each dir is sourced.
@@ -214,14 +201,18 @@ main() {
 	 * It is very important to check that the tools we will use are here, 
 	 * because we don’t want to be alone and miserably fail. 
 	 */
-	#if defined rpm
-	check_command rpm
-	check_command rpmbuild
-	#elif defined dpkg
-	check_command dpkg
-	#elif defined pkgtools
-	check_command makepkg
-	#endif
+	case $PKGMK_PACKAGE_MANAGER in
+		rpm)
+			check_command rpm
+			check_command rpmbuild
+		;;
+		dpkg)
+			check_command dpkg
+		;;
+		pkgtools)
+			check_command makepkg
+		;;
+	esac
 	/*
 	 * We don’t need to check for pacman{,-g2}, because it is not needed to
 	 * build the package, like rpmbuild and dpkg are. However, the user
@@ -235,12 +226,12 @@ main() {
 	check_directory "$PKGMK_SOURCE_DIR"
 	check_directory "$PKGMK_PACKAGE_DIR"
 	check_directory "`dirname $PKGMK_WORK_DIR`"
-	#if defined rpm
+	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
 	/*
 	 * RPM is worse, it needs it’s own tree inside the package dir.
 	 */
-	check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$arch"
-	#endif
+		check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$arch"
+	fi
 	
 	check_pkgfile
 	
@@ -252,63 +243,66 @@ main() {
 	 * Note: If pacmang2 is defined, pacman is also defined. So we need to
 	 *       check for the two.
 	 */
-	#if ! defined pacmang2 && \
-	    defined pacman || \
-	    defined dpkg   || \
-	    defined rpm    || \
-	    defined pkgtools || \
-	    defined nhopkg
-	if has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
-		ARCH=noarch
+	if [[ "$PKGMK_PACKAGE_MANAGER" != pacman-g2 ]] && \
+	   [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|rpm|pkgtools|nhopkg) ]]
+	then
+		if has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
+			ARCH=noarch
+		else
+			ARCH="$PKGMK_ARCH"
+		fi
 	else
 		ARCH="$PKGMK_ARCH"
 	fi
-	#else
-	ARCH="$PKGMK_ARCH"
-	#endif
 	/*
 	 * Targets definitions, depending of package manager used.
 	 * Note: devel and standard versions always have different targets.
 	 */
-	#if defined dpkg
+	case $PKGMK_PACKAGE_MANAGER in
+		dpkg)
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$ARCH.deb"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$ARCH.deb"
 	fi
-	#elif defined rpm
+		;;
+		rpm)
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.rpm"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.rpm"
 	fi
-	#elif defined pacman
+		;;
+		pacman|pacman-g2)
 	/*
 	 * The extension change between pacman and pacman-g2.
 	 */
-	#if defined pacmang2
-	EXT="fpm"
-	#else
-	EXT="pkg.tar.xz"
-	#endif
+	if [[ "PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
+		EXT="fpm"
+	else
+		EXT="pkg.tar.xz"
+	fi
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.$EXT"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.$EXT"
 	fi
-	#elif defined pkgtools
+		;;
+		pkgtools)
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$ARCH-$release.txz"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$ARCH-$release.txz"
 	fi
-	#elif defined nhopkg
+		;;
+		nhopkg)
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release.nho"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release.nho"
 	fi
-	#else
+		;;
+		pkgutils)
 	/*
 	 * Pkgutils users will be able to choose their compression method.
 	 */
@@ -332,7 +326,8 @@ main() {
 	if [[ -n "$EXT" ]]; then
 		TARGET="$TARGET.$EXT"
 	fi
-	#endif
+		;;
+	esac
 	
 	/*
 	 * If we just want to remove the already made package and the sources…
@@ -513,6 +508,8 @@ DOWNLOAD_TOOL="curl"
 #else /* wget is the default download tool used. */
 DOWNLOAD_TOOL="wget"
 #endif
+
+PKGMK_PACKAGE_MANAGER=_PACKAGE_MANAGER
 
 main "$@"
 

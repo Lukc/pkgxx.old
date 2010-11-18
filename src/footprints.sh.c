@@ -1,6 +1,7 @@
 
 make_footprint() {
-	#if defined pacman
+	case $PKGMK_PACKAGE_MANAGER in
+		pacman|pacman-g2)
 	/*
 	 * FIXME: Using three “grep” is not very clean. It should be possible
 	 *        to use a pattern instead.
@@ -32,7 +33,8 @@ make_footprint() {
 	#else
 	#	error No valid tar defined.
 	#endif
-	#elif defined pkgtools
+		;;
+		pkgtools)
 	#if defined gtar
 	tar tvvJf $TARGET | \
 		sed "s|  *|	|g" | \
@@ -45,7 +47,7 @@ make_footprint() {
 		    -e "s|	->	| -> |" \
 		    -e "s|\./||" | \
 		sort -k 3
-	#elif defind bsdtar
+	#elif defined bsdtar
 	bsdtar tvJf $TARGET | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
@@ -62,7 +64,8 @@ make_footprint() {
 	#else
 	#	error No valid tar defined.
 	#endif
-	#elif defined dpkg
+		;;
+		dpkg)
 	/*
 	 * This is a very dirty method to remove the first line of dpkg’s 
 	 * output using “tail”.
@@ -77,7 +80,8 @@ make_footprint() {
 		sort -k 3)
 	local lines=`echo "$footprint" | wc -l`
 	echo "$footprint" | tail -n $(($lines-1))
-	#elif defined rpm
+		;;
+		rpm)
 	local FILE
 	local IFS="
 "
@@ -95,7 +99,8 @@ make_footprint() {
 			echo "$LINE"
 		fi
 	done
-	#elif defined nhopkg
+		;;
+		nhopkg)
 	#if defined gtar
 	tar xf $TARGET data.tar.bz2
 	tar tvvjf data.tar.bz2 | \
@@ -120,7 +125,8 @@ make_footprint() {
 	#	error No valid tar defined.
 	#endif
 	rm data.tar.bz2
-	#else
+		;;
+		pkgutils)
 	/*
 	 * This is exactly the same thing, but pkginfo can do the work faster.
 	 * However, pkginfo is not available everywhere and for any type of 
@@ -130,7 +136,8 @@ make_footprint() {
 	pkginfo --footprint $TARGET | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
-	#endif
+		;;
+	esac
 }
 
 check_footprint() {
