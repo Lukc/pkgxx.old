@@ -503,6 +503,7 @@ PKGMK_CHECK_PKGFILE="no"
 PKGMK_ARCH=_ARCH
 PKGMK_KERNEL=_KERNEL
 
+readonly PKGMK_PACKAGE_MANAGERS=(pacman pacman-g2 dpkg nhopkg rpm pkgutils pkgtools)
 readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
 #if defined curl
 DOWNLOAD_TOOL="curl"

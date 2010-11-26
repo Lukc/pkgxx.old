@@ -1,4 +1,5 @@
 
+/* Pkgfile and general errors */
 E_GENERAL=1
 E_PKGFILE=2
 E_DIR_PERM=3
@@ -8,8 +9,13 @@ E_CONTROL_SUM=6
 E_FOOTPRINT=7
 E_BUILD=8
 E_INSTALL=9
+
+/* Invalid choices */
 E_INVALID_DOWNLOAD_TOOL=10
 E_INVALID_MAN_COMPRESSION=11
+E_INVALID_PM=12 /* PM == Package Manager */
+
+/* Unbuildable package */
 E_BAD_ARCH=20
 E_BAD_KERNEL=21
 

@@ -132,6 +132,11 @@ check_config() {
 		echo "Valid values are: gz bz2."
 		exit $E_INVALID_MAN_COMPRESSION
 	fi
+	if ! has $PKGMK_PACKAGE_MANAGER ${PKGMK_PACKAGE_MANAGERS[@]}; then
+		error "$PKGMK_PACKAGE_MANAGER is not a supported package manager. Please, edit your config file."
+		echo "Valid values are: ${PKGMK_PACKAGE_MANAGERS[@]}."
+		exit $E_INVALID_PM
+	fi
 }
 
 /*
