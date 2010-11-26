@@ -126,6 +126,36 @@ make_footprint() {
 			#endif
 			rm data.tar.bz2
 		;;
+		opkg)
+			local FOOTPRINT=$(
+			#if defined gtar
+			tar xf $TARGET data.tar.gz
+			tar tvvzf data.tar.gz | \
+				sed "s|  *|	|g" | \
+				cut -d "	" -f 1,2,6,7,8 | \
+				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+				    -e "s|	->	| -> |" \
+				    -e "s|\./||" | \
+				sort -k 3
+			#elif defined bsdtar
+			bsdtar xf $TARGET data.tar.gz
+			bsdtar tvzf data.tar.gz | \
+				sed "s|  *|	|g" | \
+				cut -d "	" -f 1,3,4,9,10,11 | \
+				sed "s|	|/|;s|	|/|;s|/|	|" | \
+				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+				    -e "s|	link	to	| -> |" \
+				    -e "s|	->	| -> |" \
+				    -e "s|\./||" | \
+				sort -k 3
+			#else
+			#	error No valid tar defined.
+			#endif
+			)
+			local LINES=$(echo "$FOOTPRINT" | wc -l)
+			echo "$FOOTPRINT" | tail -n $(($LINES-1))
+			rm data.tar.gz
+		;;
 		pkgutils)
 	/*
 	 * This is exactly the same thing, but pkginfo can do the work faster.

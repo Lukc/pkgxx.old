@@ -245,7 +245,7 @@ main() {
 	 *       check for the two.
 	 */
 	if [[ "$PKGMK_PACKAGE_MANAGER" != pacman-g2 ]] && \
-	   [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|rpm|pkgtools|nhopkg) ]]
+	   [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|opkg|rpm|pkgtools|nhopkg) ]]
 	then
 		if has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
 			ARCH=noarch
@@ -272,6 +272,13 @@ main() {
 				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.rpm"
 			else
 				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.rpm"
+			fi
+		;;
+		opkg)
+			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.opk"
+			else
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.opk"
 			fi
 		;;
 		pacman|pacman-g2)
@@ -503,7 +510,9 @@ PKGMK_CHECK_PKGFILE="no"
 PKGMK_ARCH=_ARCH
 PKGMK_KERNEL=_KERNEL
 
-readonly PKGMK_PACKAGE_MANAGERS=(pacman pacman-g2 dpkg nhopkg rpm pkgutils pkgtools)
+readonly PKGMK_PACKAGE_MANAGERS=(
+	pacman pacman-g2 dpkg nhopkg rpm pkgutils pkgtools opkg
+)
 readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
 #if defined curl
 DOWNLOAD_TOOL="curl"

@@ -239,6 +239,9 @@ for arg in $@; do
 		--sysconfdir=*)
 			SYSCONFDIR="`echo "$arg" | sed "s|--sysconfdir=||"`"
 		;;
+		--libexecdir=*)
+			LIBEXECDIR="`echo "$arg" | sed "s|--libexecdir=||"`"
+		;;
 		--package-manager=*)
 			PACKAGE_MANAGER="`echo "$arg" | sed "s|--package-manager=||"`"
 		;;
@@ -263,6 +266,7 @@ done
 : ${SHAREDIR:=$PREFIX/share}
 : ${MANDIR:=$SHAREDIR/man}
 : ${SYSCONFDIR:=/etc}
+: ${LIBEXECDIR:=$EPREFIX/libexec}
 
 : ${PACKAGE_MANAGER:=`package_manager`}
 : ${KERNEL:=`kernel`}
@@ -410,7 +414,7 @@ else
 	fi
 fi
 
-if ! [[ $PACKAGE_MANAGER =~ (dpkg|rpm|pkgtools|pkgutils|pacman(|-g2)|nhopkg) ]]; then
+if ! [[ $PACKAGE_MANAGER =~ ((d|o)pkg|rpm|pkgtools|pkgutils|pacman(|-g2)|nhopkg) ]]; then
 	cat << EOF >&2
 Your package manager is not known. If you want pkg++ to be built for a 
 particular package manager, use the --package-manager=<your-package-manager> 
@@ -435,6 +439,7 @@ CPPFLAGS="$CPPFLAGS -D_VERSION=\"$VERSION\""
 CPPFLAGS="$CPPFLAGS -D_ARCH=\"$ARCHITECTURE\" -D_KERNEL=\"$KERNEL\" $CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
+CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
 CPPFLAGS="$CPPFLAGS -DGMAKE=\"$GMAKE_PATH\""
 
 case $DISTRIBUTION in
@@ -490,7 +495,7 @@ DIR () {
 	echo "@echo -e \"  \033[34mMKDIR\033[00m        \033[37m$1\033[00m\";[ -d \$(DESTDIR)/$1 ] || mkdir -p \$(DESTDIR)/$1"
 }
 INSTALL () {
-	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$2"
+	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$(basename $2)"
 }
 INSTALL_F () {
 	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$4/$3\033[00m\";install -m$1 $2 \$(DESTDIR)/$4/$3"
@@ -507,6 +512,7 @@ cat > Makefile << EOF
 DESTDIR = 
 BINDIR = $EPREFIX/bin
 SHAREDIR = $SHAREDIR
+LIBEXECDIR = $LIBEXECDIR
 ETCDIR = $SYSCONFDIR
 MANDIR = $MANDIR
 
@@ -552,6 +558,7 @@ pkgxx-install: pkgxx
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
 	`DIR \$\(ETCDIR\)/pkg++/defaults`
 	`DIR \$\(ETCDIR\)/pkg++/uses`
+	`DIR \$\(LIBEXECDIR\)/pkg++`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
 	`for include in $(ls includes/); do
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++
@@ -564,6 +571,7 @@ pkgxx-install: pkgxx
 	@rm prefixes
 	@rm distributions
 	`INSTALL 0644 uses		\$\(SHAREDIR\)/pkg++`
+	`INSTALL 0755 tools/opkgmk.sh	\$\(LIBEXECDIR\)/pkg++/`
 
 update: pkgxx-install man-install
 

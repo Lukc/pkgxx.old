@@ -6,6 +6,9 @@ install_package() {
 		dpkg)
 			COMMAND="dpkg -i $TARGET"
 		;;
+		opkg)
+			COMMAND="opkg-cl install $TARGET"
+		;;
 		rpm)
 			if [[ "$PKGMK_INSTALL" = "install" ]]; then
 				COMMAND="rpm --nodeps -i $TARGET"

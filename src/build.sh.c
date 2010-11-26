@@ -105,6 +105,14 @@ build_package() {
 				mv pkg.deb $TARGET
 				dpkg -c $TARGET
 			;;
+			opkg)
+		/*
+		 * We use the opkgmk.sh script, installed by default.
+		 */
+				mkdir OPK
+				make_debian_control > OPK/control
+				_LIBEXECDIR/pkg++/opkgmk.sh -pkg $TARGET -root $PKG -verbose
+			;;
 			rpm)
 		/*
 		 * If there is a problem, it’s RPM’s fault.
