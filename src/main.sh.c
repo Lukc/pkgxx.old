@@ -524,3 +524,4 @@ PKGMK_PACKAGE_MANAGER=_PACKAGE_MANAGER
 
 main "$@"
 
+/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

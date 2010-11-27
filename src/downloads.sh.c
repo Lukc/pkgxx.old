@@ -142,3 +142,4 @@ download_source() {
 	done
 }
 
+/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

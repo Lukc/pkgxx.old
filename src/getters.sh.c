@@ -89,3 +89,4 @@ get_use_desc() {
 	) | tail -n 1 \
 	  | cut -d "|" -f 2
 }
+/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

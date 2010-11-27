@@ -107,3 +107,4 @@ make_pacman_pkginfo() {
 	done
 }
 
+/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

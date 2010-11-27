@@ -28,3 +28,4 @@ ask() {
 	read "$variable"
 }
 
+/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
