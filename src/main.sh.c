@@ -24,10 +24,6 @@
 #include "opts.sh.c"
 
 recursive() {
-	/*
-	 * This function is used with the -r option to rebuild/install/update
-	 * all packages in the directory and all it’s subdirectories.
-	 */
 	local ARGS FILE DIR
 	
 	/*
@@ -56,17 +52,11 @@ clean() {
 	 */
 	local FILE LOCAL_FILENAME
 	
-	/*
-	 * First we remove the package.
-	 */
 	if [[ -f $TARGET ]]; then
 		info "Removing $TARGET"
 		rm -f $TARGET
 	fi
 	
-	/*
-	 * And then we remove all the source files.
-	 */
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
 		if [[ -e $LOCAL_FILENAME ]] && [[ "$LOCAL_FILENAME" != "$FILE" ]]; then
@@ -81,10 +71,6 @@ clean() {
 }
 
 interrupted() {
-	/*
-	 * This function is called in case of interruption.
-	 * It cleans the work dir and ends pkg++.
-	 */
 	echo ""
 	error "Interrupted."
 	
@@ -96,35 +82,23 @@ interrupted() {
 }
 
 main() {
-	/*
-	 * Oh yeah, pkg++ begins here. \o/
-	 */
 	local FILE TARGET ARCH
 	export EXT=""
 	
-	/*
-	 * We parse the options.
-	 */
 	parse_options "$@"
 	
-	/*
-	 * If --list-includes or -li,  we just list the includes.
-	 */
 	if [[ "$PKGMK_LIST_INCLUDES" = "yes" ]]; then
 		list_includes
 		exit 0
 	fi
 	
-	/*
-	 * Use pkg++ recursively with --recursive or -r.
-	 */
 	if [[ "$PKGMK_RECURSIVE" = "yes" ]]; then
 		recursive "$@"
 		exit 0
 	fi
 	
 	/*
-	 * Some very used file names.
+	 * Some often used file names.
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
@@ -136,7 +110,7 @@ main() {
 	
 	/*
 	 * We need to define a group, with pacman and rpm. If we don’t give 
-	 * them a group, they will attack us, kill baby cats and won’t make the
+	 * them a group, they will attack us, kill kittens and won’t make the
 	 * package.
 	 * Note: We don’t need to check if another group has been already 
 	 *       declared, because the Pkgfile is sourced later.
@@ -145,9 +119,6 @@ main() {
 		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
 	
-	/*
-	 * The defaults files. Each file in each dir is sourced.
-	 */
 	for DIR in ${PKGMK_DEFAULTS_DIRS[@]}; do
 		/*
 		 * They could potencially have not been created.
@@ -182,9 +153,6 @@ main() {
 	 */
 	check_config
 	
-	/*
-	 * We source any file that has been included with ${includes[ ]}.
-	 */
 	for INCLUDE in ${includes[@]}; do
 		. $PKGMK_INCLUDES_DIR/$INCLUDE
 	done
@@ -253,10 +221,7 @@ main() {
 	else
 		ARCH="$PKGMK_ARCH"
 	fi
-	/*
-	 * Targets definitions, depending of package manager used.
-	 * Note: devel and standard versions always have different targets.
-	 */
+
 	case $PKGMK_PACKAGE_MANAGER in
 		dpkg)
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
@@ -281,7 +246,7 @@ main() {
 		;;
 		pacman|pacman-g2)
 	/*
-	 * The extension change between pacman and pacman-g2.
+	 * The extensions change between pacman and pacman-g2.
 	 */
 			if [[ "PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
 				EXT="fpm"
@@ -335,25 +300,16 @@ main() {
 		;;
 	esac
 	
-	/*
-	 * If we just want to remove the already made package and the sources…
-	 */
 	if [[ "$PKGMK_CLEAN" = "yes" ]]; then
 		clean
 		exit 0
 	fi
 	
-	/*
-	 * … or if we just want to update the footprint…
-	 */
 	if [[ "$PKGMK_UPDATE_FOOTPRINT" = "yes" ]]; then
 		update_footprint
 		exit 0
 	fi
 	
-	/*
-	 * … or the md5sum…
-	 */
 	if [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
 		download_source
 		check_file "$PKGMK_MD5SUM"
@@ -361,33 +317,22 @@ main() {
 		info "Md5sum updated."
 	fi
 	
-	/*
-	 * … or the sha256sum.
-	 */
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]]; then
 		download_source
 		check_file "$PKGMK_SHA256SUM"
 		make_sha256sum > $PKGMK_SHA256SUM
 		info "Sha256sum updated."
 	fi
-	/*
-	 * And if we checked any control sum, then we exit.
-	 */
+
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]] || [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
 		exit 0
 	fi
 	
-	/*
-	 * For those who need to only get sources. Maybe they will build later.
-	 */
 	if [[ "$PKGMK_DOWNLOAD_ONLY" = "yes" ]]; then
 		download_source
 		exit 0
 	fi
 	
-	/*
-	 * Uh… for those who need to only extract the sources ?
-	 */
 	if [[ "$PKGMK_EXTRACT_ONLY" = "yes" ]]; then
 		download_source
 		make_work_dir
@@ -397,7 +342,7 @@ main() {
 	fi
 	
 	/*
-	 * Sometimes it is usefull to know what has still to be built.
+	 * Sometimes it is useful to know what has still to be built.
 	 */
 	if [[ "$PKGMK_UP_TO_DATE" = "yes" ]]; then
 		if [[ "`build_needed`" = "yes" ]]; then
@@ -426,9 +371,6 @@ main() {
 		install_package
 	fi
 	
-	/*
-	 * Must I really comment that ?
-	 */
 	exit 0
 }
 
