@@ -208,7 +208,7 @@ check_footprint() {
 update_footprint() {
 	if [[ ! -f $TARGET ]]; then
 		error "Unable to update footprint. File '$TARGET' not found."
-		exit $E_GENERAL
+		exit E_GENERAL
 	fi
 	
 	check_file "$PKGMK_FOOTPRINT"

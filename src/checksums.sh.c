@@ -61,11 +61,11 @@ check_md5sum() {
 
 			if [[ "$PKGMK_CHECK_MD5SUM" = "yes" ]]; then
 				error "Md5sum not ok."
-				exit $E_CONTROL_SUM
+				exit E_CONTROL_SUM
 			fi
 
 			error "Building '$TARGET' failed."
-			exit $E_CONTROL_SUM
+			exit E_CONTROL_SUM
 		fi
 	else
 		if [[ "$PKGMK_CHECK_MD5SUM" = "yes" ]]; then
@@ -73,7 +73,7 @@ check_md5sum() {
 				rm -rf $PKGMK_WORK_DIR
 			fi
 			info "Md5sum not found."
-			exit $E_CONTROL_SUM
+			exit E_CONTROL_SUM
 		fi
 		
 		warning "Md5sum not found, creating new."
@@ -116,11 +116,11 @@ check_sha256sum() {
 
 			if [[ "$PKGMK_CHECK_SHA256SUM" = "yes" ]]; then
 				error "Sha256sum not ok."
-				exit $E_CONTROL_SUM
+				exit E_CONTROL_SUM
 			fi
 
 			error "Building '$TARGET' failed."
-			exit $E_CONTROL_SUM
+			exit E_CONTROL_SUM
 		fi
 	else
 		if [[ "$PKGMK_CHECK_SHA256SUM" = "yes" ]]; then
@@ -128,7 +128,7 @@ check_sha256sum() {
 				rm -rf $PKGMK_WORK_DIR
 			fi
 			info "Sha256sum not found."
-			exit $E_CONTROL_SUM
+			exit E_CONTROL_SUM
 		fi
 		
 		warning "Sha256sum not found, creating new."

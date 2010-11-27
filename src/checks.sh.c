@@ -44,22 +44,22 @@ check_pkgfile() {
 	 */
 	if [[ ! "$name" ]]; then
 		error "Variable 'name' not specified in $PKGMK_PKGFILE."
-		exit $E_PKGFILE
+		exit E_PKGFILE
 	elif [[ ! "$version" ]]; then
 		error "Variable 'version' not specified in $PKGMK_PKGFILE."
-		exit $E_PKGFILE
+		exit E_PKGFILE
 	elif [[ ! "$release" ]]; then
 		error "Variable 'release' not specified in $PKGMK_PKGFILE."
-		exit $E_PKGFILE
+		exit E_PKGFILE
 	elif [[ "`type -t build`" != "function" ]]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
-		exit $E_PKGFILE
+		exit E_PKGFILE
 	elif ! check_arch; then
 		error "This package is not made to work on your harware."
-		exit $E_BAD_ARCH
+		exit E_BAD_ARCH
 	elif ! check_kernel; then
 		error "This package is not made to work on your kernel."
-		exit $E_BAD_KERNEL
+		exit E_BAD_KERNEL
 	fi
 	/*
 	 * These vars are vital for RPM to build a package.
@@ -67,10 +67,10 @@ check_pkgfile() {
 	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
 		if [[ ! "$description" ]]; then
 			error "Variable 'description' not specified in $PKGMK_PKGFILE."
-			exit $E_PKGFILE
+			exit E_PKGFILE
 		elif [[ ! "$packager" ]]; then
 			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
-			exit $E_PKGFILE
+			exit E_PKGFILE
 		fi
 	fi
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
@@ -87,13 +87,13 @@ check_directory() {
 	 */
 	if [[ ! -d $1 ]]; then
 		error "Directory $1 does not exist."
-		exit $E_DIR_PERM
+		exit E_DIR_PERM
 	elif [[ ! -w $1 ]]; then
 		error "Directory $1 not writable."
-		exit $E_DIR_PERM
+		exit E_DIR_PERM
 	elif [[ ! -x $1 ]] || [[ ! -r $1 ]]; then
 		error "Directory $1 not readable."
-		exit $E_DIR_PERM
+		exit E_DIR_PERM
 	fi
 }
 
@@ -104,7 +104,7 @@ check_file() {
 	 */
 	if [[ -e $1 ]] && [[ ! -w $1 ]]; then
 		error "File $1 is not writable."
-		exit $E_DIR_PERM
+		exit E_DIR_PERM
 	fi
 }
 
@@ -114,7 +114,7 @@ check_command() {
 	 */
 	if [[ -z "`type -p $1`" ]]; then
 		error "Command $1 not found."
-		exit $E_GENERAL
+		exit E_GENERAL
 	fi
 }
 
@@ -125,17 +125,17 @@ check_config() {
 	if ! has $DOWNLOAD_TOOL ${PKGMK_DOWNLOAD_TOOLS[@]}; then
 		error "$DOWNLOAD_TOOL is not a valid download tool. Please, edit your config file."
 		echo "Valid values are: ${PKGMK_DOWNLOAD_TOOLS[@]}."
-		exit $E_INVALID_DOWNLOAD_TOOL
+		exit E_INVALID_DOWNLOAD_TOOL
 	fi
 	if ! [[ "$PKGMK_MAN_COMPRESSION" =~ ("gz"|"bz2") ]]; then
 		error "$PKGMK_MAN_COMPRESSION is not a valid man pages compression. Please, edit your config file."
 		echo "Valid values are: gz bz2."
-		exit $E_INVALID_MAN_COMPRESSION
+		exit E_INVALID_MAN_COMPRESSION
 	fi
 	if ! has $PKGMK_PACKAGE_MANAGER ${PKGMK_PACKAGE_MANAGERS[@]}; then
 		error "$PKGMK_PACKAGE_MANAGER is not a supported package manager. Please, edit your config file."
 		echo "Valid values are: ${PKGMK_PACKAGE_MANAGERS[@]}."
-		exit $E_INVALID_PM
+		exit E_INVALID_PM
 	fi
 }
 
