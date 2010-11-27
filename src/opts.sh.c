@@ -110,3 +110,4 @@ parse_options() {
 	PKGMK_PKGFILE="$PKGFILE"
 }
 
+/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */

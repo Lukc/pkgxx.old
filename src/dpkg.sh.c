@@ -25,3 +25,4 @@ make_debian_control() {
 	echo "Homepage: $url"
 	echo
 }
+/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */
