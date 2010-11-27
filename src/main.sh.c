@@ -1,6 +1,4 @@
 
-// vim: syntax=sh
-
 #include "error.sh.h"
 #include "display.sh.c"
 #include "getters.sh.c"
