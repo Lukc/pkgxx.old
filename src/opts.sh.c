@@ -82,7 +82,7 @@ parse_options() {
 			-cf|--config-file)
 				if [[ ! "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
-					exit $E_GENERAL
+					exit E_GENERAL
 				fi
 				PKGMK_CONFFILE="$2"
 				shift ;;
@@ -97,12 +97,12 @@ parse_options() {
 			*)
 				if [[ -n "$PKGFILE" ]]; then
 					echo "`basename $PKGMK_COMMAND`: only one $PKGMK_PKGFILE_NAME can be given"
-					exit $E_GENERAL
+					exit E_GENERAL
 				elif [[ -r "$1" ]]; then
 					PKGFILE="$1"
 				else
 					echo "`basename $PKGMK_COMMAND`: invalid option $1"
-					exit $E_GENERAL
+					exit E_GENERAL
 				fi ;;
 		esac
 		shift

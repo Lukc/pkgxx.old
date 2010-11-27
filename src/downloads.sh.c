@@ -67,7 +67,7 @@ download_file() {
 				
 			if [[ $error != 0 ]]; then
 				error "Downloading '$1' failed."
-				exit $E_DOWNLOAD
+				exit E_DOWNLOAD
 			fi
 				
 			mv -f "$LOCAL_FILENAME_PARTIAL" "$LOCAL_FILENAME"
@@ -129,13 +129,13 @@ download_source() {
 		if [[ ! -e $LOCAL_FILENAME ]] || [[ "$version" = "devel" ]]; then
 			if [[ "$LOCAL_FILENAME" = "$FILE" ]]; then
 				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
-				exit $E_DOWNLOAD
+				exit E_DOWNLOAD
 			else
 				if [[ "$PKGMK_DOWNLOAD" = "yes" ]] || [[ "$version" = "devel" ]]; then
 					download_file $FILE
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
-					exit $E_DOWNLOAD
+					exit E_DOWNLOAD
 				fi
 			fi
 		fi

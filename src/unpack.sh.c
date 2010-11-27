@@ -50,7 +50,7 @@ unpack_source() {
 				rm -rf $PKGMK_WORK_DIR
 			fi
 			error "Building '$TARGET' failed."
-			exit $E_UNPACK
+			exit E_UNPACK
 		fi
 	done
 }
