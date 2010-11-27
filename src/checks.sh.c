@@ -228,4 +228,3 @@ check_new_pkgfile () {
 	exit $RETURN
 }
 
-/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */

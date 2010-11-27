@@ -64,4 +64,3 @@ install_package() {
 	fi
 }
 
-/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */

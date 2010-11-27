@@ -218,4 +218,3 @@ update_footprint() {
 	info "Footprint updated."
 }
 
-/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */

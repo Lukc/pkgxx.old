@@ -46,4 +46,3 @@ remove_work_dir() {
 	rm -rf $PKGMK_WORK_DIR
 }
 
-/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */

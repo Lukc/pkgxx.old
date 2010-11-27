@@ -46,4 +46,3 @@ compress_manpages() {
 	done
 }
 
-/* vim:setsyntax=sh shiftwidth=4 tabstop=4: */
