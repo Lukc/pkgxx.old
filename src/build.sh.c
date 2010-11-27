@@ -68,7 +68,9 @@ build_package() {
 	 * Something went wrong
 	 */
 	if [[ $? != 0 ]]; then
-		error "code : $?"
+		errret = $?
+		error "$_ returned $errret"
+		return $errret
 	fi
 	/*
 	 * We strip the binaries/libraries if asked for.
