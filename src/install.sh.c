@@ -60,7 +60,7 @@ install_package() {
 		info "Installing '$TARGET' succeeded."
 	else
 		error "Installing '$TARGET' failed."
-		exit 1
+		exit $E_INSTALL
 	fi
 }
 

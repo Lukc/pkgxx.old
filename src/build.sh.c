@@ -60,7 +60,7 @@ build_package() {
 			info "$TARGET successfully tested."
 		else
 			error "Tests of $TARGET failed."
-			exit 1
+			exit $E_BUILD
 		fi
 	fi
 	
@@ -90,7 +90,7 @@ build_package() {
 	cd $PKG
 	if [[ "`find . | wc -l`" = 1 ]]; then
 		error "Building '$TARGET' failed."
-		exit 1
+		exit $E_BUILD
 	fi
 	/*
 	 * We think again to the poor user.
@@ -266,7 +266,7 @@ build_package() {
 		 * Uh… but if there is no package… uh… pkg++ probably failed.
 		 */
 		error "Building '$TARGET' failed."
-		exit 1
+		exit $E_BUILD
 	fi
 }
 

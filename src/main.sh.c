@@ -94,7 +94,7 @@ interrupted() {
 		rm -rf $PKGMK_WORK_DIR
 	fi
 	
-	exit 1
+	exit $E_GENERAL
 }
 
 main() {
@@ -174,7 +174,7 @@ main() {
 	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
 		if [[ ! -f $FILE ]]; then
 			error "File '$FILE' not found."
-			exit 1
+			exit $E_GENERAL
 		fi
 		. $FILE
 	done
@@ -321,7 +321,7 @@ main() {
 			none);;
 			*)
 				error "Compression mode '$PKGMK_COMPRESSION_MODE' not supported"
-				exit 1
+				exit $E_GENERAL
 				;;
 			esac
 			

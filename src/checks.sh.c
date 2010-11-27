@@ -104,7 +104,7 @@ check_file() {
 	 */
 	if [[ -e $1 ]] && [[ ! -w $1 ]]; then
 		error "File $1 is not writable."
-		exit 1
+		exit $E_DIR_PERM
 	fi
 }
 
