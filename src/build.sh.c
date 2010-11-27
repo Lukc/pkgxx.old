@@ -65,179 +65,180 @@ build_package() {
 	fi
 	
 	/*
-	 * If everything went well.
+	 * Something went wrong
 	 */
-	if [[ $? = 0 ]]; then
-		/*
-		 * We strip the binaries/libraries if asked for.
-		 */
-		if [[ "$PKGMK_NO_STRIP" = "no" ]]; then
-			strip_files
-		fi
-		
-		/*
-		 * Manual pages compression.
-		 */
-		compress_manpages
-		
-		/*
-		 * We check here that the package is not empty.
-		 */
-		cd $PKG
-		if [[ "`find . | wc -l`" = 1 ]]; then
-			error "Building '$TARGET' failed."
-			exit 1
-		fi
-		/*
-		 * We think again to the poor user.
-		 */
-		info "Build result:"
-		case $PKGMK_PACKAGE_MANAGER in
-			dpkg)
-		/*
-		 * We don’t want to know how deb are done, they are, that’s 
-		 * enough.
-		 */
-				mkdir DEBIAN
-				make_debian_control > DEBIAN/control
-				cd ..
-				dpkg-deb --build $PKG
-				mv pkg.deb $TARGET
-				dpkg -c $TARGET
-			;;
-			opkg)
-		/*
-		 * We use the opkgmk.sh script, installed by default.
-		 */
-				mkdir OPK
-				make_debian_control > OPK/control
-				_LIBEXECDIR/pkg++/opkgmk.sh -pkg $TARGET -root $PKG -verbose
-			;;
-			rpm)
-		/*
-		 * If there is a problem, it’s RPM’s fault.
-		 */
-				make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
-				rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
-				if [[ "$version" =~ (devel|dev|trunk) ]]; then
-					mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
-				else
-					mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
-				fi
-				rpm -qvlp $TARGET
-			;;
-			pkgtools)
-				mkdir $PKG/install
-				make_slackspec > $PKG/install/slack-desc
-				(
-					cd $PKG
-			/*
-			 * We create the package using makepkg. Doing this way
-			 * avoid some warnings. We redirect makepkg’s output to
-			 * /dev/null to skip it’s verbosity.
-			 */
-					makepkg -l y -c n $TARGET &> /dev/null
-			/*
-			 * As makepkg is redirected to /dev/null, we print the 
-			 * content of the package with tar.
-			 */
-					tar tvJf $TARGET
-				)
-			;;
-			pacman|pacman-g2)
-			/*
-			 * Frugalware’s packages are very close from Crux’s 
-			 * ones. The only difference is the presence of some 
-			 * metadata files at the root of the archive.
-			 * Three files are needed: .CHANGELOG, .FILELIST and
-			 * .PKGINFO
-			 */
-			/*
-			 * We get the size of the future package’s content.
-			 */
-					size="`du -cb . | tail -n 1 | awk '{print $1}'`"
-			/*
-			 * We write the files list in the future package.
-			 */
-					find . | sed "s|\./||" | sort > .FILELIST
-			/*
-			 * We write all other informations in the package.
-			 */
-					make_pacman_pkginfo > .PKGINFO
-					unset size
-			// FIXME: What about the Changelog ? :/
-			/*
-			 * And then we build the package.
-			 */
-					#if defined gtar
-						tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-					#elif defined bsdtar
-						bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-						bsdtar tvf ${TARGET%.$EXT}
-					#else
-					#	error No valid tar defined.
-					#endif
-			;;
-			nhopkg)
-					size="`du -cb . | tail -n 1 | awk '{print $1}'`"
-					tar cvvjf data.tar.bz2 *
-					make_nhoid > nhoid
-					tar cf $TARGET nhoid data.tar.bz2
-			;;
-			pkgutils)
-					#if defined gtar
-						tar cvvf ${TARGET%.$EXT} *
-					#elif defined bsdtar
-						bsdtar cf ${TARGET%.$EXT} *
-		/*
-		 * bsdtar cvvf doesn’t give enough informations about the 
-		 * saved files. So we create the archive and then we give to 
-		 * the user a files list.
-		 * Note: this list is different from the one given by GNU tar
-		 *       with cvv.
-		 */
-						bsdtar tvf ${TARGET%.$EXT}
-					#else
-					#	error No valid tar defined.
-					#endif
-		/*
-		 * pkgutils users have the choice of the compression method.
-		 * Now this choice will affect their fate.
-		 */
-				case $PKGMK_COMPRESSION_MODE in
-					gz)
-						gzip -f ${TARGET%.$EXT}
-					;;
-					bz2)
-						bzip2 -f ${TARGET%.$EXT}
-					;;
-					xz)
-						xz -f ${TARGET%.$EXT}
-					;;
-					lzo)
-						lzop -Uf ${TARGET%.$EXT}
-					;;
-				esac
-			;;
-		esac
-		if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then
-		/*
-		 * I don’t remember why, but there was a problem with pacmen.
-		 */
-		mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
-		fi
-		
-		if [[ $? = 0 ]]; then
-			BUILD_SUCCESSFUL="yes"
-			/*
-			 * We check if the package looks like what it should 
-			 * be.
-			 */
-			if [[ "$PKGMK_IGNORE_FOOTPRINT" = "yes" ]]; then
-				warning "Footprint ignored."
+	if [[ $? != 0 ]]; then
+		error "code : $?"
+	fi
+	/*
+	 * We strip the binaries/libraries if asked for.
+	 */
+	if [[ "$PKGMK_NO_STRIP" = "no" ]]; then
+		strip_files
+	fi
+	
+	/*
+	 * Manual pages compression.
+	 */
+	compress_manpages
+	
+	/*
+	 * We check here that the package is not empty.
+	 */
+	cd $PKG
+	if [[ "`find . | wc -l`" = 1 ]]; then
+		error "Building '$TARGET' failed."
+		exit 1
+	fi
+	/*
+	 * We think again to the poor user.
+	 */
+	info "Build result:"
+	case $PKGMK_PACKAGE_MANAGER in
+		dpkg)
+	/*
+	 * We don’t want to know how deb are done, they are, that’s 
+	 * enough.
+	 */
+			mkdir DEBIAN
+			make_debian_control > DEBIAN/control
+			cd ..
+			dpkg-deb --build $PKG
+			mv pkg.deb $TARGET
+			dpkg -c $TARGET
+		;;
+		opkg)
+	/*
+	 * We use the opkgmk.sh script, installed by default.
+	 */
+			mkdir OPK
+			make_debian_control > OPK/control
+			_LIBEXECDIR/pkg++/opkgmk.sh -pkg $TARGET -root $PKG -verbose
+		;;
+		rpm)
+	/*
+	 * If there is a problem, it’s RPM’s fault.
+	 */
+			make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
+			rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
+			if [[ "$version" =~ (devel|dev|trunk) ]]; then
+				mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
 			else
-				check_footprint
+				mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
 			fi
+			rpm -qvlp $TARGET
+		;;
+		pkgtools)
+			mkdir $PKG/install
+			make_slackspec > $PKG/install/slack-desc
+			(
+				cd $PKG
+		/*
+		 * We create the package using makepkg. Doing this way
+		 * avoid some warnings. We redirect makepkg’s output to
+		 * /dev/null to skip it’s verbosity.
+		 */
+				makepkg -l y -c n $TARGET &> /dev/null
+		/*
+		 * As makepkg is redirected to /dev/null, we print the 
+		 * content of the package with tar.
+		 */
+				tar tvJf $TARGET
+			)
+		;;
+		pacman|pacman-g2)
+		/*
+		 * Frugalware’s packages are very close from Crux’s 
+		 * ones. The only difference is the presence of some 
+		 * metadata files at the root of the archive.
+		 * Three files are needed: .CHANGELOG, .FILELIST and
+		 * .PKGINFO
+		 */
+		/*
+		 * We get the size of the future package’s content.
+		 */
+				size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+		/*
+		 * We write the files list in the future package.
+		 */
+				find . | sed "s|\./||" | sort > .FILELIST
+		/*
+		 * We write all other informations in the package.
+		 */
+				make_pacman_pkginfo > .PKGINFO
+				unset size
+		// FIXME: What about the Changelog ? :/
+		/*
+		 * And then we build the package.
+		 */
+				#if defined gtar
+					tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+				#elif defined bsdtar
+					bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+					bsdtar tvf ${TARGET%.$EXT}
+				#else
+				#	error No valid tar defined.
+				#endif
+		;;
+		nhopkg)
+				size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+				tar cvvjf data.tar.bz2 *
+				make_nhoid > nhoid
+				tar cf $TARGET nhoid data.tar.bz2
+		;;
+		pkgutils)
+				#if defined gtar
+					tar cvvf ${TARGET%.$EXT} *
+				#elif defined bsdtar
+					bsdtar cf ${TARGET%.$EXT} *
+	/*
+	 * bsdtar cvvf doesn’t give enough informations about the 
+	 * saved files. So we create the archive and then we give to 
+	 * the user a files list.
+	 * Note: this list is different from the one given by GNU tar
+	 *       with cvv.
+	 */
+					bsdtar tvf ${TARGET%.$EXT}
+				#else
+				#	error No valid tar defined.
+				#endif
+	/*
+	 * pkgutils users have the choice of the compression method.
+	 * Now this choice will affect their fate.
+	 */
+			case $PKGMK_COMPRESSION_MODE in
+				gz)
+					gzip -f ${TARGET%.$EXT}
+				;;
+				bz2)
+					bzip2 -f ${TARGET%.$EXT}
+				;;
+				xz)
+					xz -f ${TARGET%.$EXT}
+				;;
+				lzo)
+					lzop -Uf ${TARGET%.$EXT}
+				;;
+			esac
+		;;
+	esac
+	if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then
+	/*
+	 * I don’t remember why, but there was a problem with pacmen.
+	 */
+	mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
+	fi
+	
+	if [[ $? = 0 ]]; then
+		BUILD_SUCCESSFUL="yes"
+		/*
+		 * We check if the package looks like what it should 
+		 * be.
+		 */
+		if [[ "$PKGMK_IGNORE_FOOTPRINT" = "yes" ]]; then
+			warning "Footprint ignored."
+		else
+			check_footprint
 		fi
 	fi
 	
