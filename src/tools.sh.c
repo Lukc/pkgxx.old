@@ -38,6 +38,31 @@ use() {
 	return $return
 }
 
+use_enable() {
+	/*
+	 * For use with autotools. $(use_enable feature) will return
+	 * --enable-feature if the “feature” use flag is set, or
+	 * --disable-feature if it is not.
+	 * 
+	 * Note: $2 can give the name of the feature of the configure
+	 *       script, if it is not the same as the use flag.
+	 */
+	local flag=$1
+	local feature=${2:=$flag}
+	local value=${3:+=$3}
+	
+	if [[ -z "$flag" ]]; then
+		error "use_enable() used without a parameter."
+		return 1
+	fi
+	
+	if use $flag; then
+		echo -n "--enable-$feature$value"
+	else
+		echo -n "--disable-$feature"
+	fi
+}
+
 ask_use() {
 	/*
 	 * Function allowing to change a use flag in interactive mode.
