@@ -65,12 +65,12 @@ build_package() {
 	fi
 	
 	/*
-	 * Something went wrong
+	 * If something went wrong
 	 */
-	if [[ $? != 0 ]]; then
-		errret = $?
-		error "$_ returned $errret"
-		return $errret
+	local RETURN=$?
+	if [[ $RETURN != 0 ]]; then
+		error "build_package() returned $RETURN."
+		return $RETURN
 	fi
 	/*
 	 * We strip the binaries/libraries if asked for.
