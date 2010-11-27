@@ -10,11 +10,11 @@
 #define E_BUILD 8
 #define E_INSTALL 9
 
-/*  Invalid choices */
+/* Invalid choices */
 #define E_INVALID_DOWNLOAD_TOOL 10
 #define E_INVALID_MAN_COMPRESSION 11
 #define E_INVALID_PM 12 /* PM == Package Manager */
 
-/*  Inbuildable package */
+/* Unbuildable package */
 #define E_BAD_ARCH 20
 #define E_BAD_KERNEL 21
