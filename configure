@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REVISION="`git rev-list --all &>/dev/null | wc -l`"
+REVISION="`git rev-list --all 2>/dev/null | wc -l`"
 VERSION="0.9-devel-$REVISION"
 
 arch () {
