@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-REVISION="`git rev-list --all 2>/dev/null | wc -l`"
+REVISION="`git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g'`"
 VERSION="0.9-devel-$REVISION"
 
 arch () {
 	arch="$(uname -m)"
 	case ${arch} in
-		alpha|ia64|m68k|ppc|ppc64|x86_64) ;;
+		alpha|ia64|m68k|ppc|ppc64|x86_64|loongson) ;;
+		# loongson is the arch of Loongson (MIPS64el) processors on
+		#+ OpenBSD.
 		arm*) arch=arm ;;
 		i?86) arch=x86 ;;
 		mips*) arch=mips ;;
@@ -20,7 +22,7 @@ arch () {
 			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc." >&2
 		;;
 	esac
-	if [[ $PACKAGE_MANAGER =~ (pacman|pacman-g2|rpm|nhopkg) ]]; then
+	if has $PACKAGE_MANAGER pacman{,-g2} rpm nhopkg; then
 		case ${arch} in
 			x86) arch=i686;;
 		esac
@@ -111,6 +113,17 @@ checking_for_bin () {
 		fi
 	done
 	echo "no"
+	return 1
+}
+
+has () {
+	local flag="$1"
+	shift 1
+	for i in $@; do
+		if [[ "$flag" = "$i" ]]; then
+			return 0
+		fi
+	done
 	return 1
 }
 
@@ -414,7 +427,7 @@ else
 	fi
 fi
 
-if ! [[ $PACKAGE_MANAGER =~ ((d|o)pkg|rpm|pkgtools|pkgutils|pacman(|-g2)|nhopkg) ]]; then
+if ! has $PACKAGE_MANAGER {d,o}pkg rpm pkgtools pkgutils pacman{,-g2} nhopkg; then
 	cat << EOF >&2
 Your package manager is not known. If you want pkg++ to be built for a 
 particular package manager, use the --package-manager=<your-package-manager> 
@@ -530,13 +543,13 @@ help:
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
-	gcc -E -x c -P $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
+	cpp $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
 
 defaults/distributions:
-	gcc -E -x c -P $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
+	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
 
 pkgxx: defaults/prefixes defaults/distributions
-	cpp -E -x c -P $CPPFLAGS "src/main.sh.c" > "pkg++.tmp"
+	cpp $CPPFLAGS "src/main.sh.c" > "pkg++.tmp"
 	echo "#!/usr/bin/env bash" > pkg++
 	cat pkg++.tmp >> pkg++
 
