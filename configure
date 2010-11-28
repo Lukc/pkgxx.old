@@ -299,7 +299,7 @@ if checking_for_bin gtar &> /dev/null; then
 	GTAR_NAME="`type -p gtar`"
 	: ${USE_GTAR:=true}
 	echo "yes"
-elif tar --version | grep -q "GNU"; then
+elif tar --version 2>/dev/null | grep -q "GNU"; then
 	GTAR_NAME="`type -p tar`"
 	: ${USE_GTAR:=true}
 	echo "yes"
