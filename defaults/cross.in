@@ -1,0 +1,22 @@
+
+if [[ "${CTARGET}" != "${CHOST}" ]]; then
+	/* 
+	 * We define a prefix for the compilation tools, which differs if we are
+	 * cross-compiling or not. The prefix is used at the bottom of the file
+	 * to set the compilation tools names.
+	 */
+	local  CPREFIX="${CTARGET}"
+	export CROSS=yes
+else
+	local  CPREFIX="${CHOST}"
+	export CROSS=no
+fi
+
+: ${CC:=${CTARGET}-gcc}
+: ${CXX:=${CTARGET}-g++}
+: ${CPP:=${CTARGET}-cpp}
+: ${AS:=${CTARGET}-as}
+: ${AR:=${CTARGET}-ar}
+: ${LD:=${CTARGET}-ld}
+: ${NM:=${CTARGET}-nm}
+

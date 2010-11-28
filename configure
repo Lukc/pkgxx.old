@@ -556,7 +556,10 @@ defaults/prefixes:
 defaults/distributions:
 	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
 
-pkgxx: defaults/prefixes defaults/distributions
+defaults/cross:
+	cpp $CPPFLAGS "defaults/cross.in" >> "defaults/cross"
+
+pkgxx: defaults/prefixes defaults/distributions defaults/cross
 	cpp $CPPFLAGS "src/main.sh.c" > "pkg++.tmp"
 	echo "#!/usr/bin/env bash" > pkg++
 	cat pkg++.tmp >> pkg++
@@ -587,10 +590,13 @@ pkgxx-install: pkgxx
 	done`
 	@mv defaults/prefixes		prefixes
 	@mv defaults/distributions	distributions
+	@mv defaults/cross		cross
 	`INSTALL 0644 prefixes		\$\(ETCDIR\)/pkg++/defaults`
 	`INSTALL 0644 distributions	\$\(ETCDIR\)/pkg++/defaults`
+	`INSTALL 0644 cross		\$\(ETCDIR\)/pkg++/defaults`
 	@rm prefixes
 	@rm distributions
+	@rm cross
 	`INSTALL 0644 uses		\$\(SHAREDIR\)/pkg++`
 	`INSTALL 0755 tools/opkgmk.sh	\$\(LIBEXECDIR\)/pkg++/`
 	if ! [ -e \$(DESTDIR)\$(BINDIR)/pkgxx ]; then \
@@ -611,6 +617,7 @@ clean:
 	`REMOVE Makefile`
 	`REMOVE defaults/distributions`
 	`REMOVE defaults/prefixes`
+	`REMOVE defaults/cross`
 	`REMOVE src/config.sh.h`
 
 pkgfiles:
