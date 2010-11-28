@@ -63,6 +63,26 @@ use_enable() {
 	fi
 }
 
+use_with() {
+	/* 
+	 * Clone of use_enable(). See the function just before.
+	 */
+	local flag=$1
+	local feature=${2:=$flag}
+	local value=${3:+=$3}
+	
+	if [[ -z "$flag" ]]; then
+		error "use_with() used without a parameter."
+		return 1
+	fi
+	
+	if use $flag; then
+		echo -n "--with-$feature$value"
+	else
+		echo -n "--without-$feature"
+	fi
+}
+
 ask_use() {
 	/*
 	 * Function allowing to change a use flag in interactive mode.
