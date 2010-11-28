@@ -12,11 +12,12 @@ else
 	export CROSS=no
 fi
 
-: ${CC:=${CTARGET}-gcc}
-: ${CXX:=${CTARGET}-g++}
-: ${CPP:=${CTARGET}-cpp}
-: ${AS:=${CTARGET}-as}
-: ${AR:=${CTARGET}-ar}
-: ${LD:=${CTARGET}-ld}
-: ${NM:=${CTARGET}-nm}
-
+: ${CC:=${CPREFIX}-gcc}
+: ${CXX:=${CPREFIX}-g++}
+: ${CPP:=${CPREFIX}-cpp}
+: ${AS:=${CPREFIX}-as}
+: ${AR:=${CPREFIX}-ar}
+: ${LD:=${CPREFIX}-ld}
+: ${NM:=${CPREFIX}-nm}
+: ${RANLIB:=${CPREFIX}-ranlib}
+: ${STRIP:=${CPREFIX}-strip}
