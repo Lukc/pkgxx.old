@@ -40,6 +40,12 @@ NHOPKG=true
 NHOPKG=false
 #endif
 
+#if defined opkg
+OPKG=true
+#else
+OPKG=false
+#endif
+
 #if defined crux
 Crux=true
 #else
