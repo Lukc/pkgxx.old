@@ -11,10 +11,30 @@
 source=(${source[@]} svn:http://svn.enlightenment.org/svn/e/$e_path)
 version=devel
 
+autogen_opts=(
+	# Compilation and cross-compilation parameters.
+	${CBUILD:+--build=${CBUILD}}
+	${CHOST:+--host=${CHOST}}
+	${CTARGET:+--target=${CTARGET}}
+	# Default directories.
+	--prefix=$prefix
+	--exec-prefix=$eprefix
+	--bindir=$bindir
+	--sbindir=$sbindir
+	--libexecdir=$libexecdir
+	--sysconfdir=$sysconfdir
+	--localstatedir=$localstatedir
+	--libdir=$libdir
+	--datarootdir=$sharedir
+	--mandir=$mandir
+	# Anything special given in the Pkgfile.
+	${autogen_opts[@]}
+)
+
 build()
 {
 cd $name
-	./autogen.sh --prefix=$prefix ${autogen_opts[@]}
+	./autogen.sh ${autogen_opts[@]}
 	pkgmake ${make_opts[@]}
 	pkgmake ${make_opts[@]} install DESTDIR=$PKG
 }
