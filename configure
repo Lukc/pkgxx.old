@@ -16,8 +16,8 @@ arch () {
 		sh*) arch=sh ;;
 		sparc*) arch=sparc ;;
 		*)
-			echo "Nobody tested your architecture. Pease use --arch=<your arch> to set it manually. The default value would be $(uname -s)."
-			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc."
+			echo "Nobody tested your architecture. Pease use --arch=<your arch> to set it manually. The default value would be $(uname -s)." >&2
+			echo "The only known values are, for now, alpha, ia64, m68k, ppc, ppc64, x86, x86_64, arm, mips, hppa, s390, sh and sparc." >&2
 		;;
 	esac
 	if [[ $PACKAGE_MANAGER =~ (pacman|pacman-g2|rpm|nhopkg) ]]; then
@@ -40,8 +40,8 @@ kernel () {
 		Linux|FreeBSD|OpenBSD|NetBSD) ;;
 		CYGWIN*) kernel=Cygwin ;;
 		*)
-			echo "Nobody tested your kernel. Please, use --kernel=<your kernel> to set it manually. The default value would be $(uname -s)."
-			echo "The only known values are, for now, Linux, OpenBSD, NetBSD and FreeBSD."
+			echo "Nobody tested your kernel. Please, use --kernel=<your kernel> to set it manually. The default value would be $(uname -s)." >&2
+			echo "The only known values are, for now, Linux, OpenBSD, NetBSD and FreeBSD." >&2
 			exit 1
 		;;
 	esac
