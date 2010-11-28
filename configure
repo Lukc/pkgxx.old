@@ -286,14 +286,22 @@ done
 : ${ARCHITECTURE:=`arch`}
 : ${DISTRIBUTION:=`distribution`}
 
-if ! checking_for_bin gcc; then
-	echo "GCC is needed to configure and install pkg++, but not to use it."
+checking_for "gcc >= 4"
+if checking_for_bin gcc &> /dev/null; then
+	GCC_VERSION=$(gcc --version | head -n1 | cut -d " " -f 3)
+	if (( `echo $GCC_VERSION | cut -d . -f 1` < 4 )); then
+		echo "GCC is recommended in version 4 or more." >&2
+		echo "You may encounter problems or failures building pkg++ without it." >&2
+		echo "It is not, however, a runtime dependency." >&2
+	fi
+else
+	echo "GCC is needed to configure and install pkg++, but not to use it." >&2
 	exit 1
 fi
 
 checking_for "bash >= 4.1"
-BASH_VERSION=$(bash --version | head -n 1 | cut -d ' ' -f 4 | sed 's|(.*||')
 if checking_for_bin bash &> /dev/null; then
+	BASH_VERSION=$(bash --version | head -n 1 | cut -d ' ' -f 4 | sed 's|(.*||')
 	if	(( `echo $BASH_VERSION | cut -d . -f 1` >= 4 )) && \
 		(( `echo $BASH_VERSION | cut -d . -f 2` >= 1 ));
 	then
@@ -326,8 +334,8 @@ if checking_for_bin bsdtar; then
 else
 	if ! $USE_GTAR; then
 		USE_BSDTAR=true
-		echo "You will need GNU tar or bsdtar to extract files and build packages."
-		echo "pkg++ will be configured to use bsdtar."
+		echo "You will need GNU tar or bsdtar to extract files and build packages." >&2
+		echo "pkg++ will be configured to use bsdtar." >&2
 	else
 		: ${USE_BSDTAR:=false}
 	fi
@@ -339,8 +347,8 @@ else
 	: ${USE_CURL:=false}
 fi
 if ! checking_for_bin wget && ! $USE_CURL; then
-	echo "You will need wget or curl to be able to download files directly with pkg++."
-	echo "pkg++ will be configured to use wget."
+	echo "You will need wget or curl to be able to download files directly with pkg++." >&2
+	echo "pkg++ will be configured to use wget." >&2
 fi
 
 checking_for "GNU sed"
