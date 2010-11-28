@@ -25,6 +25,11 @@ esac
 : ${use_configure:=yes}
 
 configure_opts=(
+	# Compilation and cross-compilation parameters.
+	${CBUILD:+--build=${CBUILD}}
+	${CHOST:+--host=${CHOST}}
+	${CTARGET:+--target=${CTARGET}}
+	# Default directories.
 	--prefix=$prefix
 	--exec-prefix=$eprefix
 	--bindir=$bindir
@@ -35,6 +40,7 @@ configure_opts=(
 	--libdir=$libdir
 	--datarootdir=$sharedir
 	--mandir=$mandir
+	# Anything special given in the Pkgfile.
 	${configure_opts[@]}
 )
 
