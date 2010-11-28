@@ -572,7 +572,9 @@ pkgxx-install: pkgxx
 	@rm distributions
 	`INSTALL 0644 uses		\$\(SHAREDIR\)/pkg++`
 	`INSTALL 0755 tools/opkgmk.sh	\$\(LIBEXECDIR\)/pkg++/`
-	ln -s \$(DESTDIR)\$(BINDIR)/{pkg++,pkgxx}
+	if ! [ -e \$(DESTDIR)\$(BINDIR)/pkgxx ]; then \
+		ln -s \$(DESTDIR)\$(BINDIR)/{pkg++,pkgxx}; \
+	fi
 
 update: pkgxx-install man-install
 
