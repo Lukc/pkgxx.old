@@ -86,7 +86,7 @@ get_use_desc() {
 				grep "$use" $FILE
 			done
 		fi
-	) | tail -n 1 \
+	) | tail -n 1 \\
 	  | cut -d "|" -f 2
 }
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
