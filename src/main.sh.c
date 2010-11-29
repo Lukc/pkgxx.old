@@ -202,26 +202,11 @@ main() {
 	
 	check_pkgfile
 	
-	/*
-	 * No-arch packages must be of the form -noarch, instead of being of 
-	 * the form -x86 or whatever.
-	 * Note: pacman-g2 doesn’t support — for now — noarch packages, but 
-	 *       pacman does.
-	 * Note: If pacmang2 is defined, pacman is also defined. So we need to
-	 *       check for the two.
+	/* 
+	 * We set the architecture to something known by the package manager.
 	 */
-	if [[ "$PKGMK_PACKAGE_MANAGER" != pacman-g2 ]] && \
-	   [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|opkg|rpm|pkgtools|nhopkg) ]]
-	then
-		if has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
-			ARCH=noarch
-		else
-			ARCH="$PKGMK_ARCH"
-		fi
-	else
-		ARCH="$PKGMK_ARCH"
-	fi
-
+	ARCH=$(pm_arch)
+	
 	case $PKGMK_PACKAGE_MANAGER in
 		dpkg)
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then

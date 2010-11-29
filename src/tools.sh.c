@@ -190,6 +190,17 @@ pm_arch () {
 	 *         for the package managers who works only with archs and 
 	 *         not with kernels, etc.
 	 */
+	/*
+	 * No-arch packages must be of the form -noarch, instead of being of 
+	 * the form -x86 or whatever.
+	 * Note: pacman-g2 doesn’t support — for now — noarch packages, but 
+	 *       pacman does.
+	 */
+	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|opkg|rpm|pkgtools|nhopkg) ]] \
+	&& has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
+			echo "noarch"
+			return 0
+	fi
 	local TARGET_ARCH=$(target_arch)
 	case ${TARGET_ARCH} in
 		parisc*) arch=hppa ;;
