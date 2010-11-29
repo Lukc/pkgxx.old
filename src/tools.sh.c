@@ -158,4 +158,23 @@ make_desktop_entry() {
 	EOF
 }
 
+triplet_arch () {
+	/* 
+	 * This function returns the architecture depending on the triplet.
+	 * The triplet may be the CHOST or the CTARGET, thus allowing 
+	 * cross-compilation.
+	 *
+	 * If CTARGET nor CHOST are declared, the function does not return anything.
+	 */
+	local TRIPLET
+	if [[ -n "$CTARGET" ]]; then
+		TRIPLET=$CTARGET
+	elif [[ -n "$CHOST" ]]; then
+		TRIPLET=$CHOST
+	else
+		return 0
+	fi
+	echo $TRIPLET | cut -d- -f 1
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
