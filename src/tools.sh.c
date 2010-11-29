@@ -158,7 +158,7 @@ make_desktop_entry() {
 	EOF
 }
 
-triplet_arch () {
+target_arch () {
 	/* 
 	 * This function returns the architecture depending on the triplet.
 	 * The triplet may be the CHOST or the CTARGET, thus allowing 
@@ -190,7 +190,7 @@ pm_arch () {
 	 *         for the package managers who works only with archs and 
 	 *         not with kernels, etc.
 	 */
-	local TARGET_ARCH=$(triplet_arch)
+	local TARGET_ARCH=$(target_arch)
 	case ${TARGET_ARCH} in
 		parisc*) arch=hppa ;;
 		"Power Macintosh") arch=ppc ;;
