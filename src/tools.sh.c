@@ -177,4 +177,41 @@ triplet_arch () {
 	echo $TRIPLET | cut -d- -f 1
 }
 
+pm_arch () {
+	/* 
+	 * This function returns a correct architecture for the current
+	 * package manager, using the triplet_arch() function.
+	 * 
+	 * Warning : This function is very uncomplete for now. It will be
+	 *           completed over time, and will not be really usable 
+	 *           before the next stable release.
+	 * 
+	 * FIXME : Check for kernels, and make corresponding architectures
+	 *         for the package managers who works only with archs and 
+	 *         not with kernels, etc.
+	 */
+	local TARGET_ARCH=$(triplet_arch)
+	case ${TARGET_ARCH} in
+		parisc*) arch=hppa ;;
+		"Power Macintosh") arch=ppc ;;
+	esac
+	case $PKGMK_PACKAGE_MANAGER in
+		pacman|pacman-g2|rpm|nhopkg)
+			case ${TARGET_ARCH} in
+				i?86) arch=i686 ;;
+			esac
+		;;
+		dpkg)
+			case ${TARGET_ARCH} in
+				i?86) arch=i386 ;;
+				x86_64) arch=amd64 ;;
+				arm) arch=armel ;;
+				ppc) arch=powerpc ;;
+				powerpc64) arch=ppc64 ;;
+			esac
+		;;
+	esac
+	echo ${TARGET_ARCH}
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
