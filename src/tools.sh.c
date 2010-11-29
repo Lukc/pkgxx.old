@@ -146,16 +146,16 @@ make_desktop_entry() {
 	local desktop_icon=${4:-${name}}
 	local desktop_file=$PKG${menudir}/${5:-${desktop_name}}.desktop
 	
-	cat <<-EOF > "${desktop_file}"
-	[Desktop Entry]
-	Name=${desktop_name}
-	Type=Application
-	Comment=${description}
-	Exec=${desktop_exec}
-	TryExec=${desktop_exec%% *}
-	Icon=${desktop_icon}
-	Categories=${desktop_type}
-	EOF
+	(
+	echo "[Desktop Entry]"
+	echo "Name=${desktop_name}"
+	echo "Type=Application"
+	echo "Comment=${description}"
+	echo "Exec=${desktop_exec}"
+	echo "TryExec=${desktop_exec%% *}"
+	echo "Icon=${desktop_icon}"
+	echo "Categories=${desktop_type}"
+	) > "${desktop_file}"
 }
 
 target_arch () {
