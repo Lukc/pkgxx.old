@@ -48,7 +48,7 @@ use_enable() {
 	 *       script, if it is not the same as the use flag.
 	 */
 	local flag=$1
-	local feature=${2:=$flag}
+	local feature=${2:-$flag}
 	local value=${3:+=$3}
 	
 	if [[ -z "$flag" ]]; then
@@ -68,7 +68,7 @@ use_with() {
 	 * Clone of use_enable(). See the function just before.
 	 */
 	local flag=$1
-	local feature=${2:=$flag}
+	local feature=${2:-$flag}
 	local value=${3:+=$3}
 	
 	if [[ -z "$flag" ]]; then
