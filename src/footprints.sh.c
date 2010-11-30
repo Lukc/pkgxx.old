@@ -1,4 +1,9 @@
 
+#define __FP_SED sed \
+-e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+-e "s|	link	to	| -> |" \
+-e "s|	->	| -> |" \
+
 make_footprint() {
 	case $PKGMK_PACKAGE_MANAGER in
 		pacman|pacman-g2)
@@ -13,9 +18,7 @@ make_footprint() {
 				grep -v "\.PKGINFO" | \
 				grep -v "\.FILELIST" | \
 				grep -v "\.CHANGELOG" | \
-				sed -e "s|\./\.CHANGELOG||" \
-				    -e "s|	->	| -> |" \
-				    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+				__FP_SED -e "s|\./\.CHANGELOG||" \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar tvJf $TARGET | \
@@ -25,10 +28,7 @@ make_footprint() {
 				grep -v "\.PKGINFO" | \
 				grep -v "\.FILELIST" | \
 				grep -v "\.CHANGELOG" | \
-				sed -e "s|\./\.CHANGELOG||" \
-				    -e "s|	->	| -> |" \
-				    -e "s|	link	to	| -> |" \
-				    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+				__FP_SED -e "s|\./\.CHANGELOG||" \
 				sort -k 3
 			#else
 			#	error No valid tar defined.
@@ -43,9 +43,7 @@ make_footprint() {
 				grep -v "slack-desc" | \
 				grep -v "doinst.sh" | \
 				grep -v "drwxr-xr-x	root/root	./install/" | \
-				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	->	| -> |" \
-				    -e "s|\./||" | \
+				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar tvJf $TARGET | \
@@ -56,10 +54,7 @@ make_footprint() {
 				grep -v "slack-desc" | \
 				grep -v "doinst.sh" | \
 				grep -v "drwxr-xr-x	root/root	./install/" | \
-				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	link	to	| -> |" \
-				    -e "s|	->	| -> |" \
-				    -e "s|\./||" | \
+				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#else
 			#	error No valid tar defined.
@@ -75,8 +70,7 @@ make_footprint() {
 				sed "s|  *|\t|g" | \
 				cut -d "	" -f 1,2,6,7,8,9 | \
 				sed -e "s|\./||" \
-				    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	link	to	| -> |" | \
+				__FP_SED | \
 				sort -k 3)
 			local lines=`echo "$footprint" | wc -l`
 			echo "$footprint" | tail -n $(($lines-1))
@@ -88,8 +82,8 @@ make_footprint() {
 			for LINE in $(rpm -qvlp $TARGET | \
 				sed "s|  *|\t|g" | \
 				cut -d "	" -f 1,3,4,9,10,11 | \
-				sed -e "s|/||;s|	|/|;s|	|/|;s|/|	|;s|	->	| -> |" \
-				    -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+				sed -e "s|/||;s|	|/|;s|	|/|;s|/|	|" | \
+				__FP_SED | \
 				sort -k 3)
 			do
 				FILE="`echo "$LINE" | cut -d '	' -f 3`"
@@ -106,9 +100,7 @@ make_footprint() {
 			tar tvvjf data.tar.bz2 | \
 				sed "s|  *|	|g" | \
 				cut -d "	" -f 1,2,6,7,8 | \
-				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	->	| -> |" \
-				    -e "s|\./||" | \
+				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar xf $TARGET data.tar.bz2
@@ -116,10 +108,7 @@ make_footprint() {
 				sed "s|  *|	|g" | \
 				cut -d "	" -f 1,3,4,9,10,11 | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
-				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	link	to	| -> |" \
-				    -e "s|	->	| -> |" \
-				    -e "s|\./||" | \
+				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#else
 			#	error No valid tar defined.
@@ -133,20 +122,16 @@ make_footprint() {
 			tar tvvzf data.tar.gz | \
 				sed "s|  *|	|g" | \
 				cut -d "	" -f 1,2,6,7,8 | \
-				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	->	| -> |" \
+				__FP_SED | \
 				    -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar xf $TARGET data.tar.gz
 			bsdtar tvzf data.tar.gz | \
 				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,3,4,9,10,11 | \
+				cut -d "	" -f 1,3,4,9,10,11,12 | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
-				sed -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
-				    -e "s|	link	to	| -> |" \
-				    -e "s|	->	| -> |" \
-				    -e "s|\./||" | \
+				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#else
 			#	error No valid tar defined.
