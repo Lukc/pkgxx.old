@@ -5,7 +5,7 @@
  */
 : ${CHOST:=$MACHTYPE}
 
-if [[ "${CTARGET}" != "${CHOST}" ]]; then
+if [[ -n "${CTARGET}" && "${CTARGET}" != "${CHOST}" ]]; then
 	/* 
 	 * We define a prefix for the compilation tools, which differs if we are
 	 * cross-compiling or not. The prefix is used at the bottom of the file
