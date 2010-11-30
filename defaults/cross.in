@@ -1,4 +1,10 @@
 
+/* 
+ * $MACHTYPE is often set to the CHOST of the current machine, at least
+ * with the bash shell.
+ */
+: ${CHOST:=$MACHTYPE}
+
 if [[ "${CTARGET}" != "${CHOST}" ]]; then
 	/* 
 	 * We define a prefix for the compilation tools, which differs if we are
