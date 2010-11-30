@@ -196,7 +196,11 @@ target_libc () {
 	/* 
 	 * Same as target_arch() and target_kernel(), but for the last part
 	 * of the OSTYPE, which is not always present. If it is not present, 
-	 * it returns the third part of the triplet, too.
+	 * it returns the third part of the triplet, which is often 
+	 * representative of the desired information. The “libc” and the 
+	 * kernel are often the same on *BSD systems, which have a *BSD 
+	 * kernel and a *BSD libc, for example. It is the same for many other
+	 * OSes.
 	 */
 	local TRIPLET
 	local LIBC
