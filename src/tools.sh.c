@@ -203,22 +203,22 @@ pm_arch () {
 	fi
 	local TARGET_ARCH=$(target_arch)
 	case ${TARGET_ARCH} in
-		parisc*) arch=hppa ;;
-		"Power Macintosh") arch=ppc ;;
+		parisc*) TARGET_ARCH=hppa ;;
+		"Power Macintosh") TARGET_ARCH=ppc ;;
 	esac
 	case $PKGMK_PACKAGE_MANAGER in
 		pacman|pacman-g2|rpm|nhopkg)
 			case ${TARGET_ARCH} in
-				i?86) arch=i686 ;;
+				i?86) TARGET_ARCH=i686 ;;
 			esac
 		;;
 		dpkg)
 			case ${TARGET_ARCH} in
-				i?86) arch=i386 ;;
-				x86_64) arch=amd64 ;;
-				arm) arch=armel ;;
-				ppc) arch=powerpc ;;
-				powerpc64) arch=ppc64 ;;
+				i?86) TARGET_ARCH=i386 ;;
+				x86_64) TARGET_ARCH=amd64 ;;
+				arm) TARGET_ARCH=armel ;;
+				ppc) TARGET_ARCH=powerpc ;;
+				powerpc64) TARGET_ARCH=ppc64 ;;
 			esac
 		;;
 	esac
