@@ -82,7 +82,7 @@ interrupted() {
 }
 
 main() {
-	local FILE TARGET ARCH
+	local FILE TARGET
 	export EXT=""
 	
 	parse_options "$@"
@@ -205,28 +205,28 @@ main() {
 	/* 
 	 * We set the architecture to something known by the package manager.
 	 */
-	ARCH=$(pm_arch)
+	PKGMK_ARCH=$(pm_arch)
 	
 	case $PKGMK_PACKAGE_MANAGER in
 		dpkg)
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-				TARGET="$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$ARCH.deb"
+				TARGET="$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$PKGMK_ARCH.deb"
 			else
-				TARGET="$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$ARCH.deb"
+				TARGET="$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$PKGMK_ARCH.deb"
 			fi
 		;;
 		rpm)
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.rpm"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.rpm"
 			else
-				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.rpm"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
 			fi
 		;;
 		opkg)
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.opk"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.opk"
 			else
-				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.opk"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.opk"
 			fi
 		;;
 		pacman|pacman-g2)
@@ -239,16 +239,16 @@ main() {
 				EXT="pkg.tar.xz"
 			fi
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$ARCH.$EXT"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.$EXT"
 			else
-				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$ARCH.$EXT"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.$EXT"
 			fi
 		;;
 		pkgtools)
 			if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$ARCH-$release.txz"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
 			else
-				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$ARCH-$release.txz"
+				TARGET="$PKGMK_PACKAGE_DIR/$name-$version-$PKGMK_ARCH-$release.txz"
 			fi
 		;;
 		nhopkg)
@@ -432,7 +432,6 @@ PKGMK_CLEAN="no"
 PKGMK_CHECK="no"
 PKGMK_CHECK_PKGFILE="no"
 
-PKGMK_ARCH=_ARCH
 PKGMK_KERNEL=_KERNEL
 
 readonly PKGMK_PACKAGE_MANAGERS=(

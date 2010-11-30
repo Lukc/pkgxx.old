@@ -12,7 +12,7 @@ make_nhoid () {
 	echo "# Release:	$release"
 	echo "# License:	$license"
 	echo "# Group:	${groups[0]}"
-	echo "# Arch:	$ARCH"
+	echo "# Arch:	$PKGMK_ARCH"
 	echo "# Dep(post):	${depends[@]}"
 	echo "# Installed-Size:	$size"
 	/* Hum…  we don’t keep that data, for now */
