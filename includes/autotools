@@ -24,22 +24,24 @@ esac
 
 : ${use_configure:=yes}
 
+: ${sharedir_name:=datarootdir}
+
 configure_opts=(
 	# Compilation and cross-compilation parameters.
 	${CBUILD:+--build=${CBUILD}}
 	${CHOST:+--host=${CHOST}}
 	${CTARGET:+--target=${CTARGET}}
 	# Default directories.
-	--prefix=$prefix
-	--exec-prefix=$eprefix
-	--bindir=$bindir
-	--sbindir=$sbindir
-	--libexecdir=$libexecdir
-	--sysconfdir=$sysconfdir
-	--localstatedir=$localstatedir
-	--libdir=$libdir
-	--datarootdir=$sharedir
-	--mandir=$mandir
+	${prefix:+--prefix=$prefix}
+	${eprefix:+--exec-prefix=$eprefix}
+	${bindir:+--bindir=$bindir}
+	${sbindir:+--sbindir=$sbindir}
+	${libexecdir:+--libexecdir=$libexecdir}
+	${sysconfdir:+--sysconfdir=$sysconfdir}
+	${localstatedir:+--localstatedir=$localstatedir}
+	${libdir:+--libdir=$libdir}
+	${sharedir:+--${sharedir_name}=$sharedir}
+	${mandir:+--mandir=$mandir}
 	# Anything special given in the Pkgfile.
 	${configure_opts[@]}
 )
