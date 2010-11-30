@@ -290,9 +290,12 @@ checking_for "gcc >= 4"
 if checking_for_bin gcc &> /dev/null; then
 	GCC_VERSION=$(gcc --version | head -n1 | cut -d " " -f 3)
 	if (( `echo $GCC_VERSION | cut -d . -f 1` < 4 )); then
+		echo "no"
 		echo "GCC is recommended in version 4 or more." >&2
 		echo "You may encounter problems or failures building pkg++ without it." >&2
 		echo "It is not, however, a runtime dependency." >&2
+	else
+		echo "yes"
 	fi
 else
 	echo "GCC is needed to configure and install pkg++, but not to use it." >&2
