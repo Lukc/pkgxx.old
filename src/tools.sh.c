@@ -177,6 +177,43 @@ target_arch () {
 	echo $TRIPLET | cut -d- -f 1
 }
 
+target_kernel () {
+	/* 
+	 * Same as target_arch(), but for the OSTYPE.
+	 */
+	local TRIPLET
+	if [[ -n "$CTARGET" ]]; then
+		TRIPLET=$CTARGET
+	elif [[ -n "$CHOST" ]]; then
+		TRIPLET=$CTARGET
+	else
+		return 0
+	fi
+	echo $TRIPLET | cut -d- -f 3
+}
+
+target_libc () {
+	/* 
+	 * Same as target_arch() and target_kernel(), but for the last part
+	 * of the OSTYPE, which is not always present. If it is not present, 
+	 * it returns the third part of the triplet, too.
+	 */
+	local TRIPLET
+	local LIBC
+	if [[ -n "$CTARGET" ]]; then
+		TRIPLET=$CTARGET
+	elif [[ -n "$CHOST" ]]; then
+		TRIPLET=$CTARGET
+	else
+		return 0
+	fi
+	LIBC=$(echo $TRIPLET | cut -d- -f 4)
+	if [[ -z "$LIBC" ]]; then
+		LIBC=$(echo $TRIPLET | cut -d- -f 3)
+	fi
+	echo $LIBC
+}
+
 pm_arch () {
 	/* 
 	 * This function returns a correct architecture for the current
