@@ -238,7 +238,7 @@ pm_arch () {
 			echo "noarch"
 			return 0
 	fi
-	local TARGET_ARCH=$(target_arch)
+	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
 	case ${TARGET_ARCH} in
 		parisc*) TARGET_ARCH=hppa ;;
 		"Power Macintosh") TARGET_ARCH=ppc ;;
@@ -256,6 +256,10 @@ pm_arch () {
 				arm) TARGET_ARCH=armel ;;
 				ppc) TARGET_ARCH=powerpc ;;
 				powerpc64) TARGET_ARCH=ppc64 ;;
+			esac
+			case ${TARGET_KERNEL} in
+				freebsd*) TARGET_ARCH=kfreebsd-$TARGET_ARCH ;;
+				/* Not sure for the others… */
 			esac
 		;;
 	esac
