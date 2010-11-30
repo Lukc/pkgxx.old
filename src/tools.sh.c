@@ -266,4 +266,19 @@ pm_arch () {
 	echo ${TARGET_ARCH}
 }
 
+pm_kernel () {
+	/* 
+	 * Same as pm_arch() but for kernels.
+	 */
+	local TARGET_KERNEL=$(target_kernel)
+	case ${TARGET_KERNEL} in
+		freebsd*) TARGET_KERNEL=FreeBSD ;;
+		openbsd*) TARGET_KERNEL=OpenBSD ;;
+		netbsd*) TARGET_KERNEL=NetBSD ;;
+		linux) TARGET_KERNEL=Linux ;;
+		/* Feel free to submit patches to complete this… */
+	esac
+	echo ${TARGET_KERNEL}
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

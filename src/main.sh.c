@@ -206,6 +206,7 @@ main() {
 	 * We set the architecture to something known by the package manager.
 	 */
 	PKGMK_ARCH=$(pm_arch)
+	PKGMK_KERNEL=$(pm_kernel)
 	
 	case $PKGMK_PACKAGE_MANAGER in
 		dpkg)
