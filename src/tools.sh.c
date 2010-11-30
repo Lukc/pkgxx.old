@@ -197,7 +197,7 @@ pm_arch () {
 	 *       pacman does.
 	 */
 	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|opkg|rpm|pkgtools|nhopkg) ]] \
-	&& has no-arch ${archs[@]} || has no-kernel ${kernels[@]}; then
+	&& (has no-arch ${archs[@]} || has no-kernel ${kernels[@]}); then
 			echo "noarch"
 			return 0
 	fi
