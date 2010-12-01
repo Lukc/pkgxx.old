@@ -4,7 +4,10 @@ pkgmake() {
 	 * That avoids to use a non-gnu make, which could cause problems on 
 	 * some ports.
 	 */
-	GMAKE $MAKE_OPTS $@
+	GMAKE \
+		CC="$CC" CXX="$CXX" CPP="$CPP" AS="$AS" AR="$AR" LD="$LD" \
+		NM="$NM" RANLIB="$RANLIB" STRIP="$STRIP" \
+		$MAKE_OPTS $@
 }
 
 use() {
