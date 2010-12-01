@@ -542,6 +542,9 @@ MANDIR = $MANDIR
 
 PKGXX_VERSION=$VERSION
 
+CC = gcc
+CFLAGS =
+
 build: pkgxx
 
 help:
@@ -566,6 +569,10 @@ pkgxx: defaults/prefixes defaults/distributions defaults/cross
 	cpp $CPPFLAGS "src/main.sh.c" > "pkg++.tmp"
 	echo "#!/usr/bin/env bash" > pkg++
 	cat pkg++.tmp >> pkg++
+
+has:
+	(cd tools; \
+		\$(CC) \$(CFLAGS) has.c -o ../has)
 
 config-install:
 	`DIR \$\(ETCDIR\)`
@@ -606,9 +613,12 @@ pkgxx-install: pkgxx
 		ln -s \$(DESTDIR)\$(BINDIR)/{pkg++,pkgxx}; \
 	fi
 
-update: pkgxx-install man-install
+has-install: has
+	`INSTALL 755 has \$\(LIBEXECDIR\)/pkg++/`
 
-install: pkgxx-install config-install man-install
+update: pkgxx-install man-install has-install
+
+install: pkgxx-install config-install man-install has-install
 
 clean:
 	`REMOVE pkg++`
@@ -622,6 +632,7 @@ clean:
 	`REMOVE defaults/prefixes`
 	`REMOVE defaults/cross`
 	`REMOVE src/config.sh.h`
+	`REMOVE has`
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux

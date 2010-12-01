@@ -371,6 +371,11 @@ trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
  */
 export LC_ALL=POSIX
 
+/* 
+ * We export a new path to directly use some tools into pkg++, like has().
+ */
+export PATH=$PATH:_LIBEXECDIR/pkg++
+
 /*
  * Some RO functions that will never be modified during the execution.
  */
