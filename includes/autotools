@@ -28,9 +28,8 @@ esac
 
 configure_opts=(
 	# Compilation and cross-compilation parameters.
-	${CBUILD:+--build=${CBUILD}}
-	${CHOST:+--host=${CHOST}}
-	${CTARGET:+--target=${CTARGET}}
+	${CHOST:+--build=${CHOST}}
+	${CTARGET:+--host=${CTARGET}}
 	# Default directories.
 	${prefix:+--prefix=$prefix}
 	${eprefix:+--exec-prefix=$eprefix}
