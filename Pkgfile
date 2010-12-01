@@ -6,8 +6,6 @@ maintainer="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
 name=pkg++
 version=devel
 release=1
-archs=(no-arch)
-kernels=(no-kernel)
 source=(git:git://devel.upyum.com/pkgxx.git)
 
 case $distribution in
