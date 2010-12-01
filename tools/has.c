@@ -1,5 +1,4 @@
-#include "stdio.h"
-#include "string.h"
+#include <string.h>
 
 int main(int argc, char **argv) {
 	int i = 2; /* 0 is the executable name, 1 is the flag */
