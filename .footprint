@@ -2,12 +2,18 @@ drwxr-xr-x	root/root	etc/
 -rw-r--r--	root/root	etc/pkg++.conf
 drwxr-xr-x	root/root	etc/pkg++/
 drwxr-xr-x	root/root	etc/pkg++/defaults/
+-rw-r--r--	root/root	etc/pkg++/defaults/cross
 -rw-r--r--	root/root	etc/pkg++/defaults/distributions
 -rw-r--r--	root/root	etc/pkg++/defaults/prefixes
 drwxr-xr-x	root/root	etc/pkg++/uses/
 drwxr-xr-x	root/root	usr/
 drwxr-xr-x	root/root	usr/bin/
 -rwxr-xr-x	root/root	usr/bin/pkg++
+lrwxrwxrwx	root/root	usr/bin/pkgxx -> /usr/bin/pkg++
+drwxr-xr-x	root/root	usr/libexec/
+drwxr-xr-x	root/root	usr/libexec/pkg++/
+-rwxr-xr-x	root/root	usr/libexec/pkg++/has
+-rwxr-xr-x	root/root	usr/libexec/pkg++/opkgmk.sh
 drwxr-xr-x	root/root	usr/share/
 drwxr-xr-x	root/root	usr/share/man/
 drwxr-xr-x	root/root	usr/share/man/man5/

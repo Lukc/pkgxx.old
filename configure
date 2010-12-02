@@ -595,7 +595,7 @@ pkgxx-install: pkgxx
 	`DIR \$\(LIBEXECDIR\)/pkg++`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
 	`for include in $(ls includes/); do
-		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++
+		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++/includes
 		echo -ne "\t"
 	done`
 	@mv defaults/prefixes		prefixes
@@ -610,7 +610,7 @@ pkgxx-install: pkgxx
 	`INSTALL 0644 uses		\$\(SHAREDIR\)/pkg++`
 	`INSTALL 0755 tools/opkgmk.sh	\$\(LIBEXECDIR\)/pkg++/`
 	if ! [ -e \$(DESTDIR)\$(BINDIR)/pkgxx ]; then \
-		ln -s \$(DESTDIR)\$(BINDIR)/{pkg++,pkgxx}; \
+		ln -s \$(BINDIR)/pkg++ \$(DESTDIR)\$(BINDIR)/pkgxx; \
 	fi
 
 has-install: has
