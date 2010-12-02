@@ -10,6 +10,34 @@ pkgmake() {
 		$MAKE_OPTS $@
 }
 
+die() {
+	/* 
+	 * Display a given error message, and if in debug mode, a traceback.
+	 */
+	/* $word is used for the transition… */
+	local return=$? function file line_number type word
+	error "$@"
+	if [[ "$PKGMK_DEBUG" = yes ]]; then
+		if [[ -n "$return" ]]; then
+			echo "${BASH_SOURCE[1]}:${BASH_LINENO[1]}: ${FUNCNAME[1]} returned $return"
+		fi
+		echo "stack traceback:"
+		for ((i = 1; i < ${#FUNCNAME[@]}; i++)) ; do
+			function=${FUNCNAME[$i]}
+			file=$(basename ${BASH_SOURCE[$i]})
+			line_number=${BASH_LINENO[$(($i - 1))]}
+			type=$(type -t $function)
+			if [[ "$type" =~ function ]]; then
+				word="in"
+			else
+				word="from"
+			fi
+			echo "	$file:$line_number $word $type '$function'" >&2
+		done
+	fi
+	exit 1
+}
+
 use() {
 	/*
 	 * Very important function that returns true if a use flag is used, and
