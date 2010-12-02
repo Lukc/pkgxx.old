@@ -208,6 +208,9 @@ main() {
 	PKGMK_ARCH=$(pm_arch)
 	PKGMK_KERNEL=$(pm_kernel)
 	
+	/* 
+	 * We get the target from a specific function.
+	 */
 	TARGET="$(get_target)"
 	
 	if [[ "$PKGMK_CLEAN" = "yes" ]]; then
