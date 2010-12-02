@@ -41,11 +41,11 @@ build_package() {
 	 *              be displayed with a “+”.
 	 */
 	if [[ "`type -t pre_build`" = "function" ]]; then
-		(set -e -x ; pre_build)
+		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; pre_build)
 	fi
-	(set -e -x ; build)
+	(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; build)
 	if [[ "`type -t post_build`" = "function" ]]; then
-		(set -e -x ; post_build)
+		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; post_build)
 	fi
 	
 	/*

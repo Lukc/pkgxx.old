@@ -27,6 +27,7 @@ print_help() {
 	echo "  -cf,  --config-file <file>    use alternative configuration file"
 	echo "  -li,  --list-includes         list all inclusion files available"
 	echo "  -pm,  --package-manager <pm>  set the package manager to use"
+	echo "  -dg,  --debug                 print debug informations while building packages."
 	echo "  -v,   --version               print version and exit "
 	echo "  -h,   --help                  print help and exit"
 }
@@ -96,6 +97,8 @@ parse_options() {
 				fi
 				PKGMK_PACKAGE_MANAGER="$2"
 				shift ;;
+			-dg|--debug)
+				PKGMK_DEBUG="yes" ;;
 			-v|--version)
 				echo "`basename $PKGMK_COMMAND` $PKGMK_VERSION"
 				exit 0 ;;
