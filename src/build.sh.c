@@ -43,9 +43,14 @@ build_package() {
 	if [[ "`type -t pre_build`" = "function" ]]; then
 		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; pre_build)
 	fi
-	(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; build)
-	if [[ "`type -t post_build`" = "function" ]]; then
+	local RETURN=$?
+	if [[ $RETURN = 0 ]]; then
+		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; build)
+		RETURN=$?
+	fi
+	if [[ $RETURN = 0 && "`type -t post_build`" = "function" ]]; then
 		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; post_build)
+		RETURN=$?
 	fi
 	
 	/*
@@ -54,7 +59,7 @@ build_package() {
 	 * Note: check() can make pkg++ consider the package construction as 
 	 *       a fail if it fails.
 	 */
-	if [[ "$PKGMK_CHECK" = "yes" ]]; then
+	if [[ $RETURN != 0 && "$PKGMK_CHECK" = "yes" ]]; then
 		info "Testing $TARGET."
 		if check; then
 			info "$TARGET successfully tested."
@@ -67,7 +72,6 @@ build_package() {
 	/*
 	 * If something went wrong
 	 */
-	local RETURN=$?
 	if [[ $RETURN != 0 ]]; then
 		error "build_package() returned $RETURN."
 		return $RETURN
