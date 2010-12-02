@@ -1,0 +1,110 @@
+# Begin of Makefile
+
+# Installation directories
+
+DESTDIR :=
+PREFIX := /usr
+EPREFIX := $(PREFIX)
+BINDIR := $(EPREFIX)/bin
+SHAREDIR := $(PREFIX)/share
+LIBEXECDIR := $(EPREFIX)/libexec
+SYSCONFDIR := /etc
+MANDIR := $(SHAREDIR)/man
+
+# Portability informations…
+
+GMAKE :=  make
+GSED :=   sed
+GTAR :=   tar
+BSDTAR := bsdtar
+
+# Generic informations
+
+TRUNK = yes
+PKGXX_VERSION = 0.9-devel-$(shell git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g')
+CROSS := 
+
+# C
+
+CC := $(CROSS)gcc
+CPP := $(CROSS)cpp
+CFLAGS := -O2 -pipe
+CPPFLAGS := -x c -E -P -D_VERSION=$(PKGXX_VERSION) \
+	    -D_SHAREDIR="$(SHAREDIR)" -D_SYSCONFDIR="$(SYSCONFDIR)" \
+	    -D_LIBEXECDIR="$(LIBEXECDIR)" \
+	    -DGMAKE="$(GMAKE)" -Dbsdtar="$(BSDTAR)"
+
+#-Dgtar="$(GTAR)" to use GNU tar instead of bsdtar.
+# This should be removed before 0.10.
+
+# Rules - Generic
+
+all: build
+
+build: pkgxx defaults tools
+
+defaults: defaults/cross defaults/distributions defaults/prefixes
+
+tools: tools/has
+
+install: update install-config
+
+update:  build install-pkgxx install-defaults install-tools
+
+# Rules - Compilations
+
+tools/has: tools/has.c
+	$(CC) $(CFLAGS) tools/has.c -o tools/has
+
+# Rules - Preprocessing
+
+pkgxx:
+	echo "#/usr/bin/env bash" > pkg++
+	$(CPP) $(CPPFLAGS) src/main.sh.c >> pkg++
+
+defaults/cross: defaults/cross.in
+	$(CPP) $(CPPFLAGS) defaults/cross.in > defaults/cross
+
+defaults/distributions: defaults/distributions.in
+	$(CPP) $(CPPFLAGS) defaults/distributions.in > defaults/distributions
+
+defaults/prefixes: defaults/prefixes.in
+	$(CPP) $(CPPFLAGS) defaults/prefixes.in > defaults/prefixes
+
+# Rules - Installation
+
+install-pkgxx:
+	if ! [[ -d $(DESTDIR)$(BINDIR) ]]; then \
+		mkdir -p $(DESTDIR)$(BINDIR) ; \
+	fi
+	install -m0755 pkg++ $(DESTDIR)$(BINDIR)/pkg++
+ê
+install-defaults:
+	if ! [[ -d $(DESTDIR)$(SYSCONFDIR)/pkg++/defaults ]]; then \
+		mkdir -p $(DESTDIR)$(SYSCONFDIR)/pkg++/defaults ; \
+	fi
+	for i in cross distributions prefixes; do \
+		install -m0644 defaults/$$i $(DESTDIR)$(SHAREDIR)/pkg++/defaults/$$i || exit 1; \
+	done
+
+install-includes:
+	if ! [[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ]]; then \
+		mkdir -p $(DESTDIR)$(SHAREDIR)/pkg++/includes ; \
+	fi
+	for i in `ls includes/`; do \
+		install -m0644 includes/$$i $(DESTDIR)$(SHAREDIR)/pkg++/includes/$$i || exit 1 ; \
+	done
+
+install-tools:
+	if ! [[ -d $(DESTDIR)$(LIBEXECDIR)/pkg++ ]]; then \
+		mkdir -p $(DESTDIR)$(LIBEXECDIR)/pkg++ ; \
+	fi
+	for i in has opkgmk.sh; do \
+		install -m0644 tools/$$i $(DESTDIR)$(LIBEXECDIR)/pkg++/$$i || exit 1 ; \
+	done
+
+install-config:
+	@echo "WARNING: This Makefile still not generate config…" >&2
+	#install -m744 pkg++.conf $(DESTDIR)$(SYSCONFDIR)/pkg++.conf
+
+# End of Makefile
