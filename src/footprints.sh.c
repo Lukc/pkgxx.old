@@ -2,7 +2,15 @@
 #define __FP_SED sed \
 -e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
 -e "s|	link	to	| -> |" \
--e "s|	->	| -> |" \
+-e "s|	->	| -> |"
+
+#define __FP_GTAR tar tvvf $TARGET | \
+sed 's|  *|	|g' | \
+cut -d "	" -f 1,2,6,7,8
+
+#define __FP_BSDTAR bsdtar tvf $TARGET | \
+sed 's|  *|	|g' | \
+cut -d "	" -f 1,3,4,9,10,11,12
 
 make_footprint() {
 	case $PKGMK_PACKAGE_MANAGER in
@@ -12,18 +20,14 @@ make_footprint() {
 	 *        to use a pattern instead.
 	 */
 			#if defined gtar
-			tar tvvJf $TARGET | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,2,6,7,8 | \
+			__FP_GTAR | \
 				grep -v "\.PKGINFO" | \
 				grep -v "\.FILELIST" | \
 				grep -v "\.CHANGELOG" | \
 				__FP_SED -e "s|\./\.CHANGELOG||" \
 				sort -k 3
 			#elif defined bsdtar
-			bsdtar tvJf $TARGET | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,3,4,9,10,11 | \
+			__FP_BSDTAR | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				grep -v "\.PKGINFO" | \
 				grep -v "\.FILELIST" | \
@@ -36,9 +40,8 @@ make_footprint() {
 		;;
 		pkgtools)
 			#if defined gtar
-			tar tvvJf $TARGET | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,2,6,7,8 | \
+			// J
+			__FP_GTAR | \
 				grep -v -e "\./$" | \
 				grep -v "slack-desc" | \
 				grep -v "doinst.sh" | \
@@ -46,9 +49,7 @@ make_footprint() {
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
-			bsdtar tvJf $TARGET | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,3,4,9,10,11 | \
+			__FP_BSDTAR | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				grep -v -e "\./$" | \
 				grep -v "slack-desc" | \
@@ -97,16 +98,12 @@ make_footprint() {
 		nhopkg)
 			#if defined gtar
 			tar xf $TARGET data.tar.bz2
-			tar tvvjf data.tar.bz2 | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,2,6,7,8 | \
+			__FP_GTAR | \
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar xf $TARGET data.tar.bz2
-			bsdtar tvjf data.tar.bz2 | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,3,4,9,10,11 | \
+			__FP_BSDTAR | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
@@ -119,17 +116,14 @@ make_footprint() {
 			local FOOTPRINT=$(
 			#if defined gtar
 			tar xf $TARGET data.tar.gz
-			tar tvvzf data.tar.gz | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,2,6,7,8 | \
+			__FP_GTAR | \
 				__FP_SED | \
 				    -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar xf $TARGET data.tar.gz
-			bsdtar tvzf data.tar.gz | \
-				sed "s|  *|	|g" | \
-				cut -d "	" -f 1,3,4,9,10,11,12 | \
+			// z
+			__FP_BSDTAR | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
