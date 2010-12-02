@@ -4,11 +4,11 @@
 -e "s|	link	to	| -> |" \
 -e "s|	->	| -> |"
 
-#define __FP_GTAR tar tvvf $TARGET | \
+#define __FP_GTAR(__TARGET) tar tvvf __TARGET | \
 sed 's|  *|	|g' | \
 cut -d "	" -f 1,2,6,7,8
 
-#define __FP_BSDTAR bsdtar tvf $TARGET | \
+#define __FP_BSDTAR(__TARGET) bsdtar tvf __TARGET | \
 sed 's|  *|	|g' | \
 cut -d "	" -f 1,3,4,9,10,11,12
 
@@ -20,14 +20,14 @@ make_footprint() {
 	 *        to use a pattern instead.
 	 */
 			#if defined gtar
-			__FP_GTAR | \
+			__FP_GTAR($TARGET) | \
 				grep -v "\.PKGINFO" | \
 				grep -v "\.FILELIST" | \
 				grep -v "\.CHANGELOG" | \
 				__FP_SED -e "s|\./\.CHANGELOG||" \
 				sort -k 3
 			#elif defined bsdtar
-			__FP_BSDTAR | \
+			__FP_BSDTAR($TARGET) | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				grep -v "\.PKGINFO" | \
 				grep -v "\.FILELIST" | \
@@ -41,7 +41,7 @@ make_footprint() {
 		pkgtools)
 			#if defined gtar
 			// J
-			__FP_GTAR | \
+			__FP_GTAR($TARGET) | \
 				grep -v -e "\./$" | \
 				grep -v "slack-desc" | \
 				grep -v "doinst.sh" | \
@@ -49,7 +49,7 @@ make_footprint() {
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
-			__FP_BSDTAR | \
+			__FP_BSDTAR($TARGET) | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				grep -v -e "\./$" | \
 				grep -v "slack-desc" | \
@@ -98,12 +98,12 @@ make_footprint() {
 		nhopkg)
 			#if defined gtar
 			tar xf $TARGET data.tar.bz2
-			__FP_GTAR | \
+			__FP_GTAR(data.tar.bz2) | \
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar xf $TARGET data.tar.bz2
-			__FP_BSDTAR | \
+			__FP_BSDTAR(data.tar.bz2) | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
@@ -116,14 +116,14 @@ make_footprint() {
 			local FOOTPRINT=$(
 			#if defined gtar
 			tar xf $TARGET data.tar.gz
-			__FP_GTAR | \
+			__FP_GTAR(data.tar.gz) | \
 				__FP_SED | \
 				    -e "s|\./||" | \
 				sort -k 3
 			#elif defined bsdtar
 			bsdtar xf $TARGET data.tar.gz
 			// z
-			__FP_BSDTAR | \
+			__FP_BSDTAR(data.tar.gz) | \
 				sed "s|	|/|;s|	|/|;s|/|	|" | \
 				__FP_SED -e "s|\./||" | \
 				sort -k 3
