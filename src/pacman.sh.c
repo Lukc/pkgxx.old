@@ -107,4 +107,40 @@ make_pacman_pkginfo() {
 	done
 }
 
+pacman:build() {
+	cd $PKG
+	/*
+	 * Frugalware’s packages are very close from Crux’s 
+	 * ones. The only difference is the presence of some 
+	 * metadata files at the root of the archive.
+	 * Three files are needed: .CHANGELOG, .FILELIST and
+	 * .PKGINFO
+	 */
+	/*
+	 * We get the size of the future package’s content.
+	 */
+	size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+	/*
+	 * We write the files list in the future package.
+	 */
+	find . | sed "s|\./||" | sort > .FILELIST
+	/*
+	 * We write all other informations in the package.
+	 */
+	make_pacman_pkginfo > .PKGINFO
+	unset size
+	/* FIXME: What about the Changelog ? :/ */
+	/*
+	 * And then we build the package.
+	 */
+	#if defined gtar
+		tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+	#elif defined bsdtar
+		bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+		bsdtar tvf ${TARGET%.$EXT}
+	#else
+	#	error No valid tar defined.
+	#endif
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

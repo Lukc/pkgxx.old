@@ -106,12 +106,7 @@ build_package() {
 	 * We don’t want to know how deb are done, they are, that’s 
 	 * enough.
 	 */
-			mkdir DEBIAN
-			make_debian_control > DEBIAN/control
-			cd ..
-			dpkg-deb --build $PKG
-			mv pkg.deb $TARGET
-			dpkg -c $TARGET
+			dpkg:build
 		;;
 		opkg)
 	/*
@@ -122,75 +117,16 @@ build_package() {
 			_LIBEXECDIR/pkg++/opkgmk.sh -pkg $TARGET -root $PKG -verbose
 		;;
 		rpm)
-	/*
-	 * If there is a problem, it’s RPM’s fault.
-	 */
-			make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
-			rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
-			if [[ "$version" =~ (devel|dev|trunk) ]]; then
-				mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
-			else
-				mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
-			fi
-			rpm -qvlp $TARGET
+			rpm:build
 		;;
 		pkgtools)
-			mkdir $PKG/install
-			make_slackspec > $PKG/install/slack-desc
-			(
-				cd $PKG
-		/*
-		 * We create the package using makepkg. Doing this way
-		 * avoid some warnings. We redirect makepkg’s output to
-		 * /dev/null to skip it’s verbosity.
-		 */
-				makepkg -l y -c n $TARGET &> /dev/null
-		/*
-		 * As makepkg is redirected to /dev/null, we print the 
-		 * content of the package with tar.
-		 */
-				tar tvJf $TARGET
-			)
+			pkgtools:build
 		;;
 		pacman|pacman-g2)
-		/*
-		 * Frugalware’s packages are very close from Crux’s 
-		 * ones. The only difference is the presence of some 
-		 * metadata files at the root of the archive.
-		 * Three files are needed: .CHANGELOG, .FILELIST and
-		 * .PKGINFO
-		 */
-		/*
-		 * We get the size of the future package’s content.
-		 */
-				size="`du -cb . | tail -n 1 | awk '{print $1}'`"
-		/*
-		 * We write the files list in the future package.
-		 */
-				find . | sed "s|\./||" | sort > .FILELIST
-		/*
-		 * We write all other informations in the package.
-		 */
-				make_pacman_pkginfo > .PKGINFO
-				unset size
-		// FIXME: What about the Changelog ? :/
-		/*
-		 * And then we build the package.
-		 */
-				#if defined gtar
-					tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-				#elif defined bsdtar
-					bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-					bsdtar tvf ${TARGET%.$EXT}
-				#else
-				#	error No valid tar defined.
-				#endif
+			pacman:build
 		;;
 		nhopkg)
-				size="`du -cb . | tail -n 1 | awk '{print $1}'`"
-				tar cvvjf data.tar.bz2 *
-				make_nhoid > nhoid
-				tar cf $TARGET nhoid data.tar.bz2
+			nhopkg:build
 		;;
 		pkgutils)
 				#if defined gtar
@@ -229,8 +165,9 @@ build_package() {
 		;;
 	esac
 	if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then
-	/*
+	/* 
 	 * I don’t remember why, but there was a problem with pacmen.
+	 * FIXME: This will be a real problem when splits will be implemented…
 	 */
 	mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
 	fi

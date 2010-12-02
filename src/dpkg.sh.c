@@ -25,4 +25,15 @@ make_debian_control() {
 	echo "Homepage: $url"
 	echo
 }
+
+dpkg:build() {
+	cd $PKG
+	mkdir DEBIAN
+	make_debian_control > DEBIAN/control
+	cd ..
+	dpkg-deb --build $PKG
+	mv pkg.deb $TARGET
+	dpkg -c $TARGET
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

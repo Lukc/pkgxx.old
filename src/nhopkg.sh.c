@@ -41,5 +41,12 @@ npostremove() {
 EOT
 }
 
+nhopkg:build() {
+	cd $PKG
+	size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+	tar cvvjf data.tar.bz2 *
+	make_nhoid > nhoid
+	tar cf $TARGET nhoid data.tar.bz2
+}
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
