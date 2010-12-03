@@ -142,6 +142,9 @@ pacman:build() {
 	#	error No valid tar defined.
 	#endif
 }
+pacman-g2:build () {
+	pacman:build
+}
 
 pacman:footprint () {
 	/*
@@ -167,6 +170,9 @@ pacman:footprint () {
 	#	error No valid tar defined.
 	#endif
 }
+pacman-g2:footprint () {
+	pacman:footprint
+}
 
 pacman:install() {
 	if [[ "$PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
@@ -182,6 +188,9 @@ pacman:install() {
 	 */
 		echo "pacman -U $TARGET"
 	fi
+}
+pacman-g2:install () {
+	pacman:install
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
