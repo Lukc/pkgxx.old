@@ -148,19 +148,8 @@ pkgsplit() {
 	 */
 	tar c ".$@" | (cd $SPLITS/$split ; tar x)
 	
-	/* 
-	 * We first remove the files, and then the directories if they are 
-	 * empty.
-	 */
 	for i in ".$@" ; do
-		if [[ -e "$i" && -f "$i" ]]; then
-			rm -f $i
-		fi
-	done
-	for i in ".$@" ; do
-		if [[ -e "$i" && -d "$i" && -z "$(ls $i)" ]]; then
-			rmdir $i
-		fi
+		rm -rf $i
 	done
 }
 

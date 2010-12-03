@@ -103,13 +103,14 @@ build_package() {
 	PKG_VERSIONS=("$version" "${splits_version[@]}")
 	PKG_LICENSES=("$license" "${splits_licenses[@]}")
 	PKG_DESC=("$description" "${splits_descriptions[@]}")
+	PKG_ARCHS=("${archs[0]}" "${subarchs[@]}")
 	/*
 	 * We think again to the poor user.
 	 */
 	info "Build result:"
 	for i in ${!PKG_NAMES[*]}; do
 		local PKG_ROOT
-		info "${PKG_NAMES[$i]}-${PKG_VERSIONS[$i]:-$version}"
+		info "${PKG_NAMES[$i]}-${PKG_VERSIONS[$i]:-$version} ($(archs=${PKG_ARCHS[$i]} pm_arch))"
 		if [[ "$i" = 0 ]]; then
 			PKG_ROOT="$PKG"
 		else
@@ -117,7 +118,8 @@ build_package() {
 		fi
 		name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-$version}" \
 		license="${PKG_LICENSES[$i]:-$license}" \
-		description="${PKG_DESC[$i]}" PKG="$PKG_ROOT" \
+		description="${PKG_DESC[$i]}" archs=(${PKG_ARCHS[$i]}) \
+		PKG="$PKG_ROOT" \
 		TARGET="$(get_target)" \
 			$PKGMK_PACKAGE_MANAGER:build
 	done
