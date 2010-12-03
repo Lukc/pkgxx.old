@@ -8,6 +8,10 @@ check_arch(){
 		for ARCH in ${archs[@]}; do
 			case $ARCH in
 			no-arch)
+	/* For packages which will run on any arch once built. */
+				return 0;;
+			all)
+	/* For packages which will build on ary arch. */
 				return 0;;
 			$PKGMK_ARCH)
 				return 0;;
@@ -27,6 +31,8 @@ check_kernel(){
 		for KERNEL in ${kernels[@]}; do
 			case $KERNEL in
 			no-kernel)
+				return 0;;
+			all)
 				return 0;;
 			$PKGMK_KERNEL)
 				return 0;;
