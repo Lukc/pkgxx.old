@@ -168,4 +168,20 @@ pacman:footprint () {
 	#endif
 }
 
+pacman:install() {
+	if [[ "$PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
+		if [[ "$PKGMK_INSTALL" = "install" ]]; then
+			echo "pacman-g2 -A $TARGET"
+		else
+			echo "pacman-g2 -U $TARGET"
+		fi
+	else
+	/*
+	 * The correct parameter for pacman is always -U, even if the
+	 * package has never been installed.
+	 */
+		echo "pacman -U $TARGET"
+	fi
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

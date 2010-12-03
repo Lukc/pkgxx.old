@@ -47,4 +47,12 @@ pkgutils:footprint () {
 		sort -k 3
 }
 
+pkgutils:install () {
+	if [[ "$PKGMK_INSTALL" = "install" ]]; then
+		echo "pkgadd $TARGET"
+	else
+		echo "pkgadd -u $TARGET"
+	fi
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

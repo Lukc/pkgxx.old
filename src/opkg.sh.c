@@ -33,4 +33,8 @@ opkg:footprint () {
 	rm data.tar.gz
 }
 
+opkg:install () {
+	echo "opkg-cl install $TARGET"
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

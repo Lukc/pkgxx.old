@@ -67,4 +67,8 @@ nhopkg:footprint() {
 	rm data.tar.bz2
 }
 
+nhopkg:install() {
+	echo "nhopkg -i $TARGET"
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

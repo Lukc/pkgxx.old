@@ -52,4 +52,8 @@ dpkg:footprint() {
 	echo "$footprint" | tail -n $(($lines-1))
 }
 
+dpkg:install() {
+	echo "dpkg -i $TARGET"
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

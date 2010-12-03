@@ -70,4 +70,12 @@ rpm:footprint() {
 	done
 }
 
+rpm:install() {
+	if [[ "$PKGMK_INSTALL" = "install" ]]; then
+		echo "rpm --nodeps -i $TARGET"
+	else
+		echo "rpm --nodeps -F $TARGET"
+	fi
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

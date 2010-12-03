@@ -55,4 +55,12 @@ pkgtools:footprint () {
 	#endif
 }
 
+pkgtools:install () {
+	if [[ "$PKGMK_INSTALL" = "install" ]]; then
+		echo "installpkg $TARGET"
+	else
+		echo "upgradepkg $TARGET"
+	fi
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
