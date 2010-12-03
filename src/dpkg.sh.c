@@ -32,7 +32,7 @@ dpkg:build() {
 	make_debian_control > DEBIAN/control
 	cd ..
 	dpkg-deb --build $PKG
-	mv pkg.deb $TARGET
+	mv $(basename $PKG).deb $TARGET
 	dpkg -c $TARGET
 }
 
