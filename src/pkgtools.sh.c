@@ -31,4 +31,28 @@ pkgtools:build () {
 		)
 }
 
+pkgtools:footprint () {
+	#if defined gtar
+	// J
+	__FP_GTAR($TARGET) | \
+		grep -v -e "\./$" | \
+		grep -v "slack-desc" | \
+		grep -v "doinst.sh" | \
+		grep -v "drwxr-xr-x	root/root	./install/" | \
+		__FP_SED -e "s|\./||" | \
+		sort -k 3
+	#elif defined bsdtar
+	__FP_BSDTAR($TARGET) | \
+		sed "s|	|/|;s|	|/|;s|/|	|" | \
+		grep -v -e "\./$" | \
+		grep -v "slack-desc" | \
+		grep -v "doinst.sh" | \
+		grep -v "drwxr-xr-x	root/root	./install/" | \
+		__FP_SED -e "s|\./||" | \
+		sort -k 3
+	#else
+	#	error No valid tar defined.
+	#endif
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

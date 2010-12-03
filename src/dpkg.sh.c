@@ -36,4 +36,20 @@ dpkg:build() {
 	dpkg -c $TARGET
 }
 
+dpkg:footprint() {
+	/*
+	 * This is a very dirty method to remove the first line of dpkg’s 
+	 * output using “tail”.
+	 */
+	local footprint=$(
+	dpkg -c $TARGET | \
+		sed "s|  *|\t|g" | \
+		cut -d "	" -f 1,2,6,7,8,9 | \
+		sed -e "s|\./||" | \
+		__FP_SED | \
+		sort -k 3)
+	local lines=`echo "$footprint" | wc -l`
+	echo "$footprint" | tail -n $(($lines-1))
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

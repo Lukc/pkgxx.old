@@ -49,4 +49,22 @@ nhopkg:build() {
 	tar cf $TARGET nhoid data.tar.bz2
 }
 
+nhopkg:footprint() {
+	#if defined gtar
+	tar xf $TARGET data.tar.bz2
+	__FP_GTAR(data.tar.bz2) | \
+		__FP_SED -e "s|\./||" | \
+		sort -k 3
+	#elif defined bsdtar
+	bsdtar xf $TARGET data.tar.bz2
+	__FP_BSDTAR(data.tar.bz2) | \
+		sed "s|	|/|;s|	|/|;s|/|	|" | \
+		__FP_SED -e "s|\./||" | \
+		sort -k 3
+	#else
+	#	error No valid tar defined.
+	#endif
+	rm data.tar.bz2
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

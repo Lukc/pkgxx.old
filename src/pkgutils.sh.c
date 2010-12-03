@@ -35,4 +35,16 @@ pkgutils:build () {
 	esac
 }
 
+pkgutils:footprint () {
+	/*
+	 * This is exactly the same thing, but pkginfo can do the work faster.
+	 * However, pkginfo is not available everywhere and for any type of 
+	 * package, so pkg++ must be able do to without it on any distribution
+	 * that doesn’t use the pkgutils.
+	 */
+	pkginfo --footprint $TARGET | \
+		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
+		sort -k 3
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

@@ -143,4 +143,29 @@ pacman:build() {
 	#endif
 }
 
+pacman:footprint () {
+	/*
+	 * FIXME: Using three “grep” is not very clean. It should be possible
+	 *        to use a pattern instead.
+	 */
+	#if defined gtar
+	__FP_GTAR($TARGET) | \
+		grep -v "\.PKGINFO" | \
+		grep -v "\.FILELIST" | \
+		grep -v "\.CHANGELOG" | \
+		__FP_SED -e "s|\./\.CHANGELOG||" \
+		sort -k 3
+	#elif defined bsdtar
+	__FP_BSDTAR($TARGET) | \
+		sed "s|	|/|;s|	|/|;s|/|	|" | \
+		grep -v "\.PKGINFO" | \
+		grep -v "\.FILELIST" | \
+		grep -v "\.CHANGELOG" | \
+		__FP_SED -e "s|\./\.CHANGELOG||" \
+		sort -k 3
+	#else
+	#	error No valid tar defined.
+	#endif
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
