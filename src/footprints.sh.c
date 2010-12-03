@@ -70,7 +70,7 @@ make_footprint() {
 			dpkg -c $TARGET | \
 				sed "s|  *|\t|g" | \
 				cut -d "	" -f 1,2,6,7,8,9 | \
-				sed -e "s|\./||" \
+				sed -e "s|\./||" | \
 				__FP_SED | \
 				sort -k 3)
 			local lines=`echo "$footprint" | wc -l`
