@@ -27,13 +27,13 @@ strip_files() {
 		| $FILTER | while read FILE; do
 		case $(file -b "$FILE") in
 		*ELF*executable*not\ stripped)
-			strip --strip-all "$FILE"
+			${STRIP:-strip} --strip-all "$FILE"
 			;;
 		*ELF*shared\ object*not\ stripped)
-			strip --strip-unneeded "$FILE"
+			${STRIP:-strip} --strip-unneeded "$FILE"
 			;;
 		current\ ar\ archive)
-			strip --strip-debug "$FILE"
+			${STRIP:-strip} --strip-debug "$FILE"
 		esac
 	done
 }
