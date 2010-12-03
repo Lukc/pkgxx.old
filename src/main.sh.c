@@ -14,10 +14,12 @@
 #include "work.sh.c"
 
 #include "dpkg.sh.c"
+#include "opkg.sh.c"
 #include "pacman.sh.c"
 #include "rpm.sh.c"
 #include "pkgtools.sh.c"
 #include "nhopkg.sh.c"
+#include "pkgutils.sh.c"
 
 #include "build.sh.c"
 #include "install.sh.c"

@@ -5,6 +5,7 @@ make_work_dir() {
 	 */
 	export PKG="$PKGMK_WORK_DIR/pkg"
 	export SRC="$PKGMK_WORK_DIR/src"
+	export SPLITS="$PKGMK_WORK_DIR/splits"
 	export WORK="$PKGMK_WORK_DIR"
 	/*
 	 * And we make sure the umask will not cause problem.
@@ -16,7 +17,7 @@ make_work_dir() {
 	 */
 	cd $PKGMK_ROOT
 	remove_work_dir
-	mkdir -p $SRC $PKG
+	mkdir -p $SRC $PKG "$SPLITS/${splits[@]}"
 	
 	/*
 	 * We check md5 and sha256 control sums if possible. If the needed 

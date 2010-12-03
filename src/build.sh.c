@@ -96,74 +96,31 @@ build_package() {
 		error "Building '$TARGET' failed."
 		exit E_BUILD
 	fi
+	/* 
+	 * We export the needed vars to allow splitting.
+	 */
+	PKG_NAMES=("$name" "${splits[@]}")
+	PKG_VERSIONS=("$version" "${splits_version[@]}")
+	PKG_LICENSES=("$license" "${splits_licenses[@]}")
+	PKG_DESC=("$description" "${splits_descriptions[@]}")
 	/*
 	 * We think again to the poor user.
 	 */
 	info "Build result:"
-	case $PKGMK_PACKAGE_MANAGER in
-		dpkg)
-	/*
-	 * We don’t want to know how deb are done, they are, that’s 
-	 * enough.
-	 */
-			dpkg:build
-		;;
-		opkg)
-	/*
-	 * We use the opkgmk.sh script, installed by default.
-	 */
-			mkdir OPK
-			make_debian_control > OPK/control
-			_LIBEXECDIR/pkg++/opkgmk.sh -pkg $TARGET -root $PKG -verbose
-		;;
-		rpm)
-			rpm:build
-		;;
-		pkgtools)
-			pkgtools:build
-		;;
-		pacman|pacman-g2)
-			pacman:build
-		;;
-		nhopkg)
-			nhopkg:build
-		;;
-		pkgutils)
-				#if defined gtar
-					tar cvvf ${TARGET%.$EXT} *
-				#elif defined bsdtar
-					bsdtar cf ${TARGET%.$EXT} *
-	/*
-	 * bsdtar cvvf doesn’t give enough informations about the 
-	 * saved files. So we create the archive and then we give to 
-	 * the user a files list.
-	 * Note: this list is different from the one given by GNU tar
-	 *       with cvv.
-	 */
-					bsdtar tvf ${TARGET%.$EXT}
-				#else
-				#	error No valid tar defined.
-				#endif
-	/*
-	 * pkgutils users have the choice of the compression method.
-	 * Now this choice will affect their fate.
-	 */
-			case $PKGMK_COMPRESSION_MODE in
-				gz)
-					gzip -f ${TARGET%.$EXT}
-				;;
-				bz2)
-					bzip2 -f ${TARGET%.$EXT}
-				;;
-				xz)
-					xz -f ${TARGET%.$EXT}
-				;;
-				lzo)
-					lzop -Uf ${TARGET%.$EXT}
-				;;
-			esac
-		;;
-	esac
+	for i in ${!PKG_NAMES[*]}; do
+		local PKG_ROOT
+		info "${PKG_NAMES[$i]}-${PKG_VERSIONS[$i]:-$version}"
+		if [[ "$i" = 0 ]]; then
+			PKG_ROOT="$PKG"
+		else
+			PKG_ROOT="$SPLITS/${PKG_NAMES[$i]}"
+		fi
+		name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-$version}" \
+		license="${PKG_LICENSES[$i]:-$license}" \
+		description="${PKG_DESC[$i]}" PKG="$PKG_ROOT" \
+		TARGET="$(get_target)" \
+			$PKGMK_PACKAGE_MANAGER:build
+	done
 	if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then
 	/* 
 	 * I don’t remember why, but there was a problem with pacmen.
