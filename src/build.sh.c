@@ -104,6 +104,7 @@ build_package() {
 	PKG_LICENSES=("$license" "${splits_licenses[@]}")
 	PKG_DESC=("$description" "${splits_descriptions[@]}")
 	PKG_ARCHS=("${archs[0]}" "${subarchs[@]}")
+	PKG_DEPENDS=(${depends[@]} "{subdepends[@]}")
 	/*
 	 * We think again to the poor user.
 	 */
@@ -119,7 +120,7 @@ build_package() {
 		name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-$version}" \
 		license="${PKG_LICENSES[$i]:-$license}" \
 		description="${PKG_DESC[$i]}" archs=(${PKG_ARCHS[$i]}) \
-		PKG="$PKG_ROOT" \
+		depends="${PKG_DEPENDS[$i]}" PKG="$PKG_ROOT" \
 		TARGET="$(get_target)" \
 			$PKGMK_PACKAGE_MANAGER:build
 	done
