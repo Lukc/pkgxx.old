@@ -204,7 +204,7 @@ target_arch () {
 	elif [[ -n "$CHOST" ]]; then
 		TRIPLET=$CHOST
 	else
-		return 0
+		TRIPLET=$MACHTYPE /* We use the triplet bash was built with… */
 	fi
 	echo $TRIPLET | cut -d- -f 1
 }
