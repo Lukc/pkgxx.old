@@ -31,6 +31,7 @@ dpkg:build() {
 	mkdir DEBIAN
 	make_debian_control > DEBIAN/control
 	cd ..
+	info "Building $TARGET."
 	dpkg-deb --build $PKG
 	mv $(basename $PKG).deb $TARGET
 	dpkg -c $TARGET

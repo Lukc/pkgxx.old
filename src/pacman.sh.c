@@ -133,6 +133,7 @@ pacman:build() {
 	/*
 	 * And then we build the package.
 	 */
+	info "Building $TARGET."
 	#if defined gtar
 		tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
 	#elif defined bsdtar

@@ -111,7 +111,6 @@ build_package() {
 	info "Build result:"
 	for i in ${!PKG_NAMES[*]}; do
 		local PKG_ROOT
-		info "${PKG_NAMES[$i]}-${PKG_VERSIONS[$i]:-$version} ($(archs=${PKG_ARCHS[$i]} pm_arch))"
 		if [[ "$i" = 0 ]]; then
 			PKG_ROOT="$PKG"
 		else

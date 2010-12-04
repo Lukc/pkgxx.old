@@ -46,6 +46,7 @@ nhopkg:build() {
 	size="`du -cb . | tail -n 1 | awk '{print $1}'`"
 	tar cvvjf data.tar.bz2 *
 	make_nhoid > nhoid
+	info "Building $TARGET."
 	tar cf $TARGET nhoid data.tar.bz2
 }
 

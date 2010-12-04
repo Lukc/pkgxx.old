@@ -1,5 +1,6 @@
 
 pkgutils:build () {
+	info "Building $TARGET."
 	#if defined gtar
 	tar cvvf ${TARGET%.$EXT} *
 	#elif defined bsdtar

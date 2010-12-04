@@ -47,6 +47,7 @@ rpm:build() {
 	else
 		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
 	fi
+	info "Building $TARGET."
 	rpm -qvlp $TARGET
 }
 
