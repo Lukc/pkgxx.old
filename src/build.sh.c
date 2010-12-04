@@ -103,8 +103,8 @@ build_package() {
 	PKG_VERSIONS=("$version" "${splits_version[@]}")
 	PKG_LICENSES=("$license" "${splits_licenses[@]}")
 	PKG_DESC=("$description" "${splits_descriptions[@]}")
-	PKG_ARCHS=("${archs[0]}" "${subarchs[@]}")
-	PKG_DEPENDS=(${depends[@]} "${subdepends[@]}")
+	PKG_ARCHS=("${archs[0]}" "${splits_archs[@]}")
+	PKG_DEPENDS=("${depends[@]}" "${splits_depends[@]}")
 	/*
 	 * We think again to the poor user.
 	 */
