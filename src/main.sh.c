@@ -21,6 +21,12 @@
 #include "nhopkg.sh.c"
 #include "pkgutils.sh.c"
 
+#include "dl/ftp.sh.c"
+#include "dl/svn.sh.c"
+#include "dl/git.sh.c"
+#include "dl/hg.sh.c"
+#include "dl/bzr.sh.c"
+
 #include "build.sh.c"
 #include "install.sh.c"
 #include "opts.sh.c"
