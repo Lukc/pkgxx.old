@@ -12,6 +12,14 @@ make_slackspec () {
 	done
 }
 
+pkgtools:target () {
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
+	else
+		echo "$PKGMK_PACKAGE_DIR/$name-$version-$PKGMK_ARCH-$release.txz"
+	fi
+}
+
 pkgtools:build () {
 	mkdir $PKG/install
 	make_slackspec > $PKG/install/slack-desc

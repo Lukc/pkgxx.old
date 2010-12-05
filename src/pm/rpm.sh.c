@@ -35,6 +35,14 @@ make_rpm_spec() {
 	done
 }
 
+rpm:target() {
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.rpm"
+	else
+		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
+	fi
+}
+
 rpm:build() {
 	cd $PKG
 	/* 

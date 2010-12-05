@@ -41,6 +41,14 @@ npostremove() {
 EOT
 }
 
+nhopkg:target() {
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release.nho"
+	else
+		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release.nho"
+	fi
+}
+
 nhopkg:build() {
 	cd $PKG
 	size="`du -cb . | tail -n 1 | awk '{print $1}'`"

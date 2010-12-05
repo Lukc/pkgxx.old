@@ -1,4 +1,32 @@
 
+pkgutils:target () {
+	/*
+	 * Pkgutils users will be able to choose their compression method.
+	 */
+	case $PKGMK_COMPRESSION_MODE in
+	gz|bz2|xz|lzo)
+		EXT="$PKGMK_COMPRESSION_MODE"
+		;;
+	none);;
+	*)
+		error "Compression mode '$PKGMK_COMPRESSION_MODE' not supported"
+		exit E_GENERAL
+		;;
+	esac
+	
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar"
+	else
+		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar"
+	fi
+	
+	if [[ -n "$EXT" ]]; then
+		echo "$TARGET.$EXT"
+	else
+		echo "$TARGET"
+	fi
+}
+
 pkgutils:build () {
 	info "Building $TARGET."
 	#if defined gtar

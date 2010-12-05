@@ -26,6 +26,14 @@ make_debian_control() {
 	echo
 }
 
+dpkg:target() {
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		echo "$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$PKGMK_ARCH.deb"
+	else
+		echo "$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$PKGMK_ARCH.deb"
+	fi
+}
+
 dpkg:build() {
 	cd $PKG
 	mkdir DEBIAN

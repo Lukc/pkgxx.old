@@ -107,6 +107,22 @@ make_pacman_pkginfo() {
 	done
 }
 
+pacman:target() {
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.xz"
+	else
+		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.pkg.tar.xz"
+	fi
+}
+
+pacman-g2:target() {
+	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.fpm"
+	else
+		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.fpm"
+	fi
+}
+
 pacman:build() {
 	cd $PKG
 	/*
