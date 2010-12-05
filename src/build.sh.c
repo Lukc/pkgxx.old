@@ -157,8 +157,8 @@ build_package() {
 	else
 		if [[ -f $TARGET ]]; then
 		/*
-		 * We touch these files to avoid rebuilding an up to date 
-		 * package.
+		 * We touch these files to don’t make pkg++ ignore the package
+		 * next time.
 		 */
 			touch -r $PKGMK_ROOT/$PKGMK_PKGFILE $TARGET &> /dev/null
 		fi
