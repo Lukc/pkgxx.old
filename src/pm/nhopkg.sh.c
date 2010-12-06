@@ -77,7 +77,7 @@ nhopkg:footprint() {
 }
 
 nhopkg:install() {
-	echo "nhopkg -i $TARGET"
+	echo "nhopkg ${PKGMK_INSTALL_ROOT:+--root=$PKGMK_INSTALL_ROOT} -i $TARGET"
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
