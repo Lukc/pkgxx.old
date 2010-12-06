@@ -279,27 +279,16 @@ pm_arch () {
 		parisc*) TARGET_ARCH=hppa ;;
 		"Power Macintosh") TARGET_ARCH=ppc ;;
 	esac
+	if [[ -n "$(type -p $PKGMK_PACKAGE_MANAGER:arch)" ]]; then
+		ARCH="${TARGET_ARCH}" KERNEL="${TARGET_KERNEL}" \
+			$PKGMK_PACKAGE_MANAGER:arch
+	else
+		echo "${TARGET_ARCH}" 
+	fi
 	case $PKGMK_PACKAGE_MANAGER in
-		pacman|pacman-g2|rpm|nhopkg)
-			case ${TARGET_ARCH} in
-				i?86) TARGET_ARCH=i686 ;;
-			esac
-		;;
 		dpkg)
-			case ${TARGET_ARCH} in
-				i?86) TARGET_ARCH=i386 ;;
-				x86_64) TARGET_ARCH=amd64 ;;
-				arm) TARGET_ARCH=armel ;;
-				ppc) TARGET_ARCH=powerpc ;;
-				powerpc64) TARGET_ARCH=ppc64 ;;
-			esac
-			case ${TARGET_KERNEL} in
-				freebsd*) TARGET_ARCH=kfreebsd-$TARGET_ARCH ;;
-				/* Not sure for the others… */
-			esac
 		;;
 	esac
-	echo ${TARGET_ARCH}
 }
 
 pm_kernel () {

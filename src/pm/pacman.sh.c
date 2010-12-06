@@ -107,6 +107,19 @@ make_pacman_pkginfo() {
 	done
 }
 
+pacman:arch() {
+	case ${ARCH} in
+		i?86) ARCH=i686 ;;
+	esac
+	echo "${ARCH}"
+}
+pacman-g2:arch() {
+	case ${ARCH} in
+		i?86) ARCH=i686 ;;
+	esac
+	echo "${ARCH}"
+}
+
 pacman:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.xz"

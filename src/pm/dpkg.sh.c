@@ -26,6 +26,20 @@ make_debian_control() {
 	echo
 }
 
+dpkg:arch() {
+	case ${ARCH} in
+		i?86) ARCH=i386 ;;
+		x86_64) ARCH=amd64 ;;
+		arm) ARCH=armel ;;
+		ppc) ARCH=powerpc ;;
+		powerpc64) ARCH=ppc64 ;;
+	esac
+	case ${KERNEL} in
+		freebsd*) ARCH=kfreebsd-$ARCH ;;
+		/* Not sure for the others… */
+	esac
+}
+
 dpkg:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		echo "$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$PKGMK_ARCH.deb"
