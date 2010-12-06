@@ -4,6 +4,7 @@ print_help() {
 	echo "options:"
 	echo "  -i,   --install               build and install package"
 	echo "  -in,  --interactive           ask for use(s) when possible"
+	echo "  -ir,  --install-root <dir>    install packages in an alternative configuration file"
 	echo "  -u,   --upgrade               build and install package (as upgrade)"
 	echo "  -r,   --recursive             search for and build packages recursively"
 	echo "  -d,   --download              download missing source file(s)"
@@ -59,6 +60,13 @@ parse_options() {
 				PKGMK_IGNORE_FOOTPRINT="yes" ;;
 			-in|--ignore-new)
 				PKGMK_IGNORE_NEW="yes" ;;
+			-ir|--install-root)
+				if [[ ! "$2" ]]; then
+					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
+					exit E_GENERAL
+				fi
+				PKGMK_INSTALL_ROOT="$2"
+				shift ;;
 			-um|--update-md5sum)
 				PKGMK_UPDATE_MD5SUM="yes" ;;
 			-im|--ignore-md5sum)
