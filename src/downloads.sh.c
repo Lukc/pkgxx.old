@@ -6,8 +6,11 @@ download_file() {
 	
 	PROTOCOL="`get_protocol $1`"
 	case $PROTOCOL in
-		"http"|"https"|"ftp"|"file")
+		"http"|"https"|"ftp")
 			ftp:download "$1"
+		;;
+		"file")
+			file:copy "$1"
 		;;
 		*)
 			check_command "$PROTOCOL"
