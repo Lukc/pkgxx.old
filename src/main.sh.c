@@ -124,7 +124,7 @@ main() {
 	 * Note: We don’t need to check if another group has been already 
 	 *       declared, because the Pkgfile is sourced later.
 	 */
-	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman(|-g2)|rpm|nhopkg) ]]; then
+	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman(|-g2)|rpm|nhopkg|opkg) ]]; then
 		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
 	
