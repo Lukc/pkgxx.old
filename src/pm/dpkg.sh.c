@@ -76,7 +76,7 @@ dpkg:footprint() {
 }
 
 dpkg:install() {
-	echo "dpkg -i $TARGET"
+	echo "dpkg ${PKGMK_INSTALL_ROOT:+--root=$PKGMK_INSTALL_ROOT} -i $TARGET"
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
