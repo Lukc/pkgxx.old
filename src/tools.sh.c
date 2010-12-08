@@ -10,6 +10,18 @@ pkgmake() {
 		$MAKE_OPTS $@
 }
 
+path() {
+	local TARGET="$1"
+	for path in ${PATH/:/ }; do
+		if [[ "$TARGET" = "$path" ]]; then
+			echo "$path"
+			return 0
+		fi
+	done
+	echo "$TARGET"
+	return 1
+}
+
 die() {
 	/* 
 	 * Display a given error message, and if in debug mode, a traceback.
