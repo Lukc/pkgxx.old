@@ -4,7 +4,11 @@ get_protocol() {
 	 * It just returns what is before the first “:”.
 	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
-	echo $PROTOCOL
+	if [[ "$PROTOCOL" =~ .*+.* ]]; then
+		echo ${PROTOCOL#*+}
+	else
+		echo ${PROTOCOL}
+	fi
 }
 get_filename() {
 	/*
@@ -12,14 +16,19 @@ get_filename() {
 	 */
 	if
 		[[ $1 =~ ^(http|https|ftp):\/\/.*/(.+) ]] || \
-		[[ $1 =~ file:\/\/.* ]] || \
-		[[ $1 =~ (svn|git|hg|bzr):.*:\/\/.* ]]
+		[[ $1 =~ ^file:\/\/.* ]] || \
+		[[ $1 =~ ^(svn|git|hg|bzr):\/\/.* ]] || \
+		[[ $1 =~ ^(svn|git|hg|bzr):.*:\/\/.* ]] || \
+		[[ $1 =~ ^(svn|git|hg|bzr)\+.*:\/\/.* ]]
 	then
 		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
 		local PROTOCOL="`get_protocol $1`"
 		case $PROTOCOL in
 			svn|git|hg|bzr)
 				echo "$PKGMK_SOURCE_DIR/$name"
+				if [[ $1 =~ ^.*:.*:\/\/.* ]]; then
+					error "The form vcs:url is deprecated and will be removed in 0.9.3. Please, use vcs+url instead."
+				fi
 			;;
 			file)
 				echo -n "$PKGMK_SOURCE_DIR/"

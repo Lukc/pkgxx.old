@@ -6,7 +6,7 @@ maintainer="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
 name=pkg++
 version=devel
 release=1
-source=(git:git://devel.upyum.com/pkgxx.git)
+source=(git://devel.upyum.com/pkgxx.git)
 
 case $distribution in
 	Mandriva|Fedora|SuSE) : ${package_manager:=rpm} ;;
