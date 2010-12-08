@@ -66,9 +66,9 @@ pkgtools:footprint () {
 
 pkgtools:install () {
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		echo "installpkg $TARGET"
+		echo "installpkg ${PKGMK_INSTALL_ROOT:+-root $PKGMK_INSTALL_ROOT} $TARGET"
 	else
-		echo "upgradepkg $TARGET"
+		echo "upgradepkg ${PKGMK_INSTALL_ROOT:+-root $PKGMK_INSTALL_ROOT} $TARGET"
 	fi
 }
 

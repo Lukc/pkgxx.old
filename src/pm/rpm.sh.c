@@ -88,9 +88,9 @@ rpm:footprint() {
 
 rpm:install() {
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		echo "rpm --nodeps -i $TARGET"
+		echo "rpm ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} --nodeps -i $TARGET"
 	else
-		echo "rpm --nodeps -F $TARGET"
+		echo "rpm ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} --nodeps -F $TARGET"
 	fi
 }
 

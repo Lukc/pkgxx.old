@@ -78,9 +78,9 @@ pkgutils:footprint () {
 
 pkgutils:install () {
 	if [[ "$PKGMK_INSTALL" = "install" ]]; then
-		echo "pkgadd $TARGET"
+		echo "pkgadd ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} $TARGET"
 	else
-		echo "pkgadd -u $TARGET"
+		echo "pkgadd ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -u $TARGET"
 	fi
 }
 

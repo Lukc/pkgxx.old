@@ -43,7 +43,7 @@ opkg:footprint () {
 }
 
 opkg:install () {
-	echo "opkg-cl install $TARGET"
+	echo "opkg-cl ${PKGMK_INSTALL_ROOT:+-o $PKGMK_INSTALL_ROOT} install $TARGET"
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
