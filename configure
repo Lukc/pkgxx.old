@@ -478,10 +478,10 @@ esac
 
 case $PACKAGE_MANAGER in
 	pacman-g2)
-		CPPFLAGS="$CPPFLAGS -Dpacman=pacman -Dpacmang2=pacman-g2"
+		CPPFLAGS="$CPPFLAGS -D__pacman=pacman -D__pacmang2=pacman-g2"
 	;;
 	*)
-		CPPFLAGS="$CPPFLAGS -D$PACKAGE_MANAGER=$PACKAGE_MANAGER"
+		CPPFLAGS="$CPPFLAGS -D__$PACKAGE_MANAGER=$PACKAGE_MANAGER"
 	;;
 esac
 
@@ -558,7 +558,7 @@ help:
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
-	cpp $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
+	cpp $CPPFLAGS -x c "defaults/prefixes.in" >> "defaults/prefixes"
 
 defaults/distributions:
 	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
@@ -567,7 +567,7 @@ defaults/cross:
 	cpp $CPPFLAGS "defaults/cross.in" >> "defaults/cross"
 
 pkgxx: defaults/prefixes defaults/distributions defaults/cross
-	cpp $CPPFLAGS "src/main.sh.c" > "pkg++.tmp"
+	cpp $CPPFLAGS -x c "src/main.sh.c" > "pkg++.tmp"
 	echo "#!/usr/bin/env bash" > pkg++
 	cat pkg++.tmp >> pkg++
 

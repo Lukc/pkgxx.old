@@ -13,7 +13,7 @@ strip_files() {
 	/*
 	 * This corrects a problem on non-GNU userlands…
 	 */
-	#if defined gfind
+	#if defined __gfind
 	find . -type f -printf "%P\n" \\
 	/*
 	 * This one uses the GNU find, and it’s -printf option.
