@@ -78,7 +78,7 @@ install-pkgxx:
 		mkdir -p $(DESTDIR)$(BINDIR) ; \
 	fi
 	install -m0755 pkg++ $(DESTDIR)$(BINDIR)/pkg++
-ê
+
 install-defaults:
 	if ! [[ -d $(DESTDIR)$(SYSCONFDIR)/pkg++/defaults ]]; then \
 		mkdir -p $(DESTDIR)$(SYSCONFDIR)/pkg++/defaults ; \
