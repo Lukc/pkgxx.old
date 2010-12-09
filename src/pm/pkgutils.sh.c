@@ -29,9 +29,9 @@ pkgutils:target () {
 
 pkgutils:build () {
 	info "Building $TARGET."
-	#if defined gtar
+	#if defined __GTAR
 	tar cvvf ${TARGET%.$EXT} *
-	#elif defined bsdtar
+	#elif defined __BSDTAR
 	bsdtar cf ${TARGET%.$EXT} *
 	/*
 	 * bsdtar cvvf doesn’t give enough informations about the 

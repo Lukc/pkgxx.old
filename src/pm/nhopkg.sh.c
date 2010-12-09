@@ -59,12 +59,12 @@ nhopkg:build() {
 }
 
 nhopkg:footprint() {
-	#if defined gtar
+	#if defined __GTAR
 	tar xf $TARGET data.tar.bz2
 	__FP_GTAR(data.tar.bz2) | \
 		__FP_SED -e "s|\./||" | \
 		sort -k 3
-	#elif defined bsdtar
+	#elif defined __BSDTAR
 	bsdtar xf $TARGET data.tar.bz2
 	__FP_BSDTAR(data.tar.bz2) | \
 		sed "s|	|/|;s|	|/|;s|/|	|" | \

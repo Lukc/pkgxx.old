@@ -20,13 +20,13 @@ opkg:build () {
 
 opkg:footprint () {
 	local FOOTPRINT=$(
-	#if defined gtar
+	#if defined __GTAR
 	tar xf $TARGET data.tar.gz
 	__FP_GTAR(data.tar.gz) | \
 		__FP_SED | \
 		    -e "s|\./||" | \
 		sort -k 3
-	#elif defined bsdtar
+	#elif defined __BSDTAR
 	bsdtar xf $TARGET data.tar.gz
 	// z
 	__FP_BSDTAR(data.tar.gz) | \

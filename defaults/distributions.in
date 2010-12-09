@@ -4,91 +4,91 @@ package_manager=_PACKAGE_MANAGER
 kernel=_KERNEL
 arch=_ARCH
 
-#if defined pacman
+#if defined __pacman
 PACMAN=true
 #else
 PACMAN=false
 #endif
 
-#if defined pacmang2
+#if defined __pacmang2
 PACMAN_G2=true
 #else
 PACMAN_G2=false
 #endif
 
-#if defined dpkg
+#if defined __dpkg
 DPKG=true
 #else
 DPKG=false
 #endif
 
-#if defined rpm
+#if defined __rpm
 RPM=true
 #else
 RPM=false
 #endif
 
-#if defined pkgtools
+#if defined __pkgtools
 PKGTOOLS=true
 #else
 PKGTOOLS=false
 #endif
 
-#if defined nhopkg
+#if defined __nhopkg
 NHOPKG=true
 #else
 NHOPKG=false
 #endif
 
-#if defined opkg
+#if defined __opkg
 OPKG=true
 #else
 OPKG=false
 #endif
 
-#if defined crux
+#if defined __crux
 Crux=true
 #else
 Crux=false
 #endif
 
-#if defined debian
+#if defined __debian
 Debian=true
 #else
 Debian=false
 #endif
 
-#if defined arch
+#if defined __arch
 Arch=true
 #else
 Arch=false
 #endif
 
-#if defined frugalware
+#if defined __frugalware
 Frugalware=true
 #else
 Frugalware=false
 #endif
 
-#if defined freebsd
+#if defined __freebsd
 FreeBSD=true
 #else
 FreeBSD=false
 #endif
 
-#if defined mandriva
+#if defined __mandriva
 Mandriva=true
 #else
 Mandriva=false
 #endif
 
-#if defined arch
+#if defined __arch
 Arch=true
 #else
 Arch=false
 #endif
 
-#if defined slackware
+#if defined __slackware
 Slackware=true
 #else
 Slackware=false

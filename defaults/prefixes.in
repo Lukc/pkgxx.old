@@ -12,7 +12,7 @@
 : ${sharedir:="$prefix/share"}
 : ${datadir:="$prefix/share"}
 : ${docdir:="$data/doc/$name-$version"}
-#if defined crux || defined slackware
+#if defined __crux || defined __slackware
 : ${mandir:="$prefix/man"}
 #else
 : ${mandir:="$sharedir/man"}

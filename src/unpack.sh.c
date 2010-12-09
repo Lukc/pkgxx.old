@@ -13,7 +13,7 @@ unpack_source() {
 		 */
 		if ! [[ "$no_extraction" =~ ("true"|"yes") ]]; then
 			case $LOCAL_FILENAME in
-				#if defined gtar
+				#if defined __GTAR
 				*.tar.gz|*.tar.Z|*.tgz)
 					COMMAND="tar -C $SRC --use-compress-program=gzip -xf $LOCAL_FILENAME" ;;
 				*.tar.bz2|*.tbz2)
@@ -24,7 +24,7 @@ unpack_source() {
 					COMMAND="tar -C $SRC -xf $LOCAL_FILENAME";;
 				*.zip)
 					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
-				#elif defined bsdtar
+				#elif defined __BSDTAR
 				*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma|*.zip|*.rpm)
 					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME" ;;
 				#else

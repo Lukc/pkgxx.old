@@ -41,7 +41,7 @@ pkgtools:build () {
 }
 
 pkgtools:footprint () {
-	#if defined gtar
+	#if defined __GTAR
 	// J
 	__FP_GTAR($TARGET) | \
 		grep -v -e "\./$" | \
@@ -50,7 +50,7 @@ pkgtools:footprint () {
 		grep -v "drwxr-xr-x	root/root	./install/" | \
 		__FP_SED -e "s|\./||" | \
 		sort -k 3
-	#elif defined bsdtar
+	#elif defined __BSDTAR
 	__FP_BSDTAR($TARGET) | \
 		sed "s|	|/|;s|	|/|;s|/|	|" | \
 		grep -v -e "\./$" | \

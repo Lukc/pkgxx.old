@@ -163,9 +163,9 @@ pacman:build() {
 	 * And then we build the package.
 	 */
 	info "Building $TARGET."
-	#if defined gtar
+	#if defined __GTAR
 		tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-	#elif defined bsdtar
+	#elif defined __BSDTAR
 		bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
 		bsdtar tvf ${TARGET%.$EXT}
 	#else
@@ -181,14 +181,14 @@ pacman:footprint () {
 	 * FIXME: Using three “grep” is not very clean. It should be possible
 	 *        to use a pattern instead.
 	 */
-	#if defined gtar
+	#if defined __GTAR
 	__FP_GTAR($TARGET) | \
 		grep -v "\.PKGINFO" | \
 		grep -v "\.FILELIST" | \
 		grep -v "\.CHANGELOG" | \
 		__FP_SED -e "s|\./\.CHANGELOG||" \
 		sort -k 3
-	#elif defined bsdtar
+	#elif defined __BSDTAR
 	__FP_BSDTAR($TARGET) | \
 		sed "s|	|/|;s|	|/|;s|/|	|" | \
 		grep -v "\.PKGINFO" | \

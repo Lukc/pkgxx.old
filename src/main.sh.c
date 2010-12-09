@@ -339,7 +339,7 @@ PKGMK_PACKAGE_DIR="$PWD"
 PKGMK_WORK_DIR="$PWD/work"
 PKGMK_INSTALL_ROOT=
 
-#if defined pacman
+#if defined __pacman
 PKGMK_COMPRESSION_MODE="xz"
 #else
 /*
@@ -382,7 +382,7 @@ readonly PKGMK_PACKAGE_MANAGERS=(
 	pacman pacman-g2 dpkg nhopkg rpm pkgutils pkgtools opkg
 )
 readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
-#if defined curl
+#if defined __curl
 DOWNLOAD_TOOL="curl"
 #else /* wget is the default download tool used. */
 DOWNLOAD_TOOL="wget"

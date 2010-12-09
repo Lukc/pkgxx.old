@@ -438,14 +438,15 @@ else
 	fi
 fi
 
-if ! has $PACKAGE_MANAGER {d,o}pkg rpm pkgtools pkgutils pacman{,-g2} nhopkg; then
-	cat << EOF >&2
-Your package manager is not known. If you want pkg++ to be built for a 
-particular package manager, use the --package-manager=<your-package-manager> 
-flag to the configure script.
-EOF
-	exit 1
-fi
+# FIXME : Deprecated ?
+#if ! has $PACKAGE_MANAGER {d,o}pkg rpm pkgtools pkgutils pacman{,-g2} nhopkg; then
+#	cat << EOF >&2
+#Your package manager is not known. If you want pkg++ to be built for a 
+#particular package manager, use the --package-manager=<your-package-manager> 
+#flag to the configure script.
+#EOF
+#	exit 1
+#fi
 
 echo "Summary:"
 echo "  Architecture:           $ARCHITECTURE"
@@ -467,12 +468,12 @@ CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
 CPPFLAGS="$CPPFLAGS -DGMAKE=\"$GMAKE_PATH\""
 
 case $DISTRIBUTION in
-	Debian)		CPPFLAGS="$CPPFLAGS -Ddebian=debian"		;;
-	Frugalware)	CPPFLAGS="$CPPFLAGS -Dfrugalware=frugalware"	;;
-	Crux)		CPPFLAGS="$CPPFLAGS -Dcrux=crux"		;;
-	Mandriva)	CPPFLAGS="$CPPFLAGS -Dmandriva=mandriva"	;;
-	Arch)		CPPFLAGS="$CPPFLAGS -Darch=arch"		;;
-	Slackware)	CPPFLAGS="$CPPFLAGS -Dslackware=slackware"	;;
+	Debian)		CPPFLAGS="$CPPFLAGS -D__debian=debian"		;;
+	Frugalware)	CPPFLAGS="$CPPFLAGS -D__frugalware=frugalware"	;;
+	Crux)		CPPFLAGS="$CPPFLAGS -D__crux=crux"		;;
+	Mandriva)	CPPFLAGS="$CPPFLAGS -D__mandriva=mandriva"	;;
+	Arch)		CPPFLAGS="$CPPFLAGS -D__arch=arch"		;;
+	Slackware)	CPPFLAGS="$CPPFLAGS -D__slackware=slackware"	;;
 esac
 
 case $PACKAGE_MANAGER in
@@ -485,18 +486,18 @@ case $PACKAGE_MANAGER in
 esac
 
 if $USE_CURL; then
-	CPPFLAGS="$CPPFLAGS -Dcurl=curl"
+	CPPFLAGS="$CPPFLAGS -D__CURL"
 fi
 if $USE_GSED; then
-	CPPFLAGS="$CPPFLAGS -Dgsed=sed"
+	CPPFLAGS="$CPPFLAGS -D__GSED"
 fi
 if $USE_GFIND; then
-	CPPFLAGS="$CPPFLAGS -Dgfind=find"
+	CPPFLAGS="$CPPFLAGS -D__GFIND"
 fi
 if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
-	CPPFLAGS="$CPPFLAGS -Dgtar=$GTAR_NAME"
+	CPPFLAGS="$CPPFLAGS -D__GTAR=$GTAR_NAME"
 else
-	CPPFLAGS="$CPPFLAGS -Dbsdtar=bsdtar"
+	CPPFLAGS="$CPPFLAGS -D__BSDTAR=bsdtar"
 fi
 
 configure() {
