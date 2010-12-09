@@ -1,6 +1,6 @@
 
 svn:clone() {
-	svn co `echo "$1" | sed -e "s|svn:||"` $name
+	svn co `echo "$1" | sed -e "s|svn:svn|svn|"` $name
 }
 
 svn:pull() {

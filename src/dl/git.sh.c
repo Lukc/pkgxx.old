@@ -1,6 +1,6 @@
 
 git:clone() {
-	git clone `echo $1 | sed -e "s|git:||"` $name
+	git clone `echo $1 | sed -e "s|git:git|git|"` $name
 }
 
 git:pull() {
