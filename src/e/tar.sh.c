@@ -9,14 +9,22 @@
 
 tar:unpack() {
 	local COMPRESS
-	case "$1" in
-		*.gz|*.Z|*.tgz) COMPRESS="z" ;;
-		*.bz2|*.tbz2) COMPRESS="j" ;;
-		*.xz|*.txz) COMPRESS="J" ;;
-		*.lzma) COMPRESS=" --lzma -" ;;
+	case "$PKGMK_UNTAR_TOOL" in
+		gtar)
+			case "$1" in
+				*.gz|*.Z|*.tgz) COMPRESS="z" ;;
+				*.bz2|*.tbz2) COMPRESS="j" ;;
+				*.xz|*.txz) COMPRESS="J" ;;
+				*.lzma) COMPRESS=" --lzma -" ;;
+			esac
+			info "Unpacking $1."
+			tar -C $2 -x${COMPRESS}f $1
+		;;
+		bsdtar)
+			info "Unpacking $1."
+			bsdtar -p -o -C $2 -xf $1
+		;;
 	esac
-	info "Unpacking $1."
-	tar -C $2 -x${COMPRESS}f $1
 }
 
 tar:pack() {
