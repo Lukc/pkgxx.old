@@ -1,6 +1,6 @@
 
 bzr:clone() {
-	bzr branch `echo $1 | sed -e "s|bzr:bzr|bzr|"` $name
+	bzr branch `echo $1 | sed -e "s|bzr\+||;s|bzr:bzr|bzr|"` $name
 }
 
 bzr:pull() {
