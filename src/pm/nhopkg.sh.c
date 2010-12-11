@@ -18,7 +18,7 @@ make_nhoid () {
 	/* Hum…  we don’t keep that data, for now */
 	echo "# Build-Duration:	0 min"
 	echo "# Build-Date:	$(date -u "+%F %T %z")"
-	echo "# Build-Host:	$(hostname -f)"
+	echo "# Build-Host:	$(hostname)"
 	echo "# Url:	$url"
 	echo "# Description:	$description"
 	echo "# MD5:	$(md5sum data.tar.bz2)"
