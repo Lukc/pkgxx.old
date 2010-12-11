@@ -13,33 +13,27 @@ unpack_source() {
 		 */
 		if ! [[ "$no_extraction" =~ ("true"|"yes") ]]; then
 			case $LOCAL_FILENAME in
+				*.tar|*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma)
+					tar:unpack "$LOCAL_FILENAME" "$SRC"
+				;;
 				#if defined __GTAR
-				*.tar.gz|*.tar.Z|*.tgz)
-					COMMAND="tar -C $SRC --use-compress-program=gzip -xf $LOCAL_FILENAME" ;;
-				*.tar.bz2|*.tbz2)
-					COMMAND="tar -C $SRC --use-compress-program=bzip2 -xf $LOCAL_FILENAME" ;;
-				*.tar.xz|*.txz|*.tar.lzma)
-					COMMAND="tar -C $SRC --use-compress-program=xz -xf $LOCAL_FILENAME";;
-				*.tar)
-					COMMAND="tar -C $SRC -xf $LOCAL_FILENAME";;
 				*.zip)
-					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME" ;;
+					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME"
+					echo "$COMMAND"
+					$COMMAND
+				;;
 				#elif defined __BSDTAR
-				*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma|*.zip|*.rpm)
-					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME" ;;
-				#else
-				#	bad_tar
+				*.zip|*.rpm)
+					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME"
+					echo "$COMMAND"
+					$COMMAND
+				;;
 				#endif
 				*)
-					COMMAND="cp -r $LOCAL_FILENAME $SRC" ;;
+					info "Copying $LOCAL_FILENAME"
+					cp -r "$LOCAL_FILENAME" "$SRC"
+				;;
 			esac
-			
-			/*
-			 * Just to inform the user.
-			 */
-			echo "$COMMAND"
-			
-			$COMMAND
 		fi
 		
 		/*

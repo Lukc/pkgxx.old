@@ -21,6 +21,8 @@
 #include "pm/nhopkg.sh.c"
 #include "pm/pkgutils.sh.c"
 
+#include "e/tar.sh.c"
+
 #include "dl/ftp.sh.c"
 #include "dl/file.sh.c"
 #include "dl/svn.sh.c"
