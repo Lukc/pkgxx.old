@@ -23,6 +23,7 @@
 
 #include "e/tar.sh.c"
 #include "e/zip.sh.c"
+#include "e/rpm.sh.c"
 
 #include "dl/ftp.sh.c"
 #include "dl/file.sh.c"

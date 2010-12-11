@@ -19,15 +19,11 @@ unpack_source() {
 				*.zip)
 					zip:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
-				#if defined __BSDTAR
 				*.rpm)
-					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME"
-					echo "$COMMAND"
-					$COMMAND
+					rpm:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
-				#endif
 				*)
-					info "Copying $LOCAL_FILENAME"
+					info "Copying $LOCAL_FILENAME."
 					cp -r "$LOCAL_FILENAME" "$SRC"
 				;;
 			esac
