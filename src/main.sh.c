@@ -22,6 +22,7 @@
 #include "pm/pkgutils.sh.c"
 
 #include "e/tar.sh.c"
+#include "e/zip.sh.c"
 
 #include "dl/ftp.sh.c"
 #include "dl/file.sh.c"
@@ -382,6 +383,18 @@ PKGMK_KERNEL=_KERNEL
 
 readonly PKGMK_PACKAGE_MANAGERS=(
 	pacman pacman-g2 dpkg nhopkg rpm pkgutils pkgtools opkg
+)
+PKGMK_UNTAR_TOOL=gtar
+readonly PKGMK_UNTAR_TOOLS=(
+	gtar bsdtar
+)
+PKGMK_UNRPM_TOOL=rpm
+readonly PKGMK_UNRPM_TOOLS=(
+	rpm bsdtar
+)
+PKGMK_UNZIP_TOOL=unzip
+readonly PKGMK_UNZIP_TOOLS=(
+	unzip bsdtar
 )
 readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
 #if defined __curl

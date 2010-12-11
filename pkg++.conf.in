@@ -28,6 +28,10 @@ PKGMK_WORK_DIR="/tmp/work-$name"
 # PKGMK_COMPRESSION_MODE="gz"
 # PKGMK_MAN_COMPRESSION="gz"
 
+PKGMK_UNTAR_TOOL=gtar
+PKGMK_UNRPM_TOOL=rpm
+PKGMK_UNZIP_TOOL=unzip
+
 # These variables will be used for the packages construction.
 PKGMK_PACKAGE_MANAGER=@PACKAGE_MANAGER@
 

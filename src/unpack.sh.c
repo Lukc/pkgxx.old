@@ -16,14 +16,11 @@ unpack_source() {
 				*.tar|*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma)
 					tar:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
-				#if defined __GTAR
 				*.zip)
-					COMMAND="unzip -qq -o -d $SRC $LOCAL_FILENAME"
-					echo "$COMMAND"
-					$COMMAND
+					zip:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
-				#elif defined __BSDTAR
-				*.zip|*.rpm)
+				#if defined __BSDTAR
+				*.rpm)
 					COMMAND="bsdtar -p -o -C $SRC -xf $LOCAL_FILENAME"
 					echo "$COMMAND"
 					$COMMAND
