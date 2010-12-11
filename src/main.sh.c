@@ -387,7 +387,7 @@ readonly PKGMK_PACKAGE_MANAGERS=(
 )
 PKGMK_UNTAR_TOOL=gtar
 readonly PKGMK_UNTAR_TOOLS=(
-	gtar bsdtar
+	gtar bsdtar sltar
 )
 PKGMK_UNRPM_TOOL=rpm
 readonly PKGMK_UNRPM_TOOLS=(
