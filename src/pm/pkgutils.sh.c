@@ -30,9 +30,9 @@ pkgutils:target () {
 pkgutils:build () {
 	info "Building $TARGET."
 	#if defined __GTAR
-	tar cvvf ${TARGET%.$EXT} *
+	tar cvvf ${TARGET%.$PKGMK_COMPRESSION_MODE} *
 	#elif defined __BSDTAR
-	bsdtar cf ${TARGET%.$EXT} *
+	bsdtar cf ${TARGET%.$PKGMK_COMPRESSION_MODE} *
 	/*
 	 * bsdtar cvvf doesn’t give enough informations about the 
 	 * saved files. So we create the archive and then we give to 
@@ -40,7 +40,7 @@ pkgutils:build () {
 	 * Note: this list is different from the one given by GNU tar
 	 *       with cvv.
 	 */
-	bsdtar tvf ${TARGET%.$EXT}
+	bsdtar tvf ${TARGET%.$PKGMK_COMPRESSION_MODE}
 	#else
 	#	error No valid tar defined.
 	#endif
@@ -50,16 +50,16 @@ pkgutils:build () {
 	 */
 	case $PKGMK_COMPRESSION_MODE in
 		gz)
-			gzip -f ${TARGET%.$EXT}
+			gzip -f ${TARGET%.$PKGMK_COMPRESSION_MODE}
 		;;
 		bz2)
-			bzip2 -f ${TARGET%.$EXT}
+			bzip2 -f ${TARGET%.$PKGMK_COMPRESSION_MODE}
 		;;
 		xz)
-			xz -f ${TARGET%.$EXT}
+			xz -f ${TARGET%.$PKGMK_COMPRESSION_MODE}
 		;;
 		lzo)
-			lzop -Uf ${TARGET%.$EXT}
+			lzop -Uf ${TARGET%.$PKGMK_COMPRESSION_MODE}
 		;;
 	esac
 }
