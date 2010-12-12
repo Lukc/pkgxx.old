@@ -297,10 +297,6 @@ pm_arch () {
 	else
 		echo "${TARGET_ARCH}" 
 	fi
-	case $PKGMK_PACKAGE_MANAGER in
-		dpkg)
-		;;
-	esac
 }
 
 pm_kernel () {
