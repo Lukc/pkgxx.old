@@ -4,7 +4,7 @@ print_help() {
 	echo "options:"
 	echo "  -i,   --install               build and install package"
 	echo "  -in,  --interactive           ask for use(s) when possible"
-	echo "  -ir,  --install-root <dir>    install packages in an alternative configuration file"
+	echo "  -ir,  --install-root <dir>    install packages in an alternative directory"
 	echo "  -u,   --upgrade               build and install package (as upgrade)"
 	echo "  -r,   --recursive             search for and build packages recursively"
 	echo "  -d,   --download              download missing source file(s)"
