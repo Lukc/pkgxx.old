@@ -397,7 +397,7 @@ PKGMK_UNZIP_TOOL=unzip
 readonly PKGMK_UNZIP_TOOLS=(
 	unzip bsdtar
 )
-readonly PKGMK_DOWNLOAD_TOOLS=(curl wget)
+readonly PKGMK_DOWNLOAD_TOOLS=(curl axel wget)
 #if defined __curl
 DOWNLOAD_TOOL="curl"
 #else /* wget is the default download tool used. */

@@ -8,6 +8,8 @@ ftp:download() {
 	
 	if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
 		DOWNLOAD_OPTS="-f -L --insecure"
+	elif [[ "$DOWNLOAD_TOOL" = "axel" ]]; then
+		DOWNLOAD_OPTS="-o $LOCAL_FILENAME_PARTIAL -a"
 	elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
 		DOWNLOAD_OPTS="--passive-ftp --no-directories --tries=3 --waitretry=3 \
 			--directory-prefix=$PKGMK_SOURCE_DIR \
@@ -18,6 +20,8 @@ ftp:download() {
 		info "Partial download found, trying to resume"
 		if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
 			RESUME_CMD="-C $LOCAL_FILENAME_PARTIAL"
+		elif [[ "$DOWNLOAD_TOOL" = "axel" ]]; then
+			RESUME_CMD="" /* FIXME */
 		elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
 			RESUME_CMD="-c"
 		fi
@@ -30,6 +34,8 @@ ftp:download() {
 		REPO="`echo $REPO | sed 's|/$||'`"
 		if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
 			curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $REPO/$BASENAME > $LOCAL_FILENAME_PARTIAL
+		elif [[ "$DOWNLOAD_TOOL" = "axel" ]]; then
+			axel $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_AXEL_OPTS $REPO/$BASENAME
 		elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
 			wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $REPO/$BASENAME
 		fi
@@ -43,6 +49,8 @@ ftp:download() {
 		while true; do
 			if [[ "$DOWNLOAD_TOOL" = "curl" ]]; then
 				curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $1 > $LOCAL_FILENAME_PARTIAL
+			elif [[ "$DOWNLOAD_TOOL" = "axel" ]]; then
+				axel $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
 			elif [[ "$DOWNLOAD_TOOL" = "wget" ]]; then
 				wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
 			fi
