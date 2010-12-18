@@ -99,6 +99,7 @@ build_package() {
 	/* 
 	 * We export the needed vars to allow splitting.
 	 */
+	PKG_NAME="$name"
 	PKG_NAMES=("$name" "${splits[@]}")
 	PKG_VERSIONS=("$version" "${splits_version[@]}")
 	PKG_LICENSES=("$license" "${splits_licenses[@]}")
