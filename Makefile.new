@@ -32,7 +32,7 @@ CFLAGS := -O2 -pipe
 CPPFLAGS := -x c -E -P -D_VERSION=$(PKGXX_VERSION) \
 	    -D_SHAREDIR="$(SHAREDIR)" -D_SYSCONFDIR="$(SYSCONFDIR)" \
 	    -D_LIBEXECDIR="$(LIBEXECDIR)" \
-	    -DGMAKE="$(GMAKE)" -Dbsdtar="$(BSDTAR)"
+	    -DGMAKE="$(GMAKE)" -D__BSDTAR="$(BSDTAR)"
 
 #-Dgtar="$(GTAR)" to use GNU tar instead of bsdtar.
 # This should be removed before 0.10.
