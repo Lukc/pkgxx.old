@@ -115,11 +115,16 @@ main() {
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
-	PKGMK_CHANGELOG="`get_metafile ChangeLog | sed -e "s|\.ChangeLog|ChangeLog|"`"
-	PKGMK_FOOTPRINT="`get_metafile footprint`"
-	PKGMK_MD5SUM="`get_metafile md5sum`"
-	PKGMK_SHA256SUM="`get_metafile sha256sum`"
-	PKGMK_NOSTRIP="`get_metafile nostrip`"
+	/* 
+	 * FIXME: Use vars instead of static names…
+	 */
+	PKGMK_CHANGELOG="`get_metafile ChangeLog`"
+	PKGMK_FOOTPRINT="`get_metafile .footprint`"
+	PKGMK_MD5SUM="`get_metafile .md5sum`"
+	PKGMK_SHA256SUM="`get_metafile .sha256sum`"
+	PKGMK_NOSTRIP="`get_metafile .nostrip`"
+	PKGMK_POST_INSTALL="`get_metafile post-install`"
+	PKGMK_PRE_INSTALL="`get_metafile pre-install`"
 	
 	/*
 	 * We need to define a group, with pacman and rpm. If we don’t give 
@@ -336,6 +341,8 @@ PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
 PKGMK_SHA256SUM=".sha256sum"
 PKGMK_NOSTRIP=".nostrip"
+PKGMK_POST_INSTALL="post-install"
+PKGMK_PRE_INSTALL="pre-install"
 
 PKGMK_SOURCE_MIRRORS=()
 PKGMK_SOURCE_DIR="$PWD"

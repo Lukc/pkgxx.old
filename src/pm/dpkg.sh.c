@@ -52,6 +52,9 @@ dpkg:build() {
 	cd $PKG
 	mkdir DEBIAN
 	make_debian_control > DEBIAN/control
+	if [[ -e "$PKGMK_ROOT/$PKGMK_POST_INSTALL" ]]; then
+		cp "$PKGMK_ROOT/$PKGMK_POST_INSTALL" DEBIAN/postinst
+	fi
 	cd ..
 	info "Building $TARGET."
 	dpkg-deb --build $PKG
