@@ -125,6 +125,8 @@ main() {
 	PKGMK_NOSTRIP="`get_metafile .nostrip`"
 	PKGMK_POST_INSTALL="`get_metafile post-install`"
 	PKGMK_PRE_INSTALL="`get_metafile pre-install`"
+	PKGMK_POST_REMOVE="`get_metafile post-remove`"
+	PKGMK_PRE_REMOVE="`get_metafile pre-remove`"
 	
 	/*
 	 * We need to define a group, with pacman and rpm. If we don’t give 
@@ -343,6 +345,8 @@ PKGMK_SHA256SUM=".sha256sum"
 PKGMK_NOSTRIP=".nostrip"
 PKGMK_POST_INSTALL="post-install"
 PKGMK_PRE_INSTALL="pre-install"
+PKGMK_POST_REMOVE="post-remove"
+PKGMK_PRE_REMOVE="pre-remove"
 
 PKGMK_SOURCE_MIRRORS=()
 PKGMK_SOURCE_DIR="$PWD"

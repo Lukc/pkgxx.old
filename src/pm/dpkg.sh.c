@@ -55,6 +55,9 @@ dpkg:build() {
 	if [[ -e "$PKGMK_ROOT/$PKGMK_POST_INSTALL" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_POST_INSTALL" DEBIAN/postinst
 	fi
+	if [[ -e "$PKGMK_ROOT/$PKGMK_PRE_REMOVE" ]]; then
+		cp "$PKGMK_ROOT/$PKGMK_PRE_REMOVE" DEBIAN/prerm
+	fi
 	for FILE in ${config[@]}; do
 		echo "$FILE" >> DEBIAN/conffiles
 	done
