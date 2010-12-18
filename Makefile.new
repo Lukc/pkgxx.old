@@ -51,6 +51,8 @@ install: update install-config
 
 update:  build install-pkgxx install-defaults install-tools
 
+clean: clean-pkgxx clean-defaults clean-tools
+
 # Rules - Compilations
 
 tools/has: tools/has.c
@@ -104,7 +106,20 @@ install-tools:
 	done
 
 install-config:
-	@echo "WARNING: This Makefile still not generate config…" >&2
+	@echo "WARNING: This Makefile still do not generate config…" >&2
 	#install -m744 pkg++.conf $(DESTDIR)$(SYSCONFDIR)/pkg++.conf
+
+# Rules - Cleaning
+
+clean-pkgxx:
+	rm -f pkg++
+
+clean-defaults:
+	rm -f defaults/cross
+	rm -f defaults/distributions
+	rm -f defaults/prefixes
+
+clean-tools:
+	rm -f tools/has
 
 # End of Makefile
