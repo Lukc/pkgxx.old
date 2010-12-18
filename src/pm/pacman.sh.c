@@ -102,7 +102,7 @@ make_pacman_pkginfo() {
 	for PROVIDE in ${provides[@]}; do
 		echo "provides = $PROVIDE"
 	done
-	for FILE in ${backup[@]}; do
+	for FILE in ${config[@]}; do
 		echo "backup = $FILE"
 	done
 }

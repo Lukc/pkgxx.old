@@ -55,6 +55,9 @@ dpkg:build() {
 	if [[ -e "$PKGMK_ROOT/$PKGMK_POST_INSTALL" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_POST_INSTALL" DEBIAN/postinst
 	fi
+	for FILE in ${config[@]}; do
+		echo "$FILE" >> DEBIAN/conffiles
+	done
 	cd ..
 	info "Building $TARGET."
 	dpkg-deb --build $PKG
