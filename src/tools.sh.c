@@ -291,7 +291,7 @@ pm_arch () {
 		parisc*) TARGET_ARCH=hppa ;;
 		"Power Macintosh") TARGET_ARCH=ppc ;;
 	esac
-	if [[ -n "$(type -p $PKGMK_PACKAGE_MANAGER:arch)" ]]; then
+	if [[ -n "$(type $PKGMK_PACKAGE_MANAGER:arch)" ]]; then
 		ARCH="${TARGET_ARCH}" KERNEL="${TARGET_KERNEL}" \
 			$PKGMK_PACKAGE_MANAGER:arch
 	else

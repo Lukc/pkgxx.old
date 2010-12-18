@@ -27,17 +27,15 @@ make_debian_control() {
 }
 
 dpkg:arch() {
-	case ${ARCH} in
-		i?86) ARCH=i386 ;;
-		x86_64) ARCH=amd64 ;;
-		arm) ARCH=armel ;;
-		ppc) ARCH=powerpc ;;
-		powerpc64) ARCH=ppc64 ;;
-	esac
 	case ${KERNEL} in
 		freebsd*) ARCH=kfreebsd-$ARCH ;;
+		hurd*) ARCH=hurd-$ARCH ;;
+		netbsd*) ARCH=netbsd-$ARCH ;;
 		/* Not sure for the others… */
 	esac
+	echo "${ARCH}" | sed -e "s|i.86|i386|;s|x86_64|amd64|" \
+	                     -e "s|arm|armel|" \
+	                     -e "s|ppc|powerpc|;s|powerpc64|ppc64|"
 }
 
 dpkg:target() {

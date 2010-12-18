@@ -36,10 +36,7 @@ make_rpm_spec() {
 }
 
 rpm:arch() {
-	case ${ARCH} in
-		i?86) ARCH=i686 ;;
-	esac
-	echo "${ARCH}"
+	echo "${ARCH}" | sed -e "s|i.86|i386|"
 }
 
 rpm:target() {

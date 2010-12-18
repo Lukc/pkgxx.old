@@ -108,16 +108,10 @@ make_pacman_pkginfo() {
 }
 
 pacman:arch() {
-	case ${ARCH} in
-		i?86) ARCH=i686 ;;
-	esac
-	echo "${ARCH}"
+	echo "${ARCH}" | sed -e "s|i.86|i386|"
 }
 pacman-g2:arch() {
-	case ${ARCH} in
-		i?86) ARCH=i686 ;;
-	esac
-	echo "${ARCH}"
+	echo "${ARCH}" | sed -e "s|i.86|i386|"
 }
 
 pacman:target() {
