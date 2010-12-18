@@ -11,17 +11,17 @@ compress_manpages() {
 	 * For each man page in the package, we run gzip or bzip2, depending on
 	 * the user’s configuration.
 	 */
-	find . -type f -path "*/man/man*/*" | while read FILE; do
+	find . -type f -path "*/man/man*/*" -o -type f -path "*/man/*/man*/*" | while read FILE; do
 		case "$PKGMK_MAN_COMPRESSION" in
 			"gz")
-			if [[ "$FILE" = "${FILE%%.gz}" ]]; then
-				gzip -9 "$FILE"
-			fi
+				if [[ "$FILE" = "${FILE%%.gz}" ]]; then
+					gzip -9 "$FILE"
+				fi
 			;;
 			"bz2")
-			if [[ "$FILE" = "${FILE%%.bz2}" ]]; then
-				bzip2 -9 "$FILE"
-			fi
+				if [[ "$FILE" = "${FILE%%.bz2}" ]]; then
+					bzip2 -9 "$FILE"
+				fi
 			;;
 		esac
 	done
@@ -32,14 +32,14 @@ compress_manpages() {
 	 * Note: We can use $PKGMK_MAN_COMPRESSION because it is already of the
 	 * form of the compressed files extension.
 	 */
-	find . -type l -path "*/man/man*/*" | while read FILE; do
+	find . -type l -path "*/man/man*/*" -o -type l -path "*/man/*/man*/*" | while read FILE; do
 		TARGET=`readlink -n "$FILE"`
 		TARGET="${TARGET##*/}"
 		TARGET="${TARGET%%.$PKGMK_MAN_COMPRESSION}.$PKGMK_MAN_COMPRESSION"
 		rm -f "$FILE"
 		FILE="${FILE%%.$PKGMK_MAN_COMPRESSION}.$PKGMK_MAN_COMPRESSION"
 		DIR=`dirname "$FILE"`
-
+		
 		if [[ -e "$DIR/$TARGET" ]]; then
 			ln -sf "$TARGET" "$FILE"
 		fi
