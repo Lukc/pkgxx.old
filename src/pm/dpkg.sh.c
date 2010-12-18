@@ -52,11 +52,17 @@ dpkg:build() {
 	cd $PKG
 	mkdir DEBIAN
 	make_debian_control > DEBIAN/control
+	if [[ -e "$PKGMK_ROOT/$PKGMK_PRE_INSTALL" ]]; then
+		cp "$PKGMK_ROOT/$PKGMK_PRE_INSTALL" DEBIAN/preinst
+	fi
 	if [[ -e "$PKGMK_ROOT/$PKGMK_POST_INSTALL" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_POST_INSTALL" DEBIAN/postinst
 	fi
 	if [[ -e "$PKGMK_ROOT/$PKGMK_PRE_REMOVE" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_PRE_REMOVE" DEBIAN/prerm
+	fi
+	if [[ -e "$PKGMK_ROOT/$PKGMK_POST_REMOVE" ]]; then
+		cp "$PKGMK_ROOT/$PKGMK_POST_REMOVE" DEBIAN/postrm
 	fi
 	for FILE in ${config[@]}; do
 		echo "$FILE" >> DEBIAN/conffiles
