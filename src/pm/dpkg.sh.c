@@ -77,6 +77,9 @@ dpkg:build() {
 			cp "$PKGMK_ROOT/$name.$PKGMK_POST_REMOVE" DEBIAN/postrm
 		fi
 	fi
+	if [[ -e "$PKGMK_ROOT/$PKGMK_CHANGELOG" ]]; then
+		cp "$PKGMK_ROOT/$PKGMK_CHANGELOG" DEBIAN/changelog
+	fi
 	for FILE in ${config[@]}; do
 		[[ -e "$PKG/$FILE" ]] && echo "$FILE" >> DEBIAN/conffiles
 	done
