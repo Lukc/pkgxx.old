@@ -558,7 +558,7 @@ help:
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
-	cpp $CPPFLAGS -x c "defaults/prefixes.in" >> "defaults/prefixes"
+	cpp $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
 
 defaults/distributions:
 	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
