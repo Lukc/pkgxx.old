@@ -79,7 +79,7 @@ package_manager () {
 }
 
 distribution () {
-	if grep -q CRUX /etc/issue &>/dev/null; then
+	if [[ -e /usr/bin/crux ]]; then
 		: ${DISTRIBUTION:="Crux"}
 	elif [[ -e /etc/frugalware-release ]]; then
 		: ${DISTRIBUTION:="Frugalware"}
