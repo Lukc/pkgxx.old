@@ -27,7 +27,7 @@ wget:download() {
 
 ftp:download() {
 	
-	check_command "$DOWNLOAD_TOOL"
+	check_command "$PKGMK_DOWNLOAD_TOOL"
 	
 	LOCAL_FILENAME=`get_filename $1`
 	LOCAL_FILENAME_PARTIAL="$LOCAL_FILENAME.partial"
@@ -41,7 +41,7 @@ ftp:download() {
 	BASENAME=`get_basename $1`
 	for REPO in ${PKGMK_SOURCE_MIRRORS[@]}; do
 		REPO="`echo $REPO | sed 's|/$||'`"
-		$DOWNLOAD_TOOL:download $REPO/$BASENAME
+		$PKGMK_DOWNLOAD_TOOL:download $REPO/$BASENAME
 		error=$?
 		if [[ $error == 0 ]]; then
 			break
@@ -50,7 +50,7 @@ ftp:download() {
 	
 	if [[ $error != 0 ]]; then
 		while true; do
-			$DOWNLOAD_TOOL:download $1
+			$PKGMK_DOWNLOAD_TOOL:download $1
 			error=$?
 			if [[ $error != 0 ]] && [[ "$RESUME_CMD" ]]; then
 				info "Partial download failed, restarting."

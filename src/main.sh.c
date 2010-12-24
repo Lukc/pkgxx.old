@@ -168,6 +168,14 @@ main() {
 		. $FILE
 	done
 	
+	/* 
+	 * FIXME: Deprecation. Remove at 0.9.4.
+	 */
+	if [[ -z $PKGMK_DOWNLOAD_TOOL && -n $DOWNLOAD_TOOL ]]; then
+		error "\${DOWNLOAD_TOOL} is deprecated and will be removed in 0.9.4. Please, set ${PKGMK_DOWNLOAD_TOOL} instead."
+		PKGMK_DOWNLOAD_TOOL=$DOWNLOAD_TOOL
+	fi
+	
 	/*
 	 * Bah, just in case the configuration is not usable.
 	 */
@@ -408,12 +416,10 @@ PKGMK_UNZIP_TOOL=unzip
 readonly PKGMK_UNZIP_TOOLS=(
 	unzip bsdtar
 )
-readonly PKGMK_DOWNLOAD_TOOLS=(curl axel wget)
-#if defined __curl
-DOWNLOAD_TOOL="curl"
-#else /* wget is the default download tool used. */
-DOWNLOAD_TOOL="wget"
-#endif
+PKGMK_DOWNLOAD_TOOL=wget
+readonly PKGMK_PKGMK_DOWNLOAD_TOOLS=(
+	curl axel wget
+)
 
 PKGMK_PACKAGE_MANAGER=_PACKAGE_MANAGER
 

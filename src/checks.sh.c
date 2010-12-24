@@ -128,8 +128,8 @@ check_config() {
 	/*
 	 * Checks the usability of the configuration.
 	 */
-	if ! has $DOWNLOAD_TOOL ${PKGMK_DOWNLOAD_TOOLS[@]}; then
-		error "$DOWNLOAD_TOOL is not a valid download tool. Please, edit your config file."
+	if ! has $PKGMK_DOWNLOAD_TOOL ${PKGMK_DOWNLOAD_TOOLS[@]}; then
+		error "$PKGMK_DOWNLOAD_TOOL is not a valid download tool. Please, edit your config file."
 		echo "Valid values are: ${PKGMK_DOWNLOAD_TOOLS[@]}."
 		exit E_INVALID_DOWNLOAD_TOOL
 	fi
