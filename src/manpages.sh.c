@@ -23,6 +23,11 @@ compress_manpages() {
 					bzip2 -9 "$FILE"
 				fi
 			;;
+			"xz")
+				if [[ "$FILE" = "${FILE%%.xz}" ]]; then
+					xz -9 "$FILE"
+				fi
+			;;
 		esac
 	done
 	
