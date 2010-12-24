@@ -34,8 +34,8 @@ Set the sources of the packaged software.
 The sources are usually fetched on the (S)FTP or (S)HTTP protocols.
 A file can also by included here, with `foo' or `file://foo'.
 You can also fetch the latest sources from a git, subversion or mercurial repository.
-You juste need to use the form `scm:url'.
-An example for that is `git:git://git.wmfs.info/wmfs.git'.
+You juste need to use the form `scm+url', or `scm://' if the protocol has the same name.
+An example for that is `git://git.wmfs.info/wmfs.git', which is the same as `git+git://git.wmfs.info/wmfs.git'.
 .br
 This option is needed in any Pkgfile, but can be empty.
 .TP
@@ -63,6 +63,11 @@ This option can be needed to create some packages, but has no influence for Crux
 Set the dependencies of the packages.
 .br
 This option can be needed to create some packages, but has no influence for Crux packages creation.
+.TP
+\fBincludes=(STRING STRING)\fP
+Source each STRING in the table at the end of the Pkgfile reading.
+.br
+To see available include files, just do `pkg++ -li`.
 .TP
 .SH SEE ALSO
 pkg++.conf(5), pkg++(8)
