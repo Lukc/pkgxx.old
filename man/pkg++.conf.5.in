@@ -2,7 +2,7 @@
 .SH NAME
 \fBpkg++.conf\fP \- Configuration file for pkg++.
 .SH DESCRIPTION
-\fBpkg++.conf\fP configures pkgutils package make, pkg++(8).
+\fBpkg++.conf\fP configures pkg++(8) for any target package or triplet.
 .SH FILE FORMAT
 The file consists of a number of variable assignments of the form \fBoption\fP=\fBvalue\fP. Comments can be specified by putting a hash (#) symbol as the first character on the line.
 .SH DIRECTIVES
@@ -39,10 +39,6 @@ Set directory for building packages.
 .br
 Default: '\fBfoo\fP/work', where \fBfoo\fP is the directory of the Pkgfile.
 .TP
-\fBPKGMK_WGET_OPTS='STRING'\fP
-Additional options for wget(1), which is used by pkgmk to download all files.
-.br
-.TP
 \fBPKGMK_DOWNLOAD='STRING'\fP
 If set to 'yes', pkgmk will download the source archives if necessary.
 .br
@@ -64,9 +60,28 @@ Option to select the mode used to compress the packages. Valid strings are gz, b
 Default: 'gz'
 .TP
 \fBPKGMK_MAN_COMPRESSION='STRING'\fP
-Option to select the compression of the packaged man pages. Valid strings are gz and bz2.
+Option to select the compression of the packaged man pages. Valid strings are gz, bz2 and xz.
 .br
-Default: 'bz2'
+Default: 'gz'
+\fBPKGMK_PACKAGE_MANAGER='STRING'\fP
+Set the package manager the packages are built for.
+.SH TOOLS USED
+.TP
+\fBPKGMK_DOWNLOAD_TOOL='STRING'\fP
+Set the tool to use to download files over HTTP, HTTPS and FTP.
+.br
+Possible values are: 'axel', 'curl', 'wget'
+.br
+Default: 'wget'
+.TP
+\fBPKGMK_WGET_OPTS='STRING'\fP
+Additional options for wget(1), which is used by pkg++ to download all files.
+.TP
+\fBPKGMK_CURL_OPTS='STRING'\fP
+Additional options for curl(1), which can be used by pkg++ to download all files.
+.TP
+\fBPKGMK_AXEL_OPTS='STRING'\fP
+Additional options for axel(1), which can be used by pkg++ to download all files.
 .SH SEE ALSO
 pkg++(8)
 .SH COPYRIGHT
