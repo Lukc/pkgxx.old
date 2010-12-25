@@ -13,25 +13,6 @@
 #include "manpages.sh.c"
 #include "work.sh.c"
 
-#include "pm/dpkg.sh.c"
-#include "pm/opkg.sh.c"
-#include "pm/pacman.sh.c"
-#include "pm/rpm.sh.c"
-#include "pm/pkgtools.sh.c"
-#include "pm/nhopkg.sh.c"
-#include "pm/pkgutils.sh.c"
-
-#include "e/tar.sh.c"
-#include "e/zip.sh.c"
-#include "e/rpm.sh.c"
-
-#include "dl/ftp.sh.c"
-#include "dl/file.sh.c"
-#include "dl/svn.sh.c"
-#include "dl/git.sh.c"
-#include "dl/hg.sh.c"
-#include "dl/bzr.sh.c"
-
 #include "build.sh.c"
 #include "install.sh.c"
 #include "opts.sh.c"
@@ -138,6 +119,10 @@ main() {
 	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman(|-g2)|rpm|nhopkg|opkg) ]]; then
 		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
+	
+	for FILE in $(ls "$PKGMK_MODULES_DIR"); do
+		. $PKGMK_MODULES_DIR/$FILE
+	done
 	
 	for DIR in ${PKGMK_DEFAULTS_DIRS[@]}; do
 		/*
@@ -344,6 +329,7 @@ readonly PKGMK_ROOT="$PWD"
 PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
+PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_CHANGELOG="ChangeLog"

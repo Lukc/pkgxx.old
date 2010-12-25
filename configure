@@ -466,6 +466,7 @@ CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACK
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
 CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
 CPPFLAGS="$CPPFLAGS -DGMAKE=\"$GMAKE_PATH\""
+CPPFLAGS="$CPPFLAGS -include $PWD/src/error.sh.h -include $PWD/src/footprints.sh.h"
 
 case $DISTRIBUTION in
 	Debian)		CPPFLAGS="$CPPFLAGS -D__debian=debian"		;;
@@ -517,16 +518,19 @@ configure() {
 
 echo "Creation of \`Makefile'..."
 DIR () {
-	echo "@echo -e \"  \033[34mMKDIR\033[00m        \033[37m$1\033[00m\";[ -d \$(DESTDIR)/$1 ] || mkdir -p \$(DESTDIR)/$1"
+	echo "@echo -e \"  \033[34m[DIR]\033[00m        \033[37m$1\033[00m\";[ -d \$(DESTDIR)/$1 ] || mkdir -p \$(DESTDIR)/$1"
+}
+BUILD () {
+	echo "@echo -e \"  \033[37m[CPP]\033[00m        \033[37m${2:+$2/}$1\033[00m\"; cpp \$(CPPFLAGS) ${2:+$2/}$1$3 > ${2:+$2/}$1"
 }
 INSTALL () {
-	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$(basename $2)"
+	echo "@echo -e \"  \033[32m[INST]\033[00m       \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$(basename $2)"
 }
 INSTALL_F () {
-	echo "@echo -e \"  \033[32mINSTALL\033[00m      \033[37m$2\033[00m -> \033[37m$4/$3\033[00m\";install -m$1 $2 \$(DESTDIR)/$4/$3"
+	echo "@echo -e \"  \033[32m[INST]\033[00m       \033[37m$2\033[00m -> \033[37m$4/$3\033[00m\";install -m$1 $2 \$(DESTDIR)/$4/$3"
 }
 REMOVE () {
-	echo "@echo -e \"  \033[33mREMOVE\033[00m       \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
+	echo "@echo -e \"  \033[33m[RM]\033[00m         \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
 }
 RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
@@ -545,6 +549,7 @@ PKGXX_VERSION=$VERSION
 
 CC = gcc
 CFLAGS =
+CPPFLAGS = $CPPFLAGS
 
 build: pkgxx
 
@@ -558,16 +563,30 @@ help:
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
-	cpp $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
+	`BUILD prefixes defaults .in`
+#	cpp $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
 
 defaults/distributions:
-	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
+	`BUILD distributions defaults .in`
+#	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
 
 defaults/cross:
-	cpp $CPPFLAGS "defaults/cross.in" >> "defaults/cross"
+	`BUILD cross defaults .in`
+#	cpp $CPPFLAGS "defaults/cross.in" >> "defaults/cross"
+
+$(for module in `cd modules; ls *.sh.c`; do
+	module=${module%.sh.c}
+	echo "modules/$module:"
+	echo "	`BUILD $module modules .sh.c`"
+	echo
+done)
+
+modules: $(cd modules; for i in `ls *.sh.c | sed -e "s|\.sh\.c||"`; do echo -n "modules/$i "; done)
 
 pkgxx: defaults/prefixes defaults/distributions defaults/cross
-	cpp $CPPFLAGS -x c "src/main.sh.c" > "pkg++.tmp"
+	`BUILD main src .sh.c`
+	mv src/main pkg++.tmp
+#	cpp $CPPFLAGS -x c "src/main.sh.c" > "pkg++.tmp"
 	echo "#!/usr/bin/env bash" > pkg++
 	cat pkg++.tmp >> pkg++
 
@@ -614,12 +633,20 @@ pkgxx-install: pkgxx
 		ln -s \$(BINDIR)/pkg++ \$(DESTDIR)\$(BINDIR)/pkgxx; \
 	fi
 
+modules-install: modules
+	`DIR \$\(SHAREDIR\)/pkg++/modules`
+$(for module in `cd modules; ls *.sh.c`; do
+	module=${module%.sh.c}
+	echo "	`INSTALL 0644 modules/$module \$\(SHAREDIR\)/pkg++/modules`"
+	echo
+done)
+
 has-install: has
 	`INSTALL 755 has \$\(LIBEXECDIR\)/pkg++/`
 
-update: pkgxx-install man-install has-install
+update: pkgxx-install man-install has-install modules-install
 
-install: pkgxx-install config-install man-install has-install
+install: pkgxx-install config-install man-install has-install modules-install
 
 clean:
 	`REMOVE pkg++`
@@ -634,6 +661,9 @@ clean:
 	`REMOVE defaults/cross`
 	`REMOVE src/config.sh.h`
 	`REMOVE has`
+$(for module in `cd modules; ls *.sh.c`; do
+	echo "	`REMOVE modules/${module%.sh.c}`"
+done)
 
 pkgfiles:
 	sed -e "s|@VERSION@|\${PKGXX_VERSION}|g" Pkgfile.Crux.in > Pkgfile.Crux
