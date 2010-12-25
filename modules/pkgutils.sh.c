@@ -1,4 +1,6 @@
 
+pkg_manager_add(pkgutils)
+
 pkgutils:target () {
 	/*
 	 * Pkgutils users will be able to choose their compression method.

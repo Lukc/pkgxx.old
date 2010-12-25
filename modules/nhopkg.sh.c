@@ -1,8 +1,9 @@
 
+pkg_manager_add(nhopkg)
+
 /*
  * nhopkg specific functions.
  */
-
 make_nhoid () {
 	echo "#%NHO-0.5"
 	echo "#%PKG++-${PKGMK_VERSION}"

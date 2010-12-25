@@ -387,9 +387,6 @@ PKGMK_DEBUG="no"
 
 PKGMK_KERNEL=_KERNEL
 
-readonly PKGMK_PACKAGE_MANAGERS=(
-	pacman pacman-g2 dpkg nhopkg rpm pkgutils pkgtools opkg
-)
 PKGMK_UNTAR_TOOL=gtar
 readonly PKGMK_UNTAR_TOOLS=(
 	gtar bsdtar sltar

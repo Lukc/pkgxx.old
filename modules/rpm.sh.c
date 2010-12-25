@@ -1,4 +1,6 @@
 
+pkg_manager_add(rpm)
+
 rpm:unpack() {
 	info "Unpacking $1."
 	case "$PKGMK_UNRPM_TOOL" in

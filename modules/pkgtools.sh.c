@@ -1,4 +1,6 @@
 
+pkg_manager_add(pkgtools)
+
 make_slackspec () {
 	/*
 	 * This function creates the “spec” file of the txz.

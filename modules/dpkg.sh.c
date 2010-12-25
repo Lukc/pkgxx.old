@@ -1,4 +1,6 @@
 
+pkg_manager_add(dpkg)
+
 make_debian_control() {
 	echo "Package: $name"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then

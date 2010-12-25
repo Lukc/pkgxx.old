@@ -1,4 +1,6 @@
 
+pkg_manager_add(opkg)
+
 opkg:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.opk"

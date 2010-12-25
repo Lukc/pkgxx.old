@@ -1,4 +1,7 @@
 
+pkg_manager_add(pacman)
+pkg_manager_add(pacman-g2)
+
 make_pacman_pkginfo() {
 	/*
 	 * The '#' is here to avoid preprocessor and syntaxic coloration
