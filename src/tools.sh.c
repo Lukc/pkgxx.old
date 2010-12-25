@@ -3,6 +3,8 @@ pkgmake() {
 	/*
 	 * That avoids to use a non-gnu make, which could cause problems on 
 	 * some ports.
+	 * FIXME: any make should be used, here… the definition of these 
+	 *        values should be enough to keep this function.
 	 */
 	GMAKE \
 		CC="$CC" CXX="$CXX" CPP="$CPP" AS="$AS" AR="$AR" LD="$LD" \
@@ -11,6 +13,9 @@ pkgmake() {
 }
 
 path() {
+	/* 
+	 * FIXME: rename to which ?
+	 */
 	local TARGET="$1"
 	for path in ${PATH/:/ }; do
 		if [[ "$TARGET" = "$path" ]]; then
@@ -20,6 +25,20 @@ path() {
 	done
 	echo "$TARGET"
 	return 1
+}
+
+wcat() {
+	/*
+	 * Download and print a file to stdout.
+	 */
+	local i
+	for i in $@; do
+		if [[ -n "$(type -p $PKGMK_DOWNLOAD_TOOL)" ]]; then
+			$PKGMK_DOWNLOAD_TOOL:cat $i
+		else
+			curl:cat $i
+		fi
+	done
 }
 
 die() {

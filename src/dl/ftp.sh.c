@@ -7,12 +7,21 @@ curl:download() {
 	curl $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_CURL_OPTS $1 > $LOCAL_FILENAME_PARTIAL
 }
 
+curl:cat() {
+	curl $1 2>/dev/null
+}
+
 axel:download() {
 	if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
 		RESUME_CMD="" /* FIXME */
 	fi
 	DOWNLOAD_OPTS="-o $LOCAL_FILENAME_PARTIAL -a"
 	axel $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_AXEL_OPTS $1
+}
+
+axel:cat() {
+	local tmp="`mktmp`"
+	axel --output "$tmp" $1 &>/dev/null
 }
 
 wget:download() {
@@ -23,6 +32,10 @@ wget:download() {
 		--directory-prefix=$PKGMK_SOURCE_DIR \
 		--output-document=$LOCAL_FILENAME_PARTIAL --no-check-certificate"
 	wget $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_WGET_OPTS $1
+}
+
+wget:cat() {
+	wget -O - $1 2>/dev/null
 }
 
 ftp:download() {
