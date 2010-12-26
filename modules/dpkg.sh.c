@@ -8,13 +8,22 @@ make_debian_control() {
 	else
 		echo "Version: $version"
 	fi
-	if has no-arch ${archs[@]}; then
-		echo "Architecture: all"
-	else
-		echo "Architecture: $PKGMK_ARCH"
-	fi
+	
 	echo "Maintainer: $maintainer"
+	
+	if [[ -n "${groups[@]}" ]]; then
+		echo "Section: ${groups[0]}"
+	fi
+
 	echo "Description: $description"
+	if [[ -n "$long_desc" ]]; then
+		/* 
+		 * For dpkg, a blank line is equal to a new field, so we
+		 * just write a dot. We also insert a space at the begining
+		 * of each line, else it is also a new field.
+		 */
+		echo "$long_desc" | sed -e "s|^$|.|;s|^| |"
+	fi
 	echo -n "Depends: "
 	for n in ${!depends[*]}; do
 		if [[ -n "${depends[$(($n+1))]}" ]]; then
@@ -35,6 +44,13 @@ dpkg:arch() {
 		netbsd*) ARCH=netbsd-$ARCH ;;
 		/* Not sure for the others… */
 	esac
+	if [[ "${ARCH}" = noarch ]]; then
+		/* 
+		 * “all” is the keyword for architecture-independent packages, 
+		 * not “any”.
+		 */
+		echo "all"
+	fi
 	echo "${ARCH}" | sed -e "s|i.86|i386|;s|x86_64|amd64|" \
 	                     -e "s|arm|armel|" \
 	                     -e "s|ppc|powerpc|;s|powerpc64|ppc64|"
