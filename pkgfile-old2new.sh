@@ -26,6 +26,10 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.         #
 #############################################################################
 
+# 
+# Use this script to convert old Crux’s Pkgfiles into modern pkg++’s Pkgfiles.
+# 
+
 die(){
 	echo "$@" >&2
 	exit 1
@@ -34,13 +38,18 @@ die(){
 if [[ -n "$1" ]]; then
 	[[ -e $1 ]] && \
 	[[ -r $1 ]] || \
-	die "$1 doesn't exist or is not readable."
+	die "The Pkgfile '$1' doesn't exist or is not readable."
 	. $1
-	useless_type_return="`type -a build | tac | tail -n 1`"
+	useless_type_return="`type -a build | head -n 1`"
 	description="`cat $1 | grep "\# Description:" | sed -e "s|\# Description:||"`"
 	description="`echo $description`"
 	packager="`cat $1 | grep "\# Packager:" | sed -e "s|\# Packager:||"`"
 	packager="`echo $packager`"
+	if [[ -z "$packager" ]]; then
+		packager="$maintainer"
+	elif [[ -z "$maintainer" ]]; then
+		maintainer="$packager"
+	fi
 	maintainer="`cat $1 | grep "\# Maintainer:" | sed -e "s|\# Maintainer:||"`"
 	maintainer="`echo $maintainer`"
 	url="`cat $1 | grep "\# URL:" | sed -e "s|\# URL:||"`"
