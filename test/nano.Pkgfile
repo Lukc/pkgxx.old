@@ -1,0 +1,50 @@
+#!/usr/bin/env pkg++
+description="GNU pico clone (a tiny text editor)."
+url="http://www.nano-editor.org"
+maintainer="Juergen Daubert <juergen DOT daubert AT t-online DOT de>"
+packager="Simone Rota <sip AT crux DOT nu>"
+# Deeply modified by Lukc <lukc AT upyum DOT com>.
+depends=(ncurses)
+
+export PKGMK_DEBUG=yes
+
+name=nano
+version=2.2.6
+release=1
+source=(http://www.nano-editor.org/dist/v2.2/$name-$version.tar.gz)
+archs=(all)
+
+splits=(nano-config nano-man nano-info nano-locales)
+subarchs=(no-arch no-arch no-arch no-arch)
+subdepends=(nano man texinfo nano)
+splits_descriptions=(
+	"Default nano rc files."
+	"Nano man pages."
+	"Nano texinfo pages."
+	"Nano localisation informations."
+)
+config=(
+	$sysconfdir/nanorc
+)
+
+build(){
+	cd $name-$version
+	./configure \
+		${CHOST:+--build=${CHOST}} \
+		${CTARGET:+--host=${CTARGET}} \
+		--prefix=$prefix \
+		--sysconfdir=$sysconfdir \
+		--mandir=$mandir \
+		$(use_enable nls)
+	make
+	make DESTDIR=$PKG install
+	rm $PKG$bindir/rnano $PKG$mandir/man1/rnano.1
+	pkgsplit nano-config $sharedir/nano
+	pkgsplit nano-man $mandir
+	if use info; then
+		pkgsplit nano-info ${infodir:-$sharedir/info}
+	else
+		rm -rf $PKG$sharedir/info
+	fi
+	pkgsplit nano-locales $sharedir/locale
+}

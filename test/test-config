@@ -1,0 +1,31 @@
+
+unset CHOST CTARGET CBUILD
+export CFLAGS="-O2 -pipe -march=native" # Will require GCC ≥ 4.4
+export CXXFLAGS="$CFLAGS"
+export MAKE_OPTS="-j2"
+export USE=(nls man -info free -binary)
+PKGMK_SOURCE_MIRRORS=(
+	# If a distfiles mirror appears here, change the URL to a new broken mirror…
+	ftp://broken.mirror.net
+)
+PKGMK_SOURCE_DIR="$PWD"
+PKGMK_PACKAGE_DIR="$PWD"
+PKGMK_WORK_DIR="$PWD/work"
+# PKGMK_DOWNLOAD="no"
+# PKGMK_IGNORE_FOOTPRINT="no"
+# PKGMK_IGNORE_NEW="no"
+# PKGMK_NO_STRIP="no"
+# PKGMK_WGET_OPTS=""
+PKGMK_AXEL_OPTS="-a -v -S"
+# PKGMK_CURL_OPTS=""
+PKGMK_COMPRESSION_MODE="gz"
+PKGMK_MAN_COMPRESSION="bz2"
+PKGMK_DOWNLOAD_TOOL=curl
+PKGMK_UNTAR_TOOL=bsdtar
+PKGMK_UNRPM_TOOL=bsdtar
+PKGMK_UNZIP_TOOL=bsdtar
+
+# These variables will be used for the packages construction.
+PKGMK_PACKAGE_MANAGER=pkgutils
+
+# End of file
