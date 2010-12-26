@@ -2,6 +2,8 @@
 pkg_manager_add(pkgutils)
 
 pkgutils:target () {
+	local ARCH=""
+	
 	/*
 	 * Pkgutils users will be able to choose their compression method.
 	 */
@@ -16,10 +18,14 @@ pkgutils:target () {
 		;;
 	esac
 	
+	if [[ "$distribution" != "Crux" ]]; then
+		ARCH=-$PKGMK_ARCH
+	fi
+	
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release.pkg.tar"
+		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release$ARCH.pkg.tar"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release.pkg.tar"
+		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release$ARCH.pkg.tar"
 	fi
 	
 	if [[ -n "$EXT" ]]; then
