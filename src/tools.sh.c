@@ -302,7 +302,7 @@ pm_arch () {
 	 */
 	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|opkg|rpm|pkgtools|nhopkg) ]] \
 	&& (has no-arch ${archs[@]} || has no-kernel ${kernels[@]}); then
-			TARGET_ARCH=noarch ;;
+			TARGET_ARCH=noarch ;
 	fi
 	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
 	case ${TARGET_ARCH} in
