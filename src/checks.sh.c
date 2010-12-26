@@ -150,7 +150,6 @@ check_config() {
  * that were not included in Crux’s pkgmk.
  * It gives many informations about the recipe itself, and so is very usefull
  * for packagers.
- * TODO: (0.9/0.10) Check for long descriptions.
  */
 check_new_pkgfile () {
 	/*
@@ -166,35 +165,43 @@ check_new_pkgfile () {
 	 * not declared in the Pkgfile.
 	 */
 	if [[ ! "$description" ]]; then
-		error "Variable 'description' not specified in $PKGMK_PKGFILE."
+		error "Variable 'description' not specified in '$PKGMK_PKGFILE'."
+		RETURN=1
+	fi
+	if [[ ! "$long_desc" ]]; then
+	/* 
+	 * Long descriptions are not mandatory, the short ones can be used 
+	 * instead if missing.
+	 */
+		error "Variable 'long_desc' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$url" ]]; then
-		error "Variable 'url' not specified in $PKGMK_PKGFILE."
+		error "Variable 'url' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$packager" ]]; then
-		error "Variable 'packager' not specified in $PKGMK_PKGFILE."
+		error "Variable 'packager' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$maintainer" ]]; then
-		error "Variable 'maintainer' not specified in $PKGMK_PKGFILE."
+		error "Variable 'maintainer' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$depends" ]]; then
-		error "Variable 'depends' not specified in $PKGMK_PKGFILE."
+		error "Variable 'depends' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$name" ]]; then
-		error "Variable 'name' not specified in $PKGMK_PKGFILE."
+		error "Variable 'name' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$version" ]]; then
-		error "Variable 'version' not specified in $PKGMK_PKGFILE."
+		error "Variable 'version' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$release" ]]; then
-		error "Variable 'release' not specified in $PKGMK_PKGFILE."
+		error "Variable 'release' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$license" ]]; then
@@ -204,7 +211,7 @@ check_new_pkgfile () {
 		 * used by many package managers, we just print a warning and
 		 * don’t return any error code.
 		 */
-		warning "Variable 'license' not specified in $PKGMK_PKGFILE."
+		warning "Variable 'license' not specified in '$PKGMK_PKGFILE'."
 	fi
 	/*
 	 * pre_build() and post_build() are not mandatory. They are 
@@ -213,14 +220,14 @@ check_new_pkgfile () {
 	 * build() however is mandatory.
 	 */
 	if [[ "`type -t pre_build`" != "function" ]]; then
-		info "Function 'pre_build' not specified in $PKGMK_PKGFILE."
+		info "Function 'pre_build' not specified in '$PKGMK_PKGFILE'."
 	fi
 	if [[ "`type -t build`" != "function" ]]; then
-		error "Function 'build' not specified in $PKGMK_PKGFILE."
+		error "Function 'build' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ "`type -t post_build`" != "function" ]]; then
-		info "Function 'post_build' not specified in $PKGMK_PKGFILE."
+		info "Function 'post_build' not specified in '$PKGMK_PKGFILE'."
 	fi
 	if [[ "`type -t check`" != "function" ]]; then
 		/*
@@ -228,7 +235,7 @@ check_new_pkgfile () {
 		 * to know if everything will work, but this is not mandatory
 		 * and sometimes difficult to do.
 		 */
-		warning "Function 'check' not specified in $PKGMK_PKGFILE."
+		warning "Function 'check' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	exit $RETURN
