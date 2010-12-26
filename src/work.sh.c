@@ -17,7 +17,14 @@ make_work_dir() {
 	 */
 	cd $PKGMK_ROOT
 	remove_work_dir
-	mkdir -p $SRC $PKG "$SPLITS/${splits[@]}"
+	
+	/* 
+	 * Make a repository by split, one after the other.
+	 */
+	mkdir -p $SRC $PKG
+	for SPLIT in ${splits[@]}; do
+		 mkdir -p "$SPLITS/$SPLIT"
+	done
 	
 	/*
 	 * We check md5 and sha256 control sums if possible. If the needed 
