@@ -108,18 +108,15 @@ main() {
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
-	/* 
-	 * FIXME: Use vars instead of static names…
-	 */
-	PKGMK_CHANGELOG="`get_metafile ChangeLog`"
-	PKGMK_FOOTPRINT="`get_metafile .footprint`"
-	PKGMK_MD5SUM="`get_metafile .md5sum`"
-	PKGMK_SHA256SUM="`get_metafile .sha256sum`"
-	PKGMK_NOSTRIP="`get_metafile .nostrip`"
-	PKGMK_POST_INSTALL="`get_metafile post-install`"
-	PKGMK_PRE_INSTALL="`get_metafile pre-install`"
-	PKGMK_POST_REMOVE="`get_metafile post-remove`"
-	PKGMK_PRE_REMOVE="`get_metafile pre-remove`"
+	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
+	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
+	PKGMK_MD5SUM="`get_metafile "$PKGMK_MD5SUM"`"
+	PKGMK_SHA256SUM="`get_metafile "PKGMK_SHA256SUM"`"
+	PKGMK_NOSTRIP="`get_metafile "$PKGMK_NOSTRIP"`"
+	PKGMK_POST_INSTALL="`get_metafile "$PKGMK_POST_INSTALL"`"
+	PKGMK_PRE_INSTALL="`get_metafile "$PKGMK_PRE_INSTALL"`"
+	PKGMK_POST_REMOVE="`get_metafile "$PKGMK_POST_REMOVE"`"
+	PKGMK_PRE_REMOVE="`get_metafile "$PKGMK_PRE_REMOVE"`"
 	
 	/*
 	 * We need to define a group, with pacman and rpm. If we don’t give 
