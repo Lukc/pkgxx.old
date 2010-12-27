@@ -12,9 +12,10 @@ curl:cat() {
 }
 
 axel:download() {
-	if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
-		RESUME_CMD="" /* FIXME */
-	fi
+	/* 
+	 * axel tries to resume downloads when the output file already 
+	 * exists… so don’t need to manage that. ;)
+	 */
 	DOWNLOAD_OPTS="-o $LOCAL_FILENAME_PARTIAL -a"
 	axel $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_AXEL_OPTS $1
 }
