@@ -1,11 +1,15 @@
 
 pkg_manager_add(pkgtools)
+pkg_manager_noarch(pkgtools)
 
 make_slackspec () {
 	/*
 	 * This function creates the “spec” file of the txz.
 	 * Known problems : description of more than one line will cause a 
 	 * failure somewhere in the pkgtools. (installpkg or upgradepkg)
+	 */
+	/* 
+	 * FIXME: Use $long_desc if available.
 	 */
 	echo "|-----handy-ruler------------------------------------------------------|"
 	echo "$name: $description"

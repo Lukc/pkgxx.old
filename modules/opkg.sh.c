@@ -1,5 +1,6 @@
 
 pkg_manager_add(opkg)
+pkg_manager_noarch(opkg)
 
 opkg:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then

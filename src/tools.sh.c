@@ -296,11 +296,11 @@ pm_arch () {
 	 * Note: pacman-g2 doesn’t support — for now — noarch packages, but 
 	 *       pacman does.
 	 */
-	if [[ "$PKGMK_PACKAGE_MANAGER" =~ (pacman|dpkg|opkg|rpm|pkgtools|nhopkg) ]] \
+	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
+	if has "$PKGMK_PACKAGE_MANAGER" ${PKGMK_PM_NOARCH_SUPPORT[@]} \
 	&& (has no-arch ${archs[@]} || has no-kernel ${kernels[@]}); then
 			TARGET_ARCH=noarch ;
 	fi
-	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
 	case ${TARGET_ARCH} in
 		parisc*) TARGET_ARCH=hppa ;;
 		"Power Macintosh") TARGET_ARCH=ppc ;;

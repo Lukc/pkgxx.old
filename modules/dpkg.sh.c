@@ -1,5 +1,6 @@
 
 pkg_manager_add(dpkg)
+pkg_manager_noarch(dpkg)
 
 make_debian_control() {
 	echo "Package: $name"

@@ -1,6 +1,7 @@
 
 pkg_manager_add(pacman)
 pkg_manager_add(pacman-g2)
+pkg_manager_noarch(pacman) /* pacman-g2 does not support noarch packages */
 
 make_pacman_pkginfo() {
 	/*

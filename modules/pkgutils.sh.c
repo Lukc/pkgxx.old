@@ -1,5 +1,6 @@
 
 pkg_manager_add(pkgutils)
+pkg_manager_noarch(pkgutils)
 
 pkgutils:target () {
 	local ARCH=""
