@@ -168,24 +168,18 @@ pacman-g2:build () {
 }
 
 pacman:footprint () {
-	/*
-	 * FIXME: Using three “grep” is not very clean. It should be possible
-	 *        to use a pattern instead.
-	 */
 	#if defined __GTAR
 	__FP_GTAR($TARGET) | \
-		grep -v "\.PKGINFO" | \
-		grep -v "\.FILELIST" | \
-		grep -v "\.CHANGELOG" | \
-		__FP_SED -e "s|\./\.CHANGELOG||" \
+		__FP_SED -e '/^\.\/\.CHANGELOG$/d' \
+		         -e '/^\.\/\.PKGINFO$/d' \
+			 -e '/^\.\/\.FILELIST$/d' | \
 		sort -k 3
 	#elif defined __BSDTAR
 	__FP_BSDTAR($TARGET) | \
 		sed "s|	|/|;s|	|/|;s|/|	|" | \
-		grep -v "\.PKGINFO" | \
-		grep -v "\.FILELIST" | \
-		grep -v "\.CHANGELOG" | \
-		__FP_SED -e "s|\./\.CHANGELOG||" \
+		__FP_SED -e '/^\.\/\.CHANGELOG$/d' \
+		         -e '/^\.\/\.PKGINFO$/d' \
+			 -e '/^\.\/\.FILELIST$/d' | \
 		sort -k 3
 	#else
 	#	error No valid tar defined.
