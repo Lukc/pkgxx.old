@@ -13,6 +13,7 @@ version=2.2.6
 release=1
 source=(http://www.nano-editor.org/dist/v2.2/$name-$version.tar.gz)
 archs=(all)
+iuse=(man nls info)
 
 splits=(nano-config nano-man nano-info nano-locales)
 subarchs=(no-arch no-arch no-arch no-arch)
