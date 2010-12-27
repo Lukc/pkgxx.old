@@ -5,17 +5,22 @@ pkg_manager_noarch(pkgtools)
 make_slackspec () {
 	/*
 	 * This function creates the “spec” file of the txz.
-	 * Known problems : description of more than one line will cause a 
-	 * failure somewhere in the pkgtools. (installpkg or upgradepkg)
 	 */
-	/* 
-	 * FIXME: Use $long_desc if available.
-	 */
+	local lenght i=1
 	echo "|-----handy-ruler------------------------------------------------------|"
-	echo "$name: $description"
-	for i in {1..10}; do
-		echo "$name:"
-	done
+	if [[ -z "$long_desc" ]]; then
+		echo "$name: $description" | head -n 1
+		for i in {1..10}; do
+			echo "$name: "
+		done
+	else
+		lenght=$(echo "$long_desc" | wc -l)
+		echo "$long_desc" | sed -e "s/^/$name: /" | head -n 11
+		while (((11-$lenght) > $i)); do
+			echo "$name: "
+			((i++))
+		done
+	fi
 }
 
 pkgtools:checks () {
