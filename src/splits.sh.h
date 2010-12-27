@@ -2,7 +2,7 @@
 /* 
  * Use this before split_exec.
  */
-#define export_split \
+#define export_splits \
 	PKG_NAME="$name" ; \
 	PKG_NAMES=("$name" "${splits[@]}") ; \
 	PKG_VERSIONS=("$version" "${splits_version[@]}") ; \
