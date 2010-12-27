@@ -1,15 +1,26 @@
 
+#define make_var(__VAR,__VAL) \
+	${__VAR:+__VAR=__VAL}
+
 pkgmake() {
-	/*
-	 * That avoids to use a non-gnu make, which could cause problems on 
-	 * some ports.
-	 * FIXME: any make should be used, here… the definition of these 
-	 *        values should be enough to keep this function.
-	 */
-	GMAKE \
-		CC="$CC" CXX="$CXX" CPP="$CPP" AS="$AS" AR="$AR" LD="$LD" \
-		NM="$NM" RANLIB="$RANLIB" STRIP="$STRIP" \
-		$MAKE_OPTS $@
+	: ${MAKE=$(path make)}
+	: ${MAKE:=$(path gmake)}
+	: ${MAKE:=$(path pmake)}
+	if [[ -n "$MAKE" ]]; then
+		$MAKE \
+			make_var(CC,$CC) \
+			make_var(CXX,$CXX) \
+			make_var(CPP,$CPP) \
+			make_var(AS,$AS) \
+			make_var(AR,$AR) \
+			make_var(LD,$LD) \
+			make_var(NM,$NM) \
+			make_var(RANLIB,$RANLIB) \
+			make_var(STRIP,$STRIP) \
+			$MAKE_OPTS $@
+	else
+		die "No make implementation available."
+	fi
 }
 
 path() {
@@ -327,5 +338,7 @@ pm_kernel () {
 	esac
 	echo ${TARGET_KERNEL}
 }
+
+#undef make_var
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

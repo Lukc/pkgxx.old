@@ -389,11 +389,6 @@ if [[ -n "$GMAKE_PATH" ]]; then
 	echo "yes"
 else
 	echo "no"
-	echo "You need GNU Make to build most packages." >&2
-	echo "pkg++ can not be built if GNU Make is not present.." >&2
-	echo "If GNU Make is installed but not found, try to add it's path in \$PATH. The 
-\$PATH variable just need to be temporary adapted." >&2
-	exit 1
 fi
 
 checking_for "pkgtools"
