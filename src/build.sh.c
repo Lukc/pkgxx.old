@@ -99,13 +99,8 @@ build_package() {
 	/* 
 	 * We export the needed vars to allow splitting.
 	 */
-	PKG_NAME="$name"
-	PKG_NAMES=("$name" "${splits[@]}")
-	PKG_VERSIONS=("$version" "${splits_version[@]}")
-	PKG_LICENSES=("$license" "${splits_licenses[@]}")
-	PKG_DESC=("$description" "${splits_descriptions[@]}")
-	PKG_ARCHS=("${archs[0]}" "${splits_archs[@]}")
-	PKG_DEPENDS=("${depends[@]}" "${splits_depends[@]}")
+	export_splits
+	
 	/*
 	 * We think again to the poor user.
 	 */
@@ -117,11 +112,7 @@ build_package() {
 		else
 			PKG_ROOT="$SPLITS/${PKG_NAMES[$i]}"
 		fi
-		name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-$version}" \
-		license="${PKG_LICENSES[$i]:-$license}" \
-		description="${PKG_DESC[$i]}" archs=(${PKG_ARCHS[$i]}) \
-		depends="${PKG_DEPENDS[$i]}" PKG="$PKG_ROOT" \
-		TARGET="$(get_target)" \
+		split_exec \
 			$PKGMK_PACKAGE_MANAGER:build
 	done
 	if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then

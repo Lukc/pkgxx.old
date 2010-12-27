@@ -1,4 +1,6 @@
 
+#include "splits.sh.h"
+
 #include "error.sh.h"
 #include "display.sh.c"
 #include "getters.sh.c"
@@ -40,23 +42,9 @@ recursive() {
 }
 
 list_splits() {
-	/* 
-	 * FIXME: This code is mostly a copy of what I wrote in 
-	 *        src/build.sh.c. Maybe we should use some macros
-	 *        to avoid code bloating ?
-	 */
-	PKG_NAMES=("$name" "${splits[@]}")
-	PKG_VERSIONS=("$version" "${splits_version[@]}")
-	PKG_LICENSES=("$license" "${splits_licenses[@]}")
-	PKG_DESC=("$description" "${splits_descriptions[@]}")
-	PKG_ARCHS=("${archs[0]}" "${splits_archs[@]}")
-	PKG_DEPENDS=("${depends[@]}" "${splits_depends[@]}")
+	export_splits
 	for i in ${!PKG_NAMES[*]}; do
-		name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-$version}" \
-		license="${PKG_LICENSES[$i]:-$license}" \
-		description="${PKG_DESC[$i]}" archs=(${PKG_ARCHS[$i]}) \
-		depends="${PKG_DEPENDS[$i]}" PKG="$PKG_ROOT" \
-		TARGET="$(get_target)" \
+		split_exec \
 			$PKGMK_PACKAGE_MANAGER:target
 	done
 }
