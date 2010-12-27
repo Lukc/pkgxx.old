@@ -289,24 +289,13 @@ pm_arch () {
 	 * This function returns a correct architecture for the current
 	 * package manager, using the triplet_arch() function.
 	 * 
-	 * Warning : This function is very uncomplete for now. It will be
-	 *           completed over time, and will not be really usable 
-	 *           before the next stable release.
-	 * 
-	 * FIXME : Check for kernels, and make corresponding architectures
-	 *         for the package managers who works only with archs and 
-	 *         not with kernels, etc.
-	 */
-	/*
 	 * No-arch packages must be of the form -noarch, instead of being of 
 	 * the form -x86 or whatever.
-	 * Note: pacman-g2 doesn’t support — for now — noarch packages, but 
-	 *       pacman does.
 	 */
 	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
 	if has "$PKGMK_PACKAGE_MANAGER" ${PKGMK_PM_NOARCH_SUPPORT[@]} \
 	&& (has no-arch ${archs[@]} || has no-kernel ${kernels[@]}); then
-			TARGET_ARCH=noarch ;
+		TARGET_ARCH=noarch ;
 	fi
 	case ${TARGET_ARCH} in
 		parisc*) TARGET_ARCH=hppa ;;
