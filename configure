@@ -433,15 +433,7 @@ else
 	fi
 fi
 
-# FIXME : Deprecated ?
-#if ! has $PACKAGE_MANAGER {d,o}pkg rpm pkgtools pkgutils pacman{,-g2} nhopkg; then
-#	cat << EOF >&2
-#Your package manager is not known. If you want pkg++ to be built for a 
-#particular package manager, use the --package-manager=<your-package-manager> 
-#flag to the configure script.
-#EOF
-#	exit 1
-#fi
+: ${PACKAGE_MANAGER:=pkgutils}
 
 echo "Summary:"
 echo "  Architecture:           $ARCHITECTURE"
