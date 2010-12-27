@@ -140,16 +140,25 @@ pacman:build() {
 	 * We get the size of the future package’s content.
 	 */
 	size="`du -cb . | tail -n 1 | awk '{print $1}'`"
+	
 	/*
 	 * We write the files list in the future package.
 	 */
 	find . | sed "s|\./||" | sort > .FILELIST
+	
 	/*
 	 * We write all other informations in the package.
 	 */
 	make_pacman_pkginfo > .PKGINFO
 	unset size
-	/* FIXME: What about the Changelog ? :/ */
+	
+	/* 
+	 * We install the changelog at the good place, if available.
+	 */
+	if [[ -e "$PKGMK_ROOT/$PKGMK_CHANGELOG" ]]; then
+		cp "$PKGMK_ROOT/$PKGMK_CHANGELOG" $PKG/.CHANGELOG
+	fi
+	
 	/*
 	 * And then we build the package.
 	 */
