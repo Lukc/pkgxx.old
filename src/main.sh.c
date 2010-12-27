@@ -310,6 +310,11 @@ main() {
 	if [[ "`build_needed`" = "no" ]] && [[ "$PKGMK_FORCE" = "no" ]] && [[ "$PKGMK_CHECK_MD5SUM" = "no" ]] && [[ "$version" != "devel" ]]; then
 		info "Package '$TARGET' is up to date."
 	else
+		if [[ "$PKGMK_INTERACTIVE" = "yes" ]]; then
+			for FLAG in ${iuse[@]}; do
+				ask_use "$FLAG"
+			done
+		fi
 		download_source
 		build_package
 	fi

@@ -160,27 +160,23 @@ ask_use() {
 	done
 }
 
-uses() {
-	if [[ "$PKGMK_INTERACTIVE" = "yes" ]]; then
-		for flag in $@; do
-			ask_use $flag
-		done
-	fi
-}
-
 pkgsplit() {
 	local split="$1"
 	shift 1
 	cd $PKG
+	/* 
+	 * FIXME: Remove this, it should have been already created.
+	 */
 	mkdir -p $SPLITS/$split
 	
 	/* 
 	 * We use tar to copy a complete tree.
 	 */
-	tar c ".$@" | (cd $SPLITS/$split ; tar x)
-	
-	for i in ".$@" ; do
-		rm -rf $i
+	for FILE in $@; do
+		if [[ -e ".$FILE" ]]; then
+			tar c ".$FILE" | (cd $SPLITS/$split ; tar x)
+			rm -rf $FILE
+		fi
 	done
 }
 
