@@ -202,39 +202,18 @@ main() {
 	fi
 	
 	/*
-	 * It is very important to check that the tools we will use are here, 
-	 * because we don’t want to be alone and miserably fail. 
-	 */
-	case $PKGMK_PACKAGE_MANAGER in
-		rpm)
-			check_command rpm
-			check_command rpmbuild
-		;;
-		dpkg)
-			check_command dpkg
-		;;
-		pkgtools)
-			check_command makepkg
-		;;
-	esac
-	/*
-	 * We don’t need to check for pacman{,-g2}, because it is not needed to
-	 * build the package, like rpmbuild and dpkg are. However, the user
-	 * will get an error if using the option -i or -u and pacman{,-g2} is 
-	 * not installed.
-	 */
-	
-	/*
 	 * It would be sad to try working on directories we don’t own.
 	 */
 	check_directory "$PKGMK_SOURCE_DIR"
 	check_directory "$PKGMK_PACKAGE_DIR"
 	check_directory "`dirname $PKGMK_WORK_DIR`"
-	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
+	
 	/*
-	 * RPM is worse, it needs it’s own tree inside the package dir.
+	 * It is very important to check that the tools we will use are here, 
+	 * because we don’t want to be alone and miserably fail. 
 	 */
-		check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$arch"
+	if [[ -n $(type -p "$PKGMK_PACKAGE_MANAGER:checks") ]]; then
+		$PKGMK_PACKAGE_MANAGER:checks
 	fi
 	
 	check_pkgfile

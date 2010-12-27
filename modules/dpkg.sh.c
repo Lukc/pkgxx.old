@@ -38,6 +38,10 @@ make_debian_control() {
 	echo
 }
 
+dpkg:checks() {
+	check_command dpkg
+}
+
 dpkg:arch() {
 	case ${KERNEL} in
 		freebsd*) ARCH=kfreebsd-$ARCH ;;

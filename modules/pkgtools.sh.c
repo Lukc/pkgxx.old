@@ -18,6 +18,10 @@ make_slackspec () {
 	done
 }
 
+pkgtools:checks () {
+	check_command makepkg
+}
+
 pkgtools:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"

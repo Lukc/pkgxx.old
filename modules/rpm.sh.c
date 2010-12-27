@@ -1,6 +1,12 @@
 
 pkg_manager_add(rpm)
 
+rpm:checks() {
+	check_command rpm
+	check_command rpmbuild
+	check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH"
+}
+
 rpm:unpack() {
 	info "Unpacking $1."
 	case "$PKGMK_UNRPM_TOOL" in
