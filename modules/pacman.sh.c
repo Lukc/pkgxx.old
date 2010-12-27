@@ -111,13 +111,6 @@ make_pacman_pkginfo() {
 	done
 }
 
-pacman:arch() {
-	echo "${ARCH}" | sed -e "s|i.86|i386|"
-}
-pacman-g2:arch() {
-	echo "${ARCH}" | sed -e "s|i.86|i386|"
-}
-
 pacman:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.xz"
