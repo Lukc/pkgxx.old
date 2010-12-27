@@ -42,10 +42,28 @@ tar:unpack() {
 }
 
 tar:pack() {
-	/* 
-	 * FIXME
-	 */
-	:
+	[[ "$PKGMK_UNTAR_TOOL" = sltar ]] && die "sltar does not supports packing."
+	local TARBALL="$1" TARFLAGS
+	shift 1
+	case $TARBALL in
+		*.xz|*.txz)
+			TARFLAGS=J
+		;;
+		*.bz2|*.tbz2)
+			TARFLAGS=j
+		;;
+		*.gz|*.tgz)
+			TARFLAGS=z
+		;;
+		*.tar) ;;
+		*)
+			die "Don’t know how to make '$TARBALL'."
+		;;
+	esac
+	if [[ "$PKGMK_DEBUG" = "yes" ]]; then
+		TARFLAGS=${TARFLAGS}v
+	fi
+	tar ${TARFLAGS}c $@ > $TARBALL
 }
 
 tar:list() {
