@@ -175,10 +175,6 @@ pkgsplit() {
 	local split="$1"
 	shift 1
 	cd $PKG
-	/* 
-	 * FIXME: Remove this, it should have been already created.
-	 */
-	mkdir -p $SPLITS/$split
 	
 	/* 
 	 * We use tar to copy a complete tree.
