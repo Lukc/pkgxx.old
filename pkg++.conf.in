@@ -8,6 +8,8 @@
 # because your package will be optimised for an unknown processor, which would
 # be a problem to share them.
 
+export CHOST=$MACHTYPE
+
 export CFLAGS="-O2 -march=@MARCH@ -pipe"
 export CXXFLAGS="$CFLAGS"
 
