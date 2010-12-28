@@ -8,3 +8,6 @@
 #define scm_add(__SCM_NAME) \
 	PKGMK_SCMS=(${PKGMK_SCMS[@]} __SCM_NAME)
 
+#define untar_add(__UNTAR_NAME) \
+	PKGMK_UNTAR_TOOLS=(${PKGMK_UNTAR_TOOLS[@]} __UNTAR_NAME)
+

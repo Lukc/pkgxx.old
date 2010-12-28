@@ -14,7 +14,7 @@ unpack_source() {
 		if ! [[ "$no_extraction" =~ ("true"|"yes") ]]; then
 			case $LOCAL_FILENAME in
 				*.tar|*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma)
-					tar:unpack "$LOCAL_FILENAME" "$SRC"
+					$PKGMK_UNTAR_TOOL:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
 				*.zip)
 					zip:unpack "$LOCAL_FILENAME" "$SRC"

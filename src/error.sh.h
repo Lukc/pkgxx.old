@@ -1,5 +1,5 @@
 
-/* Pkgfile and general errors */
+/*** Pkgfile and general errors ***/
 #define E_GENERAL 1
 #define E_PKGFILE 2
 #define E_DIR_PERM 3
@@ -10,11 +10,14 @@
 #define E_BUILD 8
 #define E_INSTALL 9
 
-/* Invalid choices */
+/*** Invalid choices ***/
 #define E_INVALID_DOWNLOAD_TOOL 10
 #define E_INVALID_MAN_COMPRESSION 11
 #define E_INVALID_PM 12 /* PM == Package Manager */
+/* When something is not provided by any module */
+#define E_MODULE_NOT_PROVIDED 13
 
-/* Unbuildable package */
+/*** Unbuildable package ***/
 #define E_BAD_ARCH 20
 #define E_BAD_KERNEL 21
+

@@ -138,6 +138,11 @@ check_config() {
 		echo "Valid values are: [gz] bz2 xz."
 		exit E_INVALID_MAN_COMPRESSION
 	fi
+	if ! has $PKGMK_UNTAR_TOOL ${PKGMK_UNTAR_TOOLS[@]}; then
+		error "The untar tool '$PKGMK_UNTAR_TOOL' is not provided by any module. Please, edit your config file."
+		echo "Valid values are: ${PKGMK_UNTAR_TOOLS[@]}"
+		exit E_MODULE_NOT_PROVIDED
+	fi
 	if ! has $PKGMK_PACKAGE_MANAGER ${PKGMK_PACKAGE_MANAGERS[@]}; then
 		error "$PKGMK_PACKAGE_MANAGER is not a supported package manager. Please, edit your config file."
 		echo "Valid values are: ${PKGMK_PACKAGE_MANAGERS[@]}."

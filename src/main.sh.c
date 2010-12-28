@@ -381,9 +381,6 @@ PKGMK_DEBUG="no"
 PKGMK_KERNEL=_KERNEL
 
 PKGMK_UNTAR_TOOL=gtar
-readonly PKGMK_UNTAR_TOOLS=(
-	gtar bsdtar sltar
-)
 PKGMK_UNRPM_TOOL=rpm
 readonly PKGMK_UNRPM_TOOLS=(
 	rpm bsdtar
