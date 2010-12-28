@@ -6,7 +6,7 @@ make_slackspec () {
 	/*
 	 * This function creates the “spec” file of the txz.
 	 */
-	local lenght i=1
+	local lenght i=0
 	echo "|-----handy-ruler------------------------------------------------------|"
 	if [[ -z "$long_desc" ]]; then
 		echo "$name: $description" | head -n 1
