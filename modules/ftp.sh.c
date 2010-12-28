@@ -1,4 +1,8 @@
 
+PKGMK_DOWNLOAD_TOOLS=(
+	curl axel wget
+)
+
 curl:download() {
 	if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
 		RESUME_CMD="-C $LOCAL_FILENAME_PARTIAL"

@@ -389,11 +389,7 @@ PKGMK_UNZIP_TOOL=unzip
 readonly PKGMK_UNZIP_TOOLS=(
 	unzip bsdtar
 )
-/* PKGMK_DOWNLOAD_TOOL=wget
- * FIXME: Uncomment this at 0.9.4. */
-readonly PKGMK_DOWNLOAD_TOOLS=(
-	curl axel wget
-)
+PKGMK_DOWNLOAD_TOOL=wget
 
 PKGMK_PACKAGE_MANAGER=_PACKAGE_MANAGER
 
