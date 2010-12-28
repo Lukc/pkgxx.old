@@ -523,7 +523,7 @@ RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
 }
 cat > Makefile << EOF
-# Begin of Makefile
+# Beginning of Makefile
 
 DESTDIR = 
 BINDIR = $EPREFIX/bin
