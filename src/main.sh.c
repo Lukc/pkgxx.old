@@ -111,7 +111,7 @@ main() {
 	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
 	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
 	PKGMK_MD5SUM="`get_metafile "$PKGMK_MD5SUM"`"
-	PKGMK_SHA256SUM="`get_metafile "PKGMK_SHA256SUM"`"
+	PKGMK_SHA256SUM="`get_metafile "$PKGMK_SHA256SUM"`"
 	PKGMK_NOSTRIP="`get_metafile "$PKGMK_NOSTRIP"`"
 	PKGMK_POST_INSTALL="`get_metafile "$PKGMK_POST_INSTALL"`"
 	PKGMK_PRE_INSTALL="`get_metafile "$PKGMK_PRE_INSTALL"`"
