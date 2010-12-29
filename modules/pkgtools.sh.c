@@ -36,6 +36,7 @@ pkgtools:target () {
 }
 
 pkgtools:build () {
+	cd $PKG
 	mkdir $PKG/install
 	make_slackspec > $PKG/install/slack-desc
 	info "Building $TARGET."

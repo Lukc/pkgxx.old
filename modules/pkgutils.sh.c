@@ -38,6 +38,7 @@ pkgutils:target () {
 
 pkgutils:build () {
 	info "Building $TARGET."
+	cd $PKG
 	#if defined __GTAR
 	tar cvvf ${TARGET%.$PKGMK_COMPRESSION_MODE} *
 	#elif defined __BSDTAR
