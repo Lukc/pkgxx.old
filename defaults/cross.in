@@ -1,29 +1,19 @@
 
-/* 
- * $MACHTYPE is often set to the CHOST of the current machine, at least
- * with the bash shell.
- */
-: ${CHOST:=$MACHTYPE}
-
-if [[ -n "${CTARGET}" && "${CTARGET}" != "${CHOST}" ]]; then
+if [[ -n "${CTARGET}" && -n "${CHOST}" && "${CTARGET}" != "${CHOST}" ]]; then
 	/* 
-	 * We define a prefix for the compilation tools, which differs if we are
-	 * cross-compiling or not. The prefix is used at the bottom of the file
-	 * to set the compilation tools names.
+	 * We set the name of the more used tools to $CTARGET-$GNU_TOOL.
 	 */
-	local  CPREFIX="${CTARGET}"
+	: ${CC:=${CTARGET}-gcc}
+	: ${CXX:=${CTARGET}-g++}
+	: ${CPP:=${CTARGET}-cpp}
+	: ${AS:=${CTARGET}-as}
+	: ${AR:=${CTARGET}-ar}
+	: ${LD:=${CTARGET}-ld}
+	: ${NM:=${CTARGET}-nm}
+	: ${RANLIB:=${CTARGET}-ranlib}
+	: ${STRIP:=${CTARGET}-strip}
 	export CROSS=yes
 else
-	local  CPREFIX="${CHOST}"
 	export CROSS=no
 fi
 
-: ${CC:=${CPREFIX}-gcc}
-: ${CXX:=${CPREFIX}-g++}
-: ${CPP:=${CPREFIX}-cpp}
-: ${AS:=${CPREFIX}-as}
-: ${AR:=${CPREFIX}-ar}
-: ${LD:=${CPREFIX}-ld}
-: ${NM:=${CPREFIX}-nm}
-: ${RANLIB:=${CPREFIX}-ranlib}
-: ${STRIP:=${CPREFIX}-strip}
