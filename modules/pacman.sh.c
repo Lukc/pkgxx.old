@@ -113,9 +113,17 @@ make_pacman_pkginfo() {
 
 pacman:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.xz"
+		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
+			echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar"
+		else
+			echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
+		fi
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.pkg.tar.xz"
+		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
+			echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.pkg.tar"
+		else
+			echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
+		fi
 	fi
 }
 
@@ -159,15 +167,28 @@ pacman:build() {
 		cp "$PKGMK_ROOT/$PKGMK_CHANGELOG" $PKG/.CHANGELOG
 	fi
 	
+	/*	
+	 * We choose the good “tarflags” for the compression.
+	 */
+	local TARFLAGS
+	case "$PKGMK_COMPRESSION_MODE" in
+		gz) TARFLAGS=z ;;
+		bz2) TARFLAGS=j ;;
+		xz) TARFLAGS=J ;;
+		*)
+			warning "Unknown compression '$PKGMK_COMPRESSION_MODE'. Using xz."
+		;;
+	esac
+	
 	/*
 	 * And then we build the package.
 	 */
 	info "Building $TARGET."
 	#if defined __GTAR
-		tar cvvf ${TARGET%.$EXT} .FILELIST .PKGINFO *
+		tar cvvf ${TARGET} .FILELIST .PKGINFO *
 	#elif defined __BSDTAR
-		bsdtar cf ${TARGET%.$EXT} .FILELIST .PKGINFO *
-		bsdtar tvf ${TARGET%.$EXT}
+		bsdtar cf ${TARGET} .FILELIST .PKGINFO *
+		bsdtar tvf ${TARGET}
 	#else
 	#	error No valid tar defined.
 	#endif
@@ -199,22 +220,18 @@ pacman-g2:footprint () {
 }
 
 pacman:install() {
-	if [[ "$PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
-		if [[ "$PKGMK_INSTALL" = "install" ]]; then
-			echo "pacman-g2 ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -A $TARGET"
-		else
-			echo "pacman-g2 ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -U $TARGET"
-		fi
-	else
 	/*
 	 * The correct parameter for pacman is always -U, even if the
 	 * package has never been installed.
 	 */
-		echo "pacman ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -U $TARGET"
-	fi
+	echo "pacman ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -U $TARGET"
 }
 pacman-g2:install () {
-	pacman:install
+	if [[ "$PKGMK_INSTALL" = "install" ]]; then
+		echo "pacman-g2 ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -A $TARGET"
+	else
+		echo "pacman-g2 ${PKGMK_INSTALL_ROOT:+--root $PKGMK_INSTALL_ROOT} -U $TARGET"
+	fi
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

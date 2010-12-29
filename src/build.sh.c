@@ -115,13 +115,6 @@ build_package() {
 		split_exec \
 			$PKGMK_PACKAGE_MANAGER:build
 	done
-	if [[ "$PKGMK_PACKAGE_MANAGER" =~ pacman|pacman-g2 ]]; then
-	/* 
-	 * I don’t remember why, but there was a problem with pacmen.
-	 * FIXME: This will be a real problem when splits will be implemented…
-	 */
-	mv ${TARGET%.$EXT}.$PKGMK_COMPRESSION_MODE ${TARGET}
-	fi
 	
 	if [[ $? = 0 ]]; then
 		BUILD_SUCCESSFUL="yes"

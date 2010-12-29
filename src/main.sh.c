@@ -341,14 +341,7 @@ PKGMK_PACKAGE_DIR="$PWD"
 PKGMK_WORK_DIR="$PWD/work"
 PKGMK_INSTALL_ROOT=
 
-#if defined __pacman
 PKGMK_COMPRESSION_MODE="xz"
-#else
-/*
- * The other sucks enough to have a bad default value. :D
- */
-PKGMK_COMPRESSION_MODE="gz"
-#endif
 PKGMK_MAN_COMPRESSION="gz"
 
 /*
