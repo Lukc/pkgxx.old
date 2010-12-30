@@ -551,15 +551,12 @@ help:
 
 defaults/prefixes:
 	`BUILD prefixes defaults .in`
-#	cpp $CPPFLAGS "defaults/prefixes.in" >> "defaults/prefixes"
 
 defaults/distributions:
 	`BUILD distributions defaults .in`
-#	cpp $CPPFLAGS "defaults/distributions.in" >> "defaults/distributions"
 
 defaults/cross:
 	`BUILD cross defaults .in`
-#	cpp $CPPFLAGS "defaults/cross.in" >> "defaults/cross"
 
 $(for module in `cd modules; ls *.sh.c`; do
 	module=${module%.sh.c}
@@ -593,13 +590,12 @@ man-install:
 	`INSTALL_F 0644 man/pkg++.conf.5 pkg++.conf.5 \$\(MANDIR\)/man5`
 	`INSTALL_F 0644 man/pkgfile.5 pkgfile.5 \$\(MANDIR\)/man5`
 
-pkgxx-install: pkgxx
+pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 	`DIR \$\(BINDIR\)`
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
 	`DIR \$\(ETCDIR\)/pkg++/defaults`
 	`DIR \$\(ETCDIR\)/pkg++/uses`
-	`DIR \$\(LIBEXECDIR\)/pkg++`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
 	`for include in $(ls includes/); do
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++/includes
@@ -629,6 +625,7 @@ $(for module in `cd modules; ls *.sh.c`; do
 done)
 
 has-install: has
+	`DIR \$\(LIBEXECDIR\)/pkg++`
 	`INSTALL 755 has \$\(LIBEXECDIR\)/pkg++/`
 
 update: pkgxx-install man-install has-install modules-install
