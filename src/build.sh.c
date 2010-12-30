@@ -73,7 +73,7 @@ build_package() {
 	 * If something went wrong
 	 */
 	if [[ $RETURN != 0 ]]; then
-		error "build_package() returned $RETURN."
+		error "Building '$TARGET' failed."
 		return $RETURN
 	fi
 	/*
