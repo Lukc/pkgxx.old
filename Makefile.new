@@ -21,7 +21,7 @@ BSDTAR := bsdtar
 # Generic informations
 
 TRUNK = yes
-PKGXX_VERSION = 0.9-devel-$(shell git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g')
+PKGXX_VERSION = 0.9.1-devel-$(shell git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g')
 CROSS := 
 
 # C
