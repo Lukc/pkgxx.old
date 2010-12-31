@@ -21,7 +21,7 @@ axel:download() {
 }
 
 axel:cat() {
-	local tmp="`mktmp`"
+	local tmp="`mktemp`"
 	axel --output "$tmp" $1 &>/dev/null
 }
 
