@@ -29,6 +29,7 @@ print_help() {
 	echo "  -li,  --list-includes         list all inclusion files available"
 	echo "  -pm,  --package-manager <pm>  set the package manager to use"
 	echo "  -dg,  --debug                 print debug informations while building packages."
+	echo "  -nf,  --no-fail               run pkg++ in the dangerous no-fail mode."
 	echo "  -v,   --version               print version and exit "
 	echo "  -h,   --help                  print help and exit"
 }
@@ -107,6 +108,8 @@ parse_options() {
 				shift ;;
 			-dg|--debug)
 				PKGMK_DEBUG="yes" ;;
+			-nf|--no-fail)
+				PKGMK_NOFAIL="yes" ;;
 			-v|--version)
 				echo "`basename $PKGMK_COMMAND` $PKGMK_VERSION"
 				exit 0 ;;

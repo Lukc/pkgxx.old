@@ -7,7 +7,7 @@
  * very very very very very very very very very very unrecommended. (note the
  * line of “very”)
  * 
- * It depends on includes/frugalbuild.
+ * It depends on includes/frugalbuild and has effect only with FrugalBuilds.
  */
 
 if [[ "$PKGMK_PKGFILE" = FrugalBuild ]]; then
@@ -24,5 +24,10 @@ if [[ "$PKGMK_PKGFILE" = FrugalBuild ]]; then
 		done
 	}
 	Finclude util
+	/* 
+	 * Even if you don’t want it, it’ needed… as FrugalBuilds are 
+	 * made to work with a packages builder which has this behavior.
+	 */
+	PKGMK_NOFAIL="yes"
 fi
 

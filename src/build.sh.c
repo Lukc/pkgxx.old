@@ -6,6 +6,12 @@ build_package() {
 	 */
 	local BUILD_SUCCESSFUL="no"
 	
+	/* 
+	 * We will need to give to `set` different parameters, depending on 
+	 * the current configuration.
+	 */
+	local SET_OPTIONS
+	
 	/*
 	 * We check if we can create $TARGET, or recreate it if it already 
 	 * exists. Then we make the work dir.
@@ -33,6 +39,18 @@ build_package() {
 	 */
 	unpack_source
 	
+	/* 
+	 * Fail or not in case of bad return, and print or not debug messages.
+	 * See bellow for more informations.
+	 */
+	SET_OPTIONS=
+	if [[ "$PKGMK_NOFAIL" != "yes" ]]; then
+		SET_OPTIONS="$SET_OPTIONS -e"
+	fi
+	if [[ "$PKGMK_DEBUG" = "yes" ]]; then
+		SET_OPTIONS="$SET_OPTIONS -x"
+	fi
+	
 	cd $SRC
 	/*
 	 * The package is built now.
@@ -41,15 +59,15 @@ build_package() {
 	 *              be displayed with a “+”.
 	 */
 	if [[ "`type -t pre_build`" = "function" ]]; then
-		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; pre_build)
+		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; pre_build)
 	fi
 	local RETURN=$?
 	if [[ $RETURN = 0 ]]; then
-		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; build)
+		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; build)
 		RETURN=$?
 	fi
 	if [[ $RETURN = 0 && "`type -t post_build`" = "function" ]]; then
-		(set -e `[[ "$PKGMK_DEBUG" = yes ]] && echo "-x"` ; post_build)
+		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; post_build)
 		RETURN=$?
 	fi
 	
