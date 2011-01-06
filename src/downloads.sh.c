@@ -1,5 +1,8 @@
 
-#define __SRC_UPTODATE info "'$1' already up to date."
+/* 
+ * Very unclean, but works.
+ */
+#define __SRC_UPTODATE info "'$1' already up to date." ; exit 0
 
 download_file() {
 	info "Getting '$1'."
