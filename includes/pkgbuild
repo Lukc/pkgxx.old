@@ -1,0 +1,15 @@
+
+# 
+# Do NOT use this in a recipe. This include is here only to give pkg++
+#+ a PKGBUILDs support, with modules/pkgbuild.sh.c.
+# 
+# Current maintainer: Lukc <lukc@upyum.com>
+# 
+export name=$pkgname
+export version=$pkgver
+export release=$pkgrel
+export description=$pkgdesc
+
+export pkgdir="$PKGMK_WORK_DIR/pkg"
+export srcdir="$PKGMK_WORK_DIR/src"
+
