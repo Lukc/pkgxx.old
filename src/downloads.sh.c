@@ -19,7 +19,7 @@ download_file() {
 			check_command "$PROTOCOL"
 			cd $PKGMK_SOURCE_DIR
 			if cd $name 2&> /dev/null; then
-				if ! $PROTOCOL:pull "$1"; then
+				if ! $PROTOCOL:pull "$1" && [[ "$PKGMK_FORCE" != "yes" ]]; then
 					__SRC_UPTODATE
 				fi
 			else
