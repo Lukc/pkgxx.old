@@ -4,11 +4,7 @@ get_protocol() {
 	 * It just returns what is before the first “:”.
 	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
-	if [[ "$PROTOCOL" =~ .*+.* ]]; then
-		echo ${PROTOCOL#*+}
-	else
-		echo ${PROTOCOL}
-	fi
+	echo ${PROTOCOL/+*}
 }
 get_filename() {
 	/*
