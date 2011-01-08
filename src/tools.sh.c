@@ -23,6 +23,19 @@ pkgmake() {
 	fi
 }
 
+include () {
+	for DIR in $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
+		if [[ -e $DIR/$1 ]]; then
+			if . $DIR/$1; then
+				return 0
+			else
+				return 1 /* Parsing failed. */
+			fi
+		fi
+	done
+	return 2 /* Not found. */
+}
+
 path() {
 	/* 
 	 * FIXME: rename to which ?

@@ -176,7 +176,7 @@ main() {
 	check_config
 	
 	for INCLUDE in ${includes[@]}; do
-		. $PKGMK_INCLUDES_DIR/$INCLUDE
+		include $INCLUDE
 	done
 	
 	/*
