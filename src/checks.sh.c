@@ -224,15 +224,9 @@ check_new_pkgfile () {
 	 * but for who they are uncomplete.
 	 * build() however is mandatory.
 	 */
-	if [[ "`type -t pre_build`" != "function" ]]; then
-		info "Function 'pre_build' not specified in '$PKGMK_PKGFILE'."
-	fi
 	if [[ "`type -t build`" != "function" ]]; then
 		error "Function 'build' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
-	fi
-	if [[ "`type -t post_build`" != "function" ]]; then
-		info "Function 'post_build' not specified in '$PKGMK_PKGFILE'."
 	fi
 	if [[ "`type -t check`" != "function" ]]; then
 		/*
@@ -242,6 +236,14 @@ check_new_pkgfile () {
 		 */
 		warning "Function 'check' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
+	fi
+	if [[ -n "$lastver" ]]; then
+		local last_version=$(eval "$lastver")
+		if ! [[ "$lastver" = "$version" ]] ; then
+			warning "Last version, '$last_version', differs from current version '$version'."
+		fi
+	else
+		warning "Function 'lastver' not specified in '$PKGMK_PKGFILE'."
 	fi
 	exit $RETURN
 }
