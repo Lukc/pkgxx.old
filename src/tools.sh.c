@@ -227,15 +227,11 @@ make_desktop_entry() {
 target_arch () {
 	/* 
 	 * This function returns the architecture depending on the triplet.
-	 * The triplet may be the CHOST or the CTARGET, thus allowing 
+	 * The triplet may be the CHOST or the MACHTYPE, thus allowing 
 	 * cross-compilation.
-	 *
-	 * If CTARGET nor CHOST are declared, the function does not return anything.
 	 */
 	local TRIPLET
-	if [[ -n "$CTARGET" ]]; then
-		TRIPLET=$CTARGET
-	elif [[ -n "$CHOST" ]]; then
+	if [[ -n "$CHOST" ]]; then
 		TRIPLET=$CHOST
 	else
 		TRIPLET=$MACHTYPE /* We use the triplet bash was built with… */
@@ -248,12 +244,10 @@ target_kernel () {
 	 * Same as target_arch(), but for the OSTYPE.
 	 */
 	local TRIPLET
-	if [[ -n "$CTARGET" ]]; then
-		TRIPLET=$CTARGET
-	elif [[ -n "$CHOST" ]]; then
+	if [[ -n "$CHOST" ]]; then
 		TRIPLET=$CTARGET
 	else
-		return 0
+		TRIPLET=$MACHTYPE
 	fi
 	echo $TRIPLET | cut -d- -f 3
 }
@@ -270,12 +264,10 @@ target_libc () {
 	 */
 	local TRIPLET
 	local LIBC
-	if [[ -n "$CTARGET" ]]; then
-		TRIPLET=$CTARGET
-	elif [[ -n "$CHOST" ]]; then
+	if [[ -n "$CHOST" ]]; then
 		TRIPLET=$CTARGET
 	else
-		return 0
+		TRIPLET=$MACHTYPE
 	fi
 	LIBC=$(echo $TRIPLET | cut -d- -f 4)
 	if [[ -z "$LIBC" ]]; then

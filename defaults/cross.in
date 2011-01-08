@@ -1,17 +1,17 @@
 
-if [[ -n "${CTARGET}" && -n "${CHOST}" && "${CTARGET}" != "${CHOST}" ]]; then
+if [[ -n "${CHOST}" ]]; then
 	/* 
-	 * We set the name of the more used tools to $CTARGET-$GNU_TOOL.
+	 * We set the name of the more used tools to $CHOST-$GNU_TOOL.
 	 */
-	: ${CC:=${CTARGET}-gcc}
-	: ${CXX:=${CTARGET}-g++}
-	: ${CPP:=${CTARGET}-cpp}
-	: ${AS:=${CTARGET}-as}
-	: ${AR:=${CTARGET}-ar}
-	: ${LD:=${CTARGET}-ld}
-	: ${NM:=${CTARGET}-nm}
-	: ${RANLIB:=${CTARGET}-ranlib}
-	: ${STRIP:=${CTARGET}-strip}
+	: ${CC:=${CHOST}-gcc}
+	: ${CXX:=${CHOST}-g++}
+	: ${CPP:=${CHOST}-cpp}
+	: ${AS:=${CHOST}-as}
+	: ${AR:=${CHOST}-ar}
+	: ${LD:=${CHOST}-ld}
+	: ${NM:=${CHOST}-nm}
+	: ${RANLIB:=${CHOST}-ranlib}
+	: ${STRIP:=${CHOST}-strip}
 	export CROSS=yes
 else
 	export CROSS=no
