@@ -173,12 +173,12 @@ check_new_pkgfile () {
 		error "Variable 'description' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$long_desc" ]]; then
+	if [[ ! "$longdesc" ]]; then
 	/* 
 	 * Long descriptions are not mandatory, the short ones can be used 
 	 * instead if missing.
 	 */
-		error "Variable 'long_desc' not specified in '$PKGMK_PKGFILE'."
+		error "Variable 'longdesc' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$url" ]]; then

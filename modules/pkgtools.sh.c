@@ -8,14 +8,14 @@ make_slackspec () {
 	 */
 	local lenght i=0
 	echo "|-----handy-ruler------------------------------------------------------|"
-	if [[ -z "$long_desc" ]]; then
+	if [[ -z "$longdesc" ]]; then
 		echo "$name: $description" | head -n 1
 		for i in {1..10}; do
 			echo "$name: "
 		done
 	else
-		lenght=$(echo "$long_desc" | wc -l)
-		echo "$long_desc" | sed -e "s/^/$name: /" | head -n 11
+		lenght=$(echo "$longdesc" | wc -l)
+		echo "$longdesc" | sed -e "s/^/$name: /" | head -n 11
 		while (((11-$lenght) > $i)); do
 			echo "$name: "
 			((i++))

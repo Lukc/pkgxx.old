@@ -17,13 +17,13 @@ make_debian_control() {
 	fi
 
 	echo "Description: $description"
-	if [[ -n "$long_desc" ]]; then
+	if [[ -n "$longdesc" ]]; then
 		/* 
 		 * For dpkg, a blank line is equal to a new field, so we
 		 * just write a dot. We also insert a space at the begining
 		 * of each line, else it is also a new field.
 		 */
-		echo "$long_desc" | sed -e "s|^$|.|;s|^| |"
+		echo "$longdesc" | sed -e "s|^$|.|;s|^| |"
 	fi
 	echo -n "Depends: "
 	for n in ${!depends[*]}; do
