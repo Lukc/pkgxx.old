@@ -29,12 +29,11 @@
 : ${rss_url:=$sf_rss_url}
 
 # FIXME: use some sort of versort.
-# FIXME: It may grep ${sf_name}${sf_separator}FOO${sf_separator}${sf_version}…
-: ${last_version:=$(wcat "$sf_rss_url" | \
-	egrep "$sf_name$sf_separator.*$sf_extension" | \
-	sed -e "s|.*$sf_name$sf_separator||;s|$sf_extension.*||;" | \
+: ${lastver:="wcat '$sf_rss_url' | \
+	egrep '$sf_name$sf_separator.*$sf_extension' | \
+	sed -e 's|$sf_extension.*||;s|.*$sf_version_separator||' | \
 	sort | tac | \
-	head -n 1)}
+	head -n 1"}
 
 source=(${source[@]} $sf_mirror/$sf_dirname/$sf_name$sf_version_separator$sf_version$sf_extension)
 
