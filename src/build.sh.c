@@ -92,6 +92,15 @@ build_package() {
 	 */
 	if [[ $RETURN != 0 ]]; then
 		error "Building '$TARGET' failed."
+		if [[ "$PKGMK_KEEP_ERRLOGS" != "no" && -n "${errlogs[@]}" ]]; then
+			for PATTERN in ${errlogs[@]}; do
+				for FILE in $(cd $SRC; find . | egrep "${PATTERN}$"); do
+					local LOGFILE=$(echo "$FILE" | sed -e "s|/|.|g;s|^\.*||")
+					cp $SRC/$FILE $PKGMK_LOGS_DIR/$LOGFILE
+					error "Log available at: $PKGMK_LOGS_DIR/$LOGFILE"
+				done
+			done
+		fi
 		return $RETURN
 	fi
 	/*
