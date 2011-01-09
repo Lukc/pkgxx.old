@@ -3,11 +3,15 @@
 #
 # Need $name and $version
 # $freedesktop_extension can change the extension of the tarball. It's default value is .tar.gz.
+# $freedesktop_name is the name of the software on freedesktop. It’s default value is $name.
+# $freedesktop_version is the version of the software on freedesktop. It’s default value is $version.
+#
+# Include file made by Pingax (pingax.fr)
 #
 
-
 : ${freedesktop_name:=$name}
+: ${freedesktop_version:=$version}
 : ${freedesktop_extension:=".tar.gz"}
 
-source=(${source[0]} http://$freedesktop_name.freedesktop.org/releases/$freedesktop_name-$version$freedesktop_extension) 
+source=(${source[@]} http://$freedesktop_name.freedesktop.org/releases/$freedesktop_name-$freedesktop_version$freedesktop_extension) 
 
