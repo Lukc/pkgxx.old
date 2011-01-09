@@ -1,0 +1,13 @@
+#
+## Include for Freedesktop.org softwares
+#
+# Need $name and $version
+# $freedesktop_extension can change the extension of the tarball. It's default value is .tar.gz.
+#
+
+
+: ${freedesktop_name:=$name}
+: ${freedesktop_extension:=".tar.gz"}
+
+source=(${source[0]} http://$freedesktop_name.freedesktop.org/releases/$freedesktop_name-$version$freedesktop_extension) 
+
