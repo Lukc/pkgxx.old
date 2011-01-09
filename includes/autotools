@@ -26,6 +26,8 @@ esac
 
 : ${sharedir_name:=datarootdir}
 
+errlogs=(${errlogs[@]} 'config\.log')
+
 configure_opts=(
 	# Compilation and cross-compilation parameters.
 	${CBUILD:+--build=${CBUILD}}
