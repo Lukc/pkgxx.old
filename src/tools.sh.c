@@ -41,7 +41,8 @@ path() {
 	 * FIXME: rename to which ?
 	 */
 	local TARGET="$1"
-	for path in ${PATH/:/ }; do
+	/* Damned CPP, no ${PATH//:/ } here. :( */
+	for path in $(echo ${PATH} | sed -e "s|:| |g"); do
 		if [[ "$TARGET" = "$path" ]]; then
 			echo "$path"
 			return 0
