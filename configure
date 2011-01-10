@@ -447,7 +447,10 @@ case $ARCHITECTURE in
 	*)		CC_MARCH=$ARCHITECTURE	;;
 esac
 
-CPPFLAGS="$CPPFLAGS -x c -E -P -D_VERSION=\"$VERSION\""
+if (( `echo $GCC_VERSION | cut -d . -f 2` >= 4 )); then
+	CPPFLAGS="$CPPFLAGS -x c"
+fi
+CPPFLAGS="$CPPFLAGS -E -P -D_VERSION=\"$VERSION\""
 CPPFLAGS="$CPPFLAGS -D_ARCH=\"$ARCHITECTURE\" -D_KERNEL=\"$KERNEL\" $CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
@@ -465,6 +468,7 @@ case $DISTRIBUTION in
 esac
 
 case $PACKAGE_MANAGER in
+	"") ;;
 	pacman-g2)
 		CPPFLAGS="$CPPFLAGS -D__pacman=pacman -D__pacmang2=pacman-g2"
 	;;
@@ -508,7 +512,11 @@ DIR () {
 	echo "@echo -e \"  \033[34m[DIR]\033[00m        \033[37m$1\033[00m\";[ -d \$(DESTDIR)/$1 ] || mkdir -p \$(DESTDIR)/$1"
 }
 BUILD () {
-	echo "@echo -e \"  \033[37m[CPP]\033[00m        \033[37m${2:+$2/}$1\033[00m\"; cpp \$(CPPFLAGS) ${2:+$2/}$1$3 > ${2:+$2/}$1"
+	if (( `echo $GCC_VERSION | cut -d . -f 2` >= 4 )); then
+		echo "@echo -e \"  \033[37m[CPP]\033[00m        \033[37m${2:+$2/}$1\033[00m\"; cpp \$(CPPFLAGS) ${2:+$2/}$1$3 > ${2:+$2/}$1"
+	else
+		echo "@echo -e \"  \033[37m[CPP]\033[00m        \033[37m${2:+$2/}$1\033[00m\"; cpp \$(CPPFLAGS) ${2:+$2/}$1$3 | sed -e 's/^	*//;s/^ *//;/^#/d' > ${2:+$2/}$1"
+	fi
 }
 INSTALL () {
 	echo "@echo -e \"  \033[32m[INST]\033[00m       \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$(basename $2)"
