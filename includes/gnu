@@ -12,5 +12,5 @@
 
 : ${gnu_extension:=".tar.bz2"}
 
-source=(${source[@]} $gnu_mirror/$name/$name-$version/$name-$version$gnu_extension)
+source=(${source[@]} $gnu_mirror/$name/$name-$version$gnu_extension)
 
