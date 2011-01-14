@@ -9,8 +9,10 @@
 #
 
 : ${gnu_mirror:="ftp://ftp.gnu.org/gnu"}
-
+: ${gnu_name:="$name"}
+: ${gnu_dirname:="$gnu_name"}
+: ${gnu_version:="$version"}
 : ${gnu_extension:=".tar.bz2"}
 
-source=(${source[@]} $gnu_mirror/$name/$name-$version$gnu_extension)
+source=(${source[@]} $gnu_mirror/$gnu_dirname/$gnu_name-$gnu_version$gnu_extension)
 
