@@ -58,7 +58,7 @@ wcat() {
 	 */
 	local i
 	for i in $@; do
-		if [[ -n "$(type -p $PKGMK_DOWNLOAD_TOOL)" ]]; then
+		if [[ -n "$(type -p $PKGMK_DOWNLOAD_TOOL:cat)" ]]; then
 			$PKGMK_DOWNLOAD_TOOL:cat $i
 		else
 			curl:cat $i

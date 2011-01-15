@@ -23,6 +23,7 @@ axel:download() {
 axel:cat() {
 	local tmp="`mktemp`"
 	axel --output "$tmp" $1 &>/dev/null
+	cat "$tmp"
 }
 
 wget:download() {
