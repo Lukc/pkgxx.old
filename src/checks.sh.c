@@ -156,6 +156,7 @@ check_config() {
  * It gives many informations about the recipe itself, and so is very usefull
  * for packagers.
  */
+/* FIXME: Change that horrible name */
 check_new_pkgfile () {
 	/*
 	 * $RETURN will store the error code returned by pkg++ at the end of 
@@ -191,10 +192,6 @@ check_new_pkgfile () {
 	fi
 	if [[ ! "$maintainer" ]]; then
 		error "Variable 'maintainer' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ ! "$depends" ]]; then
-		error "Variable 'depends' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
 	if [[ ! "$name" ]]; then
@@ -243,7 +240,7 @@ check_new_pkgfile () {
 			warning "Last version, '$last_version', differs from current version '$version'."
 		fi
 	else
-		warning "Function 'lastver' not specified in '$PKGMK_PKGFILE'."
+		warning "Variable 'lastver' not specified in '$PKGMK_PKGFILE'."
 	fi
 	exit $RETURN
 }
