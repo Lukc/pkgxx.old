@@ -18,12 +18,18 @@ download_file() {
 		*)
 			check_command "$PROTOCOL"
 			cd $PKGMK_SOURCE_DIR
-			if cd $name 2&> /dev/null; then
+			if [[ ! -e "$name" ]]; then
+				$PROTOCOL:clone "$1"
+			elif [[ ! -d "$name" ]]; then
+				die "'$PKGMK_SOURCE_DIR/$name' already exists and is not a directory."
+			elif [[ ! -r "$name" ]]; then
+				die "'$PKGMK_SOURCE_DIR/$name' is not readable."
+			else
+				/* We don't check if it is writable, the dl tool will do it’s job */
+				cd $name || die "Couldn't move to '$PKGMK_SOURCE_DIR/$name'."
 				if ! $PROTOCOL:pull "$1" && [[ "$PKGMK_FORCE" != "yes" ]]; then
 					__SRC_UPTODATE
 				fi
-			else
-				$PROTOCOL:clone "$1"
 			fi
 		;;
 	esac
