@@ -1,6 +1,7 @@
 
 pkg_manager_add(nhopkg)
 pkg_manager_noarch(nhopkg)
+pkg_manager_needs_group(nhopkg)
 
 /*
  * nhopkg specific functions.

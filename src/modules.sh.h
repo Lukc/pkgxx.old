@@ -5,6 +5,9 @@
 #define pkg_manager_noarch(__PM_NAME) \
 	PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} __PM_NAME)
 
+#define pkg_manager_needs_group(__PM_NAME) \
+	PKGMK_PM_NEEDS_GROUP=(${PKGMK_PM_NEEDS_GROUP[@]} __PM_NAME)
+
 #define scm_add(__SCM_NAME) \
 	PKGMK_SCMS=(${PKGMK_SCMS[@]} __SCM_NAME)
 
