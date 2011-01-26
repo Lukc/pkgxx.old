@@ -118,17 +118,6 @@ main() {
 	PKGMK_POST_REMOVE="`get_metafile "$PKGMK_POST_REMOVE"`"
 	PKGMK_PRE_REMOVE="`get_metafile "$PKGMK_PRE_REMOVE"`"
 	
-	/*
-	 * We need to define a group, with pacman and rpm. If we don’t give 
-	 * them a group, they will attack us, kill kittens and won’t make the
-	 * package.
-	 * Note: We don’t need to check if another group has been already 
-	 *       declared, because the Pkgfile is sourced later.
-	 */
-	if has $PKGMK_PM_NEEDS_GROUP ${PKGMK_PM_NEEDS_GROUP}; then
-		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
-	fi
-	
 	for FILE in $(ls "$PKGMK_MODULES_DIR"); do
 		. $PKGMK_MODULES_DIR/$FILE
 	done
@@ -161,6 +150,15 @@ main() {
 		fi
 		. $FILE
 	done
+	
+	/*
+	 * We need to define a group, with some package managers. If we don’t 
+	 * give them a group, they will attack us, kill kittens and won’t 
+	 * make the package.
+	 */
+	if [[ -z "${groups[@]}" ]] && has $PKGMK_PACKAGE_MANAGER ${PKGMK_PM_NEEDS_GROUP[@]}; then
+		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
+	fi
 	
 	/* 
 	 * FIXME: Deprecation. Remove at 0.9.4.
