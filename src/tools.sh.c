@@ -36,6 +36,16 @@ include () {
 	return 2 /* Not found. */
 }
 
+replace() {
+	/* 
+	 * Replaces pattern $1 by pattern $2 in file $3.
+	 */
+	/* FIXME: Unoptimised, cannot take care of uncommon `sed`s */
+	local FILE=`mktemp`
+	sed "s|${1//|/\|}|${2//|/\|}|" $3 > $FILE || die "replace [sed] or redirection to '$FILE' failed"
+	mv $FILE $3 || die "mv '$FILE' '$3' [replace] failed"
+}
+
 path() {
 	/* 
 	 * FIXME: rename to which ?
