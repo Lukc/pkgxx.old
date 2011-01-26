@@ -1,6 +1,6 @@
 
 git:clone() {
-	git clone `echo $1 | sed -e 's|git+||;s|git:git|git|'` $name
+	GIT_SSL_NO_VERIFY=true git clone `echo $1 | sed -e 's|git+||;s|git:git|git|'` $name
 }
 
 git:pull() {
