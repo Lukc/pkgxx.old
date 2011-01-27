@@ -97,9 +97,12 @@ die() {
 	 * Display a given error message, and if in debug mode, a traceback.
 	 */
 	/* $word is used for the transition… */
-	local return=$? function file line_number type word
+	local return=$? function file line_number type word quiet=false
+	if [[ "$1" = "-q" ]]; then
+		quiet=true
+	fi
 	error "$@"
-	if [[ "$PKGMK_DEBUG" = yes ]]; then
+	if ! $quiet; then
 		if [[ -n "$return" ]]; then
 			echo "${BASH_SOURCE[1]}:${BASH_LINENO[1]}: ${FUNCNAME[1]} returned $return"
 		fi
