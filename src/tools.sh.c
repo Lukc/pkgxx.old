@@ -36,14 +36,30 @@ include () {
 	return 2 /* Not found. */
 }
 
+sedi() {
+	/* 
+	 * Emulates the sed -i feature.
+	 * Usage: sedi sed-script files
+	 * Note: Stollen from c4o. (Cruxports for OpenBSD)
+	 */
+	/* FIXME: Unoptimised, cannot take care of uncommon `sed`s */
+	TMP1=$(mktemp sed-i.XXXXXXXXXX) || die "mktemp [sedi] failed."
+	REGEX="$1"
+	shift
+	for i in $*; do
+		sed "$REGEX" "$i" > $TMP1 || die "sed '$REGEX' '$i' [sedi] or redirection to '$TMP1' failed."
+		/* Preserve permissions, owner, etc. */
+		cat $TMP1 > "$i" || die "cat '$TMP1' [sedi] or redirection to '$i' failed."
+	done
+	rm $TMP1
+	unset TMP1
+}
+
 replace() {
 	/* 
 	 * Replaces pattern $1 by pattern $2 in file $3.
 	 */
-	/* FIXME: Unoptimised, cannot take care of uncommon `sed`s */
-	local FILE=`mktemp`
-	sed "s|${1//|/\|}|${2//|/\|}|" $3 > $FILE || die "replace [sed] or redirection to '$FILE' failed"
-	mv $FILE $3 || die "mv '$FILE' '$3' [replace] failed"
+	sedi "s|${1//|/\|}|${2//|/\|}|" "$3"
 }
 
 path() {
