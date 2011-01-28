@@ -151,13 +151,12 @@ check_config() {
 }
 
 /*
- * check_new_pkgfile() checks the Pkgfile and the presence of new variables 
+ * check_pkgfile_only() checks the Pkgfile and the presence of new variables 
  * that were not included in Crux’s pkgmk.
  * It gives many informations about the recipe itself, and so is very usefull
  * for packagers.
  */
-/* FIXME: Change that horrible name */
-check_new_pkgfile () {
+check_pkgfile_only () {
 	/*
 	 * $RETURN will store the error code returned by pkg++ at the end of 
 	 * the check.

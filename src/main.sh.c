@@ -181,7 +181,7 @@ main() {
 	 * If -cp or --check-pkgfile, we just check the quality of the recipe.
 	 */
 	if [[ "$PKGMK_CHECK_PKGFILE" = "yes" ]]; then
-		check_new_pkgfile
+		check_pkgfile_only
 	fi
 	
 	/*
