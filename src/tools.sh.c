@@ -18,9 +18,9 @@ istrue() {
 }
 
 pkgmake() {
-	: ${MAKE=$(path make)}
-	: ${MAKE:=$(path gmake)}
-	: ${MAKE:=$(path pmake)}
+	: ${MAKE=$(which make)} \
+	  ${MAKE:=$(which gmake)} \
+	  ${MAKE:=$(which pmake)}
 	if [[ -n "$MAKE" ]]; then
 		$MAKE \
 			make_var(CC,$CC) \
