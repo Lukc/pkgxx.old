@@ -85,10 +85,7 @@ replace() {
 	sedi "s|${1//|/\|}|${2//|/\|}|" "$3"
 }
 
-path() {
-	/* 
-	 * FIXME: rename to which ?
-	 */
+which() {
 	local TARGET="$1"
 	/* Damned CPP, no ${PATH//:/ } here. :( */
 	for path in $(echo ${PATH} | sed -e "s|:| |g"); do
