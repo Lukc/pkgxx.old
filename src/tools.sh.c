@@ -2,6 +2,21 @@
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
+istrue() {
+	/* 
+	 * Use this to check if a variable is true or false, or even if 
+	 * it is a correct boolean.
+	 * Usage: istrue var
+	 */
+	if has "$1" true TRUE y yes; then
+		return 0
+	elif has "$1" false FALSE n no; then
+		return 1
+	else
+		return 2
+	fi
+}
+
 pkgmake() {
 	: ${MAKE=$(path make)}
 	: ${MAKE:=$(path gmake)}
@@ -23,7 +38,7 @@ pkgmake() {
 	fi
 }
 
-include () {
+include() {
 	for DIR in $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
 		if [[ -e $DIR/$1 ]]; then
 			if . $DIR/$1; then
