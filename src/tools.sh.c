@@ -57,15 +57,23 @@ sedi() {
 	 * Usage: sedi sed-script files
 	 * Note: Stollen from c4o. (Cruxports for OpenBSD)
 	 */
-	/* FIXME: Unoptimised, cannot take care of uncommon `sed`s */
-	TMP1=$(mktemp sed-i.XXXXXXXXXX) || die "mktemp [sedi] failed."
+	TMP1=$(mktemp sedi.XXXXXXXXXX) || die "mktemp [sedi] failed."
 	REGEX="$1"
 	shift
-	for i in $*; do
-		sed "$REGEX" "$i" > $TMP1 || die "sed '$REGEX' '$i' [sedi] or redirection to '$TMP1' failed."
-		/* Preserve permissions, owner, etc. */
-		cat $TMP1 > "$i" || die "cat '$TMP1' [sedi] or redirection to '$i' failed."
-	done
+	if istrue $sed_gnu; then
+		$sed "$REGEX" -i $@
+	else
+		/* 
+		 * Useless to try to use -isuffix, it could destroy a file 
+		 * that already exists, even if it is very few probable, or 
+		 * would need more code…
+		 */
+		for i in $*; do
+			sed "$REGEX" "$i" > $TMP1 || die "sed '$REGEX' '$i' [sedi] or redirection to '$TMP1' failed."
+			/* Preserve permissions, owner, etc. */
+			cat $TMP1 > "$i" || die "cat '$TMP1' [sedi] or redirection to '$i' failed."
+		done
+	fi
 	rm $TMP1
 	unset TMP1
 }
