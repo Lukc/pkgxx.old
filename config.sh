@@ -8,7 +8,7 @@
 #    let /configure (and so the user) choose.
 #  * Get infos about grep and find (uncomplete).
 
-TMP=$(mktemp)
+TMP=$(mktemp /tmp/config.sh.XXXXXXXX)
 
 touch $TMP
 
