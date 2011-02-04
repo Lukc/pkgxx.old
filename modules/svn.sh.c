@@ -1,10 +1,15 @@
 
+SVN_OPTS="--non-interactive --trust-server-cert"
+
 svn:clone() {
-	svn co `echo "$1" | sed -e 's|svn+||;s|svn:svn|svn|'` $name
+	svn co $SVN_OPTS `echo "$1" | sed -e 's|svn+||;s|svn:svn|svn|'` $name
 }
 
 svn:pull() {
-	if [[ "`LANG=en_US.utf8 svn up`" =~ 'At revision '*'.' ]]; then
+	/*
+	 * No need to set the LANG, as it is already exported in src/main.sh.c.
+	 */
+	if [[ "`svn up $SVN_OPTS`" =~ 'At revision '*'.' ]]; then
 		return 1
 	fi
 }

@@ -2,6 +2,21 @@
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
+istrue() {
+	/* 
+	 * Use this to check if a variable is true or false, or even if 
+	 * it is a correct boolean.
+	 * Usage: istrue var
+	 */
+	if has "$1" true TRUE y yes; then
+		return 0
+	elif has "$1" false FALSE n no; then
+		return 1
+	else
+		return 2
+	fi
+}
+
 pkgmake() {
 	: ${MAKE=$(path make)}
 	: ${MAKE:=$(path gmake)}
@@ -23,7 +38,7 @@ pkgmake() {
 	fi
 }
 
-include () {
+include() {
 	for DIR in $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
 		if [[ -e $DIR/$1 ]]; then
 			if . $DIR/$1; then
@@ -34,6 +49,40 @@ include () {
 		fi
 	done
 	return 2 /* Not found. */
+}
+
+sedi() {
+	/* 
+	 * Emulates the sed -i feature.
+	 * Usage: sedi sed-script files
+	 * Note: Stollen from c4o. (Cruxports for OpenBSD)
+	 */
+	TMP1=$(mktemp sedi.XXXXXXXXXX) || die "mktemp [sedi] failed."
+	REGEX="$1"
+	shift
+	if istrue $sed_gnu; then
+		$sed "$REGEX" -i $@
+	else
+		/* 
+		 * Useless to try to use -isuffix, it could destroy a file 
+		 * that already exists, even if it is very few probable, or 
+		 * would need more code…
+		 */
+		for i in $*; do
+			sed "$REGEX" "$i" > $TMP1 || die "sed '$REGEX' '$i' [sedi] or redirection to '$TMP1' failed."
+			/* Preserve permissions, owner, etc. */
+			cat $TMP1 > "$i" || die "cat '$TMP1' [sedi] or redirection to '$i' failed."
+		done
+	fi
+	rm $TMP1
+	unset TMP1
+}
+
+replace() {
+	/* 
+	 * Replaces pattern $1 by pattern $2 in file $3.
+	 */
+	sedi "s|${1//|/\|}|${2//|/\|}|" "$3"
 }
 
 path() {
@@ -71,9 +120,12 @@ die() {
 	 * Display a given error message, and if in debug mode, a traceback.
 	 */
 	/* $word is used for the transition… */
-	local return=$? function file line_number type word
+	local return=$? function file line_number type word quiet=false
+	if [[ "$1" = "-q" ]]; then
+		quiet=true
+	fi
 	error "$@"
-	if [[ "$PKGMK_DEBUG" = yes ]]; then
+	if ! $quiet; then
 		if [[ -n "$return" ]]; then
 			echo "${BASH_SOURCE[1]}:${BASH_LINENO[1]}: ${FUNCNAME[1]} returned $return"
 		fi

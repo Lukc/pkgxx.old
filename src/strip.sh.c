@@ -10,20 +10,13 @@ strip_files() {
 		FILTER="cat"
 	fi
 	
-	/*
-	 * This corrects a problem on non-GNU userlands…
-	 */
-	#if defined __gfind
-	find . -type f -printf "%P\n" \\
-	/*
-	 * This one uses the GNU find, and it’s -printf option.
-	 */
-	#else
-	find . -type f | sed "s|\./||" \\
-	/*
-	 * And this one uses sed to truncate the begin of the relative file’s path.
-	 */
-	#endif
+	(
+		if istrue $find_gnu; then
+			find . -type f -printf "%P\n"
+		else
+			find . -type f | sed "s|\./||"
+		fi
+	) \
 		| $FILTER | while read FILE; do
 		case $(file -b "$FILE") in
 		*ELF*executable*not\ stripped)

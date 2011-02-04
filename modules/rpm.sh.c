@@ -1,5 +1,6 @@
 
 pkg_manager_add(rpm)
+pkg_manager_needs_group(rpm)
 
 make_rpm_spec() {
 	: ${license:="Unknown"}
