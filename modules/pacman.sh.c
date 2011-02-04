@@ -67,7 +67,7 @@ make_pacman_pkginfo() {
 	 * is now conform to Frugalware’s standards.
 	 */
 		echo "arch = $PKGMK_ARCH"
-		else
+	else
 	/*
 	 * If we use pacman and not pacman-g2, we can create a noarch package.
 	 */
