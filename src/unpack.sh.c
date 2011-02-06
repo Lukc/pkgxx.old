@@ -63,12 +63,6 @@ tar:pack() {
 	tar ${TARFLAGS}c $@ > $TARBALL
 }
 
-tar:list() {
-	/* 
-	 * FIXME
-	 */
-	:
-}
 unpack_source() {
 	/*
 	 * unpack_source() unpacks any file in ${source[ ]}.
