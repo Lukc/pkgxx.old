@@ -11,8 +11,17 @@ make_md5sum() {
 				LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
 			fi
 		done
-		
-		[[ -n "$LOCAL_FILENAMES" ]] && md5sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+
+		[[ -n "$LOCAL_FILENAMES" ]] && (
+			if [[ "$md5sum_gnu" = "true" ]]; then
+				md5sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+			else
+				for FILE in $LOCAL_FILENAMES; do
+					local md5=$(md5 $FILE | sed -e 's|  .*|  |;s/MD5 (.*) = //' | sort -k 2)
+					echo "$md5  $(basename $FILE)"
+				done
+			fi
+		)
 	fi
 }
 
@@ -29,7 +38,16 @@ make_sha256sum() {
 			fi
 		done
 		
-		[[ -n "$LOCAL_FILENAMES" ]] && sha256sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+		[[ -n "$LOCAL_FILENAMES" ]] && (
+			if [[ "$sha256sum_gnu" = "true" ]]; then
+				sha256sum $LOCAL_FILENAMES | sed -e 's|  .*/|  |' | sort -k 2
+			else
+				for FILE in $LOCAL_FILENAMES; do
+					local sha256=$(sha256 $FILE | sed -e 's|  .*|  |;s/SHA256 (.*) = //' | sort -k 2)
+					echo "$sha256  $(basename $FILE)"
+				done
+			fi
+		)
 	fi
 }
 

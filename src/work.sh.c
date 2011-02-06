@@ -31,7 +31,7 @@ make_work_dir() {
 	 * tools are not available, it is not possible.
 	 */
 	if [[ "$PKGMK_IGNORE_MD5SUM" = "no" ]]; then
-		if [[ -n "`type -p md5sum`" ]]; then
+		if [[ -n "`type -p $md5sum`" ]]; then
 			check_md5sum
 		else
 			warning "'md5sum' command not found. md5sum verification ignored."
@@ -39,7 +39,7 @@ make_work_dir() {
 	fi
 	
 	if [[ "$PKGMK_IGNORE_SHA256SUM" = "no" ]]; then
-		if [[ -n "`type -p sha256sum`" ]]; then
+		if [[ -n "`type -p $sha256sum`" ]]; then
 			check_sha256sum
 		else
 			warning "'sha256sum' command not found. sha256sum verification ignored."
