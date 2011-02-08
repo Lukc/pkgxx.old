@@ -29,10 +29,12 @@
 : ${rss_url:=$sf_rss_url}
 
 # FIXME: use some sort of versort.
+# The XXX are here because the reversing command removes some characters at the begin of the file…
 : ${lastver:="wcat '$sf_rss_url' | \
 	egrep '$sf_name$sf_separator.*$sf_extension' | \
-	sed -e 's|$sf_extension.*||;s|.*$sf_version_separator||' | \
-	sort | tac | \
+	sed -e 's|$sf_extension.*||;s|.*$sf_version_separator|XXX|' | \
+	cat -n - | sort -n | cut -c 9- | \
+	sed -e 's/^X*//' | \
 	head -n 1"}
 
 source=(${source[@]} $sf_mirror/$sf_dirname/$sf_name$sf_version_separator$sf_version$sf_extension)
