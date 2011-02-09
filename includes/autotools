@@ -48,22 +48,14 @@ configure_opts=(
 	${configure_opts[@]}
 )
 
-if [[ "$separate_build_dir" = "yes" ]]; then
-	build(){
-	cd $dirname
+build(){
+cd $dirname
+	if [[ "$separate_build_dir" = "yes" ]]; then
 		mkdir __build__
 		cd __build__
-		[[ "$use_autogen" = "yes" ]] && ../autogen.sh ${autogen_opts[@]}
-		[[ "$use_configure" = "yes" ]] && ../configure ${configure_opts[@]}
-		pkgmake ${make_opts[@]}
-		pkgmake ${make_opts[@]} DESTDIR=$PKG install
-	}
-else
-	build(){
-	cd $dirname
-		[[ "$use_autogen" = "yes" ]] && ./autogen.sh ${autogen_opts[@]}
-		[[ "$use_configure" = "yes" ]] && ./configure ${configure_opts[@]}
-		pkgmake ${make_opts[@]}
-		pkgmake ${make_opts[@]} DESTDIR=$PKG install
-	}
-fi
+	fi
+	[[ "$use_autogen" = "yes" ]] && $SRC/$dirname/autogen.sh ${autogen_opts[@]}
+	[[ "$use_configure" = "yes" ]] && $SRC/$dirname/configure ${configure_opts[@]}
+	pkgmake ${make_opts[@]}
+	pkgmake ${make_opts[@]} DESTDIR=$PKG install
+}
