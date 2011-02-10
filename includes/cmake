@@ -1,8 +1,9 @@
 #
 ## Include for CMake
 #
-# Need $name, $version, $release and $source
-# Can receive arguments from $cmake_opts and $make_opts
+# Needs $name, $version, $release and $source
+# Can receive arguments from $cmake_opts, $dirname, $make, $make_opts 
+# and $separate_build_dir
 #
 
 case $version in
