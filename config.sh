@@ -31,7 +31,7 @@ gnu () {
 sed=$(which gsed) || sed=$(which sed)
 if gnu sed; then
 	sed_gnu=true
-elif sed -ix -e 's/x/x/' "$TMP" && [ -e "${TMP}x" ]; then
+elif sed -ix -e 's/x/x/' "$TMP" &>/dev/null && [ -e "${TMP}x" ]; then
 	sed_isuffix=true
 	# Background process because we don't care about it, and we want to earn time.
 	rm "${TMP}x" &
