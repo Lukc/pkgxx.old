@@ -14,6 +14,8 @@ case $version in
 	;;
 esac
 
+: ${make:="pkgmake"}
+
 cmake_opts=(
 	-DPREFIX=$prefix
 	-DCMAKE_INSTALL_DIR=$prefix
@@ -32,7 +34,7 @@ build() {
 		cd __build__
 	fi
 	cmake $SRC/$name-$version
-	pkgmake ${make_opts[@]}
-	pkgmake DESTDIR=$PKG ${make_opts[@]} install
+	$make ${make_opts[@]}
+	$make DESTDIR=$PKG ${make_opts[@]} install
 }
 
