@@ -651,6 +651,7 @@ clean:
 	`REMOVE defaults/distributions`
 	`REMOVE defaults/prefixes`
 	`REMOVE defaults/cross`
+	`REMOVE defaults/userland`
 	`REMOVE src/config.sh.h`
 	`REMOVE has`
 $(for module in `cd modules; ls *.sh.c`; do
