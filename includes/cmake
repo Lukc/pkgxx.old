@@ -5,6 +5,15 @@
 # Can receive arguments from $cmake_opts and $make_opts
 #
 
+case $version in
+	devel|dev|trunk)
+		: ${dirname:="$name"}
+	;;
+	*)
+		: ${dirname:="$name-$version"}
+	;;
+esac
+
 cmake_opts=(
 	-DPREFIX=$prefix
 	-DCMAKE_INSTALL_DIR=$prefix
@@ -16,22 +25,14 @@ cmake_opts=(
 	${cmake_opts[@]}
 )
 
-if [[ "$separate_build_dir" = "yes" ]]; then
-	build() {
-	cd $name-$version
+build() {
+	cd $dirname
+	if [[ "$separate_build_dir" = "yes" ]]; then
 		mkdir __build__
 		cd __build__
-		cmake ..
-		pkgmake ${make_opts[@]}
-		pkgmake DESTDIR=$PKG ${make_opts[@]} install
-	}
-
-else
-	build() {
-	cd $name-$version
-		cmake .
-		pkgmake ${make_opts[@]}
-		pkgmake DESTDIR=$PKG ${make_opts[@]} install
-	}
-fi
+	fi
+	cmake $SRC/$name-$version
+	pkgmake ${make_opts[@]}
+	pkgmake DESTDIR=$PKG ${make_opts[@]} install
+}
 
