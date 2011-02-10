@@ -1,7 +1,7 @@
 description="Portable package builder."
 url=http://devel.upyum.com/cgit.cgi/pkg++
-packager="Lukc (XMPP/SMTP: lukc AT upyum DOT com)"
-maintainer="Lukc (XMPP/SMTP: lukc AT upyum DOT com), MrPantoufle (SMTP: mrpantoufle AT upyum FOT com)"
+packager="Lukc <XMPP/SMTP: lukc AT upyum DOT com>"
+maintainer="Lukc <XMPP/SMTP: lukc AT upyum DOT com>"
 
 name=pkg++
 version=devel
@@ -10,27 +10,23 @@ source=(git://devel.upyum.com/pkgxx.git)
 config=(/etc/pkg++.conf)
 
 case $distribution in
-	Mandriva|Fedora|SuSE) : ${package_manager:=rpm} ;;
+	Mandriva|Fedora|*SuSE) : ${package_manager:=rpm} ;;
 	Arch)		: ${package_manager:=pacman}	;;
 	Frugalware)	: ${package_manager:=pacman-g2}	;;
-	Debian)		: ${package_manager:=dpkg}	;;
+	Debian|Ubuntu)	: ${package_manager:=dpkg}	;;
 	Slackware)	: ${package_manager:=pkgtools}	;;
 	"")						;;
 	*)		: ${package_manager:=pkgutils}	;;
 esac
 
-depends=(bash $package_manager)
+depends=(bash ${package_manager})
 
-if use gtar; then
-	configure_opts=(--with-gtar --without-bsdtar)
-else
-	configure_opts=(--without-gtar --with-bsdtar)
-fi
-if use wget || ! use curl; then
-	configure_opts=(--with-wget --without-curl)
-else
-	configure_opts=(--without-wget --with-curl)
-fi
+configure_opts=(
+	--prefix=$prefix
+	--sharedir=$sharedir
+	--sysconfdir=$sysconfdir
+	--mandir=$mandir
+)
 
 build(){
 	cd $name
