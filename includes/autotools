@@ -3,8 +3,12 @@
 #
 # Need $name, $version, $release and $source
 # Can receive arguments from $configure_opts and $make_opts
-# $use_autogen can enable the ./autogen.sh command, which takes parameters from ${autogen_opts[@]}
-# $use_configure can disable the ./configure command if set to anything other than "yes".
+# $use_autogen can enable the ./autogen.sh command, which takes parameters 
+#   from ${autogen_opts[@]}
+# $use_configure can disable the ./configure command if set to anything 
+#   other than "yes".
+# $make sets the implementation of make to use. It's default value, 
+#   `pkgmake`, means that any make implementation can be used.
 # 
 
 case $version in
@@ -25,6 +29,8 @@ esac
 : ${use_configure:=yes}
 
 : ${sharedir_name:=datarootdir}
+
+: ${make:=pkgmake}
 
 errlogs=(${errlogs[@]} 'config\.log')
 
@@ -56,6 +62,6 @@ cd $dirname
 	fi
 	[[ "$use_autogen" = "yes" ]] && $SRC/$dirname/autogen.sh ${autogen_opts[@]}
 	[[ "$use_configure" = "yes" ]] && $SRC/$dirname/configure ${configure_opts[@]}
-	pkgmake ${make_opts[@]}
-	pkgmake ${make_opts[@]} DESTDIR=$PKG install
+	${make} ${make_opts[@]}
+	${make} ${make_opts[@]} DESTDIR=$PKG install
 }
