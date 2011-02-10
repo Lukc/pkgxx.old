@@ -11,7 +11,7 @@
 source=(${source[@]} svn+https://svn.enlightenment.org/svn/e/$e_path)
 version=devel
 
-use_configure=no
-use_autogen=yes
+: ${use_configure:=no}
+: ${use_autogen:=yes}
 include autotools
 
