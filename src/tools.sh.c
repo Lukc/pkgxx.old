@@ -18,9 +18,9 @@ istrue() {
 }
 
 pkgmake() {
-	: ${MAKE=$(path make)}
-	: ${MAKE:=$(path gmake)}
-	: ${MAKE:=$(path pmake)}
+	: ${MAKE=$(which make)} \
+	  ${MAKE:=$(which gmake)} \
+	  ${MAKE:=$(which pmake)}
 	if [[ -n "$MAKE" ]]; then
 		$MAKE \
 			make_var(CC,$CC) \
@@ -85,10 +85,7 @@ replace() {
 	sedi "s|${1//|/\|}|${2//|/\|}|" "$3"
 }
 
-path() {
-	/* 
-	 * FIXME: rename to which ?
-	 */
+which() {
 	local TARGET="$1"
 	/* Damned CPP, no ${PATH//:/ } here. :( */
 	for path in $(echo ${PATH} | sed -e "s|:| |g"); do
