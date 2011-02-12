@@ -83,6 +83,8 @@ distribution () {
 		: ${DISTRIBUTION:="Crux"}
 	elif [[ -e /etc/frugalware-release ]]; then
 		: ${DISTRIBUTION:="Frugalware"}
+	elif [[ -e /etc/fedora-release ]]; then
+		: ${DISTRIBUTION:="Fedora"}
 	elif [[ -e /etc/mandriva-release ]]; then
 		: ${DISTRIBUTION:="Mandriva"}
 	elif [[ -e /etc/arch-release ]]; then
@@ -465,6 +467,7 @@ case $DISTRIBUTION in
 	Mandriva)	CPPFLAGS="$CPPFLAGS -D__mandriva=mandriva"	;;
 	Arch)		CPPFLAGS="$CPPFLAGS -D__arch=arch"		;;
 	Slackware)	CPPFLAGS="$CPPFLAGS -D__slackware=slackware"	;;
+	Fedora)		CPPFLAGS="$CPPFLAGS -D__fedora=fedora"		;;
 esac
 
 case $PACKAGE_MANAGER in

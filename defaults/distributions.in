@@ -19,6 +19,12 @@ Arch=true
 Arch=false
 #endif
 
+#if defined __fedora
+Fedora=true
+#else
+Fedora=false
+#endif
+
 #if defined __frugalware
 Frugalware=true
 #else
