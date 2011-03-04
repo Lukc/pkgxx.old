@@ -4,7 +4,7 @@ check_arch(){
 	 * Returns true if the package can be built on the actual architecture.
 	 * It uses $PKGMK_ARCH and ${archs[ ]}.
 	 */
-	if [[ "${archs[@]}" ]]; then
+	if [[ -n "${archs[@]}" ]]; then
 		for ARCH in ${archs[@]}; do
 			case $ARCH in
 			no-arch)
@@ -27,7 +27,7 @@ check_kernel(){
 	/*
 	 * Exactly the same thing than check_arch(), but for kernels.
 	 */
-	if [[ "${kernels[@]}" ]]; then
+	if [[ -n "${kernels[@]}" ]]; then
 		for KERNEL in ${kernels[@]}; do
 			case $KERNEL in
 			no-kernel)
@@ -48,16 +48,16 @@ check_pkgfile() {
 	/*
 	 * We check if the recipe is valid and usable.
 	 */
-	if [[ ! "$name" ]]; then
+	if [[ -z "$name" ]]; then
 		error "Variable 'name' not specified in $PKGMK_PKGFILE."
 		exit E_PKGFILE
-	elif [[ ! "$version" ]]; then
+	elif [[ -z "$version" ]]; then
 		error "Variable 'version' not specified in $PKGMK_PKGFILE."
 		exit E_PKGFILE
-	elif [[ ! "$release" ]]; then
+	elif [[ -z "$release" ]]; then
 		error "Variable 'release' not specified in $PKGMK_PKGFILE."
 		exit E_PKGFILE
-	elif [[ "`type -t build`" != "function" ]]; then
+	elif [[ "`type build`" != "function" ]]; then
 		error "Function 'build' not specified in $PKGMK_PKGFILE."
 		exit E_PKGFILE
 	elif ! check_arch; then
@@ -71,16 +71,17 @@ check_pkgfile() {
 	 * These vars are vital for RPM to build a package.
 	 */
 	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
-		if [[ ! "$description" ]]; then
+		if [[ -z "$description" ]]; then
 			error "Variable 'description' not specified in $PKGMK_PKGFILE."
 			exit E_PKGFILE
-		elif [[ ! "$packager" ]]; then
+		elif [[ -z "$packager" ]]; then
 			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
 			exit E_PKGFILE
 		fi
 	fi
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
-		if [[ ! "`type -t check`" = "function" ]]; then
+		/* FIXME: type works differently on zsh */
+		if [[ "`type check`" != "function" ]]; then
 			warning "Function 'check' not specified in $PKGMK_PKGFILE."
 			PKGMK_CHECK="no"
 		fi
@@ -91,13 +92,13 @@ check_directory() {
 	/*
 	 * Checks if the directory exists, is readable and writable.
 	 */
-	if [[ ! -d $1 ]]; then
+	if [[ ! -d "$1" ]]; then
 		error "Directory $1 does not exist."
 		exit E_DIR_PERM
-	elif [[ ! -w $1 ]]; then
+	elif [[ ! -w "$1" ]]; then
 		error "Directory $1 not writable."
 		exit E_DIR_PERM
-	elif [[ ! -x $1 ]] || [[ ! -r $1 ]]; then
+	elif [[ ! -x "$1" ]] || [[ ! -r "$1" ]]; then
 		error "Directory $1 not readable."
 		exit E_DIR_PERM
 	fi
@@ -108,7 +109,7 @@ check_file() {
 	 * Checks if a file exists, and if it doesn’t exist, if it is possible
 	 * to create it.
 	 */
-	if [[ -e $1 ]] && [[ ! -w $1 ]]; then
+	if [[ -e "$1" ]] && [[ ! -w "$1" ]]; then
 		error "File $1 is not writable."
 		exit E_DIR_PERM
 	fi
@@ -118,7 +119,7 @@ check_command() {
 	/*
 	 * Checks if a command is available.
 	 */
-	if [[ -z "`type -p $1`" ]]; then
+	if [[ "`type "$1"`" = "none" ]]; then
 		error "Command $1 not found."
 		exit E_GENERAL
 	fi
@@ -169,11 +170,11 @@ check_pkgfile_only () {
 	 * print an error here, but pkg++ will run even if these variables are 
 	 * not declared in the Pkgfile.
 	 */
-	if [[ ! "$description" ]]; then
+	if [[ -z "$description" ]]; then
 		error "Variable 'description' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$longdesc" ]]; then
+	if [[ -z "$longdesc" ]]; then
 	/* 
 	 * Long descriptions are not mandatory, the short ones can be used 
 	 * instead if missing.
@@ -181,31 +182,31 @@ check_pkgfile_only () {
 		error "Variable 'longdesc' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$url" ]]; then
+	if [[ -z "$url" ]]; then
 		error "Variable 'url' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$packager" ]]; then
+	if [[ -z "$packager" ]]; then
 		error "Variable 'packager' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$maintainer" ]]; then
+	if [[ -z "$maintainer" ]]; then
 		error "Variable 'maintainer' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$name" ]]; then
+	if [[ -z "$name" ]]; then
 		error "Variable 'name' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$version" ]]; then
+	if [[ -z "$version" ]]; then
 		error "Variable 'version' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$release" ]]; then
+	if [[ -z "$release" ]]; then
 		error "Variable 'release' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ ! "$license" ]]; then
+	if [[ -z "$license" ]]; then
 		/*
 		 * License can be considered as only useful with unfree 
 		 * softwares or particulary restrictive licenses. As it is not
@@ -220,11 +221,11 @@ check_pkgfile_only () {
 	 * but for who they are uncomplete.
 	 * build() however is mandatory.
 	 */
-	if [[ "`type -t build`" != "function" ]]; then
+	if [[ "`type build`" != "function" ]]; then
 		error "Function 'build' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ "`type -t check`" != "function" ]]; then
+	if [[ "`type check`" != "function" ]]; then
 		/*
 		 * check() should be given in recipes, to allow a user
 		 * to know if everything will work, but this is not mandatory

@@ -195,7 +195,7 @@ main() {
 	 * It is very important to check that the tools we will use are here, 
 	 * because we don’t want to be alone and miserably fail. 
 	 */
-	if [[ -n $(type -p "$PKGMK_PACKAGE_MANAGER:checks") ]]; then
+	if [[ "$(type "$PKGMK_PACKAGE_MANAGER:checks")" != none ]]; then
 		$PKGMK_PACKAGE_MANAGER:checks
 	fi
 	
@@ -321,7 +321,7 @@ PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
-PKGMK_PKGFILE_NAME="Pkgfile"
+PKGMK_PKGFILE_NAME="./Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"

@@ -58,7 +58,7 @@ build_package() {
 	 *           -x is used to make the subshell verbose. Any command will
 	 *              be displayed with a “+”.
 	 */
-	if [[ "`type -t pre_build`" = "function" ]]; then
+	if [[ "`type pre_build`" = "function" ]]; then
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; pre_build)
 	fi
 	local RETURN=$?
@@ -66,7 +66,7 @@ build_package() {
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; build)
 		RETURN=$?
 	fi
-	if [[ $RETURN = 0 && "`type -t post_build`" = "function" ]]; then
+	if [[ $RETURN = 0 && "`type post_build`" = "function" ]]; then
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; post_build)
 		RETURN=$?
 	fi
