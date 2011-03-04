@@ -67,7 +67,7 @@ ftp:download() {
 		while true; do
 			$PKGMK_DOWNLOAD_TOOL:download $1
 			error=$?
-			if [[ $error != 0 ]] && [[ "$RESUME_CMD" ]]; then
+			if [[ $error != 0 ]] && [[ -n "$RESUME_CMD" ]]; then
 				info "Partial download failed, restarting."
 				rm -f "$LOCAL_FILENAME_PARTIAL"
 				RESUME_CMD=""

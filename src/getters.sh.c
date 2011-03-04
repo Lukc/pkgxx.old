@@ -72,7 +72,7 @@ get_metafile() {
 	 */
 	local VERSION="`basename "$PKGMK_PKGFILE" | sed -e "s|$PKGMK_PKGFILE_NAME-||"`"
 	local DIR="`dirname "$PKGMK_PKGFILE"`"
-	if [[ "$VERSION" = `basename $PKGMK_PKGFILE` ]]; then
+	if [[ "$VERSION" = `basename "$PKGMK_PKGFILE"` ]]; then
 		echo "$DIR/$1"
 	else
 		echo "$DIR/$1-$VERSION"
