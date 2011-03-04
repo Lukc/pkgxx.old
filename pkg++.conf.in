@@ -15,7 +15,8 @@ export CXXFLAGS="$CFLAGS"
 
 export MAKE_OPTS="-j2"
 
-export USE=(nls man info free -binary)
+# Do NOT export USE directly, ZSH hates this.
+USE=(nls man info free -binary)
 
 # PKGMK_SOURCE_MIRRORS=()
 PKGMK_SOURCE_DIR="/var/cache/pkg++/sources"
