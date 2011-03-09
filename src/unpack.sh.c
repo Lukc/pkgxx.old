@@ -63,6 +63,34 @@ tar:pack() {
 	tar ${TARFLAGS}c $@ > $TARBALL
 }
 
+tar:list() {
+	/* 
+	 * FIXME: It’s not an “untar tool”, here, but a “tar listing tool”…
+	 */
+	case "$PKGMK_UNTAR_TOOL" in
+		gtar)
+			tar tvvf "$1" | \
+				sed 's|  *|	|g' | \
+				cut -d "	" -f 1,2,6,7,8
+		;;
+		bsdtar)
+			bsdtar tvf "$1" | \
+				sed 's|  *|	|g' | \
+				cut -d "	" -f 1,3,4,9,10,11,12
+		;;
+		sltar)
+			cat "$1" | sltar t /* Hum… we should be able to do a little better… a day. */
+		;;
+		*)
+			if [[ -n "$(type -t $PKGMK_UNTAR_TOOL:list)" ]]; then
+				$PKGMK_UNTAR_TOOL:list "$@"
+			else
+				die "Not supported tar implementation."
+			fi
+		;;
+	esac
+}
+
 unpack_source() {
 	/*
 	 * unpack_source() unpacks any file in ${source[ ]}.
