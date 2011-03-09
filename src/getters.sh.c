@@ -51,14 +51,16 @@ get_pkgfile() {
 	/*
 	 * Returns the name of the Pkgfile.
 	 */
+	setopt -G
 	local PKGFILE=
 	if [[ -n "$PKGMK_PKGFILE" ]]; then
 		echo "$PKGMK_PKGFILE"
-	elif [[ -n `ls $PKGMK_PKGFILE_NAME-* 2>/dev/null` ]]; then
+	elif [[ -n $(echo -n $PKGMK_PKGFILE_NAME-*) ]]; then
 		for file in $PKGMK_PKGFILE_NAME-*; do
 			if [[ "$file" =~ $PKGMK_PKGFILE_NAME-[0-9] ]]; then
 				PKGFILE=$file
 			fi
+			echo "$file"
 		done
 		echo "$PKGFILE"
 	else
@@ -72,7 +74,7 @@ get_metafile() {
 	 */
 	local VERSION="`basename "$PKGMK_PKGFILE" | sed -e "s|$PKGMK_PKGFILE_NAME-||"`"
 	local DIR="`dirname "$PKGMK_PKGFILE"`"
-	if [[ "$VERSION" = `basename $PKGMK_PKGFILE` ]]; then
+	if [[ "$VERSION" = `basename "$PKGMK_PKGFILE"` ]]; then
 		echo "$DIR/$1"
 	else
 		echo "$DIR/$1-$VERSION"

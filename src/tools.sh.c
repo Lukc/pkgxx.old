@@ -2,6 +2,10 @@
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
+type() {
+	builtin type -w "$1" | sed -e "s/${1//\//\\\/}: //"
+}
+
 istrue() {
 	/* 
 	 * Use this to check if a variable is true or false, or even if 
@@ -104,7 +108,7 @@ wcat() {
 	 */
 	local i
 	for i in $@; do
-		if [[ -n "$(type -p $PKGMK_DOWNLOAD_TOOL:cat)" ]]; then
+		if [[ "$(type $PKGMK_DOWNLOAD_TOOL:cat)" != none ]]; then
 			$PKGMK_DOWNLOAD_TOOL:cat $i
 		else
 			curl:cat $i
@@ -131,7 +135,7 @@ die() {
 			function=${FUNCNAME[$i]}
 			file=$(basename ${BASH_SOURCE[$i]})
 			line_number=${BASH_LINENO[$(($i - 1))]}
-			type=$(type -t $function)
+			type=$(type $function)
 			if [[ "$type" =~ function ]]; then
 				word="in"
 			else
@@ -356,7 +360,7 @@ pm_arch () {
 		parisc*) TARGET_ARCH=hppa ;;
 		"Power Macintosh") TARGET_ARCH=ppc ;;
 	esac
-	if [[ -n "$(type -p $PKGMK_PACKAGE_MANAGER:arch)" ]]; then
+	if [[ "$(type $PKGMK_PACKAGE_MANAGER:arch)" != none ]]; then
 		ARCH="${TARGET_ARCH}" KERNEL="${TARGET_KERNEL}" \
 			$PKGMK_PACKAGE_MANAGER:arch
 	else

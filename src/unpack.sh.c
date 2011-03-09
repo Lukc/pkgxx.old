@@ -110,7 +110,7 @@ unpack_source() {
 				;;
 				*)
 					local LOCAL_FILETYPE="$(basename "$LOCAL_FILENAME:unpack")"
-					if [[ -n "$(type -p $LOCAL_EXTENSION)" ]]; then
+					if [[ "$(type $LOCAL_EXTENSION)" != none ]]; then
 						if ! $LOCAL_EXTENSION:unpack; then
 							error "Unpacking of '$FILE' failed."
 						fi

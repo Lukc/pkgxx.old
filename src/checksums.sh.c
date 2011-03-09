@@ -5,7 +5,7 @@ make_md5sum() {
 	 */
 	local FILE LOCAL_FILENAMES
 	
-	if [[ "$source" ]]; then
+	if [[ -n "${source[@]}" ]]; then
 		for FILE in ${source[@]}; do
 			if [[ ! -d "`get_filename $FILE`" ]]; then
 				LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
@@ -31,7 +31,7 @@ make_sha256sum() {
 	 */
 	local FILE LOCAL_FILENAMES
 
-	if [[ "$source" ]]; then
+	if [[ -n "${source[@]}" ]]; then
 		for FILE in ${source[@]}; do
 			if [[ ! -d "`get_filename $FILE`" ]]; then
 				LOCAL_FILENAMES="$LOCAL_FILENAMES `get_filename $FILE`"
