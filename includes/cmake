@@ -34,7 +34,7 @@ build() {
 		mkdir __build__
 		cd __build__
 	fi
-	cmake $SRC/$name-$version ${cmake_opts[@]}
+	cmake $SRC/$dirname ${cmake_opts[@]}
 	$make ${make_opts[@]}
 	$make DESTDIR=$PKG ${make_opts[@]} install
 }
