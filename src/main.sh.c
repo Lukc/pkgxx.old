@@ -143,12 +143,16 @@ main() {
 	 *       change configuration depending on the package. And probably
 	 *       for something else, but I don’t remember what.
 	 */
-	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
-		if [[ ! -f $FILE ]]; then
+	for FILE in "$PKGMK_CONFFILE" "$PKGMK_PKGFILE" "$PKGMK_CONFFILE"; do
+		if [[ ! -f "$FILE" ]]; then
 			error "File '$FILE' not found."
 			exit E_GENERAL
 		fi
-		. $FILE
+		if [[ "$(dirname "$FILE")" = "." ]]; then
+			. "./$FILE"
+		else
+			. "$FILE"
+		fi
 	done
 	
 	/*
@@ -321,7 +325,7 @@ PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
-PKGMK_PKGFILE_NAME="./Pkgfile"
+PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"
