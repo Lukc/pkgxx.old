@@ -195,8 +195,8 @@ main() {
 	 * It is very important to check that the tools we will use are here, 
 	 * because we don’t want to be alone and miserably fail. 
 	 */
-	if [[ "$(type "$PKGMK_PACKAGE_MANAGER:checks")" != none ]]; then
-		$PKGMK_PACKAGE_MANAGER:checks
+	if [[ "$(type "${PKGMK_PACKAGE_MANAGER}:checks")" != none ]]; then
+		${PKGMK_PACKAGE_MANAGER}:checks
 	fi
 	
 	check_pkgfile
