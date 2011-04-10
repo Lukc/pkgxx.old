@@ -1,6 +1,6 @@
 
 #define __FP_SED sed \
--e "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" \
+-e "s|	lib/modules/`uname -r`/|	lib/modules/<kernel-version>/|g" \
 -e "s|	link	to	| -> |" \
 -e "s|	->	| -> |"
 

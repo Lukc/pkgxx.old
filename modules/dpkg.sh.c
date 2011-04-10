@@ -25,14 +25,17 @@ make_debian_control() {
 		 */
 		echo "$longdesc" | sed -e "s|^$|.|;s|^| |"
 	fi
+	echo "Architecture: $(dpkg:arch)"
 	echo -n "Depends: "
-	for n in ${!depends[*]}; do
-		if [[ -n "${depends[$(($n+1))]}" ]]; then
-			echo -n "${depends[$n]},"
-		else
-			echo -n "${depends[$n]}"
-		fi
-	done
+	if ((${#depends} >= 1)); then
+		for n in {1..${#depends}}; do
+			if [[ -n "${depends[$(($n+1))]}" ]]; then
+				echo -n "${depends[$n]},"
+			else
+				echo -n "${depends[$n]}"
+			fi
+		done
+	fi
 	echo
 	echo "Homepage: $url"
 	echo
@@ -49,6 +52,7 @@ dpkg:arch() {
 		netbsd*) ARCH=netbsd-$ARCH ;;
 		/* Not sure for the others… */
 	esac
+	local ARCH=${PKGMK_ARCH:-$(uname -m)}
 	if [[ "${ARCH}" = noarch ]]; then
 		/* 
 		 * “all” is the keyword for architecture-independent packages, 
@@ -107,9 +111,9 @@ dpkg:build() {
 		[[ -e "$PKG/$FILE" ]] && echo "$FILE" >> DEBIAN/conffiles
 	done
 	cd ..
-	info "Building $TARGET."
-	dpkg-deb --build $PKG
-	mv $(basename $PKG).deb $TARGET
+	info "Building '$TARGET'."
+	dpkg-deb --build "$PKG"
+	mv $(basename "$PKG").deb $TARGET
 	dpkg -c $TARGET
 }
 
@@ -118,9 +122,9 @@ dpkg:footprint() {
 	 * This is a very dirty method to remove the first line of dpkg’s 
 	 * output using “tail”.
 	 */
-	local footprint=$(
-	dpkg -c $TARGET | \
-		sed "s|  *|\t|g" | \
+	local footprint; footprint=$( \
+		dpkg -c "$TARGET" | \
+		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,2,6,7,8,9 | \
 		sed -e "s|\./||" | \
 		__FP_SED | \

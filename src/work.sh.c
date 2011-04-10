@@ -23,7 +23,8 @@ make_work_dir() {
 	 */
 	mkdir -p $SRC $PKG
 	for SPLIT in ${splits[@]}; do
-		 mkdir -p "$SPLITS/$SPLIT"
+		info "SPLIT=$SPLIT"
+		mkdir -p "$SPLITS/$SPLIT"
 	done
 	
 	/*
