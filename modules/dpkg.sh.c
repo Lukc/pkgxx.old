@@ -52,13 +52,14 @@ dpkg:arch() {
 		netbsd*) ARCH=netbsd-$ARCH ;;
 		/* Not sure for the others… */
 	esac
-	local ARCH=${PKGMK_ARCH:-$(uname -m)}
-	if [[ "${ARCH}" = noarch ]]; then
+	/*local ARCH=${PKGMK_ARCH:-$(uname -m)}*/
+	if has no-arch ${archs[@]}; then
 		/* 
 		 * “all” is the keyword for architecture-independent packages, 
 		 * not “any”.
 		 */
 		echo "all"
+		return
 	fi
 	echo "${ARCH}" | sed -e "s|i.86|i386|;s|x86_64|amd64|" \
 	                     -e "s|arm|armel|" \

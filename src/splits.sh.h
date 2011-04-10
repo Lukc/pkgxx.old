@@ -8,8 +8,8 @@
 	PKG_VERSIONS=("$version" ${splits_version[@]}) ; \
 	PKG_LICENSES=("$license" ${splits_licenses[@]}) ; \
 	PKG_DESC=("$description" ${splits_descriptions[@]}) ; \
-	PKG_ARCHS=("${archs[0]}" ${splits_archs[@]}) ; \
-	PKG_DEPENDS=(${depends[@]} "${splits_depends[@]}")
+	PKG_ARCHS=("${archs[@]}" ${splits_archs[@]}) ; \
+	PKG_DEPENDS=("${depends[@]}" ${splits_depends[@]})
 /* For the depends, an array of strings that contain the original arrays… */
 
 /* 
