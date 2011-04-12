@@ -161,7 +161,8 @@ main() {
 	 * make the package.
 	 */
 	if [[ -z "${groups[@]}" ]] && has $PKGMK_PACKAGE_MANAGER ${PKGMK_PM_NEEDS_GROUP[@]}; then
-		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
+		export groups
+		groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
 	
 	/* 
