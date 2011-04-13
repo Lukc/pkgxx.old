@@ -21,6 +21,14 @@ istrue() {
 	fi
 }
 
+tac() {
+	if [[ -n "$tac" ]]; then
+		"$tac" $@
+	else
+		nl -ba $@ | sort -nr | cut -f2-
+	fi
+}
+
 pkgmake() {
 	: ${MAKE=$(which make)} \
 	  ${MAKE:=$(which gmake)} \
