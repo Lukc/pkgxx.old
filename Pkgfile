@@ -7,30 +7,31 @@ name=pkg++
 version=devel
 release=1
 source=(git://devel.upyum.com/pkgxx.git)
-config=(/etc/pkg++.conf)
+config=(${sysconfdir:=/etc}/pkg++.conf)
 
 case $distribution in
 	Mandriva|Fedora|*SuSE) : ${package_manager:=rpm} ;;
-	Arch)		: ${package_manager:=pacman}	;;
-	Frugalware)	: ${package_manager:=pacman-g2}	;;
-	Debian|Ubuntu)	: ${package_manager:=dpkg}	;;
-	Slackware)	: ${package_manager:=pkgtools}	;;
-	"")						;;
-	*)		: ${package_manager:=pkgutils}	;;
+	Arch)           : ${package_manager:=pacman}   	;;
+	Frugalware)     : ${package_manager:=pacman-g2}	;;
+	Debian|Ubuntu)  : ${package_manager:=dpkg}     	;;
+	Slackware)      : ${package_manager:=pkgtools} 	;;
+	"")                                            	;;
+	*)              : ${package_manager:=pkgutils} 	;;
 esac
 
 depends=(zsh ${package_manager})
 
 configure_opts=(
-	--prefix=$prefix
-	--sharedir=$sharedir
-	--sysconfdir=$sysconfdir
-	--mandir=$mandir
+	--prefix=${prefix:-/usr}
+	--sharedir=${sharedir:-$prefix/share}
+	--sysconfdir=${sysconfdir:-/etc}
+	--mandir=${mandir:-$sharedir/man}
+	--package-manager=${package_manager:-pkgutils}
 )
 
 build(){
 	cd $name
-	./configure --package-manager=$package_manager \
-	            ${configure_opts[@]}
+	./configure \
+		${configure_opts[@]}
 	pkgmake -B DESTDIR=$PKG install
 }
