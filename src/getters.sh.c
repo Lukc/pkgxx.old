@@ -4,7 +4,7 @@ get_protocol() {
 	 * It just returns what is before the first “:”.
 	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
-	echo ${PROTOCOL/+*}
+	echo ${PROTOCOL/\+*}
 }
 get_filename() {
 	/*
@@ -17,8 +17,8 @@ get_filename() {
 		[[ $1 =~ ^(svn|git|hg|bzr):.*:\/\/.* ]] || \
 		[[ $1 =~ ^(svn|git|hg|bzr)\+.*:\/\/.* ]]
 	then
-		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
-		local PROTOCOL="`get_protocol $1`"
+		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${match[2]}"
+		local PROTOCOL="`get_protocol "$1"`"
 		case $PROTOCOL in
 			svn|git|hg|bzr)
 				echo "$PKGMK_SOURCE_DIR/$name"
@@ -51,14 +51,16 @@ get_pkgfile() {
 	/*
 	 * Returns the name of the Pkgfile.
 	 */
+	setopt -G
 	local PKGFILE=
 	if [[ -n "$PKGMK_PKGFILE" ]]; then
 		echo "$PKGMK_PKGFILE"
-	elif [[ -n `ls $PKGMK_PKGFILE_NAME-* 2>/dev/null` ]]; then
+	elif [[ -n $(echo -n $PKGMK_PKGFILE_NAME-*) ]]; then
 		for file in $PKGMK_PKGFILE_NAME-*; do
 			if [[ "$file" =~ $PKGMK_PKGFILE_NAME-[0-9] ]]; then
 				PKGFILE=$file
 			fi
+			echo "$file"
 		done
 		echo "$PKGFILE"
 	else
@@ -72,7 +74,7 @@ get_metafile() {
 	 */
 	local VERSION="`basename "$PKGMK_PKGFILE" | sed -e "s|$PKGMK_PKGFILE_NAME-||"`"
 	local DIR="`dirname "$PKGMK_PKGFILE"`"
-	if [[ "$VERSION" = `basename $PKGMK_PKGFILE` ]]; then
+	if [[ "$VERSION" = `basename "$PKGMK_PKGFILE"` ]]; then
 		echo "$DIR/$1"
 	else
 		echo "$DIR/$1-$VERSION"
@@ -96,7 +98,7 @@ get_use_desc() {
 }
 
 get_target() {
-	$PKGMK_PACKAGE_MANAGER:target
+	${PKGMK_PACKAGE_MANAGER}:target
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

@@ -143,12 +143,16 @@ main() {
 	 *       change configuration depending on the package. And probably
 	 *       for something else, but I don’t remember what.
 	 */
-	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
-		if [[ ! -f $FILE ]]; then
+	for FILE in "$PKGMK_CONFFILE" "$PKGMK_PKGFILE" "$PKGMK_CONFFILE"; do
+		if [[ ! -f "$FILE" ]]; then
 			error "File '$FILE' not found."
 			exit E_GENERAL
 		fi
-		. $FILE
+		if [[ "$(dirname "$FILE")" = "." ]]; then
+			. "./$FILE"
+		else
+			. "$FILE"
+		fi
 	done
 	
 	/*
@@ -157,7 +161,8 @@ main() {
 	 * make the package.
 	 */
 	if [[ -z "${groups[@]}" ]] && has $PKGMK_PACKAGE_MANAGER ${PKGMK_PM_NEEDS_GROUP[@]}; then
-		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
+		export groups
+		groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
 	
 	/* 
@@ -195,8 +200,8 @@ main() {
 	 * It is very important to check that the tools we will use are here, 
 	 * because we don’t want to be alone and miserably fail. 
 	 */
-	if [[ -n $(type -p "$PKGMK_PACKAGE_MANAGER:checks") ]]; then
-		$PKGMK_PACKAGE_MANAGER:checks
+	if [[ "$(type "${PKGMK_PACKAGE_MANAGER}:checks")" != none ]]; then
+		${PKGMK_PACKAGE_MANAGER}:checks
 	fi
 	
 	check_pkgfile
@@ -376,11 +381,11 @@ PKGMK_KERNEL=_KERNEL
 
 PKGMK_UNTAR_TOOL=gtar
 PKGMK_UNRPM_TOOL=rpm
-readonly PKGMK_UNRPM_TOOLS=(
+PKGMK_UNRPM_TOOLS=(
 	rpm bsdtar
 )
 PKGMK_UNZIP_TOOL=unzip
-readonly PKGMK_UNZIP_TOOLS=(
+PKGMK_UNZIP_TOOLS=(
 	unzip bsdtar
 )
 

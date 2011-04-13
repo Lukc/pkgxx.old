@@ -2,6 +2,10 @@
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
+type() {
+	builtin type -w "$1" | sed -e "s/${1//\//\\/\\/}: //"
+}
+
 istrue() {
 	/* 
 	 * Use this to check if a variable is true or false, or even if 
@@ -14,6 +18,14 @@ istrue() {
 		return 1
 	else
 		return 2
+	fi
+}
+
+tac() {
+	if [[ -n "$tac" ]]; then
+		"$tac" $@
+	else
+		nl -ba $@ | sort -nr | cut -f2-
 	fi
 }
 
@@ -104,8 +116,8 @@ wcat() {
 	 */
 	local i
 	for i in $@; do
-		if [[ -n "$(type -p $PKGMK_DOWNLOAD_TOOL:cat)" ]]; then
-			$PKGMK_DOWNLOAD_TOOL:cat $i
+		if [[ "$(type ${PKGMK_DOWNLOAD_TOOL}:cat)" != none ]]; then
+			${PKGMK_DOWNLOAD_TOOL}:cat $i
 		else
 			curl:cat $i
 		fi
@@ -117,29 +129,7 @@ die() {
 	 * Display a given error message, and if in debug mode, a traceback.
 	 */
 	/* $word is used for the transition… */
-	local return=$? function file line_number type word quiet=false
-	if [[ "$1" = "-q" ]]; then
-		quiet=true
-	fi
-	error "$@"
-	if ! $quiet; then
-		if [[ -n "$return" ]]; then
-			echo "${BASH_SOURCE[1]}:${BASH_LINENO[1]}: ${FUNCNAME[1]} returned $return"
-		fi
-		echo "stack traceback:"
-		for ((i = 1; i < ${#FUNCNAME[@]}; i++)) ; do
-			function=${FUNCNAME[$i]}
-			file=$(basename ${BASH_SOURCE[$i]})
-			line_number=${BASH_LINENO[$(($i - 1))]}
-			type=$(type -t $function)
-			if [[ "$type" =~ function ]]; then
-				word="in"
-			else
-				word="from"
-			fi
-			echo "	$file:$line_number $word $type '$function'" >&2
-		done
-	fi
+	error "${?:+!$?!} $@"
 	exit 1
 }
 
@@ -356,9 +346,9 @@ pm_arch () {
 		parisc*) TARGET_ARCH=hppa ;;
 		"Power Macintosh") TARGET_ARCH=ppc ;;
 	esac
-	if [[ -n "$(type -p $PKGMK_PACKAGE_MANAGER:arch)" ]]; then
+	if [[ "$(type ${PKGMK_PACKAGE_MANAGER}:arch)" != none ]]; then
 		ARCH="${TARGET_ARCH}" KERNEL="${TARGET_KERNEL}" \
-			$PKGMK_PACKAGE_MANAGER:arch
+			${PKGMK_PACKAGE_MANAGER}:arch
 	else
 		echo "${TARGET_ARCH}" 
 	fi

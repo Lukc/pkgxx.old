@@ -36,7 +36,7 @@ print_help() {
 
 parse_options() {
 	local PKGFILE=""
-	while [[ "$1" ]]; do
+	while (( $# > 0 )); do
 		case $1 in
 			-i|--install)
 				PKGMK_INSTALL="install" ;;
@@ -62,7 +62,7 @@ parse_options() {
 			-in|--ignore-new)
 				PKGMK_IGNORE_NEW="yes" ;;
 			-ir|--install-root)
-				if [[ ! "$2" ]]; then
+				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
 					exit E_GENERAL
 				fi
@@ -91,7 +91,7 @@ parse_options() {
 			-cp|--check-pkgfile)
 				PKGMK_CHECK_PKGFILE="yes";;
 			-cf|--config-file)
-				if [[ ! "$2" ]]; then
+				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
 					exit E_GENERAL
 				fi
@@ -100,7 +100,7 @@ parse_options() {
 			-li|--list-includes)
 				PKGMK_LIST_INCLUDES="yes";;
 			-pm|--package-manager)
-				if [[ ! "$2" ]]; then
+				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
 					exit E_GENERAL
 				fi

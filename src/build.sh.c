@@ -58,7 +58,7 @@ build_package() {
 	 *           -x is used to make the subshell verbose. Any command will
 	 *              be displayed with a “+”.
 	 */
-	if [[ "`type -t pre_build`" = "function" ]]; then
+	if [[ "`type pre_build`" = "function" ]]; then
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; pre_build)
 	fi
 	local RETURN=$?
@@ -66,7 +66,7 @@ build_package() {
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; build)
 		RETURN=$?
 	fi
-	if [[ $RETURN = 0 && "`type -t post_build`" = "function" ]]; then
+	if [[ $RETURN = 0 && "`type post_build`" = "function" ]]; then
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; post_build)
 		RETURN=$?
 	fi
@@ -78,9 +78,9 @@ build_package() {
 	 *       a fail if it fails.
 	 */
 	if [[ $RETURN != 0 && "$PKGMK_CHECK" = "yes" ]]; then
-		info "Testing $TARGET."
+		info "Testing '$TARGET'."
 		if check; then
-			info "$TARGET successfully tested."
+			info "'$TARGET' successfully tested."
 		else
 			error "Tests of $TARGET failed."
 			exit E_BUILD
@@ -132,15 +132,15 @@ build_package() {
 	 * We think again to the poor user.
 	 */
 	info "Build result:"
-	for i in ${!PKG_NAMES[*]}; do
+	for i in {1..${#PKG_NAMES}}; do
 		local PKG_ROOT
-		if [[ "$i" = 0 ]]; then
+		if [[ "$i" = 1 ]]; then
 			PKG_ROOT="$PKG"
 		else
 			PKG_ROOT="$SPLITS/${PKG_NAMES[$i]}"
 		fi
 		split_exec \
-			$PKGMK_PACKAGE_MANAGER:build
+			${PKGMK_PACKAGE_MANAGER}:build
 	done
 	
 	if [[ $? = 0 ]]; then
