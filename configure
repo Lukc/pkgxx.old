@@ -538,6 +538,9 @@ REMOVE () {
 RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
 }
+ZCOMPILE () {
+	echo "@echo -e \"  \033[35m[ZCOMP]\033[00m      \033[37m$1\033[00m\";echo 'zcompile \"$1\"' | zsh"
+}
 cat > Makefile << EOF
 # Beginning of Makefile
 
@@ -613,6 +616,7 @@ pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 	`DIR \$\(ETCDIR\)/pkg++/defaults`
 	`DIR \$\(ETCDIR\)/pkg++/uses`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
+	`ZCOMPILE '$(BINDIR)/pkg++'`
 	`for include in $(ls includes/); do
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++/includes
 		echo -ne "\t"
