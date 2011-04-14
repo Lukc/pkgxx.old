@@ -1,0 +1,196 @@
+\" XXX
+\" XXX: Parler des splits.
+\" XXX: Compléter tout les champs encore vides…
+\" XXX: Tout relire, et après traduire.
+\" XXX
+.TH Pkgfile 5 "" "pkg++ @VERSION@" ""
+.SH NOM
+\fBPkgfile\fP \- Recette pour pkg++.
+.SH DESCRIPTION
+Un \fBPkgfile\fP est une recette qui contient les instructions de construction 
+d’un paquet pour pkg++(8).
+.SH FORMAT DU FICHIER
+Le fichier est un script shell sourcé par pkg++.
+Ce fichier contient une série de variables et de fonctions qui seront 
+utilisées pour construire l’outil à empaqueter puis à assembler le paquet.
+.SH VARIABLES
+.TP
+\fBname=CHAINE\fP
+Définit le nom du logiciel empaqueté.
+
+Cette valeur doit être définie obligatoirement.
+.TP
+\fBversion=CHAINE\fP
+Définit la version du logiciel empaqueté.
+
+Cette valeur doit être définie obligatoirement.
+.TP
+\fBrelease=ENTIER\fP
+Définit la version de la recette.
+
+Cette valeur doit être définie obligatoirement.
+.TP
+\fBsource=('URL' 'FICHIER' 'DÉPÔT')\fP
+Définit les sources du logiciel empaqueté, ainsi que les divers correctifs
+et fichiers à ajouter.
+.br
+Les sources sont d’habitude récupérées avec les protocoles (S)FTP ou (S)HTTP.
+Les fichiers locaux fournis avec la recette peuvent être écrits directement
+dans ce tableau, en utilisant la syntaxe 'fichier' ou 'file://fichier'.
+Il est également possible de récupérer les sources depuis un dépôt git,
+subversion, bazaar ou mercurial. La syntaxe à utiliser est
+alors 'scm://dépôt' ou 'scm+protocole://dépôt' dans le cas où le protocole
+utilisé ne porte pas le même nom que l’outil de versionnement.
+
+Cette valeur doit être définie obligatoirement, mais le tableau peut rester vide.
+.TP
+\fBpackager=CHAINE\fP
+Définit l’empaqueteur, soit le cuisinier qui a écrit la recette.
+
+Cette variable peut avoir besoin d’être déclarée pour la construction de 
+certain types de paquets.
+.TP
+\fBmaintainer=CHAINE\fP
+Définit le mainteneur de la recette, soit la personne qui met à jour la
+recette au fûr et à mesure du développement du logiciel empaqueté.
+
+Cette variable peut avoir besoin d’être déclarée pour la construction de 
+certain types de paquets.
+.TP
+\fBdescription=CHAINE\fP
+Définit la description du logiciel empaqueté. Cette description doit être
+courte, soit tenir sur une ligne.
+
+Cette variable peut avoir besoin d’être déclarée pour la construction de 
+certain types de paquets.
+.TP
+\fBurl=CHAINE\fP
+Définit l’URL de la page de présentation du logiciel empaqueté.
+
+Cette variable peut avoir besoin d’être déclarée pour la construction de 
+certain types de paquets.
+.TP
+\fBdepends=('CHAINE')\fP
+Définit les dépendances du paquet.
+
+Les dépendances requises uniquement lors
+de la construction sont définies dans \fBbuilddepends=()\fP et celles qui
+sont indispensables lors de l’utilisation mais pas lors de la construction
+sont définies dans \fBusedepends=()\fP.
+.TP
+\fBincludes=('CHAINE' 'CHAINE')\fP
+Permet d’inclure des morceaux de code par défaut après la lecture du
+\fBPkgfile\fP.
+
+Pour voir la liste des fichiers d’inclusion disponibles, il suffit de faire
+\fIpkg++ -li\fP.
+.TP
+\fBlongdesc='CHAINE'\fP
+Permet de donner une description longue au paquet. Cette description peut 
+faire plusieurs lignes.
+
+Il est conseillé, pour les recettes se voulant portables, de respecter la
+limite de caractères demandée par Slackware de 11 lignes sur 80 caractères.
+Étant donné que ${\fBdescription\fP} est utilisée sur la première ligne, 
+se limiter à 10 lignes est conseillé.
+.TP
+\fBarchs=('CHAINE' 'CHAINE')\fP
+Définit la liste des architectures sur lesquelles le paquet peut être 
+construit. Si ${\fBarchs\fP[*]} contient \fIall\fP, alors le paquet
+sera considéré comme constructible sur n’importe quelle architecture.
+Si \fIno-arch\fP est dans ce tableau, alors le paquet sera construit, 
+lorsque cela sera possible, sans architecture. Ce dernier cas de figure 
+est utile pour les paquets de scripts qui n’ont pas besoin d’être 
+reconstruits sur plusieurs machines.
+.TP
+\fBkernels=('CHAINE' 'CHAINE')\fP
+Fonctionne exactement comme ${\fBarchs\fP[]}, mais pour les noyaux.
+.TP
+\fBconffiles=('CHAINE' 'CHAINE')\fP
+Définit la liste des fichiers de configuration installés dans le paquet.
+
+Certains gestionnaires de paquets peuvent utiliser cette information
+pour garder la configuration de l’utilisateur lors des mises à jour.
+.TP
+\fBlicenses=('CHAINE' 'CHAINE')\fP
+.TP
+\fBgroups=('CHAINE' 'CHAINE')\fP
+.TP
+\fBconflicts=('CHAINE' 'CHAINE')\fP
+.TP
+\fBprovides=('CHAINE' 'CHAINE')\fP
+.SH FONCTIONS
+.TP
+\fBbuild\fP()
+Cette fonction est la plus importante de la recette, et elle est souvent la
+seule à être déclarée. Elle doit contenir toutes les opérations requises à
+l’assemblage du paquet.
+
+\fBbuild\fP() est lancée depuis le répertoire ${\fBWORK\fP} et doit
+faire la construction en utilisant ${\fBPKG\fP} comme racine.
+
+Cette fonction est obligatoire dans toutes les recettes.
+.TP
+\fBcheck\fP()
+Permet de définir des tests sur un paquet construit afin de vérifier son
+intégrité.
+
+Cette fonction n’est jamais indispensable.
+.TP
+\fBpre_build\fP()
+Définit les opérations à effectuer avant \fBbuild\fP(), dans les mêmes
+conditions. Cette fonction est souvent utilisée avec la variable
+${\fBincludes\fP}, quand celle ci force la déclaration de \fBbuild\fP().
+.TP
+\fBpost_build\fP()
+Définit les opérations à effectuer après \fBbuild\fP(), dans les mêmes
+conditions. Cette fonction est souvent utilisée avec la variable
+${\fBincludes\fP}, quand celle ci force la déclaration de \fBbuild\fP().
+.SH BIBLIOTHÈQUES
+Un grand nombre de variables prédéfinies et de fonctions diverses sont 
+mises à disposition pour simplifier l’écriture des recettes ou permettre
+de résoudre des problèmes de portabilité. En voilà la liste.
+.TP
+${\fBarch\fP}
+Contient le nom de l’architecture cible du paquet. Cette architecture
+est exprimée sous le nom le plus courant la désignant dans les triplettes.
+.TP
+\fBpkgmake\fP()
+Fonction qui fait un appel à \fBmake\fP, en lui donnant comme paramètres
+le contenu de la variable globale $\fBMAKE_OPTS\fP et les paramètre reçus.
+L’implémentation de make appelée est quelconque, sauf si ${\fBmake\fP} 
+est déclarée.
+
+Pour utiliser pkgmake avec une implémentation définie de \fBmake\fP, par
+exemple \fBbmake\fP, il suffit de faire \fImake=bmake pkgmake\fP.
+.TP
+\fBtac\fP
+.TP
+\fBistrue\fP
+.TP
+\fBsedi\fP
+.TP
+\fBreplace\fP
+.TP
+\fBinclude\fP
+.TP
+\fBwcat\fP
+.TP
+\fBuse\fP
+.TP
+\fBuse_enable\fP, \fBuse_with\fP
+.TP
+\fBmake_desktop_entry\fP
+.TP
+\fB\fP
+.SH VOIR AUSSI
+pkg++.conf(5), pkg++(8)
+.SH DROIT D’AUTEUR
+pkg++ est basé sur pkgmk.
+
+Toutes les modifications sont faites par Vandervelden Luka et les
+contributeurs de pkg++ et sont sous droit d’auteur depuis 2010, sous la
+même licence. pkgmk (pkgutils) est sous droit d’auteur de Per Liden de
+2000 à 2005, puis par l’équipe de CRUX (http://crux.nu) de 2006 à 2008.
+
+Lisez le fichier COPYING pour la licence complète.

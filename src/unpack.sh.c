@@ -98,20 +98,20 @@ unpack_source() {
 	local FILE LOCAL_FILENAME COMMAND
 	
 	for FILE in ${source[@]}; do
-		LOCAL_FILENAME=`get_filename $FILE`
+		LOCAL_FILENAME="`get_filename $FILE`"
 		/*
 		 * $no_extraction can be set to true or yes in Pkgfiles. If so,
 		 * pkg++ doesn’t extract any archive nor uncompress any file.
 		 */
-		if ! [[ "$no_extraction" =~ ("true"|"yes") ]]; then
-			case $LOCAL_FILENAME in
+		if ! istrue "$no_extraction"; then
+			case "$LOCAL_FILENAME" in
 				*.tar|*.tar.gz|*.tar.Z|*.tgz|*.tar.bz2|*.tbz2|*.tar.xz|*.txz|*.tar.lzma)
-					$PKGMK_UNTAR_TOOL:unpack "$LOCAL_FILENAME" "$SRC"
+					${PKGMK_UNTAR_TOOL}:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
 				*)
-					local LOCAL_FILETYPE="$(basename "$LOCAL_FILENAME:unpack")"
-					if [[ "$(type $LOCAL_EXTENSION)" != none ]]; then
-						if ! $LOCAL_EXTENSION:unpack; then
+					local LOCAL_FILETYPE="$(basename "${LOCAL_FILENAME}:unpack")"
+					if [[ "$(type ${LOCAL_EXTENSION})" != none ]]; then
+						if ! ${LOCAL_EXTENSION}:unpack; then
 							error "Unpacking of '$FILE' failed."
 						fi
 					else

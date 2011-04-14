@@ -143,12 +143,16 @@ main() {
 	 *       change configuration depending on the package. And probably
 	 *       for something else, but I don’t remember what.
 	 */
-	for FILE in $PKGMK_CONFFILE $PKGMK_PKGFILE $PKGMK_CONFFILE; do
-		if [[ ! -f $FILE ]]; then
+	for FILE in "$PKGMK_CONFFILE" "$PKGMK_PKGFILE" "$PKGMK_CONFFILE"; do
+		if [[ ! -f "$FILE" ]]; then
 			error "File '$FILE' not found."
 			exit E_GENERAL
 		fi
-		. $FILE
+		if [[ "$(dirname "$FILE")" = "." ]]; then
+			. "./$FILE"
+		else
+			. "$FILE"
+		fi
 	done
 	
 	/*
@@ -157,7 +161,8 @@ main() {
 	 * make the package.
 	 */
 	if [[ -z "${groups[@]}" ]] && has $PKGMK_PACKAGE_MANAGER ${PKGMK_PM_NEEDS_GROUP[@]}; then
-		export groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
+		export groups
+		groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
 	
 	/* 
@@ -195,8 +200,8 @@ main() {
 	 * It is very important to check that the tools we will use are here, 
 	 * because we don’t want to be alone and miserably fail. 
 	 */
-	if [[ "$(type "$PKGMK_PACKAGE_MANAGER:checks")" != none ]]; then
-		$PKGMK_PACKAGE_MANAGER:checks
+	if [[ "$(type "${PKGMK_PACKAGE_MANAGER}:checks")" != none ]]; then
+		${PKGMK_PACKAGE_MANAGER}:checks
 	fi
 	
 	check_pkgfile
@@ -206,6 +211,13 @@ main() {
 	 */
 	PKGMK_ARCH=$(pm_arch)
 	PKGMK_KERNEL=$(pm_kernel)
+	
+	/* 
+	 * And then we set another architecture variable to something known
+	 * by the cookers.
+	 */
+	arch=$(target_arch)
+	kernel=$(target_kernel)
 	
 	/* 
 	 * We get the target from a specific function.
@@ -321,7 +333,7 @@ PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
-PKGMK_PKGFILE_NAME="./Pkgfile"
+PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"

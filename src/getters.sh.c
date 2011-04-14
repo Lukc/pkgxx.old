@@ -4,7 +4,7 @@ get_protocol() {
 	 * It just returns what is before the first “:”.
 	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
-	echo ${PROTOCOL/+*}
+	echo ${PROTOCOL/\+*}
 }
 get_filename() {
 	/*
@@ -17,8 +17,8 @@ get_filename() {
 		[[ $1 =~ ^(svn|git|hg|bzr):.*:\/\/.* ]] || \
 		[[ $1 =~ ^(svn|git|hg|bzr)\+.*:\/\/.* ]]
 	then
-		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${BASH_REMATCH[2]}"
-		local PROTOCOL="`get_protocol $1`"
+		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${match[2]}"
+		local PROTOCOL="`get_protocol "$1"`"
 		case $PROTOCOL in
 			svn|git|hg|bzr)
 				echo "$PKGMK_SOURCE_DIR/$name"
@@ -98,7 +98,7 @@ get_use_desc() {
 }
 
 get_target() {
-	$PKGMK_PACKAGE_MANAGER:target
+	${PKGMK_PACKAGE_MANAGER}:target
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

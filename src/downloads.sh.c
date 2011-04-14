@@ -19,7 +19,7 @@ download_file() {
 			check_command "$PROTOCOL"
 			cd $PKGMK_SOURCE_DIR
 			if [[ ! -e "$name" ]]; then
-				$PROTOCOL:clone "$1"
+				${PROTOCOL}:clone "$1"
 			elif [[ ! -d "$name" ]]; then
 				die "'$PKGMK_SOURCE_DIR/$name' already exists and is not a directory."
 			elif [[ ! -r "$name" ]]; then
