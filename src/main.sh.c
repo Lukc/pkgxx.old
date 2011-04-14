@@ -213,6 +213,13 @@ main() {
 	PKGMK_KERNEL=$(pm_kernel)
 	
 	/* 
+	 * And then we set another architecture variable to something known
+	 * by the cookers.
+	 */
+	arch=$(target_arch)
+	kernel=$(target_kernel)
+	
+	/* 
 	 * We get the target from a specific function.
 	 */
 	TARGET="$(get_target)"
