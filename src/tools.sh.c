@@ -285,11 +285,10 @@ target_arch () {
 	 */
 	local TRIPLET
 	if [[ -n "$CHOST" ]]; then
-		TRIPLET=$CHOST
+		echo $CHOST | cut -d- -f 1
 	else
-		TRIPLET=$MACHTYPE /* We use the triplet bash was built with… */
+		echo $MACHTYPE /* We use the architecture zsh was built with… */
 	fi
-	echo $TRIPLET | cut -d- -f 1
 }
 
 target_kernel () {
@@ -298,11 +297,10 @@ target_kernel () {
 	 */
 	local TRIPLET
 	if [[ -n "$CHOST" ]]; then
-		TRIPLET=$CTARGET
+		echo $CHOST | cut -d- -f 3
 	else
-		TRIPLET=$MACHTYPE
+		echo $OSTYPE | cut -d- -f 1
 	fi
-	echo $TRIPLET | cut -d- -f 3
 }
 
 target_libc () {
@@ -318,9 +316,9 @@ target_libc () {
 	local TRIPLET
 	local LIBC
 	if [[ -n "$CHOST" ]]; then
-		TRIPLET=$CTARGET
+		TRIPLET=$CHOST
 	else
-		TRIPLET=$MACHTYPE
+		TRIPLET=1-2-$OSTYPE
 	fi
 	LIBC=$(echo $TRIPLET | cut -d- -f 4)
 	if [[ -z "$LIBC" ]]; then
