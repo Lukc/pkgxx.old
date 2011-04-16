@@ -5,7 +5,7 @@
 #define export_splits \
 	PKG_NAME="$name" ; \
 	PKG_NAMES=("$name" ${splits[@]}) ; \
-	PKG_VERSIONS=("$version" ${splits_version[@]}) ; \
+	PKG_VERSIONS=("$version" ${splits_versions[@]}) ; \
 	PKG_LICENSES=("$license" ${splits_licenses[@]}) ; \
 	PKG_DESC=("$description" ${splits_descriptions[@]}) ; \
 	PKG_ARCHS=("${archs[@]}" ${splits_archs[@]}) ; \
