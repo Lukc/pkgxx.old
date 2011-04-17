@@ -62,20 +62,8 @@ nhopkg:build() {
 }
 
 nhopkg:footprint() {
-	#if defined __GTAR
-	tar xf $TARGET data.tar.bz2
-	__FP_GTAR(data.tar.bz2) | \
-		__FP_SED -e "s|\./||" | \
-		sort -k 3
-	#elif defined __BSDTAR
-	bsdtar xf $TARGET data.tar.bz2
-	__FP_BSDTAR(data.tar.bz2) | \
-		sed "s|	|/|;s|	|/|;s|/|	|" | \
-		__FP_SED -e "s|\./||" | \
-		sort -k 3
-	#else
-	#	error No valid tar defined.
-	#endif
+	tar xf "${TARGET}" data.tar.bz2
+	tar:list "data.tar.bz2" | __FP_SED | sort -k 3
 	rm data.tar.bz2
 }
 
