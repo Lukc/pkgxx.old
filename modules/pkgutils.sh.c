@@ -39,21 +39,8 @@ pkgutils:target () {
 pkgutils:build () {
 	info "Building $TARGET."
 	cd $PKG
-	#if defined __GTAR
-	tar cvvf ${TARGET%.$PKGMK_COMPRESSION_MODE} *
-	#elif defined __BSDTAR
-	bsdtar cf ${TARGET%.$PKGMK_COMPRESSION_MODE} *
-	/*
-	 * bsdtar cvvf doesn’t give enough informations about the 
-	 * saved files. So we create the archive and then we give to 
-	 * the user a files list.
-	 * Note: this list is different from the one given by GNU tar
-	 *       with cvv.
-	 */
-	bsdtar tvf ${TARGET%.$PKGMK_COMPRESSION_MODE}
-	#else
-	#	error No valid tar defined.
-	#endif
+	tar:pack "${TARGET%.$PKGMK_COMPRESSION_MODE}" *
+	tar:list "${TARGET%.$PKGMK_COMPRESSION_MODE}"
 	/*
 	 * pkgutils users have the choice of the compression method.
 	 * Now this choice will affect their fate.
