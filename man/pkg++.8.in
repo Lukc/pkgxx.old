@@ -104,16 +104,16 @@ SHA256 checksum of source files.
 Global package make configuration.
 .SH SOFTWARES USED AND DEPENDENCIES
 .TP
-.B "bash"
-Command interpreter.
+.B "zsh"
+Commands interpreter.
 .TP
-.B "wget"
+.B "wget, curl, axel"
 Used by pkg++ to download source code.
 .TP
 .B "git, svn and hg"
 Used by pkg++ to download versionned source code.
 .TP
-.B "coreutils"
+.B "coreutils, md5, sha256, etc."
 Used by pkg++ to make md5 and sha256 checksums, file copies, file moves, and a lot of text or files operations.
 .SH SEE ALSO
 pkg++.conf(5), pkgfile(5), pkgadd(8), pkgrm(8), pkginfo(8), rejmerge(8), wget(1)
