@@ -57,27 +57,13 @@ pkgtools:build () {
 }
 
 pkgtools:footprint () {
-	#if defined __GTAR
-	// J
-	__FP_GTAR($TARGET) | \
+	tar:list "${TARGET}" | \
 		grep -v -e "\./$" | \
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
 		grep -v "drwxr-xr-x	root/root	./install/" | \
 		__FP_SED -e "s|\./||" | \
 		sort -k 3
-	#elif defined __BSDTAR
-	__FP_BSDTAR($TARGET) | \
-		sed "s|	|/|;s|	|/|;s|/|	|" | \
-		grep -v -e "\./$" | \
-		grep -v "slack-desc" | \
-		grep -v "doinst.sh" | \
-		grep -v "drwxr-xr-x	root/root	./install/" | \
-		__FP_SED -e "s|\./||" | \
-		sort -k 3
-	#else
-	#	error No valid tar defined.
-	#endif
 }
 
 pkgtools:install () {

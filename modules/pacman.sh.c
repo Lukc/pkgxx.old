@@ -186,36 +186,19 @@ pacman:build() {
 	 * And then we build the package.
 	 */
 	info "Building $TARGET."
-	#if defined __GTAR
-		tar cvvf ${TARGET} .FILELIST .PKGINFO *
-	#elif defined __BSDTAR
-		bsdtar cf ${TARGET} .FILELIST .PKGINFO *
-		bsdtar tvf ${TARGET}
-	#else
-	#	error No valid tar defined.
-	#endif
+	tar:pack "${TARGET}" .FILELIST .PKGINFO * && \
+	tar:list "${TARGET}"
 }
 pacman-g2:build () {
 	pacman:build
 }
 
 pacman:footprint () {
-	#if defined __GTAR
-	__FP_GTAR($TARGET) | \
+	tar:list "${TARGET}" | \
 		__FP_SED -e '/^\.\/\.CHANGELOG$/d' \
 		         -e '/^\.\/\.PKGINFO$/d' \
 			 -e '/^\.\/\.FILELIST$/d' | \
 		sort -k 3
-	#elif defined __BSDTAR
-	__FP_BSDTAR($TARGET) | \
-		sed "s|	|/|;s|	|/|;s|/|	|" | \
-		__FP_SED -e '/^\.\/\.CHANGELOG$/d' \
-		         -e '/^\.\/\.PKGINFO$/d' \
-			 -e '/^\.\/\.FILELIST$/d' | \
-		sort -k 3
-	#else
-	#	error No valid tar defined.
-	#endif
 }
 pacman-g2:footprint () {
 	pacman:footprint
