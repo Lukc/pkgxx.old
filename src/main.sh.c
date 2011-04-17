@@ -5,6 +5,7 @@
 #include "display.sh.c"
 #include "getters.sh.c"
 #include "tools.sh.c"
+#include "tar.sh.c"
 #include "checks.sh.c"
 #include "includes.sh.c"
 #include "downloads.sh.c"

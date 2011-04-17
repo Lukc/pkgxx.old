@@ -35,6 +35,7 @@ PKGMK_WORK_DIR="/tmp/work-$name"
 # Variable               # Values
 PKGMK_DOWNLOAD_TOOL=curl # curl wget axel
 PKGMK_UNTAR_TOOL=gtar    # gtar bsdtar sltar
+PKGMK_TARLIST_TOOL=gtar  # gtar bsdtar
 PKGMK_UNRPM_TOOL=rpm     # rpm bsdtar
 PKGMK_UNZIP_TOOL=unzip   # unzip bsdtar
 
