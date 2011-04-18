@@ -78,32 +78,17 @@ dpkg:build() {
 	cd $PKG
 	mkdir DEBIAN
 	make_debian_control > DEBIAN/control
-	if [[ "$PKG_NAME" == "$name" ]]; then
-		if [[ -e "$PKGMK_ROOT/$PKGMK_PRE_INSTALL" ]]; then
-			cp "$PKGMK_ROOT/$PKGMK_PRE_INSTALL" DEBIAN/preinst
-		fi
-		if [[ -e "$PKGMK_ROOT/$PKGMK_POST_INSTALL" ]]; then
-			cp "$PKGMK_ROOT/$PKGMK_POST_INSTALL" DEBIAN/postinst
-		fi
-		if [[ -e "$PKGMK_ROOT/$PKGMK_PRE_REMOVE" ]]; then
-			cp "$PKGMK_ROOT/$PKGMK_PRE_REMOVE" DEBIAN/prerm
-		fi
-		if [[ -e "$PKGMK_ROOT/$PKGMK_POST_REMOVE" ]]; then
-			cp "$PKGMK_ROOT/$PKGMK_POST_REMOVE" DEBIAN/postrm
-		fi
-	else
-		if [[ -e "$PKGMK_ROOT/$name.$PKGMK_PRE_INSTALL" ]]; then
-			cp "$PKGMK_ROOT/$name.$PKGMK_PRE_INSTALL" DEBIAN/preinst
-		fi
-		if [[ -e "$PKGMK_ROOT/$name.$PKGMK_POST_INSTALL" ]]; then
-			cp "$PKGMK_ROOT/$name.$PKGMK_POST_INSTALL" DEBIAN/postinst
-		fi
-		if [[ -e "$PKGMK_ROOT/$name.$PKGMK_PRE_REMOVE" ]]; then
-			cp "$PKGMK_ROOT/$name.$PKGMK_PRE_REMOVE" DEBIAN/prerm
-		fi
-		if [[ -e "$PKGMK_ROOT/$name.$PKGMK_POST_REMOVE" ]]; then
-			cp "$PKGMK_ROOT/$name.$PKGMK_POST_REMOVE" DEBIAN/postrm
-		fi
+	if [[ -n "$PRE_INSTALL" ]]; then
+		echo "$PRE_INSTALL" > DEBIAN/preinst
+	fi
+	if [[ -n "$POST_INSTALL" ]]; then
+		echo "$POST_INSTALL" > DEBIAN/postinst
+	fi
+	if [[ -n "$PRE_REMOVE" ]]; then
+		echo "$PRE_REMOVE" > DEBIAN/prerm
+	fi
+	if [[ -n "$POST_REMOVE" ]]; then
+		echo "$POST_REMOVE" > DEBIAN/postrm
 	fi
 	if [[ -e "$PKGMK_ROOT/$PKGMK_CHANGELOG" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_CHANGELOG" DEBIAN/changelog
