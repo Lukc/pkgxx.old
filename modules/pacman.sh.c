@@ -81,7 +81,7 @@ make_pacman_pkginfo() {
 		else
 	/*
 	 * We admit here that $PKGMK_ARCH has been adapted before and 
-	 * is now conform to Arch’s standards.
+	 * is now conforming to Arch’s standards.
 	 */
 			echo "arch = $PKGMK_ARCH"
 		fi
@@ -113,6 +113,42 @@ make_pacman_pkginfo() {
 	done
 }
 
+make_pacman_dotinstall() {
+	local nonzero=false
+	if [[ -n "$PRE_INSTALL" ]]; then
+		echo "pre_install() {"
+		echo "$PRE_INSTALL" | sed -e "s/^/	/"
+		echo "}"
+		nonzero=true
+	fi
+	if [[ -n "$POST_INSTALL" ]]; then
+		echo "post_install() {"
+		echo "$POST_INSTALL" | sed -e "s/^/	/"
+		echo "}"
+		nonzero=true
+	fi
+	if [[ -n "$PRE_REMOVE" ]]; then
+		echo "pre_remove() {"
+		echo "$PRE_REMOVE" | sed -e "s/^/	/"
+		echo "}"
+		nonzero=true
+	fi
+	if [[ -n "$POST_REMOVE" ]]; then
+		echo "post_remove() {"
+		echo "$POST_REMOVE" | sed -e "s/^/	/"
+		echo "}"
+		nonzero=true
+	fi
+	if $nonzero; then
+		echo 'op=$1'
+		echo 'shift 1'
+		echo '$op $*'
+		return 0
+	else
+		return 1
+	fi
+}
+
 pacman:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
@@ -138,6 +174,8 @@ pacman-g2:target() {
 }
 
 pacman:build() {
+	local dotinstall metafiles
+	metafiles=(.FILELIST .PKGINFO)
 	cd $PKG
 	/*
 	 * Frugalware’s packages are very close from Crux’s 
@@ -154,7 +192,7 @@ pacman:build() {
 	/*
 	 * We write the files list in the future package.
 	 */
-	find . | sed "s|\./||" | sort > .FILELIST
+	find . | sed "s|\./||" | sort > $PKG/.FILELIST
 	
 	/*
 	 * We write all other informations in the package.
@@ -163,10 +201,20 @@ pacman:build() {
 	unset size
 	
 	/* 
+	 * Concatened {pre,post}-{install,remove} scripts.
+	 */
+	dotinstall="$(make_pacman_dotinstall)"
+	if [[ -n "${dotinstall}" ]]; then
+		echo -n "${dotinstall}" > $PKG/.INSTALL
+		metafiles=(${metafiles[*]} .INSTALL)
+	fi
+	
+	/* 
 	 * We install the changelog at the good place, if available.
 	 */
 	if [[ -e "$PKGMK_ROOT/$PKGMK_CHANGELOG" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_CHANGELOG" $PKG/.CHANGELOG
+		metafiles=(${metafiles[*]} .CHANGELOG)
 	fi
 	
 	/*	
@@ -186,7 +234,7 @@ pacman:build() {
 	 * And then we build the package.
 	 */
 	info "Building $TARGET."
-	tar:pack "${TARGET}" .FILELIST .PKGINFO * && \
+	tar:pack "${TARGET}" ${metafiles[*]} * && \
 	tar:list "${TARGET}"
 }
 pacman-g2:build () {
@@ -195,9 +243,10 @@ pacman-g2:build () {
 
 pacman:footprint () {
 	tar:list "${TARGET}" | \
-		__FP_SED -e '/^\.\/\.CHANGELOG$/d' \
-		         -e '/^\.\/\.PKGINFO$/d' \
-			 -e '/^\.\/\.FILELIST$/d' | \
+		__FP_SED -e '/root\/root	\.CHANGELOG$/d' \
+		         -e '/root\/root	\.PKGINFO$/d' \
+		         -e '/root\/root	\.INSTALL$/d' \
+			 -e '/root\/root	\.FILELIST$/d' | \
 		sort -k 3
 }
 pacman-g2:footprint () {
