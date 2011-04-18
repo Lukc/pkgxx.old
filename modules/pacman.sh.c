@@ -5,7 +5,7 @@ pkg_manager_noarch(pacman) /* pacman-g2 does not support noarch packages */
 pkg_manager_needs_group(pacman)
 pkg_manager_needs_group(pacman-g2)
 
-make_pacman_pkginfo() {
+pacman:_pkginfo() {
 	/*
 	 * The '#' is here to avoid preprocessor and syntaxic coloration
 	 * problems.
@@ -113,7 +113,7 @@ make_pacman_pkginfo() {
 	done
 }
 
-make_pacman_dotinstall() {
+pacman:_dotinstall() {
 	local nonzero=false
 	if [[ -n "$PRE_INSTALL" ]]; then
 		echo "pre_install() {"
@@ -197,13 +197,13 @@ pacman:build() {
 	/*
 	 * We write all other informations in the package.
 	 */
-	make_pacman_pkginfo > .PKGINFO
+	pacman:_pkginfo > .PKGINFO
 	unset size
 	
 	/* 
 	 * Concatened {pre,post}-{install,remove} scripts.
 	 */
-	dotinstall="$(make_pacman_dotinstall)"
+	dotinstall="$(pacman:_dotinstall)"
 	if [[ -n "${dotinstall}" ]]; then
 		echo -n "${dotinstall}" > $PKG/.INSTALL
 		metafiles=(${metafiles[*]} .INSTALL)

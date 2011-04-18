@@ -6,7 +6,7 @@ pkg_manager_needs_group(nhopkg)
 /*
  * nhopkg specific functions.
  */
-make_nhoid () {
+nhopkg:_nhoid () {
 	echo "#%NHO-0.5"
 	echo "#%PKG++-${PKGMK_VERSION}"
 	echo "# Package Maintainer: `echo "$maintainer" | sed -e "s|(|<|;s|)|>|"`"
@@ -56,7 +56,7 @@ nhopkg:build() {
 	cd $PKG
 	size="`du -cb . | tail -n 1 | awk '{print $1}'`"
 	tar cvvjf data.tar.bz2 *
-	make_nhoid > nhoid
+	nhopkg:_nhoid > nhoid
 	info "Building $TARGET."
 	tar cf $TARGET nhoid data.tar.bz2
 }

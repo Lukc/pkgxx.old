@@ -2,7 +2,7 @@
 pkg_manager_add(pkgtools)
 pkg_manager_noarch(pkgtools)
 
-make_slackspec () {
+pkgtools:_slackspec () {
 	/*
 	 * This function creates the “spec” file of the txz.
 	 */
@@ -38,7 +38,7 @@ pkgtools:target () {
 pkgtools:build () {
 	cd $PKG
 	mkdir $PKG/install
-	make_slackspec > $PKG/install/slack-desc
+	pkgtools:_slackspec > $PKG/install/slack-desc
 	info "Building $TARGET."
 	(
 		cd $PKG
@@ -53,7 +53,7 @@ pkgtools:build () {
 	 * content of the package with tar.
 	 */
 		tar tvJf $TARGET
-		)
+	)
 }
 
 pkgtools:footprint () {

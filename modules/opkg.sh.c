@@ -20,7 +20,7 @@ opkg:build () {
 	 */
 	cd "$PKG"
 	mkdir OPK
-	make_debian_control > OPK/control
+	dpkg:_control > OPK/control
 	info "Building $TARGET."
 	_LIBEXECDIR/pkg++/opkgmk.sh -pkg "$TARGET" -root "$PKG" -verbose
 }

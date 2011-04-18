@@ -2,7 +2,7 @@
 pkg_manager_add(dpkg)
 pkg_manager_noarch(dpkg)
 
-make_debian_control() {
+dpkg:_control() {
 	echo "Package: $name"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
 		echo "Version: 999.`date +%Y%m%d`-$release"
@@ -77,7 +77,7 @@ dpkg:target() {
 dpkg:build() {
 	cd $PKG
 	mkdir DEBIAN
-	make_debian_control > DEBIAN/control
+	dpkg:_control > DEBIAN/control
 	if [[ -n "$PRE_INSTALL" ]]; then
 		echo "$PRE_INSTALL" > DEBIAN/preinst
 	fi

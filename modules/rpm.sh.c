@@ -2,7 +2,7 @@
 pkg_manager_add(rpm)
 pkg_manager_needs_group(rpm)
 
-make_rpm_spec() {
+rpm:_spec() {
 	: ${license:="Unknown"}
 	: ${buildroot:="$prefix"}
 	
@@ -55,7 +55,7 @@ rpm:build() {
 	/*
 	 * If there is a problem, it’s RPM’s fault.
 	 */
-	make_rpm_spec > $PKGMK_WORK_DIR/$name.spec
+	rpm:_spec > $PKGMK_WORK_DIR/$name.spec
 	rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
 		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
