@@ -13,6 +13,20 @@
 /* For the depends, an array of strings that contain the original arrays… */
 
 /* 
+ * Internal, here only for split_exec.
+ */
+#define split_get_scriptname(SCRIPT) \
+	"$(if [[ "${PKG_NAME}" = "${PKG_NAMES[$i]}" ]]; then \
+		if [[ -e "${PKGMK_ROOT}/${SCRIPT}" ]]; then \
+			cat "${PKGMK_ROOT}/${SCRIPT}"; \
+		fi; \
+	else \
+		if [[ -e "${PKGMK_ROOT}/${PKG_NAMES[$i]}.${SCRIPT}" ]]; then \
+			cat "${PKGMK_ROOT}/${PKG_NAMES[$i]}.${SCRIPT}"; \
+		fi; \
+	fi)"
+
+/* 
  * Usage: split_exec command opts
  */
 #define split_exec \
@@ -20,5 +34,9 @@
 	license="${PKG_LICENSES[$i]:-$license}" \
 	description="${PKG_DESC[$i]}" archs=(${PKG_ARCHS[$i]}) \
 	depends=(${PKG_DEPENDS[$i]}) PKG="$PKG_ROOT" \
-	TARGET="$(get_target)"
+	TARGET="$(get_target)" \
+	PRE_INSTALL=split_get_scriptname(PKGMK_PRE_INSTALL) \
+	POST_INSTALL=split_get_scriptname(PKGMK_POST_INSTALL) \
+	PRE_REMOVE=split_get_scriptname(PKGMK_PRE_REMOVE) \
+	POST_REMOVE=split_get_scriptname(PKGMK_POST_REMOVE)
 
