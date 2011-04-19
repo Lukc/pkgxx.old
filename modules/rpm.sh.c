@@ -28,9 +28,9 @@ rpm:_spec() {
 	echo "%files"
 	cd $PKG
 	for file in `find . | \
-		sed "s|\.||"`
+		sed "s|^\.||"`
 	do
-		if [[ -d $file ]]; then
+		if [[ -d "$PKG/$file" ]]; then
 			echo "%dir $file"
 		else
 			echo "$file"
