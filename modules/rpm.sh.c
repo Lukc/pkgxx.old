@@ -93,12 +93,12 @@ rpm:footprint() {
 "
 	for LINE in $(rpm -qvlp $TARGET | \
 		sed "s|  *|\t|g" | \
-		cut -d "        " -f 1,3,4,9,10,11 | \
-		sed -e "s|/||;s|        |/|;s|  |/|;s|/|        |" | \
+		cut -d "	" -f 1,3,4,9,10,11 | \
+		sed -e "s|/||;s|	|/|;s|	|/|;s|/|	|" | \
 		__FP_SED | \
 		sort -k 3)
 	do
-		FILE="`echo "$LINE" | cut -d '  ' -f 3`"
+		FILE="`echo "$LINE" | cut -d '	' -f 3`"
 		if [[ -d $PKG/$FILE ]]; then
 			echo "$LINE/"
 		else
