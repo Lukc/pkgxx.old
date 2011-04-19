@@ -146,14 +146,7 @@ print_help () {
 	echo "  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX"
 	echo "                          [PREFIX]"
 	echo 
-	echo "Optional Features:"
-	echo "  --without-curl             Disable cURL support."
-	echo "  --without-wget             Disable wget support. [UNRECOMMENDED]"
-	echo "  --with-dpkg                Disable pkgutils support and add dpkg support. [UNCOMPLETE]"
-	echo "  --with-bsdtar              Use bsdtar instead of GNU tar for compression/decompression."
-	echo "  --with-gtar                Use GNU tar instead of bsdtar for compression/decompression."
-	echo "  --without-gsed             Use non-GNU sed. Slower but usable on non-GNU userlands."
-	echo "  --without-gfind            Use non-GNU find. Slower but usable on non-GNU userlands."
+	echo "Optional Features: (none)"
 	echo 
 	echo "Fine tuning of the installation directories:"
 	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
@@ -173,13 +166,8 @@ print_help () {
 
 }
 
-USE_CURL=
 USE_GSED=
 USE_GFIND=
-USE_BSDTAR=
-USE_GTAR=
-GTAR_NAME=
-GMAKE_PATH=
 
 for arg in $@; do
 	case $arg in
@@ -194,21 +182,6 @@ for arg in $@; do
 		--with-*)
 			with="`echo "$arg" | sed "s|--with-||"`"
 			case $with in
-				curl)
-					USE_CURL=true
-				;;
-				bsdtar|libarchive)
-					USE_BSDTAR=true
-				;;
-				gtar|gnu-tar)
-					USE_GTAR=true
-				;;
-				gsed|gnu-sed)
-					USE_GSED=true
-				;;
-				gfind|gnu-find)
-					USE_GFIND=true
-				;;
 				*)
 					echo "Unknown package $with."
 					echo "Please make $0 --help for more informations."
@@ -218,21 +191,6 @@ for arg in $@; do
 		--without-*)
 			without="`echo "$arg" | sed "s|--without-||"`"
 			case $without in
-				curl)
-					USE_CURL=false
-				;;
-				bsdtar|libarchive)
-					USE_BSDTAR=false
-				;;
-				gtar|gnu-tar)
-					USE_GTAR=false
-				;;
-				gsed|gnu-sed)
-					USE_GSED=false
-				;;
-				gfind|gnu-find)
-					USE_GFIND=false
-				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -320,81 +278,8 @@ else
 	echo "However, pkg++ will surely work with older versions of bash, it is just untested." >&2
 fi
 
-checking_for "GNU tar"
-if checking_for_bin gtar &> /dev/null; then
-	GTAR_NAME="`type -p gtar`"
-	: ${USE_GTAR:=true}
-	echo "yes"
-elif tar --version 2>/dev/null | grep -q "GNU"; then
-	GTAR_NAME="`type -p tar`"
-	: ${USE_GTAR:=true}
-	echo "yes"
-else
-	: ${USE_BSDTAR:=false}
-	echo "no"
-fi
-
-if checking_for_bin bsdtar; then
-	: ${USE_BSDTAR:=true}
-else
-	if ! $USE_GTAR; then
-		USE_BSDTAR=true
-		echo "You will need GNU tar or bsdtar to extract files and build packages." >&2
-		echo "pkg++ will be configured to use bsdtar." >&2
-	else
-		: ${USE_BSDTAR:=false}
-	fi
-fi
-
-if checking_for_bin curl; then
-	: ${USE_CURL:=true}
-else
-	: ${USE_CURL:=false}
-fi
-if ! checking_for_bin wget && ! $USE_CURL; then
-	echo "You will need wget or curl to be able to download files directly with pkg++." >&2
-	echo "pkg++ will be configured to use wget." >&2
-fi
-
-checking_for "GNU sed"
-if sed --version 2> /dev/null | grep -q "GNU" &> /dev/null; then
-	: ${USE_GSED:=true}
-	echo "yes"
-else
-	: ${USE_GSED:=false}
-	echo "no"
-fi
-
-checking_for "GNU find"
-if find --version 2> /dev/null | grep -q "GNU" &> /dev/null; then
-	: ${USE_GFIND:=true}
-	echo "yes"
-else
-	: ${USE_GFIND:=false}
-	echo "no"
-fi
-
-checking_for "GNU Make"
-CONTINUE=true
-for i in `echo "$PATH" | sed "s|:| |g"`; do
-	if [[ -x $i/make ]]; then
-		if $i/make --version 2> /dev/null | grep -q "GNU Make"; then
-			GMAKE_PATH="$i/make"
-		fi
-	elif [[ -x $i/gmake ]]; then
-		if $i/gmake --version 2> /dev/null | grep -q "GNU Make"; then
-			GMAKE_PATH="$i/gmake"
-		fi
-	fi
-done
-if [[ -n "$GMAKE_PATH" ]]; then
-	echo "yes"
-else
-	echo "no"
-fi
-
 checking_for "pkgtools"
-if checking_for_bin "installpkg" &> /dev/null && checking_for_pin "removepkg" &> /dev/null; then
+if checking_for_bin "installpkg" &> /dev/null && checking_for_bin "removepkg" &> /dev/null; then
 	echo "yes"
 	: ${PACKAGE_MANAGER:=pkgtools}
 else
@@ -457,7 +342,6 @@ CPPFLAGS="$CPPFLAGS -D_ARCH=\"$ARCHITECTURE\" -D_KERNEL=\"$KERNEL\" $CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
 CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
-CPPFLAGS="$CPPFLAGS -DGMAKE=\"$GMAKE_PATH\""
 CPPFLAGS="$CPPFLAGS -include $PWD/src/error.sh.h -include $PWD/src/footprints.sh.h -include $PWD/src/modules.sh.h"
 
 case $DISTRIBUTION in
@@ -479,21 +363,6 @@ case $PACKAGE_MANAGER in
 		CPPFLAGS="$CPPFLAGS -D__$PACKAGE_MANAGER=$PACKAGE_MANAGER"
 	;;
 esac
-
-if $USE_CURL; then
-	CPPFLAGS="$CPPFLAGS -D__CURL"
-fi
-if $USE_GSED; then
-	CPPFLAGS="$CPPFLAGS -D__GSED"
-fi
-if $USE_GFIND; then
-	CPPFLAGS="$CPPFLAGS -D__GFIND"
-fi
-if $USE_GTAR && [[ -n "$GTAR_NAME" ]] && ! $USE_BSDTAR; then
-	CPPFLAGS="$CPPFLAGS -D__GTAR=$GTAR_NAME"
-else
-	CPPFLAGS="$CPPFLAGS -D__BSDTAR=bsdtar"
-fi
 
 configure() {
 	sed -e "s|@ARCH@|$ARCHITECTURE|"\
