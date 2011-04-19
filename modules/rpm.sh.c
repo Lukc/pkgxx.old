@@ -36,6 +36,27 @@ rpm:_spec() {
 			echo "$file"
 		fi
 	done
+	echo
+	if [[ -n "$PRE_INSTALL" ]]; then
+		echo "%pre"
+		echo "$PRE_INSTALL" | sed "/^[ 	]*$/d"
+		echo
+	fi
+	if [[ -n "$POST_INSTALL" ]]; then
+		echo "%post"
+		echo "$POST_INSTALL" | sed "/^[ 	]*$/d"
+		echo
+	fi
+	if [[ -n "$PRE_REMOVE" ]]; then
+		echo "%preun"
+		echo "$PRE_REMOVE" | sed "/^[ 	]*$/d"
+		echo
+	fi
+	if [[ -n "$POST_REMOVE" ]]; then
+		echo "%postun"
+		echo "$POST_REMOVE" | sed "/^[ 	]*$/d"
+		echo
+	fi
 }
 
 rpm:arch() {
