@@ -14,15 +14,7 @@ export description=$pkgdesc
 
 unset archs # Bug with pkg++ archs… will be removed latter.
 
-export Fdestdir="$PKGMK_WORK_DIR/pkg"
-export Fsrcdir="$PKGMK_WORK_DIR/src"
-export startdir=$PKGMK_WORK_DIR
-
-function msg {
-	echo -e "\033[00;34m   > \033[00m$@"
-}
-
-function Fmessage {
-	echo -e "\033[00;34m   > \033[00m$@"
-}
+export Fdestdir="$PKG"
+export Fsrcdir="$SRC"
+export startdir="$PKGMK_WORK_DIR"
 

@@ -10,19 +10,30 @@
  * It depends on includes/frugalbuild and has effect only with FrugalBuilds.
  */
 
-if [[ "$PKGMK_PKGFILE" = FrugalBuild ]]; then
-	readonly includes=(frugalbuild)
+if [[ "$PKGMK_PKGFILE" =~ (.*/|)FrugalBuild ]]; then
+	includes=(frugalbuild)
 	
 	function strip_url {
 		echo "$1" | sed 's|^.*:/\/.*/||g'
 	}
 	
-	
+	/* The heart of FrugalBuilds. */
 	function Finclude {
 		for i in $@; do
-			. $PKGMK_ROOT/../../include/$i.sh
+			. $PKGMK_ROOT/$(dirname "$PKGMK_PKGFILE")/../../include/$i.sh
 		done
 	}
+	
+	/* I/O functions */ 
+	function msg {
+		echo -e "\033[00;34m   > \033[00m$@"
+	}
+	
+	function Fmessage {
+		echo -e "\033[00;34m   > \033[00m$@"
+	}
+	
+	/* Many many things used for potentially anything in recipes… */
 	Finclude util
 	/* 
 	 * Even if you don’t want it, it’ needed… as FrugalBuilds are 
