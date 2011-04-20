@@ -65,9 +65,9 @@ rpm:arch() {
 
 rpm:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.rpm"
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.rpm"
+		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
 	fi
 }
 
@@ -79,9 +79,9 @@ rpm:build() {
 	rpm:_spec > $PKGMK_WORK_DIR/$name.spec
 	rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release.$PKGMK_ARCH.rpm $TARGET
+		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
 	else
-		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release.$PKGMK_ARCH.rpm $TARGET
+		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
 	fi
 	info "Building $TARGET."
 	rpm -qvlp $TARGET
@@ -116,6 +116,9 @@ rpm:install() {
 }
 
 rpm:checks() {
+	if [[ $(rpm --version | awk '{print $3}') > 5.1.6 ]] ; then
+		export rpm_distepoch="$(rpm --eval '%disttag%distepoch')"
+	fi
 	check_command rpm
 	check_command rpmbuild
 	check_directory "$PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH"
