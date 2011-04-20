@@ -10,6 +10,11 @@ export version=$pkgver
 export release=$pkgrel
 export description=$pkgdesc
 
-export pkgdir="$PKGMK_WORK_DIR/pkg"
-export srcdir="$PKGMK_WORK_DIR/src"
+export startdir="$PKGMK_WORK_DIR" # May cause problems in future.
+export pkgdir="$PKG"
+export srcdir="$SRC"
+
+post_build() {
+	package # Nothing is installed before, in some PKGBUILDs.
+}
 
