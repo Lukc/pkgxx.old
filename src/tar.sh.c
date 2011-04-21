@@ -59,7 +59,7 @@ tar:pack() {
 	if [[ "$PKGMK_DEBUG" = "yes" ]]; then
 		TARFLAGS=${TARFLAGS}v
 	fi
-	tar ${TARFLAGS}c $@ > $TARBALL
+	tar -${TARFLAGS}cf "${TARBALL}" $@
 }
 
 tar:list() {
