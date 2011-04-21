@@ -27,7 +27,7 @@ print_help() {
 	echo "  -kw,  --keep-work             keep temporary working directory"
 	echo "  -cf,  --config-file <file>    use alternative configuration file"
 	echo "  -li,  --list-includes         list all inclusion files available"
-	echo "  -pm,  --package-manager <pm>  set the package manager to use"
+/*	echo "  -pm,  --package-manager <pm>  set the package manager to use" */
 	echo "  -dg,  --debug                 print debug informations while building packages."
 	echo "  -nf,  --no-fail               run pkg++ in the dangerous no-fail mode."
 	echo "  -v,   --version               print version and exit "
@@ -99,13 +99,13 @@ parse_options() {
 				shift ;;
 			-li|--list-includes)
 				PKGMK_LIST_INCLUDES="yes";;
-			-pm|--package-manager)
-				if [[ -z "$2" ]]; then
-					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
-					exit E_GENERAL
-				fi
-				PKGMK_PACKAGE_MANAGER="$2"
-				shift ;;
+/*			-pm|--package-manager)
+ *				if [[ -z "$2" ]]; then
+ *					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
+ *					exit E_GENERAL
+ *				fi
+ *				PKGMK_PACKAGE_MANAGER="$2"
+ *				shift ;; */
 			-dg|--debug)
 				PKGMK_DEBUG="yes" ;;
 			-nf|--no-fail)
