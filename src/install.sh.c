@@ -2,13 +2,13 @@
 install_package() {
 	local COMMAND
 	
-	COMMAND="$($PKGMK_PACKAGE_MANAGER:install)"
+	COMMAND=($($PKGMK_PACKAGE_MANAGER:install))
 	
 	info "Installing '$TARGET'."
 	
 	cd $PKGMK_ROOT
-	echo "$COMMAND"
-	$COMMAND
+	echo "${COMMAND[*]}"
+	${COMMAND[*]}
 	
 	if [[ $? = 0 ]]; then
 		info "Installing '$TARGET' succeeded."
