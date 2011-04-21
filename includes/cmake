@@ -15,16 +15,18 @@ case $version in
 	;;
 esac
 
+: ${separate_build_dir:="no"}
+
 : ${make:="pkgmake"}
 
 cmake_opts=(
-	-DPREFIX=$prefix
-	-DCMAKE_INSTALL_DIR=$prefix
-	-DSYSCONF_INSTALL_DIR=$sysconfdir
-	-DLIB_INSTALL_DIR=$libdir
-	-DDATAROOTDIR=$datarootdir
-	-DBINDIR=$bindir
-	-DMANDIR=$mandir
+	${prefix:+-DPREFIX=$prefix}
+	${prefix:+-DCMAKE_INSTALL_DIR=$prefix}
+	${sysconfdir:+-DSYSCONF_INSTALL_DIR=$sysconfdir}
+	${libdir:+-DLIB_INSTALL_DIR=$libdir}
+	${datarootdir:+-DDATAROOTDIR=$datarootdir}
+	${bindir:+-DBINDIR=$bindir}
+	${mandir:+-DMANDIR=$mandir}
 	${cmake_opts[@]}
 )
 
