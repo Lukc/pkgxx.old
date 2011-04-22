@@ -12,9 +12,9 @@ istrue() {
 	 * it is a correct boolean.
 	 * Usage: istrue var
 	 */
-	if has "$1" true TRUE y yes; then
+	if has "$1" true TRUE y yes 1; then
 		return 0
-	elif has "$1" false FALSE n no; then
+	elif has "$1" false FALSE n no 0; then
 		return 1
 	else
 		return 2
