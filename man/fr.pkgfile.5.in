@@ -119,6 +119,13 @@ pour garder la configuration de l’utilisateur lors des mises à jour.
 \fBconflicts=('CHAINE' 'CHAINE')\fP
 .TP
 \fBprovides=('CHAINE' 'CHAINE')\fP
+Indique quels paquets le paquet courant remplace.
+.TP
+\fBiuse=('CHAINE' 'CHAINE')\fP
+Liste les drapeaux use utilisés dans la recette.
+
+Ce tableau est principalement utilisé quand \fBpkg++\fP est lancé en mode
+interactif.
 .SH FONCTIONS
 .TP
 \fBbuild\fP()
@@ -165,18 +172,30 @@ Pour utiliser pkgmake avec une implémentation définie de \fBmake\fP, par
 exemple \fBbmake\fP, il suffit de faire \fImake=bmake pkgmake\fP.
 .TP
 \fBtac\fP
+Un cat dont l’ordre des lignes de la sortie est inversée.
 .TP
-\fBistrue\fP
+\fBistrue\fP \fIchaine\fP
+Retourne 0 si \fIchaine\fP correspond à yes, y, true ou 1, et 1 si
+\fIchaine\fP correspond à no, n, 0 ou false. Si \fIchaine\fP n’est
+aucune de ces valeurs, alors \fBistrue\fP retourne 2.
 .TP
-\fBsedi\fP
+\fBsedi\fP \fIscript_sed\fP \fIfichiers\fP
+Pour chaque fichier, exécute \fBsed\fP \fBscript_sed\fP et enregistre
+les modifications dans le fichier concerné.
 .TP
 \fBreplace\fP
 .TP
-\fBinclude\fP
+\fBinclude\fP \fIfichiers\fP
+Utilise le contenu des fichiers d’inclusion dont les noms sont présents
+dans \fIfichiers\fP dans la recette courante.
 .TP
-\fBwcat\fP
+\fBwcat\fP \fIurl\fP
+Télécharge le fichier disponible sur \fIurl\fP et l’envoie sur la sortie
+standard.
 .TP
 \fBuse\fP
+Permet de vérifier la présence d’un drapeau d’utilisation dans la
+configuration de l’utilisateur, dans la variable $\fBUSE\fP. 
 .TP
 \fBuse_enable\fP, \fBuse_with\fP
 .TP
