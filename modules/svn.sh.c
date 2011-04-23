@@ -2,7 +2,7 @@
 SVN_OPTS=(--non-interactive --trust-server-cert)
 
 svn:clone() {
-	svn co ${SVN_OPTS[*]} `echo "$1" | sed -e 's|svn+||;s|svn:svn|svn|'` $name
+	svn co ${SVN_OPTS[*]} `echo "$1" | sed -e 's|^svn+||'` $name
 }
 
 svn:pull() {
