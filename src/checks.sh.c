@@ -80,7 +80,6 @@ check_pkgfile() {
 		fi
 	fi
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
-		/* FIXME: type works differently on zsh */
 		if [[ "`type check`" != "function" ]]; then
 			warning "Function 'check' not specified in $PKGMK_PKGFILE."
 			PKGMK_CHECK="no"
