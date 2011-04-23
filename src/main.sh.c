@@ -166,14 +166,6 @@ main() {
 		groups=($(basename `dirname $PWD/${PKGMK_PKGFILE%$PKGMK_PKGFILE_NAME}`))
 	fi
 	
-	/* 
-	 * FIXME: Deprecation. Remove at 0.9.4.
-	 */
-	if [[ -z $PKGMK_DOWNLOAD_TOOL && -n $DOWNLOAD_TOOL ]]; then
-		error "\${DOWNLOAD_TOOL} is deprecated and will be removed in 0.9.4. Please, set \${PKGMK_DOWNLOAD_TOOL} instead."
-		PKGMK_DOWNLOAD_TOOL=$DOWNLOAD_TOOL
-	fi
-	
 	/*
 	 * Bah, just in case the configuration is not usable.
 	 */
