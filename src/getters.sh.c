@@ -81,16 +81,16 @@ get_metafile() {
 	fi
 }
 
-get_use_desc() {
+get_use_description() {
 	local use="$1"
 	local FILE
 	(
 		if [[ -e _SHAREDIR/pkg++/uses ]]; then
-			grep "$use" _SHAREDIR/pkg++/uses
+			egrep "^${use}\|" _SHAREDIR/pkg++/uses
 		fi
 		if [[ -n `ls _SYSCONFDIR/pkg++/uses/` ]]; then
 			for FILE in _SYSCONFDIR/pkg++/uses/\*; do
-				grep "$use" $FILE
+				egrep "^${use}\|" $FILE
 			done
 		fi
 	) | tail -n 1 \

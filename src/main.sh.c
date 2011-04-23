@@ -15,6 +15,7 @@
 #include "strip.sh.c"
 #include "manpages.sh.c"
 #include "work.sh.c"
+#include "interactions.sh.c"
 
 #include "build.sh.c"
 #include "install.sh.c"
@@ -277,11 +278,7 @@ main() {
 	if [[ "`build_needed`" = "no" ]] && [[ "$PKGMK_FORCE" = "no" ]] && [[ "$PKGMK_CHECK_MD5SUM" = "no" ]] && [[ "$version" != "devel" ]]; then
 		info "Package '$TARGET' is up to date."
 	else
-		if [[ "$PKGMK_INTERACTIVE" = "yes" ]]; then
-			for FLAG in ${iuse[@]}; do
-				ask_use "$FLAG"
-			done
-		fi
+		interact_uses "${iuse[*]}"
 		download_source
 		build_package
 	fi
