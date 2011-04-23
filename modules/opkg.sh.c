@@ -6,6 +6,14 @@
 pkg_manager_add(opkg)
 pkg_manager_noarch(opkg)
 
+opkg:check () {
+	if ! istrue $FORCE_OPKG; then
+		error "The 'opkg' module is broken! The produced packages are considered corrupted."
+		error "If you really want to use it, export FORCE_OPKG=true."
+		exit 1
+	fi
+}
+
 opkg:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.opk"
