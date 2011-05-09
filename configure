@@ -408,7 +408,7 @@ RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
 }
 ZCOMPILE () {
-	echo "@echo -e \"  \033[35m[ZCOMP]\033[00m      \033[37m$1\033[00m\";echo 'zcompile \"$1\"' | zsh"
+	echo "@-echo -e \"  \033[35m[ZCOMP]\033[00m      \033[37m$1\033[00m\";echo 'zcompile \"\$(DESTDIR)$1\"' | zsh"
 }
 cat > Makefile << EOF
 # Beginning of Makefile
