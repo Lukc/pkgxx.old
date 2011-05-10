@@ -1,123 +1,159 @@
 # Begin of Makefile
 
+# TODO:
+#  * man pages production and installation
+#  * Configuration production and installation. (./config.sh)
+
+# Global configuration.
+
+PACKAGE_MANAGER ?= pkgutils # Produces plain tar archives. Just put your
+                            # package manager name, lowercase, without 
+							# hyphens, underscores, and so on.
+MARCH           ?= i686     # Most common. Just update it when needed.
+
 # Installation directories
 
 DESTDIR :=
 PREFIX := /usr
-EPREFIX := $(PREFIX)
-BINDIR := $(EPREFIX)/bin
-SHAREDIR := $(PREFIX)/share
-LIBEXECDIR := $(EPREFIX)/libexec
+EPREFIX := ${PREFIX}
+BINDIR := ${EPREFIX}/bin
+SHAREDIR := ${PREFIX}/share
+LIBEXECDIR := ${EPREFIX}/libexec
 SYSCONFDIR := /etc
-MANDIR := $(SHAREDIR)/man
-
-# Portability informations…
-
-GMAKE :=  make
-GSED :=   sed
-GTAR :=   tar
-BSDTAR := bsdtar
+MANDIR := ${SHAREDIR}/man
 
 # Generic informations
 
 TRUNK = yes
-PKGXX_VERSION = 0.9.1-devel-$(shell git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g')
+.if exists(.git/)
+PKGXX_VERSION = 0.12-${REVISION:!git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g'!}
+.else
+PKGXX_VERSION = 0.12
+.endif
 CROSS := 
+
+# Well, files to produce, install, and so on.
+# If you don’t want to install something, or want to install only
+#+ some things, you should change it here.
+
+DEFAULTS = cross distributions prefixes
+MODULES != ls modules/ | egrep '\.sh\.c$$' | sed -e 's/\.sh\.c$$//'
 
 # C
 
-CC := $(CROSS)gcc
-CPP := $(CROSS)cpp
+CC := ${CROSS}gcc
+CPP := ${CROSS}cpp
 CFLAGS := -O2 -pipe
-CPPFLAGS := -x c -E -P -D_VERSION=$(PKGXX_VERSION) \
-	    -D_SHAREDIR="$(SHAREDIR)" -D_SYSCONFDIR="$(SYSCONFDIR)" \
-	    -D_LIBEXECDIR="$(LIBEXECDIR)" \
-	    -DGMAKE="$(GMAKE)" -D__BSDTAR="$(BSDTAR)"
-
-#-Dgtar="$(GTAR)" to use GNU tar instead of bsdtar.
-# This should be removed before 0.10.
+CPPFLAGS := -x c -E -P -D_VERSION=${PKGXX_VERSION} \
+	    -D_SHAREDIR="${SHAREDIR}" -D_SYSCONFDIR="${SYSCONFDIR}" \
+	    -D_LIBEXECDIR="${LIBEXECDIR}"
 
 # Rules - Generic
 
 all: build
 
-build: pkgxx defaults tools
+build: pkgxx defaults tools modules
 
-defaults: defaults/cross defaults/distributions defaults/prefixes
+defaults: ${DEFAULTS:C/^/defaults\//}
+
+modules:  ${MODULES:C/^/modules\//}
 
 tools: tools/has
 
 install: update install-config
 
-update:  build install-pkgxx install-defaults install-tools
+update:  build install-pkgxx install-defaults install-tools install-modules
 
-clean: clean-pkgxx clean-defaults clean-tools
+clean: clean-pkgxx clean-defaults clean-tools clean-modules
+
+# Directories (to generate at installation)
+
+${DESTDIR}${BINDIR}:
+	mkdir -p "${DESTDIR}${BINDIR}"
+
+${DESTDIR}${SYSCONFDIR}:
+	mkdir -p "${DESTDIR}${SYSCONFDIR}"
+
+${DESTDIR}${SYSCONFDIR}/pkg++/defaults:
+	mkdir -p "${DESTDIR}${SYSCONFDIR}/pkg++/defaults/"
+
+${DESTDIR}${SHAREDIR}/pkg++/modules:
+	mkdir -p "${DESTDIR}${SHAREDIR}/pkg++/modules/"
+
+${DESTDIR}${LIBEXECDIR}/pkg++/has:
+	mkdir -p "${DESTDIR}${LIBEXECDIR}/pkg++/has"
 
 # Rules - Compilations
 
 tools/has: tools/has.c
-	$(CC) $(CFLAGS) tools/has.c -o tools/has
+	${CC} ${CFLAGS} tools/has.c -o tools/has
 
 # Rules - Preprocessing
 
 pkgxx:
-	echo "#/usr/bin/env bash" > pkg++
-	$(CPP) $(CPPFLAGS) src/main.sh.c >> pkg++
+	echo "#/usr/bin/env zsh" > pkg++
+	${CPP} ${CPPFLAGS} src/main.sh.c >> pkg++
 
-defaults/cross: defaults/cross.in
-	$(CPP) $(CPPFLAGS) defaults/cross.in > defaults/cross
+.for i in ${DEFAULTS}
+defaults/$i: defaults/$i.in
+	${CPP} ${CPPFLAGS} defaults/$i.in > defaults/$i
+.endfor
 
-defaults/distributions: defaults/distributions.in
-	$(CPP) $(CPPFLAGS) defaults/distributions.in > defaults/distributions
+.for i in ${MODULES}
+modules/$i: modules/$i.sh.c
+	${CPP} ${CPPFLAGS} modules/$i.sh.c > modules/$i
+.endfor
 
-defaults/prefixes: defaults/prefixes.in
-	$(CPP) $(CPPFLAGS) defaults/prefixes.in > defaults/prefixes
+config: pkg++.conf
+
+pkg++.conf: pkg++.conf.in
+	sed -e 's/@MARCH@/${MARCH}/g;s/@PACKAGE_MANAGER@/${PACKAGE_MANAGER}/g' pkg++.conf.in > pkg++.conf
 
 # Rules - Installation
 
-install-pkgxx:
-	if ! [[ -d $(DESTDIR)$(BINDIR) ]]; then \
-		mkdir -p $(DESTDIR)$(BINDIR) ; \
-	fi
-	install -m0755 pkg++ $(DESTDIR)$(BINDIR)/pkg++
+install-config: config ${DESTDIR}${SYSCONFDIR}
+	install -m0644 pkg++.conf ${DESTDIR}${SYSCONFDIR}/pkg++.conf
 
-install-defaults:
-	if ! [[ -d $(DESTDIR)$(SYSCONFDIR)/pkg++/defaults ]]; then \
-		mkdir -p $(DESTDIR)$(SYSCONFDIR)/pkg++/defaults ; \
-	fi
-	for i in cross distributions prefixes; do \
-		install -m0644 defaults/$$i $(DESTDIR)$(SHAREDIR)/pkg++/defaults/$$i || exit 1; \
-	done
+install-pkgxx: ${DESTDIR}${BINDIR}
+	install -m0755 pkg++ ${DESTDIR}${BINDIR}/pkg++
 
-install-includes:
-	if ! [[ -d $(DESTDIR)$(SHAREDIR)/pkg++/includes ]]; then \
-		mkdir -p $(DESTDIR)$(SHAREDIR)/pkg++/includes ; \
-	fi
-	for i in `ls includes/`; do \
-		install -m0644 includes/$$i $(DESTDIR)$(SHAREDIR)/pkg++/includes/$$i || exit 1 ; \
-	done
+install-defaults: ${DEFAULTS:C/^/defaults\//}
 
-install-tools:
-	if ! [[ -d $(DESTDIR)$(LIBEXECDIR)/pkg++ ]]; then \
-		mkdir -p $(DESTDIR)$(LIBEXECDIR)/pkg++ ; \
-	fi
-	for i in has opkgmk.sh; do \
-		install -m0644 tools/$$i $(DESTDIR)$(LIBEXECDIR)/pkg++/$$i || exit 1 ; \
-	done
+.for i in ${DEFAULTS}
+install-defaults/$i: defaults/$i
+	install -m0644 defaults/$i ${DESTDIR}${SYSCONFDIR}/pkg++/defaults/$i
+.endfor
 
-install-config:
-	@echo "WARNING: This Makefile still do not generate config…" >&2
-	#install -m744 pkg++.conf $(DESTDIR)$(SYSCONFDIR)/pkg++.conf
+install-modules: ${MODULES:C/^/install-modules\//}
 
-# Rules - Cleaning
+.for i in ${MODULES}
+install-modules/$i: modules/$i ${DESTDIR}${SHAREDIR}/pkg++/modules
+	install -m0644 modules/$i ${DESTDIR}${SHAREDIR}/pkg++/modules/$i
+.endfor
+
+install-tools: install-tools/has
+
+install-tools/has: tools/has ${DESTDIR}${LIBEXECDIR}/pkg++/has
+	install -m0755 tools/has ${DESTDIR}${LIBEXECDIR}/pkg++/has
+
+# Cleaners
 
 clean-pkgxx:
 	rm -f pkg++
 
-clean-defaults:
-	rm -f defaults/cross
-	rm -f defaults/distributions
-	rm -f defaults/prefixes
+clean-defaults: ${DEFAULTS:C/^/clean-defaults\//}
+
+.for i in ${DEFAULTS}
+clean-defaults/$i:
+	rm -f defaults/$i
+.endfor
+
+clean-modules: ${MODULES:C/^/clean-modules\//}
+
+.for i in ${MODULES}
+clean-modules/$i:
+	rm -f modules/$i
+.endfor
 
 clean-tools:
 	rm -f tools/has
