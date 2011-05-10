@@ -1,0 +1,18 @@
+
+0.10.1:
+	* Correction of a bug that caused architectures to be not written
+	  in some packages.
+	* Some splits problems with empty split_* variables are solved and
+	  splits are more or less working again.
+	* Minor documentation updates.
+
+	-- Lukc <lukc@upyum.com>
+
+0.10:
+	* bash is replaced by zsh.
+
+	-- Lukc <lukc@upyum.com>
+
+0.1-0.10:
+	No Changelog was maintained until 0.10.
+

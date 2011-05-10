@@ -140,6 +140,8 @@ build_package() {
 			PKG_ROOT="$SPLITS/${PKG_NAMES[$i]}"
 		fi
 		split_exec \
+			ARCH="$(target_arch)" \
+			KERNEL="$(target_kernel)" \
 			${PKGMK_PACKAGE_MANAGER}:build
 	done
 	

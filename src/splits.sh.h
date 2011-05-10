@@ -30,9 +30,9 @@
  * Usage: split_exec command opts
  */
 #define split_exec \
-	name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-$version}" \
-	license="${PKG_LICENSES[$i]:-$license}" \
-	description="${PKG_DESC[$i]}" archs=(${PKG_ARCHS[$i]}) \
+	name="${PKG_NAMES[$i]}" version="${PKG_VERSIONS[$i]:-${PKG_VERSIONS[1]}}" \
+	license="${PKG_LICENSES[$i]:-${PKG_LICENSES[1]}}" \
+	description="${PKG_DESC[$i]:-${PKG_DESC[1]}}" archs=(${PKG_ARCHS[$i]}) \
 	depends=(${PKG_DEPENDS[$i]}) PKG="$PKG_ROOT" \
 	TARGET="$(get_target)" \
 	PRE_INSTALL=split_get_scriptname(PKGMK_PRE_INSTALL) \

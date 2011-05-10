@@ -113,16 +113,23 @@ Certains gestionnaires de paquets peuvent utiliser cette information
 pour garder la configuration de l’utilisateur lors des mises à jour.
 .TP
 \fBlicenses=('CHAINE' 'CHAINE')\fP
+Liste la ou les licences sous la ou lesquelles le paquet est distribué.
 .TP
 \fBgroups=('CHAINE' 'CHAINE')\fP
+Liste le ou les groupes au(x)quel(s) le paquet appartient.
+
+Chaque distribution ayant une politique d’empaquetage différent, 
+les groupes sont sans doute l’option qui changent le plus souvent.
 .TP
 \fBconflicts=('CHAINE' 'CHAINE')\fP
+Si ce paquet entre en conflit avec d’autres paquets, il faut indiquer 
+leurs noms dans ce tableau.
 .TP
 \fBprovides=('CHAINE' 'CHAINE')\fP
-Indique quels paquets le paquet courant remplace.
+Indique quels paquets le paquet courant remplace ou fournit.
 .TP
 \fBiuse=('CHAINE' 'CHAINE')\fP
-Liste les drapeaux use utilisés dans la recette.
+Liste les drapeaux d’utilisation vérifiés dans la recette.
 
 Ce tableau est principalement utilisé quand \fBpkg++\fP est lancé en mode
 interactif.
@@ -153,7 +160,7 @@ ${\fBincludes\fP}, quand celle ci force la déclaration de \fBbuild\fP().
 Définit les opérations à effectuer après \fBbuild\fP(), dans les mêmes
 conditions. Cette fonction est souvent utilisée avec la variable
 ${\fBincludes\fP}, quand celle ci force la déclaration de \fBbuild\fP().
-.SH BIBLIOTHÈQUES
+.SH OUTILS
 Un grand nombre de variables prédéfinies et de fonctions diverses sont 
 mises à disposition pour simplifier l’écriture des recettes ou permettre
 de résoudre des problèmes de portabilité. En voilà la liste.
@@ -183,7 +190,9 @@ aucune de ces valeurs, alors \fBistrue\fP retourne 2.
 Pour chaque fichier, exécute \fBsed\fP \fBscript_sed\fP et enregistre
 les modifications dans le fichier concerné.
 .TP
-\fBreplace\fP
+\fBreplace\fP \fIpattern\fP \fIchaine\fP  \fIfichier\fP
+Remplace toutes les occurences de \fIpattern\fP par \fIchaine\fP dans 
+\fIfichier\fP.
 .TP
 \fBinclude\fP \fIfichiers\fP
 Utilise le contenu des fichiers d’inclusion dont les noms sont présents
