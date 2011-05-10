@@ -105,6 +105,7 @@ modules/$i: modules/$i.sh.c
 .endfor
 
 config: pkg++.conf
+	@: # Well… cp config.sh config is not really wanted.
 
 pkg++.conf: pkg++.conf.in
 	sed -e 's/@MARCH@/${MARCH}/g;s/@PACKAGE_MANAGER@/${PACKAGE_MANAGER}/g' pkg++.conf.in > pkg++.conf
