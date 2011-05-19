@@ -1,4 +1,14 @@
 
+0.10.2:
+	* Corrections of the manual pages which still contained references to
+	  pkgmk.
+	* The zcompile instruction was broken and has been corrected in the
+	  ./configure generated Makefile.
+	* The default configuration has been ported from bash to zsh, which has
+	  not been done before…
+
+	-- Lukc <lukc@upyum.com>
+
 0.10.1:
 	* Correction of a bug that caused architectures to be not written
 	  in some packages.
