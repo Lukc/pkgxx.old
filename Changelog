@@ -1,4 +1,11 @@
 
+0.11:
+	* A beginning of implementation of scripts in Pkgfile’s functions has
+	  been made.
+	* Blank lines are removed in the output file of cpp “pkg++”. It is not
+	  really noticeable concerning size of the file, but there is no more
+	  20 blank lines and things like that…
+
 0.10.2:
 	* Corrections of the manual pages which still contained references to
 	  pkgmk.
