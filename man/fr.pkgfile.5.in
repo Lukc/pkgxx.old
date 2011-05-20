@@ -129,7 +129,7 @@ leurs noms dans ce tableau.
 Indique quels paquets le paquet courant remplace ou fournit.
 .TP
 \fBiuse=('CHAINE' 'CHAINE')\fP
-Liste les drapeaux d’utilisation vérifiés dans la recette.
+Liste les pavillons utilisés (ou non) dans la recette.
 
 Ce tableau est principalement utilisé quand \fBpkg++\fP est lancé en mode
 interactif.
@@ -169,7 +169,7 @@ ${\fBarch\fP}
 Contient le nom de l’architecture cible du paquet. Cette architecture
 est exprimée sous le nom le plus courant la désignant dans les triplettes.
 .TP
-\fBpkgmake\fP()
+\fBpkgmake\fP
 Fonction qui fait un appel à \fBmake\fP, en lui donnant comme paramètres
 le contenu de la variable globale $\fBMAKE_OPTS\fP et les paramètre reçus.
 L’implémentation de make appelée est quelconque, sauf si ${\fBmake\fP} 
@@ -179,7 +179,7 @@ Pour utiliser pkgmake avec une implémentation définie de \fBmake\fP, par
 exemple \fBbmake\fP, il suffit de faire \fImake=bmake pkgmake\fP.
 .TP
 \fBtac\fP
-Un cat dont l’ordre des lignes de la sortie est inversée.
+Un \fBcat\fP qui commence par le bas du fichier.
 .TP
 \fBistrue\fP \fIchaine\fP
 Retourne 0 si \fIchaine\fP correspond à yes, y, true ou 1, et 1 si
@@ -206,11 +206,21 @@ standard.
 Permet de vérifier la présence d’un drapeau d’utilisation dans la
 configuration de l’utilisateur, dans la variable $\fBUSE\fP. 
 .TP
-\fBuse_enable\fP, \fBuse_with\fP
+\fBuse_enable\fP, \fBuse_with\fP \fIpavillon\fP
+\fBuse_enable\fP retourne \fI--enable-pavillon\fP si \fIpavillon\fP est
+défini comme voulu par l’utilisateur et \fI--disable-pavillon\fP dans le 
+cas contraire.
+
+use_with sert à la même chose, mais en retournant \fI--with-pavillon\fP 
+et \fI--without-pavillon\fP.
 .TP
-\fBmake_desktop_entry\fP
-.TP
-\fB\fP
+\fBmake_desktop_entry\fP \fIexécutable\fP \fIcatégorie\fP \fInom\fP \fIicone\fP \fIfichier\fP
+Cette fonction sert à créer un fichier \fI.desktop\fP. Ce fichier sera
+place toujours \fI${menudir}/fichier.desktop\fP. Si fichier n’est pas 
+précisé, \fInom\fP sera utilisé à la place.
+
+\fIexécutable\fP et \fIcatégorie\fP sont obligatoires. Les autres
+paramètres ne sont pas indispensables.
 .SH VOIR AUSSI
 pkg++.conf(5), pkg++(8)
 .SH DROIT D’AUTEUR
