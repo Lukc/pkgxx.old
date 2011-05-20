@@ -230,20 +230,20 @@ make_desktop_entry() {
 	fi
 	
 	local desktop_exec=${1}
-	local desktop_type=${2}
+	local desktop_categories=${2}
 	local desktop_name=${3:-${name}}
 	local desktop_icon=${4:-${name}}
 	local desktop_file=$PKG${menudir}/${5:-${desktop_name}}.desktop
 	
 	(
-	echo "[Desktop Entry]"
-	echo "Name=${desktop_name}"
-	echo "Type=Application"
-	echo "Comment=${description}"
-	echo "Exec=${desktop_exec}"
-	echo "TryExec=${desktop_exec%% *}"
-	echo "Icon=${desktop_icon}"
-	echo "Categories=${desktop_type}"
+		echo "[Desktop Entry]"
+		echo "Name=${desktop_name}"
+		echo "Type=Application"
+		echo "Comment=${description}"
+		echo "Exec=${desktop_exec}"
+		echo "TryExec=${desktop_exec%% *}"
+		echo "Icon=${desktop_icon}"
+		echo "Categories=${desktop_categories}"
 	) > "${desktop_file}"
 }
 
