@@ -432,9 +432,9 @@ help:
 	@echo "The available rules for this Makefile are:"
 	`RULE "config   " "Install the configuration files of pkg++."`
 	`RULE "man      " "Install the manual pages of pkg++."`
-	`RULE "pkgxx    " "Install pkgxx, it's include files and the defaults file."`
+	`RULE "pkgxx    " "Install pkgxx, it's include files and the defaults files."`
 	`RULE "update   " "Make the man and pkgxx rules."`
-	`RULE "install  " "Nake the man, pkgxx and config rules."`
+	`RULE "install  " "Make the man, pkgxx and config rules."`
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
