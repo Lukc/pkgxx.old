@@ -474,9 +474,11 @@ man-install:
 	`DIR \$\(MANDIR\)`
 	`DIR \$\(MANDIR\)/man8`
 	`DIR \$\(MANDIR\)/man5`
+	`DIR \$\(MANDIR\)/fr.UTF-8/man5`
 	`INSTALL_F 0644 man/pkg++.8 pkg++.8 \$\(MANDIR\)/man8`
 	`INSTALL_F 0644 man/pkg++.conf.5 pkg++.conf.5 \$\(MANDIR\)/man5`
 	`INSTALL_F 0644 man/pkgfile.5 pkgfile.5 \$\(MANDIR\)/man5`
+	`INSTALL_F 0644 man/fr.pkgfile.5 pkgfile.5 \$\(MANDIR\)/fr.UTF-8/man5`
 
 pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 	`DIR \$\(BINDIR\)`
@@ -523,6 +525,7 @@ clean:
 	`REMOVE man/pkg++.8`
 	`REMOVE man/pkg++.conf.5`
 	`REMOVE man/pkgfile.5`
+	`REMOVE man/fr.pkgfile.5`
 	`REMOVE Makefile`
 	`REMOVE defaults/distributions`
 	`REMOVE defaults/prefixes`
@@ -547,6 +550,7 @@ cp "pkg++.conf.in" "pkg++.conf"
 cp man/{"pkg++.8.in","pkg++.8"}
 cp man/{"pkg++.conf.5.in","pkg++.conf.5"}
 cp man/{"pkgfile.5.in","pkgfile.5"}
+cp man/{"fr.pkgfile.5.in","fr.pkgfile.5"}
 configure "man/pkg++.8"
 configure "man/pkg++.conf.5"
 configure "man/pkgfile.5"
