@@ -460,7 +460,7 @@ pkgxx: defaults/prefixes defaults/distributions defaults/cross
 	mv src/main pkg++.tmp
 #	cpp $CPPFLAGS -x c "src/main.sh.c" > "pkg++.tmp"
 	echo "#!/usr/bin/env zsh" > pkg++
-	cat pkg++.tmp | sed '/^$/d' >> pkg++
+	cat pkg++.tmp | sed '/^\$\$/d' >> pkg++
 
 has:
 	(cd tools; \
