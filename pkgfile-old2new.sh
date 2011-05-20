@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 #############################################################################
 #  Copyright © 2010 Luka Vandervelden                                       #
@@ -40,7 +40,6 @@ if [[ -n "$1" ]]; then
 	[[ -r $1 ]] || \
 	die "The Pkgfile '$1' doesn't exist or is not readable."
 	. $1
-	useless_type_return="`type -a build | head -n 1`"
 	description="`cat $1 | grep "\# Description:" | sed -e "s|\# Description:||"`"
 	description="`echo $description`"
 	packager="`cat $1 | grep "\# Packager:" | sed -e "s|\# Packager:||"`"
@@ -65,7 +64,7 @@ if [[ -n "$1" ]]; then
 	echo "version=$version"
 	echo "release=$release"
 	echo "source=(${source[@]})"
-	build_content="`type -a build | grep -v "$useless_type_return"`"
+	build_content="`whence -f build`"
 	if [[ "$build_content" = "build () 
 { 
     cd \$name-\$version;
@@ -89,7 +88,7 @@ if [[ -n "$1" ]]; then
 }" ]]; then
 		echo -e "\nincludes=(python)"
 	else
-		type -a build | grep -v "$useless_type_return"
+		whence -f build
 	fi
 fi
 
