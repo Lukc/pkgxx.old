@@ -1,17 +1,45 @@
 #
-## Include for Freedesktop.org softwares
-#
-# Need $name and $version
-# $freedesktop_extension can change the extension of the tarball. It's default value is .tar.gz.
-# $freedesktop_name is the name of the software on freedesktop. It’s default value is $name.
-# $freedesktop_version is the version of the software on freedesktop. It’s default value is $version.
-#
-# Include file made by Pingax (pingax.fr)
+## Include giving tools to allow easily following
+## Freedesktop.org specifications.
 #
 
-: ${freedesktop_name:=$name}
-: ${freedesktop_version:=$version}
-: ${freedesktop_extension:=".tar.gz"}
-
-source=(${source[@]} http://$freedesktop_name.freedesktop.org/releases/$freedesktop_name-$freedesktop_version$freedesktop_extension) 
-
+make_desktop_entry() {
+	# Function which helps to create .desktop files, usually in 
+	# $prefix/applications/. See $menudir.
+	# 
+	# It needs at least one parameter to work, which is the executable name
+	# to be summoned. A second parameter is recommended, to have a complete 
+	# desktop entry, which is the list of the categories the executable is 
+	# in. (this list must be FreeDesktop compliant…)
+	
+	: ${desktop_exec:=$1} \
+	  ${desktop_caterogies:=$2} \
+	  ${desktop_name:=$3} \
+	  ${desktop_icon:=$4} \
+	  ${desktop_filename:=$5} \
+	  ${desktop_filename:=$desktop_name} \
+	  ${desktop_file:=${menudir}/$desktop_filename.desktop}
+	
+	[[ -z "${desktop_name}" ]] && desktop_name="${name}"
+	[[ -z "${desktop_icon}" ]] && desktop_name="${name}"
+	
+	if [[ -z "$desktop_exec" ]]; then
+		error "make_desktop_entry() needs a correct executable name."
+		error " | Without a correct exec name, the desktop entry can not be created."
+		return 1
+	fi
+	if [[ -z "$desktop_categories" ]]; then
+		warning "No correct category given for the desktop entry creation."
+	fi
+	
+	(
+		echo "[Desktop Entry]"
+		echo "Name=${desktop_name}"
+		echo "Type=Application"
+		echo "Comment=${description}"
+		echo "Exec=${desktop_exec}"
+		echo "TryExec=${desktop_exec%%#}"
+		echo "Icon=${desktop_icon}"
+		echo "Categories=${desktop_categories}"
+	) > "${desktop_file}"
+}

@@ -210,43 +210,6 @@ pkgsplit() {
 	done
 }
 
-make_desktop_entry() {
-	/* 
-	 * Function which helps to create .desktop files, usually in 
-	 * $prefix/applications/. See $menudir.
-	 * 
-	 * It needs at least one parameter to work, which is the executable name
-	 * to be summoned. A second parameter is recommended, to have a complete 
-	 * desktop entry, which is the list of the categories the executable is 
-	 * in. (this list must be FreeDesktop compliant…)
-	 */
-	if [[ -z "$1" ]]; then
-		error "make_desktop_entry() needs a correct executable name."
-		error " | Without a correct exec name, the desktop entry can not be created."
-		return 1
-	fi
-	if [[ -z "$2" ]]; then
-		warning "No correct type given for the desktop entry creation."
-	fi
-	
-	local desktop_exec=${1}
-	local desktop_categories=${2}
-	local desktop_name=${3:-${name}}
-	local desktop_icon=${4:-${name}}
-	local desktop_file=$PKG${menudir}/${5:-${desktop_name}}.desktop
-	
-	(
-		echo "[Desktop Entry]"
-		echo "Name=${desktop_name}"
-		echo "Type=Application"
-		echo "Comment=${description}"
-		echo "Exec=${desktop_exec}"
-		echo "TryExec=${desktop_exec%% *}"
-		echo "Icon=${desktop_icon}"
-		echo "Categories=${desktop_categories}"
-	) > "${desktop_file}"
-}
-
 target_arch () {
 	/* 
 	 * This function returns the architecture depending on the triplet.
