@@ -16,7 +16,7 @@
  * Internal, here only for split_exec.
  */
 #define split_get_scriptname(SCRIPT) \
-	"$(whence -f `echo SCRIPT | sed "s/^PKGMK_/ /" | tr '[A-Z]' '[a-z]'`; \
+	"$(whence -f `echo "SCRIPT" | sed "s/^PKGMK_/ /" | tr '[A-Z]' '[a-z]'`; \
 	if [[ "$?" = 0 ]]; then \
 		return 0;\
 	fi; \
