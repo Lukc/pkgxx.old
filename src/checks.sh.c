@@ -67,18 +67,6 @@ check_pkgfile() {
 		error "This package is not made to work on your kernel."
 		exit E_BAD_KERNEL
 	fi
-	/*
-	 * These vars are vital for RPM to build a package.
-	 */
-	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
-		if [[ -z "$description" ]]; then
-			error "Variable 'description' not specified in $PKGMK_PKGFILE."
-			exit E_PKGFILE
-		elif [[ -z "$packager" ]]; then
-			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
-			exit E_PKGFILE
-		fi
-	fi
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
 		if [[ "`type check`" != "function" ]]; then
 			warning "Function 'check' not specified in $PKGMK_PKGFILE."

@@ -116,6 +116,24 @@ rpm:install() {
 }
 
 rpm:checks() {
+	/*
+	 * These vars are vital for RPM to build a package, so we first 
+	 * check everything in the recipe is ok.
+	 */
+	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
+		if [[ -z "$description" ]]; then
+			error "Variable 'description' not specified in $PKGMK_PKGFILE."
+			exit E_PKGFILE
+		elif [[ -z "$packager" ]]; then
+			error "Variable 'packager' not specified in $PKGMK_PKGFILE."
+			exit E_PKGFILE
+		fi
+	fi
+	/* 
+	 * And then we check that the particular RPM directories, files, 
+	 * and so on, are present where they should, plus the recuperation
+	 * of the distepoch var.
+	 */
 	if [[ $(rpm --version | awk '{print $3}') > 5.1.6 ]] ; then
 		export rpm_distepoch="$(rpm --eval '%disttag%distepoch')"
 	fi
