@@ -5,7 +5,7 @@ pkg_manager_noarch(dpkg)
 dpkg:_control() {
 	echo "Package: $name"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		echo "Version: 999.`date +%Y%m%d`-$release"
+		echo "Version: 999.${PKGMK_REVISION:-`date +%Y%m%d`-$release}"
 	else
 		echo "Version: $version"
 	fi
@@ -68,7 +68,7 @@ dpkg:arch() {
 
 dpkg:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/${name}_devel-`date +%Y%m%d`-${release}_$PKGMK_ARCH.deb"
+		echo "$PKGMK_PACKAGE_DIR/${name}_devel-${PKGMK_REVISION:-`date +%Y%m%d`}-${release}_$PKGMK_ARCH.deb"
 	else
 		echo "$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$PKGMK_ARCH.deb"
 	fi
