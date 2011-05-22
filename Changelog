@@ -1,4 +1,11 @@
 
+0.11.1:
+	* New variable available for packagers, PKGMK_PORT.
+	  This variable gives the repertory where the port is. So inclusions 
+	  of port-specific files is now possible. (for exemple, a script under
+	  a different license or common code to recipes with only different 
+	  versions)
+
 0.11:
 	* A beginning of implementation of scripts in Pkgfile’s functions has
 	  been made.

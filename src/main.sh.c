@@ -106,7 +106,7 @@ main() {
 	fi
 	
 	/*
-	 * Some often used file names.
+	 * Some often used files or directories names.
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
@@ -119,6 +119,8 @@ main() {
 	PKGMK_PRE_INSTALL="`get_metafile "$PKGMK_PRE_INSTALL"`"
 	PKGMK_POST_REMOVE="`get_metafile "$PKGMK_POST_REMOVE"`"
 	PKGMK_PRE_REMOVE="`get_metafile "$PKGMK_PRE_REMOVE"`"
+	
+	PKGMK_PORT="$PKGMK_ROOT/$(dirname "$PKGMK_PKGFILE")"
 	
 	for FILE in $(ls "$PKGMK_MODULES_DIR"); do
 		. $PKGMK_MODULES_DIR/$FILE
