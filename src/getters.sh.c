@@ -60,7 +60,6 @@ get_pkgfile() {
 			if [[ "$file" =~ $PKGMK_PKGFILE_NAME-[0-9] ]]; then
 				PKGFILE=$file
 			fi
-			echo "$file"
 		done
 		echo "$PKGFILE"
 	else
