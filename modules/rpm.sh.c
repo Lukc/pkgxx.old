@@ -9,7 +9,7 @@ rpm:_spec() {
 	echo "Summary:   $description"
 	echo "Name:      $name"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		echo "Version:   999.`date +%Y%m%d`"
+		echo "Version:   999.${PKGMK_REVISION:-`date +%Y%m%d`}"
 	else
 		echo "Version:   $version"
 	fi
@@ -65,7 +65,7 @@ rpm:arch() {
 
 rpm:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
+		echo "$PKGMK_PACKAGE_DIR/$name-devel-${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
 	else
 		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
 	fi
@@ -79,7 +79,7 @@ rpm:build() {
 	rpm:_spec > $PKGMK_WORK_DIR/$name.spec
 	rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.`date +%Y%m%d`-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
+		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
 	else
 		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
 	fi
