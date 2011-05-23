@@ -2,6 +2,17 @@
 pkg_manager_add(dpkg)
 pkg_manager_noarch(dpkg)
 
+dpkg:_list() {
+	while [[ -n "$1" ]]; do
+		if [[ -n "${2}" ]]; then
+			echo -n "${1},"
+		else
+			echo    "${1}" /* End of line if end of table */
+		fi
+		shift 1
+	done
+}
+
 dpkg:_control() {
 	echo "Package: $name"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
@@ -28,13 +39,11 @@ dpkg:_control() {
 	echo "Architecture: $(dpkg:arch)"
 	echo -n "Depends: "
 	if ((${#depends} >= 1)); then
-		for n in {1..${#depends}}; do
-			if [[ -n "${depends[$(($n+1))]}" ]]; then
-				echo -n "${depends[$n]},"
-			else
-				echo -n "${depends[$n]}"
-			fi
-		done
+		dpkg:_list ${depends[@]}
+	fi
+	if ((${#conflicts} >= 1)); then
+		echo -n "Conflicts: "
+		dpkg:_list ${conflicts[@]}
 	fi
 	echo
 	echo "Homepage: $url"

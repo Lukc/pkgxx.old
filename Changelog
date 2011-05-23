@@ -10,6 +10,10 @@
 	* $CROSS is now a usable boolean. It also should be now set to true
 	  only when the triplet zsh was built with is different from the one 
 	  in $CHOST. Before, it was set to true when $CHOST was non-zero.
+	* Small improvements in modules/dpkg:
+		* Internal modification leading to a module that should be easier
+		  to maintain.
+		* Conflicts are now managed.
 
 0.11:
 	* A beginning of implementation of scripts in Pkgfile’s functions has
