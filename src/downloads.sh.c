@@ -30,7 +30,7 @@ download_file() {
 				if ! $PROTOCOL:pull "$1" && [[ "$PKGMK_FORCE" != "yes" ]]; then
 					__SRC_UPTODATE
 				fi
-				if [[ -n "$(type ${PROTOCOL}:revision)" ]]; then
+				if [[ "$(type ${PROTOCOL}:revision)" != none ]]; then
 					export PKGMK_REVISION="$(${PROTOCOL}:revision "$PKGMK_SOURCE_DIR/$name")"
 				fi
 			fi
