@@ -8,7 +8,7 @@
 
 PACKAGE_MANAGER ?= pkgutils # Produces plain tar archives. Just put your
                             # package manager name, lowercase, without 
-							# hyphens, underscores, and so on.
+                            # hyphens, underscores, and so on.
 MARCH           ?= i686     # Most common. Just update it when needed.
 
 # Installation directories
