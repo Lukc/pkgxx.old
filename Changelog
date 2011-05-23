@@ -7,6 +7,9 @@
 	  versions)
 	* A begin of revision-in-version-number implementation is made. It 
 	  does not work with every package manager or SCM.
+	* $CROSS is now a usable boolean. It also should be now set to true
+	  only when the triplet zsh was built with is different from the one 
+	  in $CHOST. Before, it was set to true when $CHOST was non-zero.
 
 0.11:
 	* A beginning of implementation of scripts in Pkgfile’s functions has
