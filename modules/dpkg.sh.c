@@ -45,7 +45,6 @@ dpkg:_control() {
 		echo -n "Conflicts: "
 		dpkg:_list ${conflicts[@]}
 	fi
-	echo
 	echo "Homepage: $url"
 	echo
 }
