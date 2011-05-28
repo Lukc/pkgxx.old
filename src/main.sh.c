@@ -110,6 +110,9 @@ main() {
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
+	/* In case the version is in the filenae */
+	version="$(echo $PKGMK_PKGFILE | sed 's/.*-//')"
+	
 	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
 	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
 	PKGMK_MD5SUM="`get_metafile "$PKGMK_MD5SUM"`"
