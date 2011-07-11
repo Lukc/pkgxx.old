@@ -67,7 +67,7 @@ clean() {
 	
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
-		if [[ -e $LOCAL_FILENAME ]] && [[ "$LOCAL_FILENAME" != "$FILE" ]]; then
+		if [[ -e $LOCAL_FILENAME && "$LOCAL_FILENAME" != "$FILE" ]]; then
 			info "Removing $LOCAL_FILENAME"
 			if [[ -d $LOCAL_FILENAME ]]; then
 				rm -r -f $LOCAL_FILENAME
@@ -247,7 +247,7 @@ main() {
 		info "Sha256sum updated."
 	fi
 
-	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]] || [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
+	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" || "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
 		exit 0
 	fi
 	
@@ -280,7 +280,7 @@ main() {
 	 * Basic users (n00bs) don’t need to rebuild a package that is
 	 * available in the package dir.
 	 */
-	if [[ "`build_needed`" = "no" ]] && [[ "$PKGMK_FORCE" = "no" ]] && [[ "$PKGMK_CHECK_MD5SUM" = "no" ]] && [[ "$version" != "devel" ]]; then
+	if [[ "`build_needed`" = "no" && "$PKGMK_FORCE" = "no" && "$PKGMK_CHECK_MD5SUM" = "no" && "$version" != "devel" ]]; then
 		info "Package '$TARGET' is up to date."
 	else
 		interact_uses "${iuse[*]}"
