@@ -285,6 +285,11 @@ main() {
 	else
 		interact_uses "${iuse[*]}"
 		download_source
+		/* 
+		 * Here we try to avoid problems of non-matching versions
+		 * with devel packages
+		 */
+		TARGET="$(get_target)"
 		build_package
 	fi
 	
