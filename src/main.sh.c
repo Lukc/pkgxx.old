@@ -110,8 +110,10 @@ main() {
 	 */
 	PKGMK_PKGFILE="`get_pkgfile`"
 	
-	/* In case the version is in the filenae */
-	version="$(echo $PKGMK_PKGFILE | sed 's/.*-//')"
+	/* In case the version is in the filename */
+	if [[ "$PKGMK_PKGFILE" =~ $PKGMK_PKGFILE_NAME-.* ]]; then
+		version="$(echo $PKGMK_PKGFILE | sed 's/.*-//')"
+	fi
 	
 	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
 	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
