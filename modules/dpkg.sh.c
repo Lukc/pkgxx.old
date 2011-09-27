@@ -7,10 +7,11 @@ dpkg:_list() {
 		if [[ -n "${2}" ]]; then
 			echo -n "${1},"
 		else
-			echo    "${1}" /* End of line if end of table */
+			echo -n "${1}"
 		fi
 		shift 1
 	done
+	echo
 }
 
 dpkg:_control() {
