@@ -1,6 +1,6 @@
 
-pkg_manager_add(rpm)
-pkg_manager_needs_group(rpm)
+PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} rpm)
+PKGMK_PM_NEEDS_GROUP=(${PKGMK_PM_NEEDS_GROUP[@]} rpm)
 
 rpm:_spec() {
 	: ${license:="Unknown"}
@@ -73,10 +73,8 @@ rpm:target() {
 
 rpm:build() {
 	cd $PKG
-	/*
-	 * If there is a problem, it’s RPM’s fault.
-	 */
 	rpm:_spec > $PKGMK_WORK_DIR/$name.spec
+	# If there is a problem, it’s RPM’s fault.
 	rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
 		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
@@ -95,7 +93,7 @@ rpm:footprint() {
 		sed "s|  *|\t|g" | \
 		cut -d "	" -f 1,3,4,9,10,11 | \
 		sed -e "s|/||;s|	|/|;s|	|/|;s|/|	|" | \
-		__FP_SED | \
+		footprint_sed | \
 		sort -k 3)
 	do
 		FILE="`echo "$LINE" | cut -d '	' -f 3`"
@@ -116,10 +114,8 @@ rpm:install() {
 }
 
 rpm:checks() {
-	/*
-	 * These vars are vital for RPM to build a package, so we first 
-	 * check everything in the recipe is ok.
-	 */
+	# These vars are vital for RPM to build a package, so we first 
+	# check everything in the recipe is ok.
 	if [[ "$PKGMK_PACKAGE_MANAGER" = rpm ]]; then
 		if [[ -z "$description" ]]; then
 			error "Variable 'description' not specified in $PKGMK_PKGFILE."
@@ -129,11 +125,10 @@ rpm:checks() {
 			exit E_PKGFILE
 		fi
 	fi
-	/* 
-	 * And then we check that the particular RPM directories, files, 
-	 * and so on, are present where they should, plus the recuperation
-	 * of the distepoch var.
-	 */
+	
+	# And then we check that the particular RPM directories, files, 
+	# and so on, are present where they should, plus the recuperation
+	# of the distepoch var.
 	if [[ $(rpm --version | awk '{print $3}') > 5.1.6 ]] ; then
 		export rpm_distepoch="$(rpm --eval '%disttag%distepoch')"
 	fi
@@ -156,15 +151,11 @@ rpm:unpack() {
 	esac
 }
 
-/* 
- * Note : There is no rpm:pack(), as rpm:build() already exists and should
- *        be used.
- */
+# Note : There is no rpm:pack(), as rpm:build() already exists and should
+#        be used.
 
 rpm:list() {
-	/* 
-	 * FIXME
-	 */
+	# FIXME
 	:
 }
 

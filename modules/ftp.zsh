@@ -5,8 +5,8 @@ curl:download() {
 	fi
 	DOWNLOAD_OPTS=(
 		-f
-		-L                 /* Follow links */
-		--insecure         /* Do not warn about SSL */
+		-L                 # Follow links
+		--insecure         # Do not warn about SSL
 	)
 	curl $RESUME_CMD ${DOWNLOAD_OPTS[@]} $PKGMK_CURL_OPTS "$1" -o "$LOCAL_FILENAME_PARTIAL"
 }
@@ -16,12 +16,10 @@ curl:cat() {
 }
 
 axel:download() {
-	/* 
-	 * axel tries to resume downloads when the output file already 
-	 * exists… so don’t need to manage that. ;)
-	 */
+	# axel tries to resume downloads when the output file already 
+	# exists… so don’t need to manage that. ;)
 	DOWNLOAD_OPTS=(
-			-o "$LOCAL_FILENAME_PARTIAL" /* Output */
+			-o "$LOCAL_FILENAME_PARTIAL" # Output
 			-a
 	)
 	axel $RESUME_CMD $DOWNLOAD_OPTS $PKGMK_AXEL_OPTS $1
@@ -37,17 +35,15 @@ wget:download() {
 	if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
 		RESUME_CMD="-c"
 	fi
-	/* 
-	 * Well, it’s not really a string, and zsh dislikes having strings when it wants arrays of strings.
-	 */
+	# Well, it’s not really a string, and zsh dislikes having strings when it wants arrays of strings.
 	DOWNLOAD_OPTS=(
-		--passive-ftp          /* Some strange things about FTP */
+		--passive-ftp          # Some strange things about FTP
 		--no-directories
-		--tries=3              /* Retry if failure */
-		--waitretry=3          /* Time between two tries */
+		--tries=3              # Retry if failure
+		--waitretry=3          # Time between two tries
 		--directory-prefix="$PKGMK_SOURCE_DIR"
-		--output-document="$LOCAL_FILENAME_PARTIAL" /* Output */
-		--no-check-certificate /* No SSL warn */
+		--output-document="$LOCAL_FILENAME_PARTIAL" # Output
+		--no-check-certificate # No SSL warn
 	)
 	wget $RESUME_CMD ${DOWNLOAD_OPTS[@]} $PKGMK_WGET_OPTS $1
 }
@@ -102,4 +98,3 @@ ftp:download() {
 	
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

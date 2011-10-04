@@ -1,11 +1,9 @@
 
-pkg_manager_add(nhopkg)
-pkg_manager_noarch(nhopkg)
-pkg_manager_needs_group(nhopkg)
+PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} nhopkg)
+PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} nhopkg)
+PKGMK_PM_NEEDS_GROUP=(${PKGMK_PM_NEEDS_GROUP[@]} __PM_NAME)
 
-/*
- * nhopkg specific functions.
- */
+# nhopkg specific functions.
 nhopkg:_nhoid () {
 	echo "#%NHO-0.5"
 	echo "#%PKG++-${PKGMK_VERSION}"
@@ -18,7 +16,7 @@ nhopkg:_nhoid () {
 	echo "# Arch:	$PKGMK_ARCH"
 	echo "# Dep(post):	${depends[@]}"
 	echo "# Installed-Size:	$size"
-	/* Hum…  we don’t keep that data, for now */
+	# Hum…  we don’t keep that data, for now
 	echo "# Build-Duration:	0 min"
 	echo "# Build-Date:	$(date -u "+%F %T %z")"
 	echo "# Build-Host:	$(hostname)"
@@ -26,12 +24,10 @@ nhopkg:_nhoid () {
 	echo "# Description:	$description"
 	echo "# MD5:	$(md5sum data.tar.bz2)"
 
-/* 
- * I hate that damned noemptyfuncs function… which is in more useless.
- * 
- * We will need to adapt that later, to really use these post install and
- * pre install functions.
- */
+# I hate that damned noemptyfuncs function… which is in more useless.
+# 
+# We will need to adapt that later, to really use these post install and
+# pre install functions.
 	cat << EOT
 npostinstall() {
 	:
@@ -63,7 +59,7 @@ nhopkg:build() {
 
 nhopkg:footprint() {
 	tar xf "${TARGET}" data.tar.bz2
-	tar:list "data.tar.bz2" | __FP_SED | sort -k 3
+	tar:list "data.tar.bz2" | footprint_sed | sort -k 3
 	rm data.tar.bz2
 }
 
@@ -71,4 +67,3 @@ nhopkg:install() {
 	echo "nhopkg ${PKGMK_INSTALL_ROOT:+--root=$PKGMK_INSTALL_ROOT} -i $TARGET"
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

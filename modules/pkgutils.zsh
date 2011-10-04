@@ -1,13 +1,11 @@
 
-pkg_manager_add(pkgutils)
-pkg_manager_noarch(pkgutils)
+PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} pkgutils)
+PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} pkgutils)
 
 pkgutils:target () {
 	local ARCH=""
 	
-	/*
-	 * Pkgutils users will be able to choose their compression method.
-	 */
+	# Pkgutils users will be able to choose their compression method.
 	case $PKGMK_COMPRESSION_MODE in
 	gz|bz2|xz|lzo)
 		EXT="$PKGMK_COMPRESSION_MODE"
@@ -41,10 +39,9 @@ pkgutils:build () {
 	cd $PKG
 	tar:pack "${TARGET%.$PKGMK_COMPRESSION_MODE}" *
 	tar:list "${TARGET%.$PKGMK_COMPRESSION_MODE}"
-	/*
-	 * pkgutils users have the choice of the compression method.
-	 * Now this choice will affect their fate.
-	 */
+	
+	# pkgutils users have the choice of the compression method.
+	# Now this choice will affect their fate.
 	case $PKGMK_COMPRESSION_MODE in
 		gz)
 			gzip -f ${TARGET%.$PKGMK_COMPRESSION_MODE}
@@ -62,12 +59,10 @@ pkgutils:build () {
 }
 
 pkgutils:footprint () {
-	/*
-	 * This is exactly the same thing, but pkginfo can do the work faster.
-	 * However, pkginfo is not available everywhere and for any type of 
-	 * package, so pkg++ must be able do to without it on any distribution
-	 * that doesn’t use the pkgutils.
-	 */
+	# This is exactly the same thing, but pkginfo can do the work faster.
+	# However, pkginfo is not available everywhere and for any type of 
+	# package, so pkg++ must be able do to without it on any distribution
+	# that doesn’t use the pkgutils.
 	pkginfo --footprint $TARGET | \
 		sed "s|\tlib/modules/`uname -r`/|\tlib/modules/<kernel-version>/|g" | \
 		sort -k 3
@@ -81,4 +76,3 @@ pkgutils:install () {
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

@@ -6,12 +6,9 @@ svn:clone() {
 }
 
 svn:pull() {
-	/*
-	 * No need to set the LANG, as it is already exported in src/main.sh.c.
-	 */
+	# No need to set the LANG, as it is already exported in src/main.sh.c.
 	if [[ "`svn up $SVN_OPTS`" =~ 'At revision '*'.' ]]; then
 		return 1
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

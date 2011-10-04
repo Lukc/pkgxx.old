@@ -1,5 +1,5 @@
 
-/* Look at tar.sh.c for more informations about the structure of this file. */
+# Look at tar.sh.c for more informations about the structure of this file.
 
 zip:unpack() {
 	info "Unpacking $1."
@@ -14,16 +14,12 @@ zip:unpack() {
 }
 
 zip:pack() {
-	/* 
-	 * FIXME
-	 */
+	# FIXME
 	:
 }
 
 zip:list() {
-	/* 
-	 * FIXME
-	 */
+	# FIXME
 	:
 }
 

@@ -1,6 +1,6 @@
 
-pkg_manager_add(dpkg)
-pkg_manager_noarch(dpkg)
+PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} dpkg)
+PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} dpkg)
 
 dpkg:_list() {
 	while [[ -n "$1" ]]; do
@@ -30,11 +30,9 @@ dpkg:_control() {
 
 	echo "Description: $description"
 	if [[ -n "$longdesc" ]]; then
-		/* 
-		 * For dpkg, a blank line is equal to a new field, so we
-		 * just write a dot. We also insert a space at the begining
-		 * of each line, else it is also a new field.
-		 */
+		# For dpkg, a blank line is equal to a new field, so we
+		# just write a dot. We also insert a space at the begining
+		# of each line, else it is also a new field.
 		echo "$longdesc" | sed -e "s|^$|.|;s|^| |"
 	fi
 	echo "Architecture: $(dpkg:arch)"
@@ -59,14 +57,12 @@ dpkg:arch() {
 		freebsd*) ARCH=kfreebsd-$ARCH ;;
 		hurd*) ARCH=hurd-$ARCH ;;
 		netbsd*) ARCH=netbsd-$ARCH ;;
-		/* Not sure for the others… */
+		# Not sure for the others…
 	esac
-	/*local ARCH=${PKGMK_ARCH:-$(uname -m)}*/
+	#local ARCH=${PKGMK_ARCH:-$(uname -m)}
 	if has no-arch ${archs[@]}; then
-		/* 
-		 * “all” is the keyword for architecture-independent packages, 
-		 * not “any”.
-		 */
+		# “all” is the keyword for architecture-independent packages, 
+		# not “any”.
 		echo "all"
 		return
 	fi
@@ -113,16 +109,14 @@ dpkg:build() {
 }
 
 dpkg:footprint() {
-	/*
-	 * This is a very dirty method to remove the first line of dpkg’s 
-	 * output using “tail”.
-	 */
+	# This is a very dirty method to remove the first line of dpkg’s 
+	# output using “tail”.
 	local footprint; footprint=$( \
 		dpkg -c "$TARGET" | \
 		sed "s|  *|	|g" | \
 		cut -d "	" -f 1,2,6,7,8,9 | \
 		sed -e "s|\./||" | \
-		__FP_SED | \
+		footprint_sed | \
 		sort -k 3)
 	local lines=`echo "$footprint" | wc -l`
 	echo "$footprint" | tail -n $(($lines-1))
@@ -132,4 +126,3 @@ dpkg:install() {
 	echo "dpkg ${PKGMK_INSTALL_ROOT:+--root=$PKGMK_INSTALL_ROOT} -i $TARGET"
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

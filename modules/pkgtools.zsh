@@ -1,11 +1,9 @@
 
-pkg_manager_add(pkgtools)
-pkg_manager_noarch(pkgtools)
+PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} pkgtools)
+PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} pkgtools)
 
 pkgtools:_slackspec () {
-	/*
-	 * This function creates the “spec” file of the txz.
-	 */
+	# This function creates the “spec” file of the txz.
 	local lenght i=0
 	echo "|-----handy-ruler------------------------------------------------------|"
 	if [[ -z "$longdesc" ]]; then
@@ -42,16 +40,14 @@ pkgtools:build () {
 	info "Building $TARGET."
 	(
 		cd $PKG
-	/*
-	 * We create the package using makepkg. Doing this way
-	 * avoid some warnings. We redirect makepkg’s output to
-	 * /dev/null to skip it’s verbosity.
-	 */
+		
+	# We create the package using makepkg. Doing this way
+	# avoid some warnings. We redirect makepkg’s output to
+	# /dev/null to skip it’s verbosity.
 		makepkg -l y -c n $TARGET &> /dev/null
-	/*
-	 * As makepkg is redirected to /dev/null, we print the 
-	 * content of the package with tar.
-	 */
+		
+	# As makepkg is redirected to /dev/null, we print the 
+	# content of the package with tar.
 		tar tvJf $TARGET
 	)
 }
@@ -62,7 +58,7 @@ pkgtools:footprint () {
 		grep -v "slack-desc" | \
 		grep -v "doinst.sh" | \
 		grep -v "drwxr-xr-x	root/root	./install/" | \
-		__FP_SED -e "s|\./||" | \
+		footprint_sed -e "s|\./||" | \
 		sort -k 3
 }
 
@@ -74,4 +70,3 @@ pkgtools:install () {
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

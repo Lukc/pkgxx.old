@@ -446,14 +446,19 @@ defaults/distributions:
 defaults/cross:
 	`BUILD cross defaults .in`
 
-$(for module in `cd modules; ls *.sh.c`; do
-	module=${module%.sh.c}
+$(for module in `cd modules; ls *.zsh`; do
+	module=${module%.zsh}
 	echo "modules/$module:"
-	echo "	`BUILD $module modules .sh.c`"
+	echo "	@sed -e \"s|@BINDIR@|\$(BINDIR)|\"\
+		-e \"s|@SHAREDIR@|\$(SHAREDIR)|\"\
+		-e \"s|@LIBEXECDIR@|\$(LIBEXECDIR)|\"\
+		-e \"s|@SYSCONFDIR@|\$(ETCDIR)|\"\
+		modules/$module.zsh > modules/$module"
+	echo "	@echo -e \"  \033[36m[MOD]\033[00m        \033[37mmodules/$module\033[00m\""
 	echo
 done)
 
-modules: $(cd modules; for i in `ls *.sh.c | sed -e "s|\.sh\.c||"`; do echo -n "modules/$i "; done)
+modules: $(cd modules; for i in `ls *.zsh | sed -e "s|\.zsh||"`; do echo -n "modules/$i "; done)
 
 pkgxx: defaults/prefixes defaults/distributions defaults/cross
 	`BUILD main src .sh.c`
@@ -504,8 +509,8 @@ pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 
 modules-install: modules
 	`DIR \$\(SHAREDIR\)/pkg++/modules`
-$(for module in `cd modules; ls *.sh.c`; do
-	module=${module%.sh.c}
+$(for module in `cd modules; ls *.zsh`; do
+	module=${module%.zsh}
 	echo "	`INSTALL 0644 modules/$module \$\(SHAREDIR\)/pkg++/modules`"
 	echo
 done)
@@ -533,8 +538,8 @@ clean:
 	`REMOVE defaults/userland`
 	`REMOVE src/config.sh.h`
 	`REMOVE has`
-$(for module in `cd modules; ls *.sh.c`; do
-	echo "	`REMOVE modules/${module%.sh.c}`"
+$(for module in `cd modules; ls *.zsh`; do
+	echo "	`REMOVE modules/${module%.zsh}`"
 done)
 
 pkgfiles:

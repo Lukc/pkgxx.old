@@ -1,10 +1,8 @@
-/* 
- * FIXME: This module is broken. Any help to make it working would be
- * appreciated...
- */
+# FIXME: This module is broken. Any help to make it working would be
+# appreciated...
 
-pkg_manager_add(opkg)
-pkg_manager_noarch(opkg)
+PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} opkg)
+PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} opkg)
 
 opkg:check () {
 	if ! istrue $FORCE_OPKG; then
@@ -23,9 +21,7 @@ opkg:target () {
 }
 
 opkg:build () {
-	/*
-	 * We use the opkgmk.sh script, installed by default.
-	 */
+	# We use the opkgmk.sh script, installed by default.
 	cd "$PKG"
 	mkdir OPK
 	dpkg:_control > OPK/control
@@ -34,13 +30,13 @@ opkg:build () {
 }
 
 opkg:footprint () {
-	tar xf $TARGET data.tar.gz
+	tar xf "$TARGET" data.tar.gz
 	local FOOTPRINT=$(
-		tar:list "${TARGET}"
-		__FP_GTAR(data.tar.gz) | \
-			__FP_SED \
-			    -e "s|\./||" | \
-			sort -k 3
+		#tar:list "${TARGET}" XXX: WTH?
+		tar:list data.tar.gz | \
+			footprint_sed \
+				-e "s|\./||" | \
+				sort -k 3
 	)
 	local LINES=$(echo "$FOOTPRINT" | wc -l)
 	echo "$FOOTPRINT" | tail -n $(($LINES-1))
@@ -51,4 +47,3 @@ opkg:install () {
 	echo "opkg-cl ${PKGMK_INSTALL_ROOT:+-o $PKGMK_INSTALL_ROOT} install $TARGET"
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */

@@ -51,4 +51,13 @@ update_footprint() {
 	info "Footprint updated."
 }
 
+
+footprint_sed() {
+	sed \
+		-e "s|	lib/modules/`uname -r`/|	lib/modules/<kernel-version>/|g" \
+		-e "s|	link	to	| -> |" \
+		-e "s|	->	| -> |" \
+		$@
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
