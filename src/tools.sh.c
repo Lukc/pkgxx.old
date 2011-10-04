@@ -2,6 +2,16 @@
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
+source () {
+	local FILE="$1"
+	shift 1
+	if [[ "$(dirname "$FILE")" = "." ]]; then
+		. "./$FILE" $@
+	else
+		. "$FILE" $@
+	fi
+}
+
 type() {
 	builtin type -w "$1" | sed -e "s/${1//\//\\/\\/}: //"
 }

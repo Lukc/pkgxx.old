@@ -105,28 +105,6 @@ main() {
 		exit 0
 	fi
 	
-	/*
-	 * Some often used files or directories names.
-	 */
-	PKGMK_PKGFILE="`get_pkgfile`"
-	
-	/* In case the version is in the filename */
-	if [[ "$PKGMK_PKGFILE" =~ $PKGMK_PKGFILE_NAME-.* ]]; then
-		version="$(echo $PKGMK_PKGFILE | sed 's/.*-//')"
-	fi
-	
-	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
-	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
-	PKGMK_MD5SUM="`get_metafile "$PKGMK_MD5SUM"`"
-	PKGMK_SHA256SUM="`get_metafile "$PKGMK_SHA256SUM"`"
-	PKGMK_NOSTRIP="`get_metafile "$PKGMK_NOSTRIP"`"
-	PKGMK_POST_INSTALL="`get_metafile "$PKGMK_POST_INSTALL"`"
-	PKGMK_PRE_INSTALL="`get_metafile "$PKGMK_PRE_INSTALL"`"
-	PKGMK_POST_REMOVE="`get_metafile "$PKGMK_POST_REMOVE"`"
-	PKGMK_PRE_REMOVE="`get_metafile "$PKGMK_PRE_REMOVE"`"
-	
-	PKGMK_PORT="$PKGMK_ROOT/$(dirname "$PKGMK_PKGFILE")"
-	
 	for FILE in $(ls "$PKGMK_MODULES_DIR"); do
 		. $PKGMK_MODULES_DIR/$FILE
 	done
@@ -146,23 +124,54 @@ main() {
 		fi
 	done
 	
+	PKGMK_PKGFILE="`get_pkgfile`"
+	
 	/*
 	 * Configuration file and Pkgfile are sourced.
 	 * Note: The configuration file is sourced twice, to allow users to 
 	 *       change configuration depending on the package. And probably
 	 *       for something else, but I don’t remember what.
 	 */
-	for FILE in "$PKGMK_CONFFILE" "$PKGMK_PKGFILE" "$PKGMK_CONFFILE"; do
+	for FILE in "$PKGMK_CONFFILE" "$PKGMK_PKGFILE"; do
 		if [[ ! -f "$FILE" ]]; then
 			error "File '$FILE' not found."
 			exit E_GENERAL
 		fi
-		if [[ "$(dirname "$FILE")" = "." ]]; then
-			. "./$FILE"
-		else
-			. "$FILE"
+	done
+	
+	if [[ -z "${PKGMK_RECIPES[@]}" ]]; then
+		error "No way to parse any recipe has been found. Please install a recipe module."
+		exit E_GENERAL
+	fi
+	
+	source "$PKGMK_CONFFILE"
+	for RECIPE in ${PKGMK_RECIPES[@]}; do
+		if $RECIPE:match "$PKGMK_PKGFILE"; then
+			$RECIPE:parse "$PKGMK_PKGFILE"
+			PKGMK_RECIPE_FORMAT=$RECIPE
+			break
 		fi
 	done
+	if [[ -z "$PKGMK_RECIPE_FORMAT" ]]; then
+		error "'$PKGMK_PKGFILE' can not be parsed."
+		exit E_GENERAL
+	fi
+	source "$PKGMK_CONFFILE"
+	
+	/*
+	 * Some often used files or directories names.
+	 */
+	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
+	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
+	PKGMK_MD5SUM="`get_metafile "$PKGMK_MD5SUM"`"
+	PKGMK_SHA256SUM="`get_metafile "$PKGMK_SHA256SUM"`"
+	PKGMK_NOSTRIP="`get_metafile "$PKGMK_NOSTRIP"`"
+	PKGMK_POST_INSTALL="`get_metafile "$PKGMK_POST_INSTALL"`"
+	PKGMK_PRE_INSTALL="`get_metafile "$PKGMK_PRE_INSTALL"`"
+	PKGMK_POST_REMOVE="`get_metafile "$PKGMK_POST_REMOVE"`"
+	PKGMK_PRE_REMOVE="`get_metafile "$PKGMK_PRE_REMOVE"`"
+	
+	PKGMK_PORT="$PKGMK_ROOT/$(dirname "$PKGMK_PKGFILE")"
 	
 	/*
 	 * We need to define a group, with some package managers. If we don’t 
@@ -337,6 +346,7 @@ PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
+PKGMK_RECIPE_FORMAT=""
 PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"
