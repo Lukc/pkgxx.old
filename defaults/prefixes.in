@@ -1,6 +1,4 @@
 
-// vim: syntax=sh
-
 : ${sysconfdir:="/etc"}
 : ${localstatedir:="/var"}
 : ${prefix:="/usr"}
@@ -12,9 +10,9 @@
 : ${sharedir:="$prefix/share"}
 : ${datadir:="$prefix/share"}
 : ${docdir:="$data/doc/$name-$version"}
-#if defined __crux || defined __slackware
+if $Crux || $Slackware; then
 : ${mandir:="$prefix/man"}
-#else
+else
 : ${mandir:="$sharedir/man"}
-#endif
+fi
 
