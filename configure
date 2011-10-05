@@ -422,14 +422,16 @@ help:
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
-	`BUILD prefixes defaults .zsh`
+	$(echo "@echo -e \"  \033[37m[CP ]\033[00m        \033[37mdefaults/prefixes\033[00m\";")
+	@cp defaults/prefixes.zsh defaults/prefixes
 
 defaults/distributions:
 	$(echo "@echo -e \"  \033[37m[ZSH]\033[00m        \033[37mdefaults/distributions\033[00m\";")
 	@zsh ./distributions.zsh > defaults/distributions
 
 defaults/cross:
-	`BUILD cross defaults .in`
+	$(echo "@echo -e \"  \033[37m[CP ]\033[00m        \033[37mdefaults/cross\033[00m\";")
+	@cp defaults/cross.zsh defaults/cross
 
 $(for module in `cd modules; ls *.zsh`; do
 	module=${module%.zsh}

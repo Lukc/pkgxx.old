@@ -1,8 +1,6 @@
 
 if [[ -n "${CHOST}" ]]; then
-	/* 
-	 * We set the name of the most used tools to $CHOST-$GNU_TOOL.
-	 */
+	# We set the name of the most used tools to $CHOST-$GNU_TOOL.
 	: ${CC:=${CHOST}-gcc}
 	: ${CXX:=${CHOST}-g++}
 	: ${CPP:=${CHOST}-cpp}
@@ -14,9 +12,7 @@ if [[ -n "${CHOST}" ]]; then
 	: ${STRIP:=${CHOST}-strip}
 fi
 
-/* 
- * We could have a CHOST (and we should) without being cross-compiling.
- */
+# We could have a CHOST (and we should) without being cross-compiling.
 if [[ "$CHOST" != "$MACHTYPE-$VENDOR-$OSTYPE" ]]; then
 	export CROSS=true
 else
