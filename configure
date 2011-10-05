@@ -422,7 +422,7 @@ help:
 	`RULE "clean    " "Remove configured files."`
 
 defaults/prefixes:
-	`BUILD prefixes defaults .in`
+	`BUILD prefixes defaults .zsh`
 
 defaults/distributions:
 	$(echo "@echo -e \"  \033[37m[ZSH]\033[00m        \033[37mdefaults/distributions\033[00m\";")
