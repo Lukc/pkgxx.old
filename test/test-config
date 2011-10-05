@@ -3,7 +3,7 @@ unset CHOST CTARGET CBUILD
 export CFLAGS="-O2 -pipe -march=native" # Will require GCC ≥ 4.4
 export CXXFLAGS="$CFLAGS"
 export MAKE_OPTS="-j2"
-export USE=(nls man -info free -binary)
+USE=(nls man -info free -binary)
 PKGMK_SOURCE_MIRRORS=(
 	# If a distfiles mirror appears here, change the URL to a new broken mirror…
 	ftp://broken.mirror.net
@@ -27,5 +27,8 @@ PKGMK_UNZIP_TOOL=bsdtar
 
 # These variables will be used for the packages construction.
 PKGMK_PACKAGE_MANAGER=pkgutils
+
+export distribution=Test
+readonly distribution
 
 # End of file
