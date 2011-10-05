@@ -503,6 +503,7 @@ pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 	`INSTALL 0644 defaults/userland		\$\(ETCDIR\)/pkg++/defaults`
 	`INSTALL 0644 uses			\$\(SHAREDIR\)/pkg++`
 	`INSTALL 0755 tools/opkgmk.sh		\$\(LIBEXECDIR\)/pkg++/`
+	`INSTALL 0755 tools/xxrocks.lua		\$\(LIBEXECDIR\)/pkg++/`
 	if ! [ -e \$(DESTDIR)\$(BINDIR)/pkgxx ]; then \
 		ln -s \$(BINDIR)/pkg++ \$(DESTDIR)\$(BINDIR)/pkgxx; \
 	fi
