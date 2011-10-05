@@ -192,6 +192,7 @@ pacman:build() {
 		xz) TARFLAGS=J ;;
 		*)
 			warning "Unknown compression '$PKGMK_COMPRESSION_MODE'. Using xz."
+			TARFLAGS=J
 		;;
 	esac
 	

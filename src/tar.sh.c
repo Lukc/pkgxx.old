@@ -39,7 +39,10 @@ sltar:unpack() {
 
 tar:pack() {
 	[[ "$PKGMK_UNTAR_TOOL" = sltar ]] && die "sltar does not support packing."
-	local TARBALL="$1" TARFLAGS
+	local TARBALL="$1"
+	if [[ -z "$TARFLAGS" ]]; then
+		local TARFLAGS
+	fi
 	shift 1
 	case $TARBALL in
 		*.xz|*.txz)
@@ -53,7 +56,7 @@ tar:pack() {
 		;;
 		*.tar) ;;
 		*)
-			die "Don’t know how to make '$TARBALL'."
+			[[ -z "$TARFLAGS" ]] && die "Don’t know how to make '$TARBALL'."
 		;;
 	esac
 	if [[ "$PKGMK_DEBUG" = "yes" ]]; then
