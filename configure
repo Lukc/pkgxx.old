@@ -155,7 +155,6 @@ print_help () {
 	echo 
 	echo "System Informations:"
 	echo "  --package-manager=         Choose the package manager to use behind pkg++."
-	echo "  --distribution=            Set the distribution's name."
 	echo "  --arch=                    Set the architecture's name."
 	echo "  --kernel=                  Set the kernel's name."
 	echo 
@@ -223,9 +222,6 @@ for arg in $@; do
 		;;
 		--kernel=*)
 			KERNEL="`echo "$arg" | sed "s|--kernel=||"`"
-		;;
-		--distribution=*)
-			DISTRIBUTION="`echo "$arg" | sed "s|--distribution=||"`"
 		;;
 		*)
 			echo "Unknown parameter: $arg."
@@ -325,7 +321,6 @@ fi
 echo "Summary:"
 echo "  Architecture:           $ARCHITECTURE"
 echo "  Kernel:                 $KERNEL"
-echo "  Distribution:           $DISTRIBUTION"
 echo "  Package manager:        $PACKAGE_MANAGER"
 
 case $ARCHITECTURE in
@@ -339,20 +334,10 @@ if (( `echo $GCC_VERSION | cut -d . -f 2` >= 4 )); then
 fi
 CPPFLAGS="$CPPFLAGS -E -P -D_VERSION=\"$VERSION\""
 CPPFLAGS="$CPPFLAGS -D_ARCH=\"$ARCHITECTURE\" -D_KERNEL=\"$KERNEL\" $CPPFLAGS"
-CPPFLAGS="$CPPFLAGS -D_DISTRIBUTION=\"$DISTRIBUTION\" -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
+CPPFLAGS="$CPPFLAGS -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
 CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
 CPPFLAGS="$CPPFLAGS -include $PWD/src/error.sh.h -include $PWD/src/footprints.sh.h -include $PWD/src/modules.sh.h"
-
-case $DISTRIBUTION in
-	Debian)		CPPFLAGS="$CPPFLAGS -D__debian=debian"		;;
-	Frugalware)	CPPFLAGS="$CPPFLAGS -D__frugalware=frugalware"	;;
-	Crux)		CPPFLAGS="$CPPFLAGS -D__crux=crux"		;;
-	Mandriva)	CPPFLAGS="$CPPFLAGS -D__mandriva=mandriva"	;;
-	Arch)		CPPFLAGS="$CPPFLAGS -D__arch=arch"		;;
-	Slackware)	CPPFLAGS="$CPPFLAGS -D__slackware=slackware"	;;
-	Fedora)		CPPFLAGS="$CPPFLAGS -D__fedora=fedora"		;;
-esac
 
 case $PACKAGE_MANAGER in
 	"") ;;
@@ -368,7 +353,6 @@ configure() {
 	sed -e "s|@ARCH@|$ARCHITECTURE|"\
 		-e "s|@KERNEL@|$KERNEL|"\
 		-e "s|@VERSION@|$VERSION|"\
-		-e "s|@DISTRIBUTION@|$DISTRIBUTION|"\
 		-e "s|@PACKAGE_MANAGER@|$PACKAGE_MANAGER|"\
 		-e "s|@MARCH@|$CC_MARCH|"\
 		-e "s|@GMAKE@|$GMAKE_PATH|"\
@@ -441,7 +425,8 @@ defaults/prefixes:
 	`BUILD prefixes defaults .in`
 
 defaults/distributions:
-	`BUILD distributions defaults .in`
+	$(echo "@echo -e \"  \033[37m[ZSH]\033[00m        \033[37mdefaults/distributions\033[00m\";")
+	@zsh ./distributions.zsh > defaults/distributions
 
 defaults/cross:
 	`BUILD cross defaults .in`
