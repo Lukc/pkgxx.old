@@ -1,5 +1,16 @@
 #!/usr/bin/env zsh
 
+checking_for_bin () {
+	for i in `echo "$PATH" | sed "s|:| |g"`; do
+		if [[ -x $i/$1 ]]; then
+			echo "yes"
+			return 0
+		fi
+	done
+	echo "no"
+	return 1
+}
+
 DISTRIBUTIONS=(
 	# We put here only the most known distributions.
 	Crux Frugalware Fedora Mandriva Arch Slackware Debian FreeBSD
@@ -17,8 +28,9 @@ elif [[ -e /etc/arch-release ]]; then
 	: ${DISTRIBUTION:="Arch"}
 elif [[ $PACKAGE_MANAGER = pkgtools ]]; then
 	: ${DISTRIBUTION:="Slackware"}
-elif [[ $PACKAGE_MANAGER = dpkg ]] && checking_for_bin "apt-get" &> /dev/null;
+elif [[ $PACKAGE_MANAGER = dpkg ]] && checking_for_bin "apt-get";
 then
+	# FIXME: Debian is not the only distribution with dpkg…
 	: ${DISTRIBUTION:="Debian"}
 elif [[ "$KERNEL" = FreeBSD ]]; then
 	: ${DISTRIBUTION:="FreeBSD"}
