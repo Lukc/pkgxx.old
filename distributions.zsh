@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 DISTRIBUTIONS=(
-	# We put here only the 
+	# We put here only the most known distributions.
 	Crux Frugalware Fedora Mandriva Arch Slackware Debian FreeBSD
 )
 
