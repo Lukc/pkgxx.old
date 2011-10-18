@@ -19,7 +19,7 @@ case $distribution in
 	*)              : ${package_manager:=pkgutils} 	;;
 esac
 
-depends=(zsh ${package_manager})
+depends=(zsh)
 
 configure_opts=(
 	--prefix=${prefix:-/usr}
