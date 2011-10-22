@@ -225,6 +225,7 @@ check_pkgfile_only () {
 		local last_version=$(eval "$lastver")
 		if [[ "$last_version" != "$version" ]] ; then
 			warning "Last version, '$last_version', differs from current version '$version'."
+			RETURN=1
 		fi
 	else
 		warning "Variable 'lastver' not specified in '$PKGMK_PKGFILE'."
