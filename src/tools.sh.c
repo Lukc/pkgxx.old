@@ -310,6 +310,36 @@ pm_kernel () {
 	echo ${TARGET_KERNEL}
 }
 
+vercmp () {
+	/* FIXME: Correct the hypothetic case where comp="!=" or "~=", or */
+	/* FIXME: + add the fantastic "~>" operator. (>= x and < x+1)     */
+	local comp=$2
+	local i=1
+	v1=$(echo "$1" | cut -d '.' -f $i)
+	v2=$(echo "$3" | cut -d '.' -f $i)
+	while [[ -n "$v1" && -n "$v2" ]]; do
+		if ! (( $v1 == $v2 )); then
+			(( $v1 $comp $v2 ))
+			return $?
+		fi
+		i=$(($i+1))
+		v1=$(echo "$1" | cut -d "." -f $i)
+		v2=$(echo "$3" | cut -d "." -f $i)
+	done
+	return 0 /* If everything was equal. */
+}
+
+lastver () {
+	local lastver="$1"
+	shift 1
+	for i in $@; do
+		if vercmp "$i" ">" "$lastver"; then
+			lastver="$i"
+		fi
+	done
+	echo "$lastver"
+}
+
 #undef make_var
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
