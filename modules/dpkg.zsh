@@ -15,7 +15,7 @@ dpkg:_list() {
 }
 
 dpkg:_control() {
-	echo "Package: $name"
+	echo "Package: ${name//_/-}"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
 		echo "Version: 999.${PKGMK_REVISION:-`date +%Y%m%d`-$release}"
 	else
@@ -73,9 +73,9 @@ dpkg:arch() {
 
 dpkg:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/${name}_devel-${PKGMK_REVISION:-`date +%Y%m%d`}-${release}_$PKGMK_ARCH.deb"
+		echo "$PKGMK_PACKAGE_DIR/${name//_/-}_devel-${PKGMK_REVISION:-`date +%Y%m%d`}-${release}_$PKGMK_ARCH.deb"
 	else
-		echo "$PKGMK_PACKAGE_DIR/${name}_$version-${release}_$PKGMK_ARCH.deb"
+		echo "$PKGMK_PACKAGE_DIR/${name//_/-}_$version-${release}_$PKGMK_ARCH.deb"
 	fi
 }
 
