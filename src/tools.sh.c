@@ -321,6 +321,8 @@ vercmp () {
 		if ! (( $v1 == $v2 )); then
 			if [[ "$comp" =~ ("!="|"~=") ]]; then
 				return 0
+			elif [[ "$comp" == "~>" ]]; then
+				return 1
 			else
 				(( $v1 $comp $v2 ))
 				return $?
@@ -329,6 +331,7 @@ vercmp () {
 		i=$(($i+1))
 		v1=$(echo "$1" | cut -d "." -f $i)
 		v2=$(echo "$3" | cut -d "." -f $i)
+		[[ -z "$v2" && "$comp" == "~>" ]] && return 0
 		[[ -n "$v1" && -z "$v2" ]] && v2=0
 		[[ -n "$v2" && -z "$v1" ]] && v1=0
 	done
