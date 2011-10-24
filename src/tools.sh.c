@@ -325,6 +325,8 @@ vercmp () {
 		i=$(($i+1))
 		v1=$(echo "$1" | cut -d "." -f $i)
 		v2=$(echo "$3" | cut -d "." -f $i)
+		[[ -n "$v1" && -z "$v2" ]] && v2=0
+		[[ -n "$v2" && -z "$v1" ]] && v1=0
 	done
 	return 0 /* If everything was equal. */
 }
