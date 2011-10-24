@@ -319,8 +319,12 @@ vercmp () {
 	v2=$(echo "$3" | cut -d '.' -f $i)
 	while [[ -n "$v1" && -n "$v2" ]]; do
 		if ! (( $v1 == $v2 )); then
-			(( $v1 $comp $v2 ))
-			return $?
+			if [[ "$comp" =~ ("!="|"~=") ]]; then
+				return 0
+			else
+				(( $v1 $comp $v2 ))
+				return $?
+			fi
 		fi
 		i=$(($i+1))
 		v1=$(echo "$1" | cut -d "." -f $i)
@@ -328,7 +332,8 @@ vercmp () {
 		[[ -n "$v1" && -z "$v2" ]] && v2=0
 		[[ -n "$v2" && -z "$v1" ]] && v1=0
 	done
-	return 0 /* If everything was equal. */
+	/* If everything was equal. */
+	[[ "$comp" =~ ("!="|"~=") ]] && return 1 || return 0
 }
 
 lastver () {
