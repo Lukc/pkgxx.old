@@ -3,6 +3,30 @@
 REVISION="`git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g'`"
 VERSION="0.11-devel-$REVISION"
 
+dist () {
+	# FIXME: Put this somewhere else?
+	[[ -e Makefile ]] && make clean
+	[[ -e pkg++-$VERSION ]] && rm -rf pkg++-$VERSION
+	# Cleaning, just in case we might want to built that a day.
+	for i in .tar.{gz,bz2,lzma,lzo,xz,Z} .zip .sqsh; do
+		[[ -e pkg++-$VERSION$i ]] && rm -f pkg++-$VERSION$i
+	done
+	(
+		# Removing hidden and “backup files” from some text editors.
+		files=($(find . | egrep -v "(~$|/\\.|^\\.$)"))
+		mkdir pkg++-$VERSION
+		# Copying to the “distdir” from which we create the tarballs.
+		tar cf - ${files[*]} | (cd pkg++-$VERSION/; tar xf -)
+		tar czf pkg++-$VERSION{.tar.gz,}
+		tar cjf pkg++-$VERSION{.tar.bz2,}
+		tar cJf pkg++-$VERSION{.tar.xz,}
+	)
+}
+
+clean-dist () {
+	rm -rf pkg++-$VERSION* 
+}
+
 arch () {
 	arch="$(uname -m)"
 	case ${arch} in
@@ -140,6 +164,10 @@ print_help () {
 	echo "  -h, --help              display this help and exit"
 	echo "  -V, --version           display version information and exit"
 	echo 
+	echo "Direct Build:"
+	echo "  -d, --dist              create tarballs of pkg++"
+	echo "  -D, --clean-dist        remove pkg++ tarballs and distdir"
+	echo 
 	echo "Installation directories:"
 	echo "  --prefix=PREFIX         install architecture-independent files in PREFIX"
 	echo "                          [/usr]"
@@ -177,6 +205,14 @@ for arg in $@; do
 		-V|--version)
 			echo "pkg++ $VERSION"
 			exit 0
+		;;
+		-d|--dist)
+			dist
+			exit $?
+		;;
+		-D|--clean-dist)
+			clean-dist
+			exit $?
 		;;
 		--with-*)
 			with="`echo "$arg" | sed "s|--with-||"`"
