@@ -136,7 +136,7 @@ wcat() {
 
 die() {
 	/* 
-	 * Display a given error message, and if in debug mode, a traceback.
+	 * Display a given error message.
 	 */
 	/* $word is used for the transition… */
 	error "${?:+!$?!} $@"
