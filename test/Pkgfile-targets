@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+if [[ -z "$PKGMK_VERSION" ]]; then
+	exec pkg++ $0
+fi
+
+function test_info {
+	# 1 and 2: return and excpected value
+	# 3: Test number.
+	# 4: Test name.
+	(( $1 == $2 )) && \
+		info "Test $3 worked. [$4]" || \
+		error "Test $3 failed. [$4]"
+}
+
+CHOST=i686-pc-linux-gnu
+PKGMK_PACKAGE_MANAGER=dpkg
+[[ "$(pm_arch)" = i386 ]]
+test_info $? 0 1 "pm_arch() arch  "
+
+CHOST=i686-pc-freebsd1
+PKGMK_PACKAGE_MANAGER=dpkg
+[[ "$(pm_arch)" = kfreebsd-i386 ]]
+test_info $? 0 2 "pm_arch() kernel"
+
+(
+	CHOST=i686-pc-linux-uclibc
+	[[ "$(target_libc)" = uclibc ]]
+) && (
+	CHOST=i686-pc-freebsd1.2.3
+	[[ "$(target_libc)" = freebsd1.2.3 ]]
+)
+test_info $? 0 3 "target_libc()   "
+
+(
+	CHOST=arch-vendor-openbsd1.2.3
+	[[ "$(pm_kernel)" = OpenBSD ]]
+)
+test_info $? 0 3 "pm_kernel()     "
+
+exit 0
+
