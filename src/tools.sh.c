@@ -315,8 +315,14 @@ vercmp () {
 	/* FIXME: + add the fantastic "~>" operator. (>= x and < x+1)     */
 	local comp=$2
 	local i=1
-	v1=$(echo "$1" | cut -d '.' -f $i)
-	v2=$(echo "$3" | cut -d '.' -f $i)
+	local version1=$(echo "$1" | sed -e "s/-/./g")
+	local version2=$(echo "$3" | sed -e "s/-/./g")
+	local v1=$(echo "$version1" | cut -d '.' -f $i)
+	local v2=$(echo "$version2" | cut -d '.' -f $i)
+	
+	alpha=-3
+	beta=-2
+	rc=-1
 	while [[ -n "$v1" && -n "$v2" ]]; do
 		if ! (( $v1 == $v2 )); then
 			if [[ "$comp" =~ ("!="|"~=") ]]; then
@@ -329,8 +335,8 @@ vercmp () {
 			fi
 		fi
 		i=$(($i+1))
-		v1=$(echo "$1" | cut -d "." -f $i)
-		v2=$(echo "$3" | cut -d "." -f $i)
+		v1=$(echo "$version1" | cut -d "." -f $i)
+		v2=$(echo "$version2" | cut -d "." -f $i)
 		[[ -z "$v2" && "$comp" == "~>" ]] && return 0
 		[[ -n "$v1" && -z "$v2" ]] && v2=0
 		[[ -n "$v2" && -z "$v1" ]] && v1=0
