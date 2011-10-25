@@ -158,6 +158,11 @@ use() {
 	done
 	if (( $return == 2 )); then
 		local eval=$(eval "echo \${use_${1}[1]}")
+		if [[ "$eval" = 1 ]]; then
+			eval=0
+		elif [[ "$eval" = 0 ]]; then
+			eval=1
+		fi
 		if [[ -n "$eval" ]]; then
 			return $eval
 		fi
