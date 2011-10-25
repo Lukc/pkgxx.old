@@ -5,7 +5,7 @@ if [[ -z "$PKGMK_VERSION" ]]; then
 fi
 
 function test_info {
-	# 1 and 2: return and excpected value
+	# 1 and 2: return and expected value
 	# 3: Test number.
 	# 4: Test name.
 	(( $1 == $2 )) && \
