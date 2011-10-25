@@ -1,6 +1,0 @@
-nls|Use the Native Language Support
-free|Use only Free Software and deblob blobed softwares when possible.
-minimal|Disable as many features as possible.
-man|Make man pages.
-info|Make texinfo pages.
-binary|Use official binaries when possible.

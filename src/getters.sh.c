@@ -77,9 +77,10 @@ get_metafile() {
 }
 
 get_use_description() {
+	/* FIXME-0.12: Depreciation. */
 	local use="$1"
 	local FILE
-	(
+	local desc=$((
 		if [[ -e _SHAREDIR/pkg++/uses ]]; then
 			egrep "^${use}\|" _SHAREDIR/pkg++/uses
 		fi
@@ -89,7 +90,17 @@ get_use_description() {
 			done
 		fi
 	) | tail -n 1 \
-	  | cut -d "|" -f 2
+	  | cut -d "|" -f 2)
+	if [[ -n "$desc" ]]; then
+		error
+		error "The old use flags description format is deprecated."
+		error "It's support will be removed for pkg++ 0.12"
+		error
+	fi
+	if [[ -z "$desc" ]]; then
+		desc="$(eval "echo \${use_${use}[2]}")" # 1 is default status
+	fi
+	echo "$desc"
 }
 
 get_target() {
