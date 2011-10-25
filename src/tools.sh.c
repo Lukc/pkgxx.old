@@ -222,11 +222,10 @@ pkgsplit() {
 
 target_arch () {
 	/* 
-	 * This function returns the architecture depending on the triplet.
+	 * This function return the architecture depending on the triplet.
 	 * The triplet may be the CHOST or the MACHTYPE, thus allowing 
 	 * cross-compilation.
 	 */
-	local TRIPLET
 	if [[ -n "$CHOST" ]]; then
 		echo $CHOST | cut -d- -f 1
 	else
@@ -238,7 +237,6 @@ target_kernel () {
 	/* 
 	 * Same as target_arch(), but for the OSTYPE.
 	 */
-	local TRIPLET
 	if [[ -n "$CHOST" ]]; then
 		echo $CHOST | cut -d- -f 3
 	else
