@@ -14,7 +14,6 @@ get_filename() {
 		[[ $1 =~ ^(http|https|ftp):\/\/.*/(.+) ]] || \
 		[[ $1 =~ ^file:\/\/.* ]] || \
 		[[ $1 =~ ^(svn|git|hg|bzr):\/\/.* ]] || \
-		[[ $1 =~ ^(svn|git|hg|bzr):.*:\/\/.* ]] || \
 		[[ $1 =~ ^(svn|git|hg|bzr)\+.*:\/\/.* ]]
 	then
 		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${match[2]}"
@@ -22,9 +21,6 @@ get_filename() {
 		case $PROTOCOL in
 			svn|git|hg|bzr)
 				echo "$PKGMK_SOURCE_DIR/$name"
-				if [[ $1 =~ ^.*:.*:\/\/.* ]]; then
-					error "The form vcs:url is deprecated and will be removed in 0.9.3. Please, use vcs+url instead."
-				fi
 			;;
 			file)
 				echo -n "$PKGMK_SOURCE_DIR/"
