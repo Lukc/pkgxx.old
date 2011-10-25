@@ -148,7 +148,7 @@ use() {
 	 * Very important function that returns true if a use flag is used, and
 	 * false if it is not.
 	 */
-	local return=1
+	local return=2
 	for flag in ${USE[@]}; do
 		if [[ "$flag" = "$1" ]] || [[ "$flag" = "+$1" ]]; then
 			return=0
@@ -156,6 +156,12 @@ use() {
 			return=1
 		fi
 	done
+	if (( $return == 2 )); then
+		local eval=$(eval "echo \${use_${1}[1]}")
+		if [[ -n "$eval" ]]; then
+			return $eval
+		fi
+	fi
 	return $return
 }
 
