@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+
+if [[ -z "$PKGMK_VERSION" ]]; then
+	exec pkg++ $0
+fi
+
+function test_info {
+	# 1 and 2: return and expected value
+	# 3: Test number.
+	# 4: Test name.
+	(( $1 == $2 )) && \
+		info "Test $3 worked. [$4]" || \
+		error "Test $3 failed. [$4]"
+}
+
+PKGMK_SOURCE_DIR=srcdir
+
+[[ "$(get_protocol git://blah)" = git && "$(get_protocol git+ssh://blah)" = git ]]
+test_info $? 0 1 "get_protocol()"
+
+[[ "$(name=blah get_filename "git+http://test/blah.git")" = srcdir/blah ]]
+test_info $? 0 2 "get_filename()"
+
+[[ "$(get_basename x://a/b/c/basename)" = basename ]]
+test_info $? 0 3 "get_basename()"
+
+(
+	PKGMK_PKGFILE=blah
+	[[ "$(get_metafile test)" = ./test ]]
+) && (
+	PKGMK_PKGFILE=blah/bloh
+	[[ "$(get_metafile test)" = blah/test ]]
+)
+test_info $? 0 4 "get_metafile()"
+
+exit 0
+
