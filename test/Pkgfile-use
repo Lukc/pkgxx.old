@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+if [[ -z "$PKGMK_VERSION" ]]; then
+	exec pkg++ $0
+fi
+
+function test_info {
+	# 1 and 2: return and expected value
+	# 3: Test number.
+	# 4: Test name.
+	(( $1 == $2 )) && \
+		info "Test $3 worked. [$4]" || \
+		error "Test $3 failed. [$4]"
+}
+
+USE=(a -b +c)
+use_d=(0 "D")
+use_e=(1 "E")
+
+use a
+test_info $? 0 1 "use useflag        "
+
+! use b
+test_info $? 0 2 "use -useflag       "
+
+use c
+test_info $? 0 3 "use +useflag       "
+
+use d
+test_info $? 1 4 "use undefined +flag"
+
+use e
+test_info $? 0 5 "use undefined -flag"
+
+use f
+test_info $? 2 6 "use unknown flag   "
+
+[[ "$(get_use_description d)" == "D" ]]
+test_info $? 0 7 "use descriptions   "
+
+exit 0
+

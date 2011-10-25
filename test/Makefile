@@ -7,9 +7,9 @@ PKGXX ?= pkg++
 ZSH   ?= zsh
 
 # built is not in this list because it requires to be root and is currently subject to recurring failures.
-all: targets getters vercmp
+all: targets getters vercmp use
 
-targets getters vercmp:
+targets getters vercmp use:
 	@echo '. ./test-config-io-only ; info "\033[32m[[ Running $@ tests ]] --"' | ${ZSH}
 	@${PKGXX} -cf test-config-io-only ./Pkgfile-$@
 
