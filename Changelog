@@ -1,4 +1,31 @@
 
+0.11.2:
+	* Use flags definitions have been remade. Each use flag is now defined in
+	  a defaults file. They can also have a default enable or disable value,
+	  defined in the same place.
+	* use() now manages unknown flags, and if no information about it’s enable
+	  or disable status is found, returns 2, instead of 1.
+	* The ./configure supports two new options:
+		* -d or --dist, to build distribution tarballs in gzip, bzip2 or xz.
+		* -D or --clean-dist, to remove those tarballs and the temporary
+		  directory created to build the tarballs.
+	* A version comparator has been added, vercmp().
+	* A last version getter has been added, lastver(), which use vercmp().
+	* The test/Makefile now runs only the pkg++ API tools and not the build
+	  tests, except if explicitly asked by asking to build “nano” or “build”.
+	* Test suites have been added in the test/directory:
+		* getters
+		* use
+		* vercmp
+		* targets
+	* A correction in modules/dpkg has been made to avoid failures when $name
+	  contains “_”.
+	* The way recipes are managed deeply changed. For that reason, the
+	  rockspecs support has been quickly added and the PKGBUILDs/FrugalBuilds
+	  support has been lost (though we are still working on fixing it).
+
+	-- Lukc <lukc@upyum.com>
+
 0.11.1:
 	* New variable available for packagers, PKGMK_PORT.
 	  This variable gives the repertory where the port is. So inclusions 
@@ -15,12 +42,16 @@
 		  to maintain.
 		* Conflicts are now managed.
 
+	-- Lukc <lukc@upyum.com>
+
 0.11:
 	* A beginning of implementation of scripts in Pkgfile’s functions has
 	  been made.
 	* Blank lines are removed in the output file of cpp “pkg++”. It is not
 	  really noticeable concerning size of the file, but there is no more
 	  20 blank lines and things like that…
+
+	-- Lukc <lukc@upyum.com>
 
 0.10.2:
 	* Corrections of the manual pages which still contained references to
