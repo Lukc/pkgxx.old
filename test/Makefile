@@ -4,6 +4,16 @@ fail = \033[31mfail\033[00m
 nochk = \033[33mn/a\033[00m
 
 PKGXX ?= pkg++
+ZSH   ?= zsh
+
+# built is not in this list because it requires to be root and is currently subject to recurring failures.
+all: targets getters vercmp
+
+targets getters vercmp:
+	@echo '. ./test-config-io-only ; info "\033[32m[[ Running $@ tests ]] --"' | ${ZSH}
+	@${PKGXX} -cf test-config-io-only ./Pkgfile-$@
+
+build: nano
 
 nano: check_root
 	@echo " [ Cleaning                                   ]"
