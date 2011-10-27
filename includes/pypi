@@ -13,4 +13,4 @@
 : ${pypi_version:=$version}
 : ${pypi_extension:=".tar.gz"}
 
-source=(${source[@]} http://pypi.python.org/packages/sources/${pypi_name:0:1}/$pypi_name/$pypi_name-$pypi-version$pypi_extension)
+source=(${source[@]} http://pypi.python.org/packages/sources/${pypi_name:0:1}/$pypi_name/$pypi_name-$pypi_version$pypi_extension)
