@@ -1,0 +1,16 @@
+#
+## Include for python packages available on http://pypi.python.org
+#
+# Need $name and $version
+# $pypi_extension can change the extension of the tarball. It's default value is .tar.gz.
+# $pipy_name is the name of the software on pypi. It’s default value is $name.
+# $pypi_version is the version of the software on pypi. It’s default value is $version.
+#
+# Include file made by Pingax (pingax.fr)
+#
+
+: ${pypi_name:=$name}
+: ${pypi_version:=$version}
+: ${pypi_extension:=".tar.gz"}
+
+source=(${source[@]} http://pypi.python.org/packages/sources/${pypi_name:0:1}/$pypi_name/$pypi_name-$pypi-version$pypi_extension)
