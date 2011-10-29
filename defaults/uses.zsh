@@ -11,7 +11,7 @@ use_free=(1     "Use only Free Software and deblob blobed softwares when possibl
 use_minimal=(1  "Enable as few features as possible.")
 use_man=(1      "Build and install man pages.")
 use_info=(1     "Build and install texinfo pages.")
-use_binary=(1   "Use official binaries instead of buildin when this option is available.")
+use_binary=(1   "Use official binaries instead of building when this option is available.")
 
 if [[ "$LANG" =~ fr_FR.* ]]; then
 	use_nls[2]="Utiliser la Prise en charge des Langues Natives."
