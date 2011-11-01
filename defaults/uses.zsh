@@ -1,7 +1,7 @@
 # This file lists useflags, their default status (+use, -use, …) and their description.
 
 # FOR TRANSLATORS:
-#   If you want to translate the useflags descriptions, just redefine then
+#   If you want to translate the useflags descriptions, just redefine them
 #   with use_usename[2]="new description" inside a
 #   `if [[ $LANG =~ locale_LOCALE.ENCODING ]]; then` and `fi` bloc.
 #   An example is available at the end of this file for french. (and it is incomplete)
