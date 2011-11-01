@@ -26,6 +26,10 @@
 	* The way recipes are managed deeply changed. For that reason, the
 	  rockspecs support has been quickly added and the PKGBUILDs/FrugalBuilds
 	  support has been lost (though we are still working on fixing it).
+	* depname() has been added, for package managers’ module’s maintainers.
+	  It should allow defining versions of dependencies (and conflicts,
+	  and replacements, and so on) without breaking package managers that
+	  do not manage versions.
 
 	-- Lukc <lukc@upyum.com>
 

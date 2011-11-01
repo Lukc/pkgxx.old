@@ -386,6 +386,20 @@ lastver () {
 	echo "$lastver"
 }
 
+depname() {
+	/* 
+	 * What could be worse than finding a "gcc >= 4.6" in a… well, in 
+	 * something not able to manage dependencies. To avoid the awful 
+	 * previous situation, we give depname() to module maintainer, 
+	 * allowing them to get the name of their dependencies without
+	 * doing the job themselves (which we can’t call “maintaining”).
+	 * 
+	 * REMEMBER TO UPDATE THIS IF AND WHEN YOU CHANGE SOMETHING IN
+	 * THE depends[] SYNTAX.
+	 */
+	echo "$1" | sed -e "s/ .*//;s/(>|<|>=|<=|=|==|~>|~<|!=|~=).*//"
+}
+
 #undef make_var
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
