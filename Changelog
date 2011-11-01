@@ -10,6 +10,9 @@
 		* -D or --clean-dist, to remove those tarballs and the temporary
 		  directory created to build the tarballs.
 	* A version comparator has been added, vercmp().
+	* @{ is a new function also added to compare versions in a much
+	  stricter way, doing some checks on it’s opts before trying to
+	  compare anything.
 	* A last version getter has been added, lastver(), which use vercmp().
 	* The test/Makefile now runs only the pkg++ API tools and not the build
 	  tests, except if explicitly asked by asking to build “nano” or “build”.

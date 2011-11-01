@@ -354,6 +354,27 @@ vercmp () {
 	[[ "$comp" =~ ("!="|"~=") ]] && return 1 || return 0
 }
 
+@{ () {
+	case $# in
+		0|1|2)
+			die "@{ needs 3 parameters and to be closed."
+		;;
+		3)
+			die "@{ needs to be closed."
+		;;
+		4);;
+		*)
+			die "@{ needs only 3 paramaters and to be closed."
+		;;
+	esac
+	/* This is debug to avoid having problems with vercmp. */
+	echo "$1$2$3" | (grep -q " " || grep -q "	") && die "@{: opts must not contain any space or tabulation."
+	for i in 1 2 3; do
+		eval "[[ -z \$$i ]]" && die "@{: empty opt (\$$i)."
+	done
+	vercmp "$1" "$2" "$3"
+}
+
 lastver () {
 	local lastver="$1"
 	shift 1
