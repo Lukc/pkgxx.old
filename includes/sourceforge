@@ -28,12 +28,9 @@
 : ${sf_rss_url:="http://sourceforge.net/api/file/index/project-id/$sf_id/mtime/desc/limit/20/rss"}
 : ${rss_url:=$sf_rss_url}
 
-# FIXME: use some sort of versort.
-: ${lastver:="wcat '$sf_rss_url' | \
+: ${lastver:="lastver \$(wcat '$sf_rss_url' | \
 	egrep '$sf_name$sf_separator.*$sf_extension' | \
-	sed -e 's|$sf_extension.*||;s|.*$sf_version_separator||' | \
-	tac | \
-	head -n 1"}
+	sed -e 's|$sf_extension.*||;s|.*$sf_version_separator||')"}
 
 source=(${source[@]} $sf_mirror/$sf_dirname/$sf_name$sf_version_separator$sf_version$sf_extension)
 
