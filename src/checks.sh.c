@@ -230,6 +230,9 @@ check_pkgfile_only () {
 	else
 		warning "Variable 'lastver' not specified in '$PKGMK_PKGFILE'."
 	fi
+	if [[ $RETURN = 0 ]]; then
+		info "Everything is in perfect order."
+	fi
 	exit $RETURN
 }
 

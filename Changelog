@@ -3,6 +3,8 @@
 	* Use flags definitions have been remade. Each use flag is now defined in
 	  a defaults file. They can also have a default enable or disable value,
 	  defined in the same place.
+	* pkg++ -cp says that everything is in order when nothing bad is to
+	  report about the checked recipe.
 	* use() now manages unknown flags, and if no information about it’s enable
 	  or disable status is found, returns 2, instead of 1.
 	* The ./configure supports two new options:
