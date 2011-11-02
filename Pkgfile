@@ -2,6 +2,17 @@ description="Portable package builder."
 url=http://devel.upyum.com/cgit.cgi/pkg++
 packager="Lukc <XMPP/SMTP: lukc AT upyum DOT com>"
 maintainer="Lukc <XMPP/SMTP: lukc AT upyum DOT com>"
+license="GPL2"
+longdesc="pkg++ is a tool to build software packages. It uses a simple shell
+based format for it's recipes and works on many operating systems.
+The goal of pkg++ is to allow to build a package for your native
+package manager and respecting your OS guidelines as much as
+possible, from only one recipe, a Pkgfile.
+
+pkg++ builds deb, rpm, txz (Slackware), pkg.tar.xz or .gz for both Crux 
+and Arch, nho, fpm, and maybe many more!"
+
+lastver="echo 0" # Nothing is greater than devel, so don’t try to get anything.
 
 name=pkg++
 version=devel
@@ -35,3 +46,10 @@ build(){
 		${configure_opts[@]}
 	pkgmake -B DESTDIR=$PKG install
 }
+
+check(){
+	# It could be improved, but no adapted Pkgfile exist in test/.
+	cd $name/test
+	make test && pkg++ -cp &> /dev/null
+}
+
