@@ -332,6 +332,7 @@ vercmp () {
 	alpha=-3
 	beta=-2
 	rc=-1
+	devel=99999 /* If you ever find a version greater than this, update */
 	while [[ -n "$v1" && -n "$v2" ]]; do
 		if ! (( $v1 == $v2 )); then
 			if [[ "$comp" =~ ("!="|"~=") ]]; then
