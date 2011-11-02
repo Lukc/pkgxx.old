@@ -30,6 +30,8 @@
 	  It should allow defining versions of dependencies (and conflicts,
 	  and replacements, and so on) without breaking package managers that
 	  do not manage versions.
+	* The shell function which() which is embedded in pkg++ has been
+	  corrected (yeah, before, we had a buggy which()).
 
 	-- Lukc <lukc@upyum.com>
 

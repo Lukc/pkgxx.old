@@ -111,8 +111,8 @@ which() {
 	local TARGET="$1"
 	/* Damned CPP, no ${PATH//:/ } here. :( */
 	for path in $(echo ${PATH} | sed -e "s|:| |g"); do
-		if [[ "$TARGET" = "$path" ]]; then
-			echo "$path"
+		if [[ -x "$path/$TARGET" ]]; then
+			echo "$path/$TARGET"
 			return 0
 		fi
 	done
