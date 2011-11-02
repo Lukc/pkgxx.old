@@ -320,8 +320,6 @@ pm_kernel () {
 }
 
 vercmp () {
-	/* FIXME: Correct the hypothetic case where comp="!=" or "~=", or */
-	/* FIXME: + add the fantastic "~>" operator. (>= x and < x+1)     */
 	local comp=$2
 	local i=1
 	local version1=$(echo "$1" | sed -e "s/-/./g")
