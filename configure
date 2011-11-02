@@ -399,8 +399,9 @@ configure() {
 	mv $1.tmp $1
 }
 
+# FIXME: Isn’t it possible to do this in the produced Makefile?
 echo "Creation of \`defaults/userland'..."
-sh ./config.sh > defaults/userland
+zsh userland.zsh > defaults/userland
 
 echo "Creation of \`Makefile'..."
 DIR () {

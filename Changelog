@@ -33,6 +33,11 @@
 	* The shell function which() which is embedded in pkg++ has been
 	  corrected (yeah, before, we had a buggy which()).
 	* info(), warning() and error() have been modified to be more fun.
+	* The ./config.sh file at the root of the repository has been renamed
+	  ./userland.zsh. This has been done because of ./distributions.zsh,
+	  which was already present and generates in the Makefile
+	  defaults/distributions. So, it should not change anything for the
+	  user.
 
 	-- Lukc <lukc@upyum.com>
 
