@@ -32,6 +32,7 @@
 	  do not manage versions.
 	* The shell function which() which is embedded in pkg++ has been
 	  corrected (yeah, before, we had a buggy which()).
+	* info(), warning() and error() have been modified to be more fun.
 
 	-- Lukc <lukc@upyum.com>
 
