@@ -34,6 +34,34 @@ pkgutils:target () {
 	fi
 }
 
+pkgutils:checkdeps () {
+	local ok=0
+	for dep in ${depends[@]} ${builddepends[@]}; do
+		local depname="$(depname "$dep")"
+		local installed="$(pkginfo -i | egrep "^$depname ")"
+		if [[ -n "$installed" ]]; then
+			# Then we check if the version is correct.
+			local depver="$(echo "$dep" | sed -e "s/^$depname//;s/.* //")"
+			if [[ -n "$depver" ]]; then
+				local instver="$(echo "$installed" | cut -d " " -f 2)"
+				local depcomp="$(echo "$dep" | sed -e "s/^$depname *//;s/ .*$depver$//")"
+				# A particular version is specified.
+				if @{ $instver $depcomp $depver }@; then
+					info "Checking for $dep... ok"
+				else
+					error "Checking for $dep... outdated"
+				fi
+			else
+				info "Checking for $dep... ok"
+			fi
+		else
+			ok=1
+			error "Checking for $dep... uninstalled"
+		fi
+	done
+	return $ok
+}
+
 pkgutils:build () {
 	info "Building $TARGET."
 	cd $PKG

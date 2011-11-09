@@ -25,6 +25,7 @@ print_help() {
 	echo "  -c,   --clean                 remove package and downloaded files"
 	echo "  -cp   --check-pkgfile         do not build, only check \`$PKGMK_PKGFILE_NAME'"
 	echo "  -kw,  --keep-work             keep temporary working directory"
+	echo "  -cd,  --check-depends         check that all dependencies are installed before build"
 	echo "  -cf,  --config-file <file>    use alternative configuration file"
 	echo "  -li,  --list-includes         list all inclusion files available"
 /*	echo "  -pm,  --package-manager <pm>  set the package manager to use" */
@@ -90,6 +91,8 @@ parse_options() {
 				PKGMK_KEEP_WORK="yes" ;;
 			-cp|--check-pkgfile)
 				PKGMK_CHECK_PKGFILE="yes";;
+			-cd|--check-depends)
+				PKGMK_CHECK_DEPENDS="yes" ;;
 			-cf|--config-file)
 				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"

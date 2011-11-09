@@ -217,6 +217,20 @@ main() {
 	check_pkgfile
 	
 	/* 
+	 * If the user wants a dependencies-check, we do it between the recipe check
+	 * and the use of it’s content.
+	 */
+	if [[ "$PKGMK_CHECK_DEPENDS" = "yes" ]]; then
+		if [[ "$(type ${PKGMK_PACKAGE_MANAGER}:checkdeps)" != "none" ]]; then
+			/* It does have access to ${depends[*]}, ${build_depends[*]}, etc. */
+			if ! ${PKGMK_PACKAGE_MANAGER}:checkdeps; then
+				error "All dependencies where not found on your system."
+				exit 1
+			fi
+		fi
+	fi
+	
+	/* 
 	 * We set the architecture to something known by the package manager.
 	 */
 	PKGMK_ARCH=$(pm_arch)
@@ -395,6 +409,7 @@ PKGMK_CHECK_PKGFILE="no"
 PKGMK_DEBUG="no"
 PKGMK_NOFAIL="no"
 PKGMK_KEEP_ERRLOGS="yes"
+PKGMK_CHECK_DEPENDS="yes"
 
 PKGMK_KERNEL=_KERNEL
 
