@@ -95,6 +95,25 @@ main() {
 	
 	parse_options "$@"
 	
+	/* 
+	 * Profiles are configuration sets used only in some particular cases.
+	 * It allows the user to have multiple configuration and to go on
+	 * from one another by just doing a pkg++ -p profile.
+	 *
+	 * As they exist to change the configuration, they must be managed
+	 * as soon as possible.
+	 */
+	if [[ -n "$PKGMK_PROFILE" ]]; then
+		for DIR in ${PKGMK_PROFILES_DIRS[@]}; do
+			if [[ -e "$DIR/$PKGMK_PROFILE" ]]; then
+				. "$PKGMK_PROFILES_DIR/$PKGMK_PROFILE"
+			else
+				error "Requested profile ($PKGMK_PROFILE) is not available."
+				exit 1
+			fi
+		done
+	fi
+	
 	if [[ "$PKGMK_LIST_INCLUDES" = "yes" ]]; then
 		list_includes
 		exit 0
@@ -106,7 +125,7 @@ main() {
 	fi
 	
 	for FILE in $(ls "$PKGMK_MODULES_DIR"); do
-		. $PKGMK_MODULES_DIR/$FILE
+		. "$PKGMK_MODULES_DIR/$FILE"
 	done
 	
 	for DIR in ${PKGMK_DEFAULTS_DIRS[@]}; do
@@ -358,9 +377,11 @@ PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
+PKGMK_PROFILES_DIRS=(_SHAREDIR/pkg++/profiles _SYSCONFDIR/pkg++/profiles)
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_RECIPE_FORMAT=""
+PKGMK_PROFILE=""
 PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"
 PKGMK_MD5SUM=".md5sum"

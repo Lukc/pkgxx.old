@@ -28,6 +28,7 @@ print_help() {
 	echo "  -cd,  --check-depends         check that all dependencies are installed before build"
 	echo "  -cf,  --config-file <file>    use alternative configuration file"
 	echo "  -li,  --list-includes         list all inclusion files available"
+	echo "  -p,   --profile <profile>     load a predefined profile"
 /*	echo "  -pm,  --package-manager <pm>  set the package manager to use" */
 	echo "  -dg,  --debug                 print debug informations while building packages."
 	echo "  -nf,  --no-fail               run pkg++ in the dangerous no-fail mode."
@@ -102,6 +103,13 @@ parse_options() {
 				shift ;;
 			-li|--list-includes)
 				PKGMK_LIST_INCLUDES="yes";;
+			-p|--profile)
+				if [[ -z "$2" ]]; then
+					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
+					exit E_GENERAL
+				fi
+				PKGMK_PROFILE="$2"
+				shift ;;
 /*			-pm|--package-manager)
  *				if [[ -z "$2" ]]; then
  *					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"

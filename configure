@@ -489,6 +489,7 @@ has:
 
 config-install:
 	`DIR \$\(ETCDIR\)`
+	`DIR \$\(ETCDIR\)/profiles`
 	`INSTALL 0644 pkg++.conf \$\(ETCDIR\)`
 
 man-install:
