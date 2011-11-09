@@ -4,7 +4,7 @@ packager="Lukc <XMPP/SMTP: lukc AT upyum DOT com>"
 maintainer="Lukc <XMPP/SMTP: lukc AT upyum DOT com>"
 license="GPL2"
 longdesc="pkg++ is a tool to build software packages. It uses a simple shell
-based format for it's recipes and works on many operating systems.
+based format for its recipes and works on many operating systems.
 The goal of pkg++ is to allow to build a package for your native
 package manager and respecting your OS guidelines as much as
 possible, from only one recipe, a Pkgfile.
