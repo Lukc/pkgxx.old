@@ -363,7 +363,7 @@ vercmp () {
 		;;
 		4);;
 		*)
-			die "@{ needs only 3 paramaters and to be closed."
+			die "@{ needs only 3 parameters and to be closed."
 		;;
 	esac
 	/* This is debug to avoid having problems with vercmp. */
