@@ -350,7 +350,7 @@ vercmp () {
 		[[ -n "$v2" && -z "$v1" ]] && v1=0
 	done
 	/* If everything was equal. */
-	[[ "$comp" =~ ("!="|"~=") ]] && return 1 || return 0
+	[[ "$comp" =~ ("!="|"~="|">"|"<") ]] && return 1 || return 0
 }
 
 @{ () {

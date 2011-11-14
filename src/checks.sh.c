@@ -223,7 +223,7 @@ check_pkgfile_only () {
 	fi
 	if [[ -n "$lastver" ]]; then
 		local last_version=$(eval "$lastver")
-		if @{ "$last_version" ">=" "$version" }@ ; then
+		if @{ "$last_version" ">" "$version" }@ ; then
 			warning "Last version, '$last_version', is greater than the current version '$version'."
 			RETURN=1
 		fi
