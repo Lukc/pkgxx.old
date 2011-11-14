@@ -423,7 +423,7 @@ INSTALL_F () {
 	echo "@echo -e \"  \033[32m[INS]\033[00m        \033[37m$2\033[00m -> \033[37m$4/$3\033[00m\";install -m$1 $2 \$(DESTDIR)/$4/$3"
 }
 REMOVE () {
-	echo "@echo -e \"  \033[33m[REM]\033[00m         \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
+	echo "@echo -e \"  \033[33m[REM]\033[00m        \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
 }
 RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
