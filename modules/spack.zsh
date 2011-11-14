@@ -4,6 +4,7 @@ PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} spack)
 
 spack:checks () {
 	check_command spackpkg
+	# We need the pkgtools:_slackdesc function.
 	if ! has pkgtools ${PKGMK_PACKAGE_MANAGERS[@]}; then
 		error
 		error "The pkgtools module is required to write slack-desc."
@@ -23,7 +24,11 @@ spack:target () {
 spack:build () {
 	cd $PKG
 	mkdir $PKG/install
-	pkgtools:_slackspec > $PKG/install/slack-desc
+	if $Slackware; then
+		pkgtools:_slackspec > $PKG/install/slack-desc
+	else
+		pkgtools:_slackspec > $PKG/about.txt
+	fi
 	info "Building $TARGET."
 	spackpkg -q "$PKG"
 	mv $PKG/../pkg.spack "$TARGET"
