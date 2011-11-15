@@ -161,7 +161,8 @@ use() {
 		if [[ "$eval" = 1 ]]; then
 			eval=0
 		elif [[ "$eval" = 0 ]]; then
-			eval=1
+			/* Do not use because not specified otherwise anywhere */
+			eval=3
 		fi
 		if [[ -n "$eval" ]]; then
 			return $eval
