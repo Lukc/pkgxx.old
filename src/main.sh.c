@@ -21,6 +21,10 @@
 #include "install.sh.c"
 #include "opts.sh.c"
 
+/* We include zsh tools to display colors, as any civilised being would */
+autoload -U colors
+colors
+
 recursive() {
 	local ARGS FILE DIR
 	

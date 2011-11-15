@@ -12,15 +12,15 @@
  */
 
 info() {
-	echo -e "\033[01;32m--\033[37;01m $1\033[00m"
+	echo -e "${fg_bold[green]}--${fg_bold[white]} $1${reset_color}"
 }
 
 warning() {
-	echo -e "\033[01;33m--\033[33;01m WARNING: $1\033[00m" >&2
+	echo -e "${fg_bold[yellow]}-- WARNING: $1${reset_color}" >&2
 }
 
 error() {
-	echo -e "\033[01;31m--\033[31;01m ERROR: $1\033[00m" >&2
+	echo -e "${fg_bold[red]}-- ERROR: $1${reset_color}" >&2
 }
 
 /*
