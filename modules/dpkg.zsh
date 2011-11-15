@@ -4,10 +4,19 @@ PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} dpkg)
 
 dpkg:_list() {
 	while [[ -n "$1" ]]; do
+		echo -n "$(depname ${1})"
+		local ver="$(echo "${1}" | sed -e "s/^$(depname "${1//\+/\\+}") *//")"
+		if [[ -n "$ver" ]]; then
+			case $ver in
+				">="*|"<="*|"=") ;;
+				">"*) ver="${ver/">"/">>"}" ;;
+				"<"*) ver="${ver/"<"/"<<"}" ;;
+				"="*) ver="${ver/"="/"=="}" ;;
+			esac
+			echo -n " ($ver)"
+		fi
 		if [[ -n "${2}" ]]; then
-			echo -n "${1},"
-		else
-			echo -n "${1}"
+			echo -n ","
 		fi
 		shift 1
 	done
