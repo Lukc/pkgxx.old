@@ -6,7 +6,7 @@
 # $freedesktop_name is the name of the software on freedesktop. It’s default value is $name.
 # $freedesktop_version is the version of the software on freedesktop. It’s default value is $version.
 #
-# Include file made by Pingax (pingax.fr)
+# Include file made by Pingax <anthony@pingax.no-ip.info>
 #
 
 : ${freedesktop_name:=$name}
