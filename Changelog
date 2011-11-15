@@ -3,6 +3,8 @@
 	* Use flags definitions have been remade. Each use flag is now defined in
 	  a defaults file. They can also have a default enable or disable value,
 	  defined in the same place.
+	* pkg++ -cp says that everything is in order when nothing bad is to
+	  report about the checked recipe.
 	* use() now manages unknown flags, and if no information about it’s enable
 	  or disable status is found, returns 2, instead of 1.
 	* The ./configure supports two new options:
@@ -10,6 +12,9 @@
 		* -D or --clean-dist, to remove those tarballs and the temporary
 		  directory created to build the tarballs.
 	* A version comparator has been added, vercmp().
+	* @{ is a new function also added to compare versions in a much
+	  stricter way, doing some checks on it’s opts before trying to
+	  compare anything.
 	* A last version getter has been added, lastver(), which use vercmp().
 	* The test/Makefile now runs only the pkg++ API tools and not the build
 	  tests, except if explicitly asked by asking to build “nano” or “build”.
@@ -23,6 +28,18 @@
 	* The way recipes are managed deeply changed. For that reason, the
 	  rockspecs support has been quickly added and the PKGBUILDs/FrugalBuilds
 	  support has been lost (though we are still working on fixing it).
+	* depname() has been added, for package managers’ module’s maintainers.
+	  It should allow defining versions of dependencies (and conflicts,
+	  and replacements, and so on) without breaking package managers that
+	  do not manage versions.
+	* The shell function which() which is embedded in pkg++ has been
+	  corrected (yeah, before, we had a buggy which()).
+	* info(), warning() and error() have been modified to be more fun.
+	* The ./config.sh file at the root of the repository has been renamed
+	  ./userland.zsh. This has been done because of ./distributions.zsh,
+	  which was already present and generates in the Makefile
+	  defaults/distributions. So, it should not change anything for the
+	  user.
 
 	-- Lukc <lukc@upyum.com>
 

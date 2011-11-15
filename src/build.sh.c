@@ -45,10 +45,10 @@ build_package() {
 	 */
 	SET_OPTIONS=
 	if [[ "$PKGMK_NOFAIL" != "yes" ]]; then
-		SET_OPTIONS="$SET_OPTIONS -e"
+		SET_OPTIONS="${SET_OPTIONS:--}e"
 	fi
 	if [[ "$PKGMK_DEBUG" = "yes" ]]; then
-		SET_OPTIONS="$SET_OPTIONS -x"
+		SET_OPTIONS="${SET_OPTIONS:--}x"
 	fi
 	
 	cd $SRC

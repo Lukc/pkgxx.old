@@ -2,18 +2,25 @@
 /*
  * What to say ? The three functions are used to display informations. They can
  * be redeclared in the config file.
+ * Update [2011/02/11]: We broke compatibility with some Crux scripts by
+ *   changing those functions. Compatibility had problems before because 
+ *   of the colors which were not present in pkgmk, but now, nothing parsing
+ *   the output of pkgmk should work with pkg++ if no configuration has 
+ *   been done to avoid it. I [Lukc] hope this modification will open
+ *   a new era of peace and prosperity on pkg++, and a little more fun
+ *   to packaging.
  */
 
 info() {
-	echo -e "\033[32m=======> $1\033[00m"
+	echo -e "\033[01;32m--\033[37;01m $1\033[00m"
 }
 
 warning() {
-	echo -e "\033[33m=======> WARNING: $1\033[00m" >&2
+	echo -e "\033[01;33m--\033[33;01m WARNING: $1\033[00m" >&2
 }
 
 error() {
-	echo -e "\033[31m=======> ERROR: $1\033[00m" >&2
+	echo -e "\033[01;31m--\033[31;01m ERROR: $1\033[00m" >&2
 }
 
 /*
@@ -23,7 +30,7 @@ error() {
 ask() {
 	local variable="$1"
 	shift 1
-	echo -e "\033[37m=======> $@\033[00m"
+	echo -e "\033[01;36m--\033[00;01m $@\033[00m"
 	echo -n " > "
 	read "$variable"
 }

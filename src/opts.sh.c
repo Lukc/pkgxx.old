@@ -25,8 +25,10 @@ print_help() {
 	echo "  -c,   --clean                 remove package and downloaded files"
 	echo "  -cp   --check-pkgfile         do not build, only check \`$PKGMK_PKGFILE_NAME'"
 	echo "  -kw,  --keep-work             keep temporary working directory"
+	echo "  -cd,  --check-depends         check that all dependencies are installed before build"
 	echo "  -cf,  --config-file <file>    use alternative configuration file"
 	echo "  -li,  --list-includes         list all inclusion files available"
+	echo "  -p,   --profile <profile>     load a predefined profile"
 /*	echo "  -pm,  --package-manager <pm>  set the package manager to use" */
 	echo "  -dg,  --debug                 print debug informations while building packages."
 	echo "  -nf,  --no-fail               run pkg++ in the dangerous no-fail mode."
@@ -90,6 +92,8 @@ parse_options() {
 				PKGMK_KEEP_WORK="yes" ;;
 			-cp|--check-pkgfile)
 				PKGMK_CHECK_PKGFILE="yes";;
+			-cd|--check-depends)
+				PKGMK_CHECK_DEPENDS="yes" ;;
 			-cf|--config-file)
 				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
@@ -99,6 +103,13 @@ parse_options() {
 				shift ;;
 			-li|--list-includes)
 				PKGMK_LIST_INCLUDES="yes";;
+			-p|--profile)
+				if [[ -z "$2" ]]; then
+					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
+					exit E_GENERAL
+				fi
+				PKGMK_PROFILE="$2"
+				shift ;;
 /*			-pm|--package-manager)
  *				if [[ -z "$2" ]]; then
  *					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"

@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 REVISION="`git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g'`"
-VERSION="0.11-devel-$REVISION"
+VERSION="0.11.2-devel-$REVISION"
 
 dist () {
 	# FIXME: Put this somewhere else?
@@ -399,8 +399,9 @@ configure() {
 	mv $1.tmp $1
 }
 
+# FIXME: Isn’t it possible to do this in the produced Makefile?
 echo "Creation of \`defaults/userland'..."
-sh ./config.sh > defaults/userland
+zsh userland.zsh > defaults/userland
 
 echo "Creation of \`Makefile'..."
 DIR () {
@@ -416,19 +417,19 @@ BUILD () {
 	fi
 }
 INSTALL () {
-	echo "@echo -e \"  \033[32m[INST]\033[00m       \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$(basename $2)"
+	echo "@echo -e \"  \033[32m[INS]\033[00m        \033[37m$2\033[00m -> \033[37m$3/$2\033[00m\";install -m$1 $2 \$(DESTDIR)/$3/$(basename $2)"
 }
 INSTALL_F () {
-	echo "@echo -e \"  \033[32m[INST]\033[00m       \033[37m$2\033[00m -> \033[37m$4/$3\033[00m\";install -m$1 $2 \$(DESTDIR)/$4/$3"
+	echo "@echo -e \"  \033[32m[INS]\033[00m        \033[37m$2\033[00m -> \033[37m$4/$3\033[00m\";install -m$1 $2 \$(DESTDIR)/$4/$3"
 }
 REMOVE () {
-	echo "@echo -e \"  \033[33m[RM]\033[00m         \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
+	echo "@echo -e \"  \033[33m[REM]\033[00m        \033[37m$1\033[00m\";[ -e $1 ] && rm -rf $1 || true"
 }
 RULE () {
 	echo "@echo -e \"  \033[37m$1\033[00m  \t $2\""
 }
 ZCOMPILE () {
-	echo "@-echo -e \"  \033[35m[ZCOMP]\033[00m      \033[37m$1\033[00m\";echo 'zcompile \"\$(DESTDIR)$1\"' | zsh"
+	echo "@-echo -e \"  \033[35m[ZCO]\033[00m        \033[37m$1\033[00m\";echo 'zcompile \"\$(DESTDIR)$1\"' | zsh"
 }
 cat > Makefile << EOF
 # Beginning of Makefile
@@ -457,22 +458,9 @@ help:
 	`RULE "install  " "Make the man, pkgxx and config rules."`
 	`RULE "clean    " "Remove configured files."`
 
-defaults/prefixes:
-	$(echo "@echo -e \"  \033[37m[CP ]\033[00m        \033[37mdefaults/prefixes\033[00m\";")
-	@cp defaults/prefixes.zsh defaults/prefixes
-
 defaults/distributions:
 	$(echo "@echo -e \"  \033[37m[ZSH]\033[00m        \033[37mdefaults/distributions\033[00m\";")
 	@zsh ./distributions.zsh > defaults/distributions
-
-defaults/cross:
-	$(echo "@echo -e \"  \033[37m[CP ]\033[00m        \033[37mdefaults/cross\033[00m\";")
-	@cp defaults/cross.zsh defaults/cross
-
-defaults/uses:
-	# FIXME: In the future, we might want to disable NLS without having the packager to do it.
-	$(echo "@echo -e \"  \033[37m[CP ]\033[00m        \033[37mdefaults/uses\033[00m\";")
-	@cp defaults/uses.zsh defaults/uses
 
 $(for module in `cd modules; ls *.zsh`; do
 	module=${module%.zsh}
@@ -488,7 +476,7 @@ done)
 
 modules: $(cd modules; for i in `ls *.zsh | sed -e "s|\.zsh||"`; do echo -n "modules/$i "; done)
 
-pkgxx: defaults/prefixes defaults/distributions defaults/cross defaults/uses
+pkgxx: defaults/distributions
 	`BUILD main src .sh.c`
 	mv src/main pkg++.tmp
 #	cpp $CPPFLAGS -x c "src/main.sh.c" > "pkg++.tmp"
@@ -501,6 +489,7 @@ has:
 
 config-install:
 	`DIR \$\(ETCDIR\)`
+	`DIR \$\(ETCDIR\)/profiles`
 	`INSTALL 0644 pkg++.conf \$\(ETCDIR\)`
 
 man-install:
@@ -525,13 +514,17 @@ pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++/includes
 		echo -ne "\t"
 	done`
-	`INSTALL 0644 defaults/prefixes		\$\(ETCDIR\)/pkg++/defaults`
 	`INSTALL 0644 defaults/distributions	\$\(ETCDIR\)/pkg++/defaults`
-	`INSTALL 0644 defaults/cross		\$\(ETCDIR\)/pkg++/defaults`
 	`INSTALL 0644 defaults/userland		\$\(ETCDIR\)/pkg++/defaults`
-	`INSTALL 0644 defaults/uses		\$\(ETCDIR\)/pkg++/defaults`
+	$(for default in `cd defaults; ls *.zsh`; do
+		# FIXME: In the future, we might want to disable NLS without having the packager to do it. (defaults/use)
+		default=${default%.zsh}
+		echo -ne "\t"
+		INSTALL_F 0644 defaults/$default.zsh $default \$\(ETCDIR\)/pkg++/defaults
+	done)
 	`INSTALL 0755 tools/opkgmk.sh		\$\(LIBEXECDIR\)/pkg++/`
 	`INSTALL 0755 tools/xxrocks.lua		\$\(LIBEXECDIR\)/pkg++/`
+	`INSTALL 0755 tools/pkgbuild.bash	\$\(LIBEXECDIR\)/pkg++/`
 	if ! [ -e \$(DESTDIR)\$(BINDIR)/pkgxx ]; then \
 		ln -s \$(BINDIR)/pkg++ \$(DESTDIR)\$(BINDIR)/pkgxx; \
 	fi

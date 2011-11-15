@@ -10,7 +10,8 @@ list_includes() {
 		elif grep -q "build()" _SHAREDIR/pkg++/includes/$include; then
 			echo -e "\033[32m$include\033[00m"
 		else
-			echo -e "$include"
+			/* Libraries and tools */
+			echo -e "\033[36m$include\033[00m"
 		fi
 	done
 }

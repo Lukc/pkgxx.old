@@ -111,8 +111,8 @@ which() {
 	local TARGET="$1"
 	/* Damned CPP, no ${PATH//:/ } here. :( */
 	for path in $(echo ${PATH} | sed -e "s|:| |g"); do
-		if [[ "$TARGET" = "$path" ]]; then
-			echo "$path"
+		if [[ -x "$path/$TARGET" ]]; then
+			echo "$path/$TARGET"
 			return 0
 		fi
 	done
@@ -320,8 +320,6 @@ pm_kernel () {
 }
 
 vercmp () {
-	/* FIXME: Correct the hypothetic case where comp="!=" or "~=", or */
-	/* FIXME: + add the fantastic "~>" operator. (>= x and < x+1)     */
 	local comp=$2
 	local i=1
 	local version1=$(echo "$1" | sed -e "s/-/./g")
@@ -332,6 +330,7 @@ vercmp () {
 	alpha=-3
 	beta=-2
 	rc=-1
+	devel=99999 /* If you ever find a version greater than this, update */
 	while [[ -n "$v1" && -n "$v2" ]]; do
 		if ! (( $v1 == $v2 )); then
 			if [[ "$comp" =~ ("!="|"~=") ]]; then
@@ -351,7 +350,28 @@ vercmp () {
 		[[ -n "$v2" && -z "$v1" ]] && v1=0
 	done
 	/* If everything was equal. */
-	[[ "$comp" =~ ("!="|"~=") ]] && return 1 || return 0
+	[[ "$comp" =~ ("!="|"~="|">"|"<") ]] && return 1 || return 0
+}
+
+@{ () {
+	case $# in
+		0|1|2)
+			die "@{ needs 3 parameters and to be closed."
+		;;
+		3)
+			die "@{ needs to be closed."
+		;;
+		4);;
+		*)
+			die "@{ needs only 3 parameters and to be closed."
+		;;
+	esac
+	/* This is debug to avoid having problems with vercmp. */
+	echo "$1$2$3" | (grep -q " " || grep -q "	") && die "@{: opts must not contain any space or tabulation."
+	for i in 1 2 3; do
+		eval "[[ -z \$$i ]]" && die "@{: empty opt (\$$i)."
+	done
+	vercmp "$1" "$2" "$3"
 }
 
 lastver () {
@@ -363,6 +383,20 @@ lastver () {
 		fi
 	done
 	echo "$lastver"
+}
+
+depname() {
+	/* 
+	 * What could be worse than finding a "gcc >= 4.6" in a… well, in 
+	 * something not able to manage dependencies. To avoid the awful 
+	 * previous situation, we give depname() to module maintainer, 
+	 * allowing them to get the name of their dependencies without
+	 * doing the job themselves (which we can’t call “maintaining”).
+	 * 
+	 * REMEMBER TO UPDATE THIS IF AND WHEN YOU CHANGE SOMETHING IN
+	 * THE depends[] SYNTAX.
+	 */
+	echo "$1" | sed -e "s/ .*//;s/(>|<|>=|<=|=|==|~>|~<|!=|~=).*//"
 }
 
 #undef make_var
