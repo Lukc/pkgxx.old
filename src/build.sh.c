@@ -1,4 +1,25 @@
 
+print_useflags() {
+	local FLAGS=""
+	for use in ${iuse[*]}; do
+		if use $use; then
+			FLAGS="${FLAGS} ${fg_bold[blue]}${use}${reset_color}"
+		else
+			case "$?" in
+				2)
+					FLAGS="${FLAGS} ${fg_bold[yellow]}~${use}${reset_color}"
+				;;
+				*)
+					FLAGS="${FLAGS} ${fg_bold[red]}-${use}${reset_color}"
+				;;
+			esac
+		fi
+	done
+	if [[ -n "${FLAGS}" ]]; then
+		echo -n " [${FLAGS}${fg_bold[white]} ]"
+	fi
+}
+
 build_package() {
 	/*
 	 * If the build is not successful, then it is not successful. Logic, 
@@ -31,7 +52,7 @@ build_package() {
 	 * Think to the poor user who would not know what is happening whithout
 	 * this small line.
 	 */
-	info "Building '$TARGET'."
+	info "Building '$name'$(print_useflags)."
 	
 	/*
 	 * And after though to the poor users, we can extract the sources, if
@@ -78,11 +99,11 @@ build_package() {
 	 *       a fail if it fails.
 	 */
 	if [[ $RETURN != 0 && "$PKGMK_CHECK" = "yes" ]]; then
-		info "Testing '$TARGET'."
+		info "Testing '$name'."
 		if check; then
-			info "'$TARGET' successfully tested."
+			info "'$name' successfully tested."
 		else
-			error "Tests of $TARGET failed."
+			error "Tests of '$name' failed."
 			exit E_BUILD
 		fi
 	fi
@@ -91,7 +112,7 @@ build_package() {
 	 * If something went wrong
 	 */
 	if [[ $RETURN != 0 ]]; then
-		error "Building '$TARGET' failed."
+		error "Building '$name' failed."
 		if [[ "$PKGMK_KEEP_ERRLOGS" != "no" && -n "${errlogs[@]}" ]]; then
 			for PATTERN in ${errlogs[@]}; do
 				for FILE in $(cd $SRC; find . | egrep "${PATTERN}$"); do
@@ -120,7 +141,7 @@ build_package() {
 	 */
 	cd $PKG
 	if [[ "`find . | wc -l`" = 1 ]]; then
-		error "Building '$TARGET' failed."
+		error "Building '$name' failed."
 		exit E_BUILD
 	fi
 	/* 
@@ -167,7 +188,7 @@ build_package() {
 	fi
 	
 	if [[ "$BUILD_SUCCESSFUL" = "yes" ]]; then
-		info "Building '$TARGET' succeeded."
+		info "Building '$name' succeeded."
 	else
 		if [[ -f $TARGET ]]; then
 		/*
@@ -179,7 +200,7 @@ build_package() {
 		/*
 		 * Uh… but if there is no package… uh… pkg++ probably failed.
 		 */
-		error "Building '$TARGET' failed."
+		error "Building '$name' failed."
 		exit E_BUILD
 	fi
 }
