@@ -8,5 +8,7 @@ monotone:revision() {
 }
 
 monotone:pull() {
+	if [[ "`mtn automate pull --dry-run -q | grep revision`" = "receive_revision "0"" ]]; then
+		return 1
+	fi
 }
-
