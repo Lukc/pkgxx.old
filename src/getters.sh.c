@@ -13,21 +13,24 @@ get_filename() {
 	if
 		[[ $1 =~ ^(http|https|ftp):\/\/.*/(.+) ]] || \
 		[[ $1 =~ ^file:\/\/.* ]] || \
-		[[ $1 =~ ^(svn|git|hg|mtn|bzr):\/\/.* ]] || \
-		[[ $1 =~ ^(svn|git|hg|mtn|bzr)\+.*:\/\/.* ]]
+		[[ $1 =~ ^[aA-zZ]:\/\/.* ]] || \
+		[[ $1 =~ ^[aA-zZ]\+.*:\/\/.* ]]
 	then
 		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${match[2]}"
 		local PROTOCOL="`get_protocol "$1"`"
 		case $PROTOCOL in
-			svn|git|hg|mtn|bzr)
-				echo "$PKGMK_SOURCE_DIR/$name"
-			;;
 			file)
 				echo -n "$PKGMK_SOURCE_DIR/"
 				echo "$1" | sed -e "s|file://||"
 			;;
 			*)
-				echo "$NORMAL_RETURN"
+				if [[ "$(type ${PROTOCOL}:clone)" != "none" ]] ; then
+					/* A VCS download URL */
+					echo "$PKGMK_SOURCE_DIR/$name"
+				else
+					/* Well, something else. */
+					echo "$NORMAL_RETURN"
+				fi
 			;;
 		esac
 	else
