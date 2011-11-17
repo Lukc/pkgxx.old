@@ -1,4 +1,8 @@
 
+<{ include doc.spp }>
+
+<{ get work_in_progress }>
+
 # *useflags* #
 
 This page gives documentation about useflags. It explains what it is

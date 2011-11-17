@@ -1,0 +1,55 @@
+
+<{set work-in-progress \
+<div class="work-in-progress">\
+	This page or section is still a work in progress.\
+	As such, it is very probably incomplete or imprecise.\
+</div>\
+}>
+
+<{set planned \
+<div class="planned-feature">\
+	This feature is planned but not implemented yet, or only partially.\
+</div> \
+}>
+
+<{set new-feature \
+<div class="new-feature">\
+	This feature is brand new. It may change lightly over time or be\
+	currently uncomplete.\
+</div> \
+}>
+
+<{set deprecated \
+<div class="deprecated">\
+	This feature is deprecated. It might still work in old pkg++ versions,\
+	but it is recommended not to use it.\
+</div> \
+}>
+
+<{set mandatory \
+<div class="mandatory">\
+	This variable or function must be declared in any Pkgfile.\
+</div>\
+}>
+
+<{set recommended \
+<div class="recommended">\
+	This option is not mandatory, but it is recommended to set it when\
+	it can have a value.\
+</div>\
+}>
+
+<{set module-required \
+<div class="mandatory">\
+	This variable or function must be declared for your module to work correctly.\
+</div>\
+}>
+
+<{set module-recommended \
+<div class="recommended">\
+	This variable or function should be declared, as it will\
+	allow your module to support more pkg++ features.\
+</div>\
+}>
+
+

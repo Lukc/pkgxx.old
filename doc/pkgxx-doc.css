@@ -15,3 +15,29 @@ pre code {
 	border:none;
 }
 
+/* FIXME: Use icons? */
+
+.work-in-progress,
+.planned-feature, .new-feature, .deprecated, .mandatory, .recommended {
+	margin:15px;
+	padding:8px;
+	border-radius:6px;
+	border-left:3px solid;
+}
+
+.work-in-progress {
+	background:#EEC;
+	color:#660;
+	font-weight:bold;
+}
+
+.planned-feature, .new-feature {
+	border-color:#CDE;
+} .deprecated {
+	border-color:#FB9;
+} .mandatory {
+	border-color:#ECA;
+} .recommended {
+	border-color:#BDB;
+}
+
