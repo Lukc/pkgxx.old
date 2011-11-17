@@ -9,7 +9,7 @@ This page gives documentation about useflags. It explains what it is
 and how to use it.
 
 A use flag is a keyword that represents the support of a feature or
-of a dependency. For example, a server does not need X, so it’s use
+of a dependency. For example, a server does not need X, so its use
 flag “X” will be disabled. On the other hand, a destkop with GNOME
 or KDE will need X, and so will enable the “X” use flag during the
 construction of any package that can use it.
@@ -51,7 +51,7 @@ from a script, just `echo ${USE[@]}`.
 ### Default *useflags* ###
 
 Most useflags and their effect on a package depend on the recipe
-you are using. However some of them (well, a few of them) are
+you are using. However, some of them (well, a few of them) are
 generic and their keywords and functions are decided by the pkg++
 team.
 
@@ -82,7 +82,7 @@ learning of how-to-master-useflags-from-the-inside. If you are a
 mere user who just want to get things to work as you want them to
 work, this part will learn you very little.
 
-If you are a packager, it is on the contrary recommended that you
+If you are a packager, it is, on the contrary, recommended that you
 read this file.
 
 *If you are a packager, you will have to wait until I complete
