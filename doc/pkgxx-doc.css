@@ -1,0 +1,17 @@
+
+#menu, #footer {
+	background-color:#BB8;
+} #submenu {
+	background-color:#DDA;
+}
+
+em {
+	color:#660!important;
+} a {
+	color:#771;
+}
+
+pre code {
+	border:none;
+}
+
