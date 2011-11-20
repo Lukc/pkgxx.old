@@ -7,7 +7,7 @@ mtn:clone() {
 
 mtn:revision() {
 	cd "$1"
-	mtn automate log | wc-l 
+	mtn automate log -q | wc-l 
 }
 
 mtn:pull() {
