@@ -14,7 +14,7 @@
 
 <{set new-feature \
 <div class="new-feature">\
-	This feature is brand new. It may change lightly over time or be\
+	This feature is brand new. It may change slightly over time or be\
 	currently uncomplete.\
 </div> \
 }>
