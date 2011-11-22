@@ -44,7 +44,7 @@ the port. It can differ from the $packager.
 
 If you wrote a port, you should be $packager and $maintainer.
 If you stop maintaining a port, you are still the $packager, 
-but the $maintainer will change on any repository where you
+but the $maintainer will change on any repository where your
 port is copied and modified.
 
 #### $name ####
