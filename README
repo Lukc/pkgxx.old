@@ -1,0 +1,103 @@
+
+# pkg++ #
+
+## Description ##
+
+pkg++ is a tool to build packages on any distribution and
+with any package manager. It wants to be a simple tool
+to build anything, anywhere, at anytime.
+
+## Why pkg++? ##
+
+Many experienced Linux users wanted to build packages for
+their distribution, or at least packages compliant with
+their package manager, but the tools given by their 
+distribution were too much complicated. pkg++ offers
+a way to build easily packages for anyone.
+
+You can use it to package the last application you
+found on the net, the software you are developing and
+want to redistribute, a tool you patched and want to
+redistribute, or simply to contribute to a collaborative
+repository to make peace between distributions.
+
+## Dependencies ##
+
+To get pkg++ working, you just need zsh. To build it, 
+however, you also need gcc. Any other preprocessor 
+might work, but none has been tested and work would
+very probably have to be done.
+
+## Installation ##
+
+Now, you are convinced pkg++ is the best tool to build
+package, whatever you distribution might be, and you 
+want to install it.
+
+Just run the following commands:
+
+	./configure
+	make
+	make install
+
+If you want to update, replace `make install` by 
+`make update`. This will avoid the Makefile to erase your
+already existing configuration (/etc/pkg++.conf).
+
+If you want to install pkg++ in a prefix other than /usr, 
+you can re-run configure this way:
+
+	./configure \
+		--prefix=/usr/local \
+		--sysconfdir=/usr/local/etc
+
+## Configuration ##
+
+pkg++ tries to be working out of the box. As such, any 
+post-installation configuration would be optional and you
+can run it right now.
+
+However, you may want to set the directories in which you
+will download your sources or store your packages, or even
+the features you want to enable or disable in the recipes
+you are going to use.
+
+To change you sources and packages directories, edit the 
+following variables. You can put the absolute link of any
+directory you want, but do not forget it will have to be 
+created before you try to build a recipe, or pkg++ will
+fail.
+
+	PKGMK_SOURCE_DIR="/srv/sources"
+	PKGMK_PACKAGE_DIR="/srv/local"
+
+You should also set the logs directory. Some recipes use
+it, and you will be happy to have data to give to the 
+ports maintainers to help them solving your problem 
+faster.
+
+	PKGMK_LOGS_DIR="/var/log/pkg++/"
+
+For “useflags”, just edit the ${USE[]} array. If you do
+not know much about useflags, you should read the 
+[useflags help](http://devel.upyum.com/pkgxx/doc/useflags.xhtml).
+
+If you already know what it is, just declare…
+
+	USE=(my -flags)
+
+The other variables of the file should be intuitive 
+and commented enough for you to guess their effect. :)
+
+## Bugs ##
+
+pkg++ is buggy. Very buggy. But, keep hope, the bugs will
+very likely not be a problem for you. Main ones are listed
+here.
+
+  * Noarch packages might not be built as noarch, 
+    particularily in…
+  * splits. They never worked correctly, even when they
+    worked.
+  * Documentation is quite rare. More than water in a desert.
+

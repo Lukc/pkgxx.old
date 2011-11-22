@@ -3,6 +3,8 @@
 
 <{ get work_in_progress }>
 
+Last build: <{ system LANG=C date }>
+
 # *Pkgfiles* reference #
 
 This file is here to list all the functions and variables you can
@@ -15,12 +17,50 @@ both use, may it be by declaring them or using their value.
 Those are the variables you can define in a Pkgfile. Some of them
 are mandatory, and others might help you avoiding problems.
 
+#### ${builddepends[]} ####
+
+Contains the dependencies needed at build-time but not at run-time.
+
+Its content is similar to the one of ${depends[]}.
+
+<{ get new_feature }>
+<{ get recommended }>
+
 #### $class ####
 
 $class contains the “type” of software you packaged. The allowed
 values are: "library".
 
 <{ get planned }>
+
+#### ${depends[]} ####
+
+You can write in this array the list of packages names your recipe
+depends on.
+
+As the package name of your dependencies change in most 
+distributions or OSes, special variables are available.
+
+The recommended default dependency names are the software names 
+(lowercase, eg. `foo`).
+
+The following example shows how to set two dependencies and how
+to add the exact names of those dependencies on Debian.
+
+	depends=(liba pkgb)
+	
+	if $Debian; then
+		depends=(${depends//liba/liba-1.42})
+		depends=(${depends//pkgb/b-pkg-foo-47})
+	fi
+
+<{ get recommended }>
+
+To know exactly what special variables are available to determine 
+the construction OS, look at 
+[defaults/distributions](defaults/distributions.xhtml).
+
+See also $builddepends and $usedepends.
 
 #### ${iuse[]} ####
 
@@ -46,6 +86,8 @@ If you wrote a port, you should be $packager and $maintainer.
 If you stop maintaining a port, you are still the $packager, 
 but the $maintainer will change on any repository where your
 port is copied and modified.
+
+Its content is similar to the one of $packager.
 
 #### $name ####
 
@@ -86,6 +128,15 @@ software.
 
 <{ get recommended }>
 
+#### ${usedepends[]} ####
+
+Contains the dependencies needed at run-time but not at build-time.
+
+Its content is similar to the one of ${depends[]}.
+
+<{ get new_feature }>
+<{ get recommended }>
+
 #### $version ####
 
 $version sets the version of the software you are packaging.
@@ -122,7 +173,7 @@ You might also want to look at the following variables/functions:
 
 #### post\_build() ####
 
-post_build() does exactly the same thing as build(), except it is run
+post\_build() does exactly the same thing as build(), except it is run
 just before.
 
 It is mainly used when an [include file](include_files.xhtml) that
@@ -130,7 +181,7 @@ defines build() is used.
 
 #### pre\_build() ####
 
-pre_build() does exactly the same thing as build(), except it is run
+pre\_build() does exactly the same thing as build(), except it is run
 just before.
 
 It is mainly used when an [include file](include_files.xhtml) that
