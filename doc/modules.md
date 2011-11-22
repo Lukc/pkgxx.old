@@ -37,7 +37,7 @@ checkout of the repository.
 
 #### vcs:pull() ####
 
-This function must update a cloned repository. It is normally run
+This function must update a cloned repository. It is normally ran
 from the inside of the repository, so no need to use `cd`.
 
 It should also check whether the update was successful (new files
