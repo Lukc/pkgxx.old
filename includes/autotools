@@ -74,3 +74,4 @@ if istrue $use_autocheck; then
 	}
 fi
 
+# vim: syntax=sh shiftwidth=4 tabstop=4

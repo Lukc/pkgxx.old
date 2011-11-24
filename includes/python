@@ -19,4 +19,4 @@ cd $dirname
 	python setup.py build ${build_opts[@]} install --root=$PKG --prefix=$prefix ${install_opts[@]}
 }
 
-
+# vim: syntax=sh shiftwidth=4 tabstop=4

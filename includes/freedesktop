@@ -43,3 +43,5 @@ make_desktop_entry() {
 		echo "Categories=${desktop_categories}"
 	) > "${desktop_file}"
 }
+
+# vim: syntax=sh shiftwidth=4 tabstop=4

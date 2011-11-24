@@ -30,4 +30,4 @@ cd $dirname
 	make DESTDIR=$PKG ${make_opts[@]} install
 }
 
-
+# vim: syntax=sh shiftwidth=4 tabstop=4

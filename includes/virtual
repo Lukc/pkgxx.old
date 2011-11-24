@@ -11,4 +11,4 @@ build() {
 	mkdir -p $PKG$sysconfdir
 }
 
-
+# vim: syntax=sh shiftwidth=4 tabstop=4
