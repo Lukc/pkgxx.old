@@ -27,6 +27,7 @@ case $use_autogen in
 esac
 
 : ${use_configure:=yes}
+: ${use_autocheck:=yes}
 
 : ${sharedir_name:=datarootdir}
 
@@ -65,3 +66,11 @@ cd $dirname
 	${make} ${make_opts[@]}
 	${make} ${make_opts[@]} DESTDIR=$PKG install
 }
+
+if istrue $use_autocheck; then
+	check() {
+		cd $dirname
+		make check
+	}
+fi
+
