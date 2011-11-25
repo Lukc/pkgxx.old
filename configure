@@ -508,6 +508,8 @@ pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
 	`DIR \$\(ETCDIR\)/pkg++/defaults`
+	`DIR \$\(SHAREDIR\)/pkg++/post-defaults`
+	`DIR \$\(ETCDIR\)/pkg++/post-defaults`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
 	`ZCOMPILE '$(BINDIR)/pkg++'`
 	`for include in $(ls includes/); do
@@ -516,6 +518,7 @@ pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
 	done`
 	`INSTALL 0644 defaults/distributions	\$\(ETCDIR\)/pkg++/defaults`
 	`INSTALL 0644 defaults/userland		\$\(ETCDIR\)/pkg++/defaults`
+	`INSTALL 0644 post-defaults/cross.zsh	\$\(ETCDIR\)/pkg++/post-defaults`
 	$(for default in `cd defaults; ls *.zsh`; do
 		# FIXME: In the future, we might want to disable NLS without having the packager to do it. (defaults/use)
 		default=${default%.zsh}
