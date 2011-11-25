@@ -22,7 +22,8 @@ pkgutils:target () {
 	fi
 	
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$pkgname#devel-`date +%Y%m%d`-$release$ARCH.pkg.tar"
+		revision="${PKGMK_REVISION:-$(date +%Y%m%d)-$release}"
+		TARGET="$PKGMK_PACKAGE_DIR/$pkgname#devel-${revision}$ARCH.pkg.tar"
 	else
 		TARGET="$PKGMK_PACKAGE_DIR/$pkgname#$version-$release$ARCH.pkg.tar"
 	fi

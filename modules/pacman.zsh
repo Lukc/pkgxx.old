@@ -15,7 +15,7 @@ pacman:_pkginfo() {
 	# repositories.
 	echo "pkgname = $pkgname"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		echo "pkgver = 999.`date +%Y%m%d`-$release"
+		echo "pkgver = ${PKGMK_REVISION:-`date +%Y%m%d`-$release}"
 	else
 		echo "pkgver = $version-$release"
 	fi
@@ -129,9 +129,9 @@ pacman:_dotinstall() {
 pacman:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
-			echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar"
+			echo "$PKGMK_PACKAGE_DIR/$pkgname-${PKGMK_REVISION:-`date +%Y%m%d`}-$release-$PKGMK_ARCH.pkg.tar"
 		else
-			echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
+			echo "$PKGMK_PACKAGE_DIR/$pkgname-${PKGMK_REVISION:-`date +%Y%m%d`}-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
 		fi
 	else
 		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
