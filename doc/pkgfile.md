@@ -29,7 +29,10 @@ Its content is similar to the one of ${depends[]}.
 #### $class ####
 
 $class contains the “type” of software you packaged. The allowed
-values are: "library".
+values are: "library", "documentation", "man-pages", "headers", 
+"sources" and none ("").
+
+Some modules may use additional values.
 
 <{ get planned }>
 
@@ -106,6 +109,13 @@ If you are a port maintainer, you should look instead at $maintainer.
 
 <{ get recommended }>
 
+#### $pkgname ####
+
+$pkgname allows to redefine the package name (eg. libfoo instead
+of foo). It can be used in includes and modules with $class 
+without taking the risk to change $name and making the recipe
+unusable.
+
 #### $release ####
 
 $release sets the version of the port. It must be an integer 
@@ -120,6 +130,13 @@ ${source[]} is an array than contains the URLs or URIs of sources,
 patches, icons, etc. you need to build a software and its package.
 
 <{ get mandatory }>
+
+#### ${supports[]} ####
+
+Supports contains a list of features the recipe offers. Its values
+can be: `cross`.
+
+<{ get new_feature }>
 
 #### $url ####
 

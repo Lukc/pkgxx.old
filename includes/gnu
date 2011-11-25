@@ -4,7 +4,7 @@
 # Need $name and $version
 # $gnu_extension can change the extension of the tarball. It's default value is .tar.bz2.
 # $gnu_mirror is the GNU mirror on which tarballs are downloaded. It is mainly
-#+ here to allow any user to choose it's GNU mirror, and not for packaging, 
+#+ here to allow any user to choose its GNU mirror, and not for packaging, 
 #+ even if it can be used in recipes.
 #
 
@@ -16,3 +16,4 @@
 
 source=(${source[@]} $gnu_mirror/$gnu_dirname/$gnu_name-$gnu_version$gnu_extension)
 
+# vim: syntax=sh shiftwidth=4 tabstop=4

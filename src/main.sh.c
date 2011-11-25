@@ -181,6 +181,24 @@ main() {
 	fi
 	source "$PKGMK_CONFFILE"
 	
+	/* 
+	 * We export $pkgname, to be sure it will be available to modules,
+	 * now that the recipe has been parsed.
+	 */
+	: ${pkgname:=$name}
+	
+	/* 
+	 * Once the recipes are parsed and pkgname is exported, post-recipe
+	 * defaults are read.
+	 */
+	for DIR in ${PKGMK_PRDEFAULTS_DIRS[@]}; do
+		if [[ -d $DIR ]] && [[ -n $(ls $DIR/) ]]; then
+			for FILE in $DIR"/"*; do
+				. $FILE
+			done
+		fi
+	done
+	
 	/*
 	 * Some often used files or directories names.
 	 */
@@ -379,6 +397,8 @@ readonly PKGMK_ROOT="$PWD"
  */
 PKGMK_CONFFILE=_SYSCONFDIR"/pkg++.conf"
 PKGMK_DEFAULTS_DIRS=(_SHAREDIR/pkg++/defaults _SYSCONFDIR/pkg++/defaults/)
+/* Post-recipe defaults. */
+PKGMK_PRDEFAULTS_DIRS=(_SHAREDIR/pkg++/post-defaults _SYSCONFDIR/pkg++/post-defaults/)
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
 PKGMK_PROFILES_DIRS=(_SHAREDIR/pkg++/profiles _SYSCONFDIR/pkg++/profiles)

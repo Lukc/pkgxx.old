@@ -15,9 +15,9 @@ spack:checks () {
 
 spack:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-${PKGMK_REVISION:=`date +%Y%m%d`}-$PKGMK_ARCH-$release.spack"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-${PKGMK_REVISION:=`date +%Y%m%d`}-$PKGMK_ARCH-$release.spack"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$PKGMK_ARCH-$release.spack"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$PKGMK_ARCH-$release.spack"
 	fi
 }
 

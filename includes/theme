@@ -10,4 +10,4 @@ build() {
 	cp -r ${themes[@]} $PKG$sharedir/themes/
 }
 
-
+# vim: syntax=sh shiftwidth=4 tabstop=4

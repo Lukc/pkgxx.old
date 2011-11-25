@@ -27,18 +27,17 @@ case $use_autogen in
 esac
 
 : ${use_configure:=yes}
+: ${use_autocheck:=yes}
 
 : ${sharedir_name:=datarootdir}
 
 : ${make:=pkgmake}
 
+supports=(${supports[@]} cross)
+
 errlogs=(${errlogs[@]} 'config\.log')
 
 configure_opts=(
-	# Compilation and cross-compilation parameters.
-	${CBUILD:+--build=${CBUILD}}
-	${CHOST:+--host=${CHOST}}
-	${CTARGET:--target=${CTARGET}}
 	# Default directories.
 	${prefix:+--prefix=$prefix}
 	${eprefix:+--exec-prefix=$eprefix}
@@ -54,6 +53,15 @@ configure_opts=(
 	${configure_opts[@]}
 )
 
+if $cross; then
+	configure_opts=(
+		${CBUILD:+--build=${CBUILD}}
+		${CHOST:+--host=${CHOST}}
+		${CTARGET:--target=${CTARGET}}
+		${configure_opts[@]}
+	)
+fi
+
 build(){
 cd $dirname
 	if [[ "$separate_build_dir" = "yes" ]]; then
@@ -65,3 +73,12 @@ cd $dirname
 	${make} ${make_opts[@]}
 	${make} ${make_opts[@]} DESTDIR=$PKG install
 }
+
+if istrue $use_autocheck; then
+	check() {
+		cd $dirname
+		make check
+	}
+fi
+
+# vim: syntax=sh shiftwidth=4 tabstop=4

@@ -34,3 +34,4 @@
 
 source=(${source[@]} $sf_mirror/$sf_dirname/$sf_name$sf_version_separator$sf_version$sf_extension)
 
+# vim: syntax=zsh shiftwidth=4 tabstop=4

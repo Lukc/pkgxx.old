@@ -14,9 +14,9 @@ opkg:check () {
 
 opkg:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.opk"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.opk"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.opk"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$release-$PKGMK_ARCH.opk"
 	fi
 }
 

@@ -15,3 +15,4 @@ version=devel
 : ${use_autogen:=yes}
 include autotools
 
+# vim: syntax=sh shiftwidth=4 tabstop=4

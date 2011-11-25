@@ -13,7 +13,7 @@ pacman:_pkginfo() {
 	# The version is in fact the version and the release of the package, 
 	# using the form version-release. It is the same thing on Frugalware’s
 	# repositories.
-	echo "pkgname = $name"
+	echo "pkgname = $pkgname"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
 		echo "pkgver = 999.`date +%Y%m%d`-$release"
 	else
@@ -129,24 +129,24 @@ pacman:_dotinstall() {
 pacman:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
 		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
-			echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar"
+			echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar"
 		else
-			echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
+			echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
 		fi
 	else
 		if [[ "$PKGMK_COMPRESSION_MODE" = "none" ]]; then
-			echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.pkg.tar"
+			echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$release-$PKGMK_ARCH.pkg.tar"
 		else
-			echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
+			echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$release-$PKGMK_ARCH.pkg.tar.$PKGMK_COMPRESSION_MODE"
 		fi
 	fi
 }
 
 pacman-g2:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.fpm"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release-$PKGMK_ARCH.fpm"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release-$PKGMK_ARCH.fpm"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$release-$PKGMK_ARCH.fpm"
 	fi
 }
 
