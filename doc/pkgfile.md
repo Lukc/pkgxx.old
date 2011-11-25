@@ -131,6 +131,13 @@ patches, icons, etc. you need to build a software and its package.
 
 <{ get mandatory }>
 
+#### ${supports[]} ####
+
+Supports contains a list of features the recipe offers. Its values
+can be: `cross`.
+
+<{ get new_feature }>
+
 #### $url ####
 
 $url contains the URL of the web page (or web site) of the packaged 
