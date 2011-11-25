@@ -33,13 +33,11 @@ esac
 
 : ${make:=pkgmake}
 
+supports=(${supports[@]} cross)
+
 errlogs=(${errlogs[@]} 'config\.log')
 
 configure_opts=(
-	# Compilation and cross-compilation parameters.
-	${CBUILD:+--build=${CBUILD}}
-	${CHOST:+--host=${CHOST}}
-	${CTARGET:--target=${CTARGET}}
 	# Default directories.
 	${prefix:+--prefix=$prefix}
 	${eprefix:+--exec-prefix=$eprefix}
@@ -54,6 +52,15 @@ configure_opts=(
 	# Anything special given in the Pkgfile.
 	${configure_opts[@]}
 )
+
+if $cross; then
+	configure_opts=(
+		${CBUILD:+--build=${CBUILD}}
+		${CHOST:+--host=${CHOST}}
+		${CTARGET:--target=${CTARGET}}
+		${configure_opts[@]}
+	)
+fi
 
 build(){
 cd $dirname
