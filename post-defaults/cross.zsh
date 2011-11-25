@@ -1,7 +1,7 @@
 
 # We could have a CHOST (and we should) without being cross-compiling.
 # We also check that our recipe *can* cross-compile.
-if [[ -n "$CHOST" && "$CHOST" != "$MACHTYPE-$VENDOR-$OSTYPE" ]] && has cross ${supports[@]}; then
+if [[ -n "$CHOST" && "$CHOST" != "$MACHTYPE-$VENDOR-$OSTYPE" ]] && USE=(${supports[@]}) use cross; then
 	export cross=true
 	# We set the name of the most used tools to $CHOST-$GNU_TOOL.
 	: ${CC:=${CHOST}-gcc}
