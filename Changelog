@@ -1,4 +1,12 @@
 
+0.11.3:
+	* $pkgname added. It allows changing the package name without changing
+	  the recipe name.
+	* ${supports[]} added. It currently allows disabling automated
+	  cross-compiling tools if it does not contain "cross".
+	* $class added.
+	* includes/autotools uses ${supports[]}
+
 0.11.2:
 	* Use flags definitions have been remade. Each use flag is now defined in
 	  a defaults file. They can also have a default enable or disable value,
