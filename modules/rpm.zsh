@@ -7,7 +7,7 @@ rpm:_spec() {
 	: ${buildroot:="$prefix"}
 	
 	echo "Summary:   $description"
-	echo "Name:      $name"
+	echo "Name:      $pkgname"
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
 		echo "Version:   999.${PKGMK_REVISION:-`date +%Y%m%d`}"
 	else
@@ -65,21 +65,21 @@ rpm:arch() {
 
 rpm:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$release${rpm_distepoch:+-$rpm_distepoch}-$PKGMK_ARCH.rpm"
 	fi
 }
 
 rpm:build() {
 	cd $PKG
-	rpm:_spec > $PKGMK_WORK_DIR/$name.spec
+	rpm:_spec > $PKGMK_WORK_DIR/$pkgname.spec
 	# If there is a problem, it’s RPM’s fault.
-	rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$name.spec
+	rpmbuild --define "_topdir $PKGMK_PACKAGE_DIR/RPM" --quiet --buildroot=$PKG -bb $PKGMK_WORK_DIR/$pkgname.spec
 	if [[ "$version" =~ (devel|dev|trunk) ]]; then
-		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-999.${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
+		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$pkgname-999.${PKGMK_REVISION:-`date +%Y%m%d`}-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
 	else
-		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$name-$version-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
+		mv $PKGMK_PACKAGE_DIR/RPM/RPMS/$PKGMK_ARCH/$pkgname-$version-$release${rpm_distepoch:+-$rpm_distepoch}.$PKGMK_ARCH.rpm $TARGET
 	fi
 	info "Building $TARGET."
 	rpm -qvlp $TARGET

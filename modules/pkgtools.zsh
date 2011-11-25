@@ -7,15 +7,15 @@ pkgtools:_slackspec () {
 	local lenght i=0
 	echo "|-----handy-ruler------------------------------------------------------|"
 	if [[ -z "$longdesc" ]]; then
-		echo "$name: $description" | head -n 1
+		echo "$pkgname: $description" | head -n 1
 		for i in {1..10}; do
-			echo "$name: "
+			echo "$pkgname: "
 		done
 	else
 		lenght=$(echo "$longdesc" | wc -l)
-		echo "$longdesc" | sed -e "s/^/$name: /" | head -n 11
+		echo "$longdesc" | sed -e "s/^/$pkgname: /" | head -n 11
 		while (((11-$lenght) > $i)); do
-			echo "$name: "
+			echo "$pkgname: "
 			((i++))
 		done
 	fi
@@ -27,9 +27,9 @@ pkgtools:checks () {
 
 pkgtools:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$PKGMK_ARCH-$release.txz"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$PKGMK_ARCH-$release.txz"
 	fi
 }
 

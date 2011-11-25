@@ -181,6 +181,12 @@ main() {
 	fi
 	source "$PKGMK_CONFFILE"
 	
+	/* 
+	 * We export $pkgname, to be sure it will be available to modules,
+	 * now that the recipe has been parsed.
+	 */
+	: ${pkgname:=$name}
+	
 	/*
 	 * Some often used files or directories names.
 	 */

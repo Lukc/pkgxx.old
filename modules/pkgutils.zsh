@@ -22,9 +22,9 @@ pkgutils:target () {
 	fi
 	
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		TARGET="$PKGMK_PACKAGE_DIR/$name#devel-`date +%Y%m%d`-$release$ARCH.pkg.tar"
+		TARGET="$PKGMK_PACKAGE_DIR/$pkgname#devel-`date +%Y%m%d`-$release$ARCH.pkg.tar"
 	else
-		TARGET="$PKGMK_PACKAGE_DIR/$name#$version-$release$ARCH.pkg.tar"
+		TARGET="$PKGMK_PACKAGE_DIR/$pkgname#$version-$release$ARCH.pkg.tar"
 	fi
 	
 	if [[ -n "$EXT" ]]; then

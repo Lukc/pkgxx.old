@@ -8,7 +8,7 @@ nhopkg:_nhoid () {
 	echo "#%NHO-0.5"
 	echo "#%PKG++-${PKGMK_VERSION}"
 	echo "# Package Maintainer: `echo "$maintainer" | sed -e "s|(|<|;s|)|>|"`"
-	echo "# Name:	$name"
+	echo "# Name:	$pkgname"
 	echo "# Version:	$version"
 	echo "# Release:	$release"
 	echo "# License:	$license"
@@ -42,9 +42,9 @@ EOT
 
 nhopkg:target() {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$name-devel-`date +%Y%m%d`-$release.nho"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$release.nho"
 	else
-		echo "$PKGMK_PACKAGE_DIR/$name-$version-$release.nho"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$release.nho"
 	fi
 }
 

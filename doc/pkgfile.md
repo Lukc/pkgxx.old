@@ -29,7 +29,10 @@ Its content is similar to the one of ${depends[]}.
 #### $class ####
 
 $class contains the “type” of software you packaged. The allowed
-values are: "library".
+values are: "library", "documentation", "man-pages", "headers", 
+"sources" and none ("").
+
+Some modules may use additional values.
 
 <{ get planned }>
 
@@ -105,6 +108,13 @@ eg: `User <XMPP:me@my_server.org>` or `The One <one@mailserver.org>`
 If you are a port maintainer, you should look instead at $maintainer.
 
 <{ get recommended }>
+
+#### $pkgname ####
+
+$pkgname allows to redefine the package name (eg. libfoo instead
+of foo). It can be used in includes and modules with $class 
+without taking the risk to change $name and making the recipe
+unusable.
 
 #### $release ####
 
