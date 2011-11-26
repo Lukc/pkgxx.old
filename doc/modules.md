@@ -21,7 +21,7 @@ You need to declare at least two functions:
   * vcs:clone()
   * vcs:pull()
 
-For an example, look at the modules/git.zsh file of pkg++’ sources.
+For example, look at the modules/git.zsh file of pkg++’ sources.
 
 ### Reference ###
 
