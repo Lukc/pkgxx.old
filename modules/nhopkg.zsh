@@ -9,7 +9,11 @@ nhopkg:_nhoid () {
 	echo "#%PKG++-${PKGMK_VERSION}"
 	echo "# Package Maintainer: `echo "$maintainer" | sed -e "s|(|<|;s|)|>|"`"
 	echo "# Name:	$pkgname"
-	echo "# Version:	$version"
+	if [[ "$version" =~ (devel|dev|trunk) ]]; then
+		echo "# Version:	999.${PKGMK_REVISION:-$(date +%Y%m%d)}"
+	else
+		echo "# Version:	$version"
+	fi
 	echo "# Release:	$release"
 	echo "# License:	$license"
 	echo "# Group:	${groups[0]}"

@@ -27,7 +27,7 @@ pkgtools:checks () {
 
 pkgtools:target () {
 	if [[ "$version" = "devel" ]] || [[ "$version" = "dev" ]]; then
-		echo "$PKGMK_PACKAGE_DIR/$pkgname-devel-`date +%Y%m%d`-$PKGMK_ARCH-$release.txz"
+		echo "$PKGMK_PACKAGE_DIR/$pkgname-${PKGMK_REVISION:-devel-`date +%Y%m%d`}-$PKGMK_ARCH-$release.txz"
 	else
 		echo "$PKGMK_PACKAGE_DIR/$pkgname-$version-$PKGMK_ARCH-$release.txz"
 	fi
