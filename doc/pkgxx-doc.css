@@ -1,8 +1,9 @@
 
 #menu, #footer {
-	background-color:#BB8;
+	background-color:#FFF;
+	box-shadow:0 0 8px #EEB;
 } #submenu {
-	background-color:#DDA;
+	background-color:transparent;
 }
 
 em {
@@ -26,18 +27,22 @@ pre code {
 }
 
 .work-in-progress {
-	background:#EEC;
+	box-shadow:0 0 8px #EEC;
 	color:#660;
 	font-weight:bold;
 }
 
 .planned-feature, .new-feature {
+	box-shadow:0 0 10px #CDE;
 	border-color:#CDE;
 } .deprecated {
+	box-shadow:0 0 10px #FB9;
 	border-color:#FB9;
 } .mandatory {
+	box-shadow:0 0 10px #ECA;
 	border-color:#ECA;
 } .recommended {
+	box-shadow:0 0 10px #BDB;
 	border-color:#BDB;
 }
 
