@@ -174,7 +174,8 @@ print_help () {
 	echo "  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX"
 	echo "                          [PREFIX]"
 	echo 
-	echo "Optional Features: (none)"
+	echo "Optional Features:"
+	echo "  --enable-export         do not use autoconfiguration"
 	echo 
 	echo "Fine tuning of the installation directories:"
 	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
@@ -217,6 +218,9 @@ for arg in $@; do
 		--with-*)
 			with="`echo "$arg" | sed "s|--with-||"`"
 			case $with in
+				export)
+					export EXPORT=true
+				;;
 				*)
 					echo "Unknown package $with."
 					echo "Please make $0 --help for more informations."
@@ -226,6 +230,9 @@ for arg in $@; do
 		--without-*)
 			without="`echo "$arg" | sed "s|--without-||"`"
 			case $without in
+				export)
+					export EXPORT=false
+				;;
 				*)
 					echo "Unknown package $without."
 					echo "Please make $0 --help for more informations."
@@ -272,6 +279,8 @@ done
 : ${MANDIR:=$SHAREDIR/man}
 : ${SYSCONFDIR:=/etc}
 : ${LIBEXECDIR:=$EPREFIX/libexec}
+
+: ${EXPORT:=false}
 
 : ${PACKAGE_MANAGER:=`package_manager`}
 : ${KERNEL:=`kernel`}
@@ -577,7 +586,12 @@ pkgfiles:
 # End of file
 EOF
 
-cp "pkg++.conf.in" "pkg++.conf"
+if $EXPORT; then
+	cp "pkg++.conf.in" "pkg++.conf"
+else
+	echo "Auto-configuration of 'pkg++.conf'..."
+	zsh mkconfig.zsh > pkg++.conf
+fi
 cp man/{"pkg++.8.in","pkg++.8"}
 cp man/{"pkg++.conf.5.in","pkg++.conf.5"}
 cp man/{"pkgfile.5.in","pkgfile.5"}
