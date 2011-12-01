@@ -3,6 +3,12 @@
 	* Revision numbers are available with Mercurial (hg) repositories.
 	* ${supports[]} now uses a USE-like syntax.
 	* defaults/prefixes becomes post-defaults/prefixes.zsh
+	* @{ does not use die() anymore.
+	* istrue() has been replaced by a C tool of the same function, name
+	  and use.
+	* $PKGMK_HOMEPREFIX can be set if pkg++ is used to build packages
+	  in a user directory (eg. ~/, ~/.local, etc.). It exports the 
+	  required variables to avoid having dependencies problems.
 
 0.11.4:
 	* Mainly documentation updates and bug corrections.
