@@ -16,21 +16,6 @@ type() {
 	builtin type -w "$1" | sed -e "s/${1//\//\\/\\/}: //"
 }
 
-istrue() {
-	/* 
-	 * Use this to check if a variable is true or false, or even if 
-	 * it is a correct boolean.
-	 * Usage: istrue var
-	 */
-	if has "$1" true TRUE y yes 1; then
-		return 0
-	elif has "$1" false FALSE n no 0; then
-		return 1
-	else
-		return 2
-	fi
-}
-
 tac() {
 	if [[ -n "$tac" ]]; then
 		"$tac" $@

@@ -492,9 +492,11 @@ pkgxx: defaults/distributions
 	echo "#!/usr/bin/env zsh" > pkg++
 	cat pkg++.tmp | sed '/^\$\$/d' >> pkg++
 
-has:
-	(cd tools; \
-		\$(CC) \$(CFLAGS) has.c -o ../has)
+$(for i in has istrue; do
+	echo "$i:"
+	echo "	(cd tools; \\"
+	echo "		\$(CC) \$(CFLAGS) $i.c -o ../$i)"
+done)
 
 config-install:
 	`DIR \$\(ETCDIR\)`
@@ -512,7 +514,7 @@ man-install:
 	`INSTALL_F 0644 man/fr.pkgfile.5 pkgfile.5 \$\(MANDIR\)/fr.UTF-8/man5`
 
 # FIXME: The comment below is simple enough to understand the problem.
-pkgxx-install: pkgxx has-install # has-install is needed for \$(LIBEXECDIR)
+pkgxx-install: pkgxx libexecdir has-install istrue-install
 	`DIR \$\(BINDIR\)`
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
@@ -549,9 +551,15 @@ $(for module in `cd modules; ls *.zsh`; do
 	echo
 done)
 
-has-install: has
+libexecdir:
 	`DIR \$\(LIBEXECDIR\)/pkg++`
-	`INSTALL 755 has \$\(LIBEXECDIR\)/pkg++/`
+
+has-install: has
+$(for i in has istrue; do
+	echo "$i-install: $i"
+	echo -n "	"
+	INSTALL 755 "$i" \$\(LIBEXECDIR\)/pkg++/
+done)
 
 update: pkgxx-install man-install has-install modules-install
 
