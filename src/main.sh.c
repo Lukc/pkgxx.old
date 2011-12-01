@@ -456,6 +456,11 @@ PKGMK_NOFAIL="no"
 PKGMK_KEEP_ERRLOGS="yes"
 PKGMK_CHECK_DEPENDS="yes"
 
+/* 
+ * Variables used by generic defaults and post-defaults files.
+ */
+PKGMK_HOMEPREFIX="no"
+
 PKGMK_KERNEL=_KERNEL
 
 PKGMK_UNTAR_TOOL=gtar

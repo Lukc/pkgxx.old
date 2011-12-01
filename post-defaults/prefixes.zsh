@@ -17,3 +17,18 @@ else
 	: ${mandir:="$sharedir/man"}
 fi
 
+# PKGMK_HOMEPREFIX should be a boolean, and is independant of $prefix.
+if istrue $PKGMK_HOMEPREFIX; then
+	# Those three variables are modified to allow building with
+	#+ libraries and headers in alternative directories.
+	export CFLAGS="-I$includedir $CFLAGS"
+	export CXXFLAGS="-I$includedir $CXXFLAGS"
+	export LDFLAGS="-L$libdir $LDFLAGS"
+	
+	if [[ -z "$LD_LIBRARY_PATH" ]]; then
+		export LD_LIBRARY_PATH="$libdir"
+	else
+		export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$libdir"
+	fi
+fi
+

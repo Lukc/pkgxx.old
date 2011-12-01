@@ -32,6 +32,10 @@ PKGMK_IGNORE_NEW="yes"
 # PKGMK_COMPRESSION_MODE="gz"
 # PKGMK_MAN_COMPRESSION="gz"
 
+# Set this to "yes" if you want to build packages to install in your $HOME.
+#+ It will enable extra CFLAGS and LDFLAGS, so do not use it if not required.
+# PKGMK_HOMEPREFIX="no"
+
 # Variable               # Values
 PKGMK_DOWNLOAD_TOOL=curl # curl wget axel
 PKGMK_UNTAR_TOOL=gtar    # gtar bsdtar sltar
