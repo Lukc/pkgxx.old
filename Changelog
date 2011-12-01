@@ -1,4 +1,12 @@
 
+0.11.5:
+	* Revision numbers are available with Mercurial (hg) repositories.
+	* ${supports[]} now uses a USE-like syntax.
+	* defaults/prefixes becomes post-defaults/prefixes.zsh
+
+0.11.4:
+	* Mainly documentation updates and bug corrections.
+
 0.11.3:
 	* $pkgname added. It allows changing the package name without changing
 	  the recipe name.
