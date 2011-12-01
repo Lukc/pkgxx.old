@@ -12,8 +12,8 @@
 : ${datadir:="$prefix/share"}
 : ${docdir:="$data/doc/$name-$version"}
 if $Crux || $Slackware; then
-: ${mandir:="$prefix/man"}
+	: ${mandir:="$prefix/man"}
 else
-: ${mandir:="$sharedir/man"}
+	: ${mandir:="$sharedir/man"}
 fi
 
