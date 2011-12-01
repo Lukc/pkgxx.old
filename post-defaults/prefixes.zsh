@@ -6,6 +6,7 @@
 : ${bindir:="$eprefix/bin"}
 : ${sbindir:="$eprefix/sbin"}
 : ${libdir:="$prefix/lib"}
+: ${includedir:="$prefix/include"}
 : ${libexecdir:="$eprefix/libexec"}
 : ${sharedir:="$prefix/share"}
 : ${datadir:="$prefix/share"}
