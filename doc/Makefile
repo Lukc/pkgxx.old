@@ -32,7 +32,7 @@ clean: sources-clean
 sources-clean: ${SRC:S/$/.xhtml-clean/}
 
 .for src in ${SRC}
-${src}.xhtml:
+${src}.xhtml: ${src}.md header.xhtml
 	@echo " -- Building ${src}.xhtml."
 	${Q}( \
 		cat ${header} && \
