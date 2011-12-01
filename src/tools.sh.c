@@ -342,14 +342,17 @@ vercmp () {
 @{ () {
 	case $# in
 		0|1|2)
-			die "@{ needs 3 parameters and to be closed."
+			error "@{ needs 3 parameters and to be closed."
+			return 1
 		;;
 		3)
-			die "@{ needs to be closed."
+			error "@{ needs to be closed."
+			return 1
 		;;
 		4);;
 		*)
-			die "@{ needs only 3 parameters and to be closed."
+			error "@{ needs only 3 parameters and to be closed."
+			return 1
 		;;
 	esac
 	/* This is debug to avoid having problems with vercmp. */
