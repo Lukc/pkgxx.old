@@ -581,6 +581,7 @@ clean:
 	`REMOVE defaults/uses`
 	`REMOVE src/config.sh.h`
 	`REMOVE has`
+	`REMOVE istrue`
 $(for module in `cd modules; ls *.zsh`; do
 	echo "	`REMOVE modules/${module%.zsh}`"
 done)
