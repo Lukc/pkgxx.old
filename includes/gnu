@@ -15,5 +15,6 @@
 : ${gnu_extension:=".tar.bz2"}
 
 source=(${source[@]} $gnu_mirror/$gnu_dirname/$gnu_name-$gnu_version$gnu_extension)
+lastver="lastver \$(wcat $gnu_mirror/$gnu_dirname/ | grep '$gnu_name-' | sed -e 's/.*$gnu_name-//;s/${gnu_extension//\./\\.}.*//')"
 
 # vim: syntax=sh shiftwidth=4 tabstop=4
