@@ -223,9 +223,14 @@ check_pkgfile_only () {
 	fi
 	if [[ -n "$lastver" ]]; then
 		local last_version="$(eval "$lastver" | sed -e 's/^[	 ]*//;s/[ 	]*$//')"
-		if @{ "$last_version" ">" "$version" }@ ; then
-			warning "Last version, '$last_version', is greater than the current version '$version'."
-			RETURN=1
+		if [[ -n "$last_version" ]]; then
+			if @{ "$last_version" ">" "$version" }@ ; then
+				warning "Last version, '$last_version', is greater than the current version '$version'."
+				RETURN=2
+			fi
+		else
+			error "\$last_version did not returned anything."
+			RETURN=3
 		fi
 	else
 		warning "Variable 'lastver' not specified in '$PKGMK_PKGFILE'."
