@@ -31,7 +31,8 @@ recursive() {
 	/*
 	 * Hey, we don’t want to make a recursive fail.
 	 */
-	ARGS=`echo "$@" | sed -e "s/--recursive//g" -e "s/-r//g"`
+	ARGS=("${@//--recursive/}")
+	ARGS=("${ARGS[@]//-r/}")
 	
 	/*
 	 * Now, for each directory that contains a Pkgfile, we move to it and
@@ -41,7 +42,7 @@ recursive() {
 		DIR="`dirname $FILE`/"
 		if [[ -d $DIR ]]; then
 			info "Entering directory '$DIR'."
-			(cd $DIR && $PKGMK_COMMAND $ARGS)
+			(cd $DIR && $PKGMK_COMMAND ${ARGS[@]})
 			info "Leaving directory '$DIR'."
 		fi
 	done
