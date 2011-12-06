@@ -313,6 +313,16 @@ vercmp () {
 	local v1=$(echo "$version1" | cut -d '.' -f $i)
 	local v2=$(echo "$version2" | cut -d '.' -f $i)
 	
+	/* 
+	 * Those two .0 are here to prevent a failure from a strange behavior of… cut.
+	 */
+	if [[ ! "$version1" =~ \. ]]; then
+		version1=$version1.0
+	fi
+	if [[ ! "$version2" =~ \. ]]; then
+		version2=$version2.0
+	fi
+	
 	alpha=-3
 	beta=-2
 	rc=-1
@@ -326,6 +336,10 @@ vercmp () {
 			else
 				(( $v1 $comp $v2 ))
 				return $?
+			fi
+		else
+			if [[ "$comp" =~ (">"|"<") ]]; then
+				return 1
 			fi
 		fi
 		i=$(($i+1))
