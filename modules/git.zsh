@@ -14,3 +14,23 @@ git:pull() {
 	fi
 }
 
+# This special function provides a tool to check if a local repository is up
+#+ to date and to print a warning if not… when put in a nice $lastver.
+git:lastver() {
+	local last_sha current_sha
+	if [[ -e "$PKGMK_SOURCE_DIR/$name" ]]; then
+		cd $PKGMK_SOURCE_DIR/$name
+	else
+		#error "Can not check whether repository is up to date without a local clone."
+		echo "$version"
+		return 1
+	fi
+	last_sha="$(git ls-remote "$1" -h refs/heads/master | sed -e 's|	*refs/heads/master$||')"
+	current_sha="$(git rev-list master | head -n 1)"
+	if [[ "$last_sha" != "$current_sha" ]]; then
+		echo "$version+1"
+	else
+		echo "$version"
+	fi
+}
+
