@@ -12,7 +12,7 @@ curl:download() {
 }
 
 curl:cat() {
-	curl $1 2>/dev/null
+	curl -L --insecure $1 2>/dev/null
 }
 
 axel:download() {
@@ -49,7 +49,7 @@ wget:download() {
 }
 
 wget:cat() {
-	wget -O - $1 2>/dev/null
+	wget -O --no-check-certificate - $1 2>/dev/null
 }
 
 ftp:download() {
