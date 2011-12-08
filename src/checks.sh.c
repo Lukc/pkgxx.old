@@ -212,7 +212,7 @@ check_pkgfile_only () {
 		error "Function 'build' not specified in '$PKGMK_PKGFILE'."
 		RETURN=1
 	fi
-	if [[ "`type check`" != "function" ]]; then
+	if istrue "$PKGMK_CHECK" && [[ "`type check`" != "function" ]]; then
 		/*
 		 * check() should be given in recipes, to allow a user
 		 * to know if everything will work, but this is not mandatory
