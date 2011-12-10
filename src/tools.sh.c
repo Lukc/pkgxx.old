@@ -309,7 +309,10 @@ vercmp () {
 	local comp=$2
 	local i=1
 	local version1=$(echo "$1" | sed -e "s/-/./g;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g").0
-	local version2=$(echo "$3" | sed -e "s/-/./;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g").0
+	local version2=$(echo "$3" | sed -e "s/-/./;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g")
+	if [[ "$comp" != "~>" ]]; then
+		version2="$version2".0
+	fi
 	local v1=$(echo "$version1" | cut -d '.' -f $i)
 	local v2=$(echo "$version2" | cut -d '.' -f $i)
 	
