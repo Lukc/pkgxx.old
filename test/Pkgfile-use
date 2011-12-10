@@ -27,10 +27,10 @@ use c
 test_info $? 0 3 "use +useflag       "
 
 use d
-test_info $? 1 4 "use undefined +flag"
+test_info $? 3 4 "use undefined -flag"
 
 use e
-test_info $? 0 5 "use undefined -flag"
+test_info $? 0 5 "use undefined +flag"
 
 use f
 test_info $? 2 6 "use unknown flag   "
