@@ -13,6 +13,8 @@ use_minimal=( 1 "Enable as few features as possible."                           
 use_man=(     1 "Build and install man pages."                                             )
 use_info=(    1 "Build and install texinfo pages."                                         )
 use_binary=(  1 "Use official binaries instead of building when this option is available." )
+use_slots=(   0 "Build package for installation with slot (UNRECOMMENDED)."                ) # Well, almost no package manager use slots…
+use_vanilla=( 0 "Do not use patches that are not mandatory."                               )
 
 # Free, open programming languages
 use_perl=(   1 "Add Perl support or binding."   )
