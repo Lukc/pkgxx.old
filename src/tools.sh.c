@@ -377,6 +377,15 @@ lastver () {
 	echo "$lastver"
 }
 
+lasttar() {
+	local tarname="$2"
+	lastver $(
+		wcat "$1" | \
+			grep "${tarname:=$name}-.*\.tar\(gz\|bz2\|xz\|lzma\|lzo\)*" | \
+			sed -e "s/.*${tarname}-//;s/\.tar\.\(gz\|bz2\|xz\|lzma\|lzo\).*//"
+	)
+}
+
 depname() {
 	/* 
 	 * What could be worse than finding a "gcc >= 4.6" in a… well, in 
