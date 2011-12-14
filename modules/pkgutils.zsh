@@ -2,6 +2,34 @@
 PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} pkgutils)
 PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} pkgutils)
 
+#<
+# ## pkgutils.zsh ##
+# 
+# ### History ###
+# The pkgutils module originates from the old pkgmk. It is mainly an improved 
+# version of its content that was used to build packages.
+# 
+# It followed the recent pkgmk upgrades that made the choice of compression 
+# algorithms possible.
+# 
+# ### Packages structure ###
+# 
+# The package is a simple compressed tar archive. There is no metadata stored.
+# 
+#     $name#version-$revision.pkg.tar.(xz|gz|bz2)
+#      └── (...)
+# 
+# ### Required tools ###
+# 
+# This module does not require non-standard tools.
+# 
+# ### Special configuration ###
+# 
+# This module does not use non-standard configuration.
+# 
+# Maintained by Lukc
+#>
+
 pkgutils:target () {
 	local ARCH=""
 	
