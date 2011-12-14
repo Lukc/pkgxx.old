@@ -38,7 +38,6 @@ sltar:unpack() {
 }
 
 tar:pack() {
-	[[ "$PKGMK_UNTAR_TOOL" = sltar ]] && die "sltar does not support packing."
 	local TARBALL="$1"
 	if [[ -z "$TARFLAGS" ]]; then
 		local TARFLAGS
