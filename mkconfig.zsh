@@ -32,7 +32,7 @@ done
 for tool in bsdtar tar; do
 	if [[ -n "$(which $tool)" ]]; then
 		untar_tool=$tool
-		if [[ "$untar_tool" == "tar" ]]; then
+		if [[ "$untar_tool" == "tar" ]] && gnu "$(which tar)"; then
 			untar_tool=gtar # GNU...
 		fi
 	fi
