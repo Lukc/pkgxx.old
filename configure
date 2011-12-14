@@ -555,16 +555,20 @@ done)
 libexecdir:
 	`DIR \$\(LIBEXECDIR\)/pkg++`
 
-has-install: has
 $(for i in has istrue; do
-	echo "$i-install: $i"
+	echo "$i-install: $i libexecdir"
 	echo -n "	"
-	INSTALL 755 "$i" \$\(LIBEXECDIR\)/pkg++/
+	INSTALL 0755 "$i" \$\(LIBEXECDIR\)/pkg++/
 done)
 
-update: pkgxx-install man-install has-install modules-install
+pkgfile-old2new.sh-install: pkgfile-old2new.sh
+	$(INSTALL 0755 "pkgfile-old2new.sh" \$\(LIBEXECDIR\)/pkg++)
 
-install: pkgxx-install config-install man-install has-install modules-install
+tools-install: has-install istrue-install pkgfile-old2new.sh-install
+
+update: pkgxx-install man-install modules-install tools-install
+
+install: pkgxx-install config-install man-install modules-install tools-install
 
 clean:
 	`REMOVE pkg++`
