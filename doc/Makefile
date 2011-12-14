@@ -18,36 +18,76 @@ spp ?= spp
 footer ?= footer.xhtml
 header ?= header.xhtml
 
+URL ?= http://pkgxx.org/doc
+
 SRC != ls *.md | sed -e "s/\(.*\/\)*//;s/\.md$$//"
+MOD != ls ../modules/*.zsh | sed -e "s|^../modules/||;s|\.zsh$$||"
 
 Q ?= @
 
 all: sources modules
 sources: ${SRC:S/$/.xhtml/}
-modules: ${MOD}
-# FIXME: We will extract documentation/informations directly from the modules
-#        source code/comments, in the future. (or not)
+modules: ${MOD:S/$/.xhtml/:S/^/modules\//} modules/index.xhtml
 
-clean: sources-clean
+clean: sources-clean modules-clean
 sources-clean: ${SRC:S/$/.xhtml-clean/}
+modules-clean: ${MOD:S/$/.xhtml-clean/:S/^/modules\//} modules/${header}-clean modules/${footer}-clean modules/index.xhtml-clean
 
 .for src in ${SRC}
-${src}.xhtml: ${src}.md header.xhtml
+${src}.xhtml: ${src}.md ${header} ${footer}
 	@echo " -- Building ${src}.xhtml."
 	${Q}( \
 		cat ${header} && \
 		cat ${src}.md | sed -f links.sed | (${spp} -t spp || sed -e "s/<{.*}>//") | ${markdown} && \
 		cat ${footer} \
 	) > ${src}.xhtml || ( \
-		echo "-- Building of ${src}.xhtml failed!" ; \
+		echo " -- Building of ${src}.xhtml failed!" ; \
 		rm ${src}.xhtml; \
 	)
-.endfor
 
-.for src in ${SRC}
-${src}.xhtml-clean: ${src}.xhtml
+${src}.xhtml-clean:
 	@echo " -- Removing ${src}.xhtml."
 	${Q}rm -f ${src}.xhtml
+.endfor
+
+modules/:
+	@mkdir -p modules/
+
+modules/${header}: modules/
+	@echo " -- Building modules/${header}."
+	${Q}cat ${header} | sed -e "/<div id=\"submenu\">/,/<\/div>/{s/href=\"/href=\"..\//}" > modules/${header}
+modules/${footer}: modules/
+	@echo " -- Building modules/${footer}."
+	${Q}cp ${footer} modules/${footer}
+
+modules/${header}-clean:
+	${Q}rm -f modules/${header}
+modules/${footer}-clean:
+	${Q}rm -f modules/${footer}
+
+modules/index.xhtml: modules/${header} modules/${footer}
+	@echo " -- Building modules/index.xhtml."
+	${Q}( \
+		cat modules/${header} && \
+		echo -e "${MOD:S/$/\n/:S/^/  * /}" | sed -e "s/\( \* \)\([a-zA-Z0-9]*\)/\1<a href=\"${URL:S/\//\\\//g}\/modules\/\2.xhtml\">\2<\/a>/" | ${markdown} && \
+		cat modules/${footer} \
+	) > modules/index.xhtml
+modules/index.xhtml-clean:
+	@echo " -- Removing modules/index.xhtml."
+	${Q}rm -f modules/index.xhtml
+
+.for src in ${MOD}
+modules/${src}.xhtml: doc.sh modules/ modules/${header} modules/${footer}
+	@echo " -- Building modules/${src}.xhtml."
+	${Q}( \
+		cat modules/${header} && \
+		markdown="${markdown}" sh doc.sh ../modules/${src}.zsh && \
+		cat modules/${footer} \
+	) > modules/${src}.xhtml || rm -f modules/${src}.xhtml
+
+modules/${src}.xhtml-clean:
+	@echo " -- Removing modules/${src}.xhtml."
+	${Q}rm -f modules/${src}.xhtml
 .endfor
 
 # spp is needed to build some of the documentation.
