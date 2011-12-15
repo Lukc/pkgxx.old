@@ -77,7 +77,7 @@ modules/index.xhtml-clean:
 	${Q}rm -f modules/index.xhtml
 
 .for src in ${MOD}
-modules/${src}.xhtml: doc.sh modules/ modules/${header} modules/${footer}
+modules/${src}.xhtml: doc.sh modules/ modules/${header} modules/${footer} ../modules/${src}.zsh
 	@echo " -- Building modules/${src}.xhtml."
 	${Q}( \
 		cat modules/${header} && \
