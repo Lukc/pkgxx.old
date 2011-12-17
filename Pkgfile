@@ -38,6 +38,7 @@ configure_opts=(
 	--sysconfdir=${sysconfdir:-/etc}
 	--mandir=${mandir:-$sharedir/man}
 	--package-manager=${package_manager:-pkgutils}
+	--with-export # Well, it’s a package, not a user-install.
 )
 
 build(){
