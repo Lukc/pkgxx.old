@@ -175,7 +175,7 @@ print_help () {
 	echo "                          [PREFIX]"
 	echo 
 	echo "Optional Features:"
-	echo "  --enable-export         do not use autoconfiguration"
+	echo "  --with-export           do not use autoconfiguration"
 	echo 
 	echo "Fine tuning of the installation directories:"
 	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
