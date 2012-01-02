@@ -91,15 +91,18 @@ modules/${src}.xhtml-clean:
 .endfor
 
 # spp is needed to build some of the documentation.
-# As very few distros have packaged it, here is a bootstrap rule.
+# As very few distros have packaged it with my own personal changes, here
+#+ is a bootstrap rule. Those changes are vital for real-world use of spp
+#+ (in my humble opinion), and more important, are vital to build pkg++’
+#+ documentation.
 
-spp: spp.hg
+spp: spp.git
 	@echo " -- Building spp."
-	${Q}cd spp.hg; make CFLAGS="-O3 -march=native"
-	${Q}cp spp.hg/spp spp
+	${Q}cd spp.git; make CFLAGS="-O3 -march=native"
+	${Q}cp spp.git/spp spp
 
-spp.hg:
-	@echo " -- Cloning spp’s mercurial repository."
-	${Q}hg clone http://hg.youterm.com/spp spp.hg
+spp.git:
+	@echo " -- Cloning spp’s git repository."
+	${Q}git clone git://upyum.com/spp spp.git
 
 
