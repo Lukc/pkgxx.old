@@ -39,7 +39,7 @@ subinfo() {
 ask() {
 	local variable="$1"
 	shift 1
-	echo -e "\033[01;36m--\033[00;01m $@\033[00m"
+	echo -e "${fg_bold[magenta]}--${fg_bold[white]} $@${reset_color}"
 	echo -n " > "
 	read "$variable"
 }
