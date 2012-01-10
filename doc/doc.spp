@@ -32,6 +32,12 @@
 </div>\
 }>
 
+<{set mandatory-module \
+<div class="mandatory">\
+	This variable or function must be declared in any module.\
+</div>\
+}>
+
 <{set recommended \
 <div class="recommended">\
 	This option is not mandatory, but it is recommended to set it when\

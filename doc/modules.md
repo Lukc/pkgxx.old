@@ -36,7 +36,7 @@ which name is $name.
 You should assure yourself that things like SSL will not block the 
 checkout of the repository.
 
-<{ get module_required }>
+<{ get module-mandatory }>
 
 #### vcs:pull() ####
 
@@ -47,7 +47,7 @@ It should also check whether the update was successful (new files
 were added, modified or removed) or not (the remote repository did 
 not changed since the last pull or clone).
 
-<{ get module_required }>
+<{ get module-mandatory }>
 
 #### vcs:revision() ####
 
@@ -72,7 +72,7 @@ $name, $version, $revision, etc.
 The package name must be absolute and must be prefixed by
 `$PKGMK_PACKAGE_DIR`.
 
-<{ get mandatory }>
+<{ get module_required }>
 
 #### pkg:checkdeps() ####
 
@@ -92,7 +92,7 @@ Absolute path and name of the package are stored in $TARGET.
 So, once built, $TARGET must match your package on the local
 filesystem.
 
-<{ get mandatory }>
+<{ get module_required }>
 
 #### pkg:footprint() ####
 

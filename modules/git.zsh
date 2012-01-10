@@ -1,4 +1,16 @@
 
+#<
+# ## git ##
+# 
+# The git module provides the required tools to fetch sources from git
+# repositories, to get a revision number of a repository using the list
+# of commits (to version numerically packages), to update an already
+# cloned repository and to check if the last is up to date.
+# 
+# For more information about how to use this module, please refer
+# to the [modules reference](/doc/modules.xhtml).
+#>
+
 git:clone() {
 	GIT_SSL_NO_VERIFY=true git clone `echo $1 | sed -e 's|^git+||'` $name
 }
