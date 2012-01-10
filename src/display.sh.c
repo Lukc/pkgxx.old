@@ -23,6 +23,15 @@ error() {
 	echo -e "${fg_bold[red]}-- ERROR: $1${reset_color}" >&2
 }
 
+/* 
+ * This may be used to print messages from inside build(), check() and other
+ * recipe-defined functions, even if internal-use is also planed.
+ */
+
+subinfo() {
+	echo "${fg_bold[blue]} --${fg_bold[white]} $@${reset_color}"
+}
+
 /*
  * Use this *only* in interactive mode. Any other use could destroy the world.
  */
