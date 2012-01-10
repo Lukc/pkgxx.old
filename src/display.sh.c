@@ -12,15 +12,15 @@
  */
 
 info() {
-	echo -e "${fg_bold[green]}--${fg_bold[white]} $1${reset_color}"
+	echo "${fg_bold[green]}--${fg_bold[white]} $@${reset_color}"
 }
 
 warning() {
-	echo -e "${fg_bold[yellow]}-- WARNING: $1${reset_color}" >&2
+	echo "${fg_bold[yellow]}-- WARNING: $@${reset_color}" >&2
 }
 
 error() {
-	echo -e "${fg_bold[red]}-- ERROR: $1${reset_color}" >&2
+	echo  "${fg_bold[red]}-- ERROR: $@${reset_color}" >&2
 }
 
 /* 
