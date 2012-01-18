@@ -359,9 +359,15 @@ vercmp () {
 		;;
 	esac
 	/* This is debug to avoid having problems with vercmp. */
-	echo "$1$2$3" | (grep -q " " || grep -q "	") && die "@{: opts must not contain any space or tabulation."
+	echo "$1$2$3" | (egrep -q "[ 	]") && {
+			error "@{: opts must not contain any space or tabulation."
+			return 1
+		}
 	for i in 1 2 3; do
-		eval "[[ -z \$$i ]]" && die "@{: empty opt (\$$i)."
+		eval "[[ -z \$$i ]]" && {
+			error "@{: empty opt (\$$i)."
+			return 1
+		}
 	done
 	vercmp "$1" "$2" "$3"
 }
