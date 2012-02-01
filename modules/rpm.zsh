@@ -129,7 +129,7 @@ rpm:checks() {
 	# And then we check that the particular RPM directories, files, 
 	# and so on, are present where they should, plus the recuperation
 	# of the distepoch var.
-	if [[ $(rpm --version | awk '{print $3}') > 5.1.6 ]] ; then
+	if [[ $(rpm --version | awk '{print $3}') > 5.1.6 ]] && ! istrue $PKGMK_RPM_IGNORE_DISTEPOCH ; then
 		export rpm_distepoch="$(rpm --eval '%disttag%distepoch')"
 	fi
 	check_command rpm
