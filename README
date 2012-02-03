@@ -24,9 +24,11 @@ repository to make peace between distributions.
 ## Dependencies ##
 
 To get pkg++ working, you just need zsh. To build it, 
-however, you also need gcc. Any other preprocessor 
-might work, but none has been tested and work would
-very probably have to be done.
+however, you also need gcc and make. Any other
+preprocessor  might work, but none has been tested and
+work would very probably have to be done. As for make, 
+the Makefile is generic and any implementation should
+be able to use it without any kind of problem.
 
 ## Installation ##
 
@@ -50,6 +52,13 @@ you can re-run configure this way:
 	./configure \
 		--prefix=/usr/local \
 		--sysconfdir=/usr/local/etc
+
+The file `Makefile.new` you may have noticed is a
+non-working work-in-progress of Makefile for bmake. This
+Makefile should ideally be independent of any external
+script. However, no-one is seriously maintaining it right
+now and it is really outdated, so please, if you are not
+already a pkg++ user and a bmake expert, do not use it. :)
 
 ## Configuration ##
 
@@ -78,7 +87,7 @@ faster.
 
 	PKGMK_LOGS_DIR="/var/log/pkg++/"
 
-For “useflags”, just edit the ${USE[]} array. If you do
+For “useflags”, just edit the `${USE[]}` array. If you do
 not know much about useflags, you should read the 
 [useflags help](http://devel.upyum.com/pkgxx/doc/useflags.xhtml).
 
@@ -96,7 +105,7 @@ very likely not be a problem for you. Main ones are listed
 here.
 
   * Noarch packages might not be built as noarch, 
-    particularily in…
+    particularly in…
   * splits. They never worked correctly, even when they
     worked.
   * Documentation is quite rare. More than water in a desert.
