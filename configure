@@ -382,7 +382,7 @@ CPPFLAGS="$CPPFLAGS -D_ARCH=\"$ARCHITECTURE\" -D_KERNEL=\"$KERNEL\" $CPPFLAGS"
 CPPFLAGS="$CPPFLAGS -D_PACKAGE_MANAGER=\"$PACKAGE_MANAGER\""
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
 CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
-CPPFLAGS="$CPPFLAGS -include $PWD/src/error.sh.h -include $PWD/src/footprints.sh.h -include $PWD/src/modules.sh.h"
+CPPFLAGS="$CPPFLAGS -include $PWD/src/error.sh.h -include $PWD/src/modules.sh.h"
 
 case $PACKAGE_MANAGER in
 	"") ;;
