@@ -284,6 +284,17 @@ main() {
 	 */
 	arch=$(target_arch)
 	kernel=$(target_kernel)
+
+	/* 
+	 * At that point, we need to get the revision of the VCS if one is used.
+	 */
+	for SOURCE in ${source[@]}; do
+		local PROTOCOL="$(get_protocol "$SOURCE")"
+		if [[ "$(type ${PROTOCOL}:revision)" == "function" ]]; then
+			export PKGMK_REVISION="$(${PROTOCOL}:revision "$(get_filename "$SOURCE")")"
+		fi
+	done
+	
 	
 	/* 
 	 * We get the target from a specific function.
