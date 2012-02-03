@@ -1,4 +1,13 @@
 
+0.11.6:
+	* info(), warning() and error() updated to display all options given.
+	* subinfo() added to print messages from inside recipe-defined
+	  functions (build(), check(), etc.) and from modules at usefull times
+	  (check_depends(), build(), etc.).
+	* PKGMK_RPM_IGNORE_DISTEPOCH added to help avoid problems with the 
+	  "distepoch" and "disttag" variables of some distributions of RPM.
+	* Gentoo added to the list of known distributions.
+
 0.11.5:
 	* Revision numbers are available with Mercurial (hg) repositories.
 	* ${supports[]} now uses a USE-like syntax.
