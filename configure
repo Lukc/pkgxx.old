@@ -7,7 +7,7 @@ dist () {
 	# FIXME: Put this somewhere else?
 	[[ -e Makefile ]] && make clean
 	[[ -e pkg++-$VERSION ]] && rm -rf pkg++-$VERSION
-	# Cleaning, just in case we might want to built that a day.
+	# Cleaning, just in case we might want to build that a day.
 	for i in .tar.{gz,bz2,lzma,lzo,xz,Z} .zip .sqsh; do
 		[[ -e pkg++-$VERSION$i ]] && rm -f pkg++-$VERSION$i
 	done
