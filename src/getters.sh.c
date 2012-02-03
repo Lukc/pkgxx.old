@@ -1,7 +1,7 @@
 
 get_protocol() {
 	/*
-	 * It just returns what is before the first “:”.
+	 * It just returns what is before the first “:” and after the first “+”.
 	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
 	echo ${PROTOCOL/\+*}
@@ -40,7 +40,7 @@ get_filename() {
 
 get_basename() {
 	/*
-	 * Returns something. Probably the complete path of a file on a server.
+	 * Returns the base name of a file or URL.
 	 */
 	local FILE="`echo $1 | sed 's|^.*://.*/||g'`"
 	echo $FILE
@@ -80,11 +80,24 @@ get_metafile() {
 }
 
 get_use_description() {
+	/* 
+	 * Prints on stdout the description of a use flag. The description can
+	 * be defined anywhere in the configuration, recipe or include.
+	 *
+	 * Each use flag can have a description. Use `use_flag[2]="desc"` to
+	 * define a description for `flag`. Redefining use descriptions is 
+	 * however something to avoid.
+	 */
 	local use="$1"
 	eval "echo \${use_${use}[2]}"
 }
 
 get_target() {
+	/* 
+	 * Prints on stdout the absolute name and path of a package, making
+	 * the required calls to the required parts of the wanted package
+	 * manager’s module.
+	 */
 	${PKGMK_PACKAGE_MANAGER}:target
 }
 
