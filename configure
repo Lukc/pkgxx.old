@@ -303,20 +303,19 @@ else
 	exit 1
 fi
 
-checking_for "bash >= 4.1"
-if checking_for_bin bash &> /dev/null; then
-	BASH_VERSION=$(bash --version | head -n 1 | cut -d ' ' -f 4 | sed 's|(.*||')
-	if	(( `echo $BASH_VERSION | cut -d . -f 1` >= 4 )) && \
-		(( `echo $BASH_VERSION | cut -d . -f 2` >= 1 ));
+checking_for "zsh >= 4.3"
+if checking_for_bin zsh &> /dev/null; then
+	ZSH_VERSION=$(zsh --version | cut -d ' ' -f 2)
+	if	(( `echo $ZSH_VERSION | cut -d . -f 1` >= 4 )) && \
+		(( `echo $ZSH_VERSION | cut -d . -f 2` >= 3 ));
 	then
 		echo "yes"
 	else
-		echo "Bash is found, but is not up to date. pkg++ will surely work, but it is untested." >&2
+		echo "zsh is found, but is not up to date. pkg++ will surely work, but it is untested." >&2
 	fi
 else
 	echo "no"
-	echo "You will need a recent enough bash version to use pkg++. Without bash, you will not be able to install or use pkg++." >&2
-	echo "However, pkg++ will surely work with older versions of bash, it is just untested." >&2
+	echo "zsh is required to use pkg++ and to install it correctly" >&2
 fi
 
 checking_for "pkgtools"
