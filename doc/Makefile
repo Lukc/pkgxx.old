@@ -22,16 +22,19 @@ URL ?= http://pkgxx.org/doc
 
 SRC != ls *.md | sed -e "s/\(.*\/\)*//;s/\.md$$//"
 MOD != ls ../modules/*.zsh | sed -e "s|^../modules/||;s|\.zsh$$||"
+INC != ls ../includes | sed -e "s|^../includes/||"
 
 Q ?= @
 
-all: sources modules
+all: sources modules includes
 sources: ${SRC:S/$/.xhtml/}
 modules: ${MOD:S/$/.xhtml/:S/^/modules\//} modules/index.xhtml
+includes: ${INC:S/$/.xhtml/:S/^/includes\//} includes/index.xhtml
 
-clean: sources-clean modules-clean
+clean: sources-clean modules-clean includes-clean
 sources-clean: ${SRC:S/$/.xhtml-clean/}
 modules-clean: ${MOD:S/$/.xhtml-clean/:S/^/modules\//} modules/${header}-clean modules/${footer}-clean modules/index.xhtml-clean
+includes-clean: ${INC:S/$/.xhtml-clean/:S/^/includes\//} includes/${header}-clean includes/${footer}-clean includes/index.xhtml-clean
 
 .for src in ${SRC}
 ${src}.xhtml: ${src}.md ${header} ${footer}
@@ -88,6 +91,47 @@ modules/${src}.xhtml: doc.sh modules/ modules/${header} modules/${footer} ../mod
 modules/${src}.xhtml-clean:
 	@echo " -- Removing modules/${src}.xhtml."
 	${Q}rm -f modules/${src}.xhtml
+.endfor
+
+includes/:
+	@mkdir -p includes/
+
+includes/${header}: includes/
+	@echo " -- Building includes/${header}."
+	${Q}cat ${header} | sed -e "/<div id=\"submenu\">/,/<\/div>/{s/href=\"/href=\"..\//}" > includes/${header}
+includes/${footer}: includes/
+	@echo " -- Building includes/${footer}."
+	${Q}cp ${footer} includes/${footer}
+
+includes/${header}-clean:
+	${Q}rm -f includes/${header}
+includes/${footer}-clean:
+	${Q}rm -f includes/${footer}
+
+includes/index.xhtml: includes/${header} includes/${footer}
+	@echo " -- Building includes/index.xhtml."
+	${Q}( \
+		cat includes/${header} && \
+		echo -e "${MOD:S/$/\n/:S/^/  * /}" | sed -e "s/\( \* \)\([a-zA-Z0-9]*\)/\1<a href=\"${URL:S/\//\\\//g}\/includes\/\2.xhtml\">\2<\/a>/" | ${markdown} && \
+		cat includes/${footer} \
+	) > includes/index.xhtml
+includes/index.xhtml-clean:
+	@echo " -- Removing includes/index.xhtml."
+	${Q}rm -f includes/index.xhtml
+
+
+.for src in ${INC}
+includes/${src}.xhtml: doc.sh includes/ includes/${header} includes/${footer} ../includes/${src}
+	@echo " -- Building includes/${src}.xhtml."
+	${Q}( \
+		cat includes/${header} && \
+		markdown="${markdown}" sh doc.sh ../includes/${src} && \
+		cat includes/${footer} \
+	) > includes/${src}.xhtml || rm -f includes/${src}.xhtml
+
+includes/${src}.xhtml-clean:
+	@echo " -- Removing includes/${src}.xhtml."
+	${Q}rm -f includes/${src}.xhtml
 .endfor
 
 # spp is needed to build some of the documentation.
