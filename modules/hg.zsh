@@ -1,4 +1,20 @@
 
+#<
+# ## Mercurial ##
+# 
+# The Mercurial module allows you to use Mercurial repositories as
+# sources in your recipes.
+#
+# It supports cloning, updating already cloned repositories and 
+# getting revision numbers.
+# 
+# Please, do not use it with `git://` URLs. If you want to use `hg`
+# to clone git repositories, edit the git module.
+#
+# The keyword of this module is `hg`.
+# 
+#>
+
 hg:clone() {
 	hg clone `echo $1 | sed -e 's|^hg+||'` $name
 }

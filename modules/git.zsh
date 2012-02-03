@@ -7,6 +7,8 @@
 # of commits (to version numerically packages), to update an already
 # cloned repository and to check if the last is up to date.
 # 
+# The keyword with which you can prefix git URLs is `git`.
+#  
 # For more information about how to use this module, please refer
 # to the [modules reference](/doc/modules.xhtml).
 #>

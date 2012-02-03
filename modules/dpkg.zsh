@@ -2,6 +2,39 @@
 PKGMK_PACKAGE_MANAGERS=(${PKGMK_PACKAGE_MANAGERS[@]} dpkg)
 PKGMK_PM_NOARCH_SUPPORT=(${PKGMK_PM_NOARCH_SUPPORT[@]} dpkg)
 
+#<
+# ## dpkg.zsh ##
+# 
+# ### Description ###
+# 
+# The `dpkg` module tries to build deb packages as respectful of 
+# Debian packaging standards as possible.
+# 
+# It relies on `dpkg-deb` for the final phase of the packages
+# building process.
+# 
+# ### Packages structure ###
+# 
+# deb packages are a ar archive, containing a repository dedicated
+# to metadata and a tarball containing itself the packaged software’s
+# files and directories.
+# 
+#     ${name}_${version}-${release}_${arch}.deb (ar)
+#
+# FIXME: A nice schema is missing.
+# 
+# ### Required tools ###
+# 
+# This module requires `dpkg-deb`, which is distributed with `dpkg`
+# and thus present on any standard Debian installation.
+# 
+# ### Special configuration ###
+# 
+# This module does not use non-standard configuration.
+# 
+# Maintained by Lukc
+#>
+
 dpkg:_list() {
 	while [[ -n "$1" ]]; do
 		echo -n "$(depname ${1})"

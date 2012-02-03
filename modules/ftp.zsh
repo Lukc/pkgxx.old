@@ -1,4 +1,36 @@
 
+#<
+# ## FTP — File Transfert Protocol ##
+# 
+# This module defines how to fetch sources from `HTTP(s)` and 
+# `FTP(s)` protocols, using different tools. The tools used
+# and how they should be used can be defined in your configuration
+# file `pkg++.conf.in`.
+# 
+# SSL warnings are ignored. If a download fails, downloading only
+# the missing parts of the required file will be tried if the 
+# download tool used permits it.
+# 
+# If you have a problem trying to fetch tarballs, look at the
+# *Extra configuration* section.
+# 
+# ### Extra configuration ###
+# 
+#   * `PKGMK_DOWNLOAD_TOOL="string"` —
+#     This variable defines which tool to use to fetch sources. The 
+#     supported tools are `curl`, `axel` and `wget`.
+#   * `PKGMK_CURL_OPTS="string"` —
+#     This variable allows giving additional options to the `curl`
+#     executable when downloading a file with curl.
+#   * `PKGMK_WGET_OPTS="string"` —
+#     This variable allows giving additional options to the `wget`
+#     executable when downloading a file with wget.
+#   * `PKGMK_AXEL_OPTS="string"` —
+#     This variable allows giving additional options to the `axel`
+#     executable when downloading a file with axel.
+# 
+#>
+
 curl:download() {
 	if [[ -f "$LOCAL_FILENAME_PARTIAL" ]]; then
 		RESUME_CMD="-C $LOCAL_FILENAME_PARTIAL"
@@ -17,7 +49,7 @@ curl:cat() {
 
 axel:download() {
 	# axel tries to resume downloads when the output file already 
-	# exists… so don’t need to manage that. ;)
+	# exists… so no need to manage that. ;)
 	DOWNLOAD_OPTS=(
 			-o "$LOCAL_FILENAME_PARTIAL" # Output
 			-a

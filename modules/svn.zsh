@@ -1,4 +1,15 @@
 
+#<
+# ## Subversion ##
+# 
+# The Subversion module allows you to use Subversion repositories as
+# sources in your recipes.
+#
+# It supports cloning and updating already cloned repositories.
+#
+# The keyword with which you can prefix your Subversion URLs is `svn`.
+#>
+
 SVN_OPTS=(--non-interactive --trust-server-cert)
 
 svn:clone() {
