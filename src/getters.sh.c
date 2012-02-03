@@ -1,14 +1,14 @@
 
 get_protocol() {
 	/*
-	 * It just returns what is before the first “:” and after the first “+”.
+	 * It just returns what is before the firsts “:” and “+”.
 	 */
 	local PROTOCOL="`echo $1 | cut -d ':' -f 1`"
 	echo ${PROTOCOL/\+*}
 }
 get_filename() {
 	/*
-	 * Returns the name of the file/directory, even in an URL.
+	 * Returns the name of the file/directory on the local file system.
 	 */
 	if
 		[[ $1 =~ ^(http|https|ftp):\/\/.*/(.+) ]] || \
