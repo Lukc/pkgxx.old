@@ -201,13 +201,22 @@ build_package() {
 			PKG_ROOT="${SPLITS}/$SPLIT"
 		fi
 		
-		pkgname="${split_pkgname}" \
-		pkgversion="${split_version}" \
-		pkgrelease="${split_release}" \
-		PKG="${PKG_ROOT}" \
-		ARCH="$(target_arch)" \
-		KERNEL="$(target_kernel)" \
-		TARGET="$(get_target)" \
+		pkgname="${split_pkgname}"           \
+		name="${split_name}"                 \
+		version="${split_version}"           \
+		release="${split_release}"           \
+		description="${split_description}"   \
+		longdesc="${split_longdesc}"         \
+		license="${split_license}"           \
+		url="${url}"                         \
+		depends=(${split_depends[@]})        \
+		build_depends=(${split_depends[@]})  \
+		archs=(${split_depends[@]})          \
+		kernels=(${split_kernels[@]})        \
+		PKG="${PKG_ROOT}"                    \
+		ARCH="$(target_arch)"                \
+		KERNEL="$(target_kernel)"            \
+		TARGET="$(get_target)"               \
 			${PKGMK_PACKAGE_MANAGER}:build
 	done
 	
