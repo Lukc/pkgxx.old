@@ -17,6 +17,11 @@ use_slots=(   0 "Build package for installation with slot (UNRECOMMENDED)."     
 use_vanilla=( 0 "Do not use patches that are not mandatory."                               )
 use_splits=(  0 "Split the package into several different small packages."                 )
 
+# Splits and distributions liking splits
+if $Debian || $Fedora || $Mandriva; then
+	use_splits[1]=1
+fi
+
 # Free, open programming languages
 use_perl=(   1 "Add Perl support or binding."   )
 use_lua=(    1 "Add Lua support or binding."    )
