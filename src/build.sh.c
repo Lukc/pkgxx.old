@@ -170,7 +170,7 @@ build_package() {
 				if [[ ${SPLIT} == $pkgname ]]; then
 					export ${SPLIT}_pkgname=\"${pkgname}\"
 				else
-					export ${SPLIT}_pkgname=\"${name}-${SPLIT}\"
+					export ${SPLIT}_pkgname=\"${SPLIT}\"
 				fi
 			fi
 		"
