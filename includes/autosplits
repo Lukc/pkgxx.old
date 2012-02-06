@@ -31,21 +31,32 @@
 
 splits=(${splits[@]} ${autosplits[@]})
 
-for SPLIT in ${autosplits[@]}; do
-	case "$SPLIT" in
-		man)
-			man_pkgname="${pkgname:-$name}-man"
-		;;
-		doc)
-			doc_pkgname="${pkgname:-$name}-doc"
-		;;
-		locales)
-			locales_pkgname="${pkgname:-$name}-locales"
-		;;
-	esac
-done
+if [[ ${#autosplits} -gt 0 ]]; then
+	has splits ${iuse[@]} || iuse=(${iuse[@]} splits)
+fi
+
+if use splits; then
+	for SPLIT in ${autosplits[@]}; do
+		case "$SPLIT" in
+			man)
+				man_pkgname="${pkgname:-$name}-man"
+			;;
+			doc)
+				doc_pkgname="${pkgname:-$name}-doc"
+			;;
+			locales)
+				locales_pkgname="${pkgname:-$name}-locales"
+			;;
+		esac
+	done
+fi
 
 autosplit() {
+	if ! use splits; then
+		# If we do not want splits, there should not be any
+		#+ problem, which implies a no-error return code.
+		return 0
+	fi
 	for SPLIT in ${autosplits[@]}; do
 		case "$SPLIT" in
 			man)
@@ -55,6 +66,12 @@ autosplit() {
 				pkgsplit doc $docdir
 			;;
 			locales)
+				# The locales may be somewhere else if the
+				#+ software does not uses the standard place
+				#+ where to put locales. To avoid problems
+				#+ with that, we use the variable $localesdir,
+				#+ which is in such cases to be exported from
+				#+ the Pkgfile.
 				pkgsplit locales ${localesdir:-$sharedir/locale}
 			;;
 		esac
