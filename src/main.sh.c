@@ -189,6 +189,14 @@ main() {
 	: ${pkgname:=$name}
 	
 	/* 
+	 * If ${name} contains '-', there will be problems later in build().
+	 * So, we just remove those '-'.
+	 */
+	if [[ "$name" =~ .*-.* ]]; then
+		name="${name//-/_}"
+	fi
+	
+	/* 
 	 * Once the recipes are parsed and pkgname is exported, post-recipe
 	 * defaults are read.
 	 */

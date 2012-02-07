@@ -163,11 +163,11 @@ build_package() {
 	 * We think again to the poor user.
 	 */
 	info "Build result:"
-	for SPLIT in $pkgname ${splits[@]}; do
+	for SPLIT in $name ${splits[@]}; do
 		
 		eval "
 			if [[ -z \"\${${SPLIT}_pkgname}\" ]]; then
-				if [[ ${SPLIT} == $pkgname ]]; then
+				if [[ ${SPLIT} == $name ]]; then
 					export ${SPLIT}_pkgname=\"${pkgname}\"
 				else
 					export ${SPLIT}_pkgname=\"${SPLIT}\"
