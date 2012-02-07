@@ -18,8 +18,10 @@ a way to build easily packages for anyone.
 You can use it to package the last application you
 found on the net, the software you are developing and
 want to redistribute, a tool you patched and want to
-redistribute, or simply to contribute to a collaborative
-repository to make peace between distributions.
+be recognised as dependency by your package manager,
+or simply to contribute to a collaborative
+repository, may it be for a single distribution or
+for users on multiple distributions.
 
 ## Dependencies ##
 
