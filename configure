@@ -563,11 +563,15 @@ done)
 pkgfile-old2new.sh-install: pkgfile-old2new.sh
 	$(INSTALL 0755 "pkgfile-old2new.sh" \$\(LIBEXECDIR\)/pkg++)
 
+default-dirs:
+	`DIR /var/cache/pkg++/sources`
+	`DIR /var/cache/pkg++/packages`
+
 tools-install: has-install istrue-install pkgfile-old2new.sh-install
 
 update: pkgxx-install man-install modules-install tools-install
 
-install: pkgxx-install config-install man-install modules-install tools-install
+install: pkgxx-install config-install man-install modules-install tools-install default-dirs
 
 clean:
 	`REMOVE pkg++`
