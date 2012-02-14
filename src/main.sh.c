@@ -262,7 +262,18 @@ main() {
 	 * If the user wants a dependencies-check, we do it between the recipe check
 	 * and the use of it’s content.
 	 */
-	if [[ "$PKGMK_CHECK_DEPENDS" = "yes" ]]; then
+	if ! (
+			istrue "$PKGMK_DOWNLOAD_ONLY"    || \
+			istrue "$PKGMK_EXTRACT_ONLY"     || \
+			istrue "$PKGMK_UP_TO_DATE"       || \
+			istrue "$PKGMK_CLEAN"            || \
+			istrue "$PKGMK_UPDATE_FOOTPRINT" || \
+			istrue "$PKGMK_UPDATE_MD5SUM"    || \
+			istrue "$PKGMK_UPDATE_SHA256SUM" || \
+			istrue "$PKGMK_CHECK_PKGFILE"    || \
+			istrue "$PKGMK_LIST_INCLUDES"
+	   ) && [[ "$PKGMK_CHECK_DEPENDS" = "yes" ]]
+	then
 		if [[ "$(type ${PKGMK_PACKAGE_MANAGER}:checkdeps)" != "none" ]]; then
 			/* It does have access to ${depends[*]}, ${build_depends[*]}, etc. */
 			if ! ${PKGMK_PACKAGE_MANAGER}:checkdeps; then
