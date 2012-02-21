@@ -29,10 +29,26 @@ Its content is similar to the one of ${depends[]}.
 #### $class ####
 
 $class contains the “type” of software you packaged. The allowed
-values are: "library", "documentation", "man-pages", "headers", 
-"sources" and none ("").
+values are: `library`, `documentation`, `man-pages`, `headers` or
+`sources`.
+
+This variable is not mandatory, and not having set it is not a
+problem.
 
 Some modules may use additional values.
+
+<{ get planned }>
+
+#### ${contributors[]} ####
+
+${contributors[]} is here to contain the names and mails of
+all the previous contributors of the package or the port.
+
+	# Example
+	contributors=(
+		"Some One <someone@upyum.com>"
+		"The Packager <packager@pkgxx.org>"
+	)
 
 <{ get planned }>
 
@@ -70,7 +86,15 @@ See also $builddepends and $usedepends.
 ${iuse[]} is an array containing a list of [[useflags]] used in
 the recipe.
 
+	# Example
+	iuse=(nls doc static)
+
 <{ get recommended }>
+
+For more informations about *useflags*, you should read the
+[useflags reference](useflags.xhtml).
+
+If you use custom flags, don’t forget to declare them.
 
 #### $license ####
 
@@ -134,7 +158,7 @@ patches, icons, etc. you need to build a software and its package.
 #### ${supports[]} ####
 
 Supports contains a list of features the recipe offers. Its values
-can be: `cross`.
+can be: `cross`, `autosplits`.
 
 <{ get new_feature }>
 
