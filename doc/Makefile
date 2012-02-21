@@ -112,7 +112,7 @@ includes/index.xhtml: includes/${header} includes/${footer}
 	@echo " -- Building includes/index.xhtml."
 	${Q}( \
 		cat includes/${header} && \
-		echo -e "${MOD:S/$/\n/:S/^/  * /}" | sed -e "s/\( \* \)\([a-zA-Z0-9]*\)/\1<a href=\"${URL:S/\//\\\//g}\/includes\/\2.xhtml\">\2<\/a>/" | ${markdown} && \
+		echo -e "${INC:S/$/\n/:S/^/  * /}" | sed -e "s/\( \* \)\([a-zA-Z0-9.\\-]*\)/\1<a href=\"${URL:S/\//\\\//g}\/includes\/\2.xhtml\">\2<\/a>/" | ${markdown} && \
 		cat includes/${footer} \
 	) > includes/index.xhtml
 includes/index.xhtml-clean:
