@@ -46,16 +46,20 @@ pkgmake() {
 }
 
 include() {
-	for DIR in $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
-		if [[ -e $DIR/$1 ]]; then
-			if . $DIR/$1; then
-				return 0
-			else
-				return 1 /* Parsing failed. */
+	for FILE in $@; do
+		for DIR in $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
+			if [[ -e $DIR/$FILE ]]; then
+				if . $DIR/$FILE; then
+					continue 2
+				else
+					error "An error occured while including \`$DIR/$FILE'."
+					return 1 /* Parsing failed. */
+				fi
 			fi
-		fi
+		done
+		error "Include \`$FILE' was not found."
+		return 2 /* Not found. */
 	done
-	return 2 /* Not found. */
 }
 
 sedi() {
