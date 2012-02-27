@@ -57,7 +57,7 @@ pacman:_pkginfo() {
 	else
 	
 	# If we use pacman and not pacman-g2, we can create a noarch package.
-		if has no-arch ${archs[@]}; then
+		if [[ "$PKGMK_ARCH" = noarch ]]; then
 	# We use “any” to have a noarch package on Arch.
 			echo "arch = any"
 		else
