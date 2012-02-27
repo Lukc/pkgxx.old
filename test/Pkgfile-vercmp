@@ -38,5 +38,8 @@ test_info $? 0 6 "@{ function"
 @{ "1. 2" ">" "1.1" }@ &>/dev/null
 test_info $? 1 7 "@{ spaces  "
 
+@{ 1.2.3 -ge 1.2.2 }@
+test_info $? 0 8 "hyphen opts"
+
 exit 0
 

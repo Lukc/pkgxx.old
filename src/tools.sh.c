@@ -310,6 +310,38 @@ vercmp () {
 	local i=1
 	local version1=$(echo "$1" | sed -e "s/-/./g;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g").0
 	local version2=$(echo "$3" | sed -e "s/-/./;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g")
+	
+	/* 
+	 * Traditional sh comparison operators should be supported, because
+	 * they don’t require to be quoted
+	 */
+	case "$comp" in
+		-gt)
+			comp=">"
+		;;
+		-ge)
+			comp=">="
+		;;
+		-lt)
+			comp="<"
+		;;
+		-le)
+			comp="<="
+		;;
+		-eq)
+			comp="=="
+		;;
+		-ne)
+			comp="!="
+		;;
+		-sb)
+			/* 
+			 * Standing for Same Branch.
+			 */
+			comp="~>"
+		;;
+	esac
+	
 	if [[ "$comp" != "~>" ]]; then
 		version2="$version2".0
 	fi
