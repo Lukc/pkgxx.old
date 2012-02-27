@@ -1,3 +1,13 @@
+0.12:
+	* -lt,-gt,-le,-ge,-eq,-ne are now supported by vercmp() (and so by @{
+	  }@). In more, -sb has been added, which is equivalent to ~>.
+	* Problems of directories path in includes/cmake have been resolved.
+	* Several minor documentation updates have been performed.
+	* The experimental dependencies check is not run anymore when pkg++
+	  does not plan to build a package.
+	* The script-generated Makefile now creates the
+	  /var/cache/pkg++/sources and /var/cache/pkg++/packages directories,
+	  so that pkg++ is directly usable after a fresh installation.
 
 0.11.6:
 	* info(), warning() and error() updated to display all options given.
