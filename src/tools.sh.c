@@ -202,7 +202,7 @@ use_with() {
 }
 
 pkgsplit() {
-	local split="${1}"
+	local split="$1"
 	shift 1
 	cd $PKG
 	
@@ -212,7 +212,7 @@ pkgsplit() {
 	for FILE in $@; do
 		if [[ -e ".$FILE" ]]; then
 			tar c ".$FILE" | (cd $SPLITS/$split ; tar x)
-			rm -rf ".$FILE"
+			rm -rf $FILE
 		fi
 	done
 }

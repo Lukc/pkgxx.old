@@ -49,45 +49,10 @@ recursive() {
 }
 
 list_splits() {
-	for SPLIT in $name ${splits[@]}; do
-		eval "
-			if [[ -z \"\${${SPLIT}_pkgname}\" ]]; then
-				if [[ ${SPLIT} == $name ]]; then
-					export ${SPLIT}_pkgname=\"${pkgname}\"
-				else
-					export ${SPLIT}_pkgname=\"${SPLIT}\"
-				fi
-			fi
-		"
-		
-		for VAR in name version release pkgname license; do
-			eval "
-				export split_${VAR}=\"\$${SPLIT}_${VAR}\"
-				if [[ -z \"\$split_${VAR}\" ]]; then
-					split_${VAR}=\"\${${VAR}}\"
-				fi
-			"
-		done
-		
-		for VAR in source archs kernels; do
-			eval "
-				export split_${VAR}
-				split_${VAR}=(\${${SPLIT}_${VAR}[@]})
-				if [[ \${#split_${VAR}} = 0 ]]; then
-					split_${VAR}=(\${${VAR}[@]})
-				fi
-			"
-		done
-		pkgname="${split_pkgname}"              \
-		name="${split_name}"                    \
-		version="${split_version}"              \
-		release="${split_release}"              \
-		license="${split_license}"              \
-		archs=(${split_depends[@]})             \
-		kernels=(${split_kernels[@]})           \
-		ARCH="$(target_arch)"                   \
-		KERNEL="$(target_kernel)"               \
-			${PKGMK_PACKAGE_MANAGER}:target
+	export_splits
+	for i in ${!PKG_NAMES[*]}; do
+		split_exec \
+			$PKGMK_PACKAGE_MANAGER:target
 	done
 }
 
@@ -222,14 +187,6 @@ main() {
 	 * now that the recipe has been parsed.
 	 */
 	: ${pkgname:=$name}
-	
-	/* 
-	 * If ${name} contains '-', there will be problems later in build().
-	 * So, we just remove those '-'.
-	 */
-	if [[ "$name" =~ .*-.* ]]; then
-		name="${name//-/_}"
-	fi
 	
 	/* 
 	 * Once the recipes are parsed and pkgname is exported, post-recipe
