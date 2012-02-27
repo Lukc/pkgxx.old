@@ -71,6 +71,9 @@ To see available include files, just do `pkg++ -li`.
 .TP
 .SH SEE ALSO
 pkg++.conf(5), pkg++(8)
+.SH HTML DOCUMENTATION
+More documentation is available in Markdown in pkg++' sources directory. It can easily be converted into HTML with a standard Markdown implementation.
+If you don't want to bother with Markdown, an up-to-date HTML documentation should be available at http://pkgxx.org/doc/pkgfile.xhtml.
 .SH COPYRIGHT
 pkg++ is based on pkgmk. All the modifications are Copyright (c) 2010 Vandervelden Luka and are under the same License.
 pkgmk (pkgutils) is Copyright (c) 2000-2005 Per Liden and Copyright (c) 2006-2008 CRUX team (http://crux.nu).
