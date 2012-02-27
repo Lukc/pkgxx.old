@@ -6,6 +6,27 @@
 # and $separate_build_dir
 #
 
+if ! has cmake ${includes[@]}; then
+	# If we are here, this file has been requested for the tools it contains.
+	
+	function cmake_enable {
+		local FLAG="$1"
+		local CMAKE_OPT="$2"
+		echo -n "-DENABLE_${CMAKE_OPT}="
+		if use "$FLAG"; then
+			echo "YES"
+		else
+			echo "NO"
+		fi
+		iuse=(${iuse[@]//$FLAG} $FLAG)
+	}
+	
+	# We should better use the rest of the file after the recipe has finished
+	# being parsed.
+	includes=(cmake ${includes[@]//cmake})
+	return 0
+fi
+
 case $version in
 	devel|dev|trunk)
 		: ${dirname:="$name"}
