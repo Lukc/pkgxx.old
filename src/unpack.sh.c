@@ -17,9 +17,9 @@ unpack_source() {
 					${PKGMK_UNTAR_TOOL}:unpack "$LOCAL_FILENAME" "$SRC"
 				;;
 				*)
-					local LOCAL_FILETYPE="$(basename "${LOCAL_FILENAME}:unpack")"
+					local LOCAL_EXTENSION="${LOCAL_FILENAME##*\.}"
 					if [[ "$(type ${LOCAL_EXTENSION})" != none ]]; then
-						if ! ${LOCAL_EXTENSION}:unpack; then
+						if ! ${LOCAL_EXTENSION}:unpack "${LOCAL_FILENAME}" "${SRC}"; then
 							error "Unpacking of '$FILE' failed."
 						fi
 					else
