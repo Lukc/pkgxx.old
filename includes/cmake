@@ -21,12 +21,13 @@ esac
 
 cmake_opts=(
 	${prefix:+-DPREFIX=$prefix}
-	${prefix:+-DCMAKE_INSTALL_DIR=$prefix}
+	${prefix:+-DCMAKE_INSTALL_PREFIX=$prefix}
 	${sysconfdir:+-DSYSCONF_INSTALL_DIR=$sysconfdir}
 	${libdir:+-DLIB_INSTALL_DIR=$libdir}
 	${datarootdir:+-DDATAROOTDIR=$datarootdir}
 	${bindir:+-DBINDIR=$bindir}
 	${mandir:+-DMANDIR=$mandir}
+	${docdir:+-DDOCDIR=$docdir}
 	${cmake_opts[@]}
 )
 
