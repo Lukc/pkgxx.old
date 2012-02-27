@@ -18,7 +18,7 @@ unpack_source() {
 				;;
 				*)
 					local LOCAL_EXTENSION="${LOCAL_FILENAME##*\.}"
-					if [[ "$(type ${LOCAL_EXTENSION})" != none ]]; then
+					if [[ "$(type ${LOCAL_EXTENSION}:unpack)" != "${LOCAL_EXTENSION}:unpack: none" ]]; then
 						if ! ${LOCAL_EXTENSION}:unpack "${LOCAL_FILENAME}" "${SRC}"; then
 							error "Unpacking of '$FILE' failed."
 						fi
