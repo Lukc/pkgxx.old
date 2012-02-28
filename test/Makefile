@@ -13,6 +13,13 @@ targets getters vercmp use:
 	@echo '. ./test-config-io-only ; info "\033[32m[[ Running $@ tests ]] --"' | ${ZSH}
 	@${PKGXX} -cf test-config-io-only ./Pkgfile-$@
 
+doc:
+	@for file in ../includes/* ../modules/*.zsh; do \
+		if ! grep -q "#<" "$$file"; then \
+			echo " > $$file is not documented." | sed -e "s/\.\.//"; \
+		fi; \
+	done
+
 build: nano
 
 nano: check_root
