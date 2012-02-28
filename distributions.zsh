@@ -37,6 +37,15 @@ elif [[ -e /etc/arch-release ]]; then
 elif [[ -e /etc/gentoo-release ]]; then
 	: ${DISTRIBUTION:="Gentoo"}
 	: ${DISTRIBUTION_VERSION:="$(cat /etc/gentoo-release | sed -e 's/.*release //')"}
+elif [[ -e /etc/SuSE-release ]]; then
+	# Note: we don’t use /etc/os-release here because it is not possible
+	#+ to parse it with sh.
+	if [[ -e /etc/SuSE-brand && "$(head -n 1 /etc/SuSE-brand)" = "openSUSE" ]]; then
+		: ${DISTRIBUTION:="openSUSE"}
+	else
+		: ${DISTRIBUTION:="SuSE"}
+	fi
+	: ${DISTRIBUTION_VERSION:="$(grep VERSION /etc/SuSE-release | cut -d ' ' -f 3)"}
 elif [[ -e /etc/lsb-release ]]; then
 	if . /etc/lsb-release; then
 		# Should cover Ubuntu and Debian, at least.
@@ -57,8 +66,9 @@ else
 fi
 
 case $DISTRIBUTION in
-	Ubuntu|Mint)  FAMILY=Debian ;;
-	*)            FAMILY=$DISTRIBUTION ;;
+	Ubuntu|Mint)    FAMILY=Debian ;;
+	SuSE|openSUSE)  FAMILY=SuSE ;;
+	*)              FAMILY=$DISTRIBUTION ;;
 esac
 
 [[ -n "$DISTRIBUTION" ]]         && echo "distribution=\"$DISTRIBUTION\""
