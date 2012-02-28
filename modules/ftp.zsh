@@ -81,7 +81,7 @@ wget:download() {
 }
 
 wget:cat() {
-	wget -O --no-check-certificate - $1 2>/dev/null
+	wget -O- --no-check-certificate - $1 2>/dev/null
 }
 
 ftp:download() {
