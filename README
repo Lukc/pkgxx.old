@@ -91,7 +91,7 @@ faster.
 
 For “useflags”, just edit the `${USE[]}` array. If you do
 not know much about useflags, you should read the 
-[useflags help](http://devel.upyum.com/pkgxx/doc/useflags.xhtml).
+[useflags help](http://pkgxx.org/doc/useflags.xhtml).
 
 If you already know what it is, just declare…
 
@@ -108,7 +108,14 @@ here.
 
   * Noarch packages might not be built as noarch, 
     particularly in…
-  * splits. They never worked correctly, even when they
-    worked.
+  * … splits. They never worked correctly, even when they
+    worked. However, they are reimplemented in the 0.13/0.14
+    branch of pkg++.
   * Documentation is quite rare. More than water in a desert.
+    This tends to be a little less true everyday, but there
+    is still much work to be done.
+
+There may of course be more bugs that we may be unaware of.
+If you find a such a bug, please send me a message by mail
+or Jabber/XMPP at lukc@upyum.com for both protocols.
 
