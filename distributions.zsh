@@ -79,12 +79,10 @@ for d in ${DISTRIBUTIONS[@]}; do
 	if [[ "$DISTRIBUTION" = "$d" ]]; then
 		echo "$d=true"
 		echo "${d}_version=$DISTRIBUTION_VERSION"
+	elif [[ "$FAMILY" = "$d" ]]; then
+		echo "$d=true"
 	else
-		if [[ "$FAMILY" = "$d" ]]; then
-			echo "$d=true"
-		else
-			echo "$d=false"
-		fi
+		echo "$d=false"
 	fi
 done
 
