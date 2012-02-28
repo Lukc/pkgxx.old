@@ -1,9 +1,26 @@
-#
-## Include for Python
-#
-# Need $name, $version, $release and $source
-# Can receive arguments from $build_opts and $install_opts
-#
+#<
+# # Include for Python distutils
+# 
+# This include declares a `build()` function if none has been declared.
+# This function will try to run a `setup.py` script in a given
+# directory of the sources to build a Python software and install it.
+# 
+# ## Important variables
+# 
+# * $dirname can be set to the directory in which the setup.py script
+#   can be found and run. It defaults to `$name-$version` for stable
+#   `$version`s and to `$name` for unstable ones.
+# * $python can be set to the name of the Python interpreter to use to 
+#   run the setup.py script. Usually, it should contain `python2` or
+#   `python3`, with maybe a more precise version if needed. It defaults
+#   to `python`.
+# * `${build_opts[]}` is passed as options to the setup.py script after
+#   the parameter “build”.
+# * `${install_opts[]}` is similar to `${build_opts[]}`, except it is 
+#   given after the `install`, the `--root=` and the `--prefix=`
+#   parameters.
+# 
+#>
 
 case $version in
 	devel|dev|trunk)
@@ -14,9 +31,14 @@ case $version in
 	;;
 esac
 
-build() {
-cd $dirname
-	python setup.py build ${build_opts[@]} install --root=$PKG --prefix=$prefix ${install_opts[@]}
-}
+# This is very important for python2 or python3 specific packages.
+: ${python:=python}
+
+if [[ "$(type -w build)" != "build: function" ]]; then
+	build() {
+		cd $dirname
+		${python} setup.py build ${build_opts[@]} install --root=$PKG --prefix=$prefix ${install_opts[@]}
+	}
+fi
 
 # vim: syntax=sh shiftwidth=4 tabstop=4
