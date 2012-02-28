@@ -15,7 +15,7 @@ checking_for_bin () {
 DISTRIBUTIONS=(
 	# We put here only the most known distributions.
 	Crux Arch Slackware Frugalware   # KISS
-	Fedora Mandriva                  # RPM-based
+	Fedora Mandriva SuSE openSUSE    # RPM-based
 	Debian Ubuntu Mint               # dpkg/Debian-based
 	FreeBSD OpenBSD NetBSD           # *BSD
 	Cygwin                           # Problems.
