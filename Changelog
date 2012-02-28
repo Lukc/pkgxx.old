@@ -8,6 +8,15 @@
 	* The script-generated Makefile now creates the
 	  /var/cache/pkg++/sources and /var/cache/pkg++/packages directories,
 	  so that pkg++ is directly usable after a fresh installation.
+	* Mint, SuSE and openSUSE have both been added to the list of 
+	  distribution-specific variables of /etc/pkg++/defaults/distributions
+	  (see distributions.zsh).
+	* wget:cat() (and so wcat in most cases) were broken, but have been
+	  repaired.
+	* The non-tar archive types are working again (that is, all unpack
+	  modules).
+	* includes/python has been updated and now supports the `$python`
+	  variable to tell in a recipe which Python interpreter to use.
 
 0.11.6:
 	* info(), warning() and error() updated to display all options given.
