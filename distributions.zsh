@@ -16,7 +16,7 @@ DISTRIBUTIONS=(
 	# We put here only the most known distributions.
 	Crux Arch Slackware Frugalware   # KISS
 	Fedora Mandriva                  # RPM-based
-	Debian Ubuntu                    # dpkg/Debian-based
+	Debian Ubuntu Mint               # dpkg/Debian-based
 	FreeBSD OpenBSD NetBSD           # *BSD
 	Cygwin                           # Problems.
 	Gentoo                           # Also problems, as those distro do
@@ -42,6 +42,8 @@ elif [[ -e /etc/lsb-release ]]; then
 		# Should cover Ubuntu and Debian, at least.
 		: ${DISTRIBUTION:="$DISTRIB_ID"}
 		: ${DISTRIBUTION_VERSION:="$DISTRIB_RELEASE"}
+		# We remove the Linux part of LinuxMint.
+		DISTRIBUTION="${DISTRIBUTION//LinuxMint/Mint}"
 	else
 		echo "  /etc/lsb-release could not be parsed." >&2
 	fi
@@ -55,8 +57,8 @@ else
 fi
 
 case $DISTRIBUTION in
-	Ubuntu)   FAMILY=Debian ;;
-	*)        FAMILY=$DISTRIBUTION ;;
+	Ubuntu|Mint)  FAMILY=Debian ;;
+	*)            FAMILY=$DISTRIBUTION ;;
 esac
 
 [[ -n "$DISTRIBUTION" ]]         && echo "distribution=\"$DISTRIBUTION\""
