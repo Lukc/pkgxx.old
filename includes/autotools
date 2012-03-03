@@ -1,15 +1,23 @@
-#
-## Include for Autoconf
-#
-# Need $name, $version, $release and $source
-# Can receive arguments from $configure_opts and $make_opts
-# $use_autogen can enable the ./autogen.sh command, which takes parameters 
-#   from ${autogen_opts[@]}
-# $use_configure can disable the ./configure command if set to anything 
-#   other than "yes".
-# $make sets the implementation of make to use. It's default value, 
-#   `pkgmake`, means that any make implementation can be used.
+#<
+# # Include for Autoconf
 # 
+# The `autoconf` include defines the `build()` function if it does not
+# exist already. It can also define the `check()` function, if
+# `$use_autocheck` is set in the recipe to `true`.
+# 
+# ## Important variables ##
+# 
+#   * `$use_autogen` can be set to `true` or `false` to force the use
+#     of the autogen.sh in the sources directory. It defaults to 
+#     `true` if you are building a development version, and to `false`
+#     in other cases.
+#   * `${autegen_opts[]}` can be used to pass options to the
+#     `autogen.sh` script.
+#   * `$use_configure` is similar to `$use_autogen`, except it 
+#      manages the use of the `configure` script.
+#   * `${configure_opts[]}` is similar to `${autogen_opts[]}`, except
+#     it passes its content to `configure`.
+#>
 
 case $version in
 	devel|dev|trunk)
@@ -30,8 +38,6 @@ esac
 : ${use_autocheck:=yes}
 
 : ${sharedir_name:=datarootdir}
-
-: ${make:=pkgmake}
 
 supports=(${supports[@]} cross)
 
@@ -70,8 +76,8 @@ cd $dirname
 	fi
 	[[ "$use_autogen" = "yes" ]] && $SRC/$dirname/autogen.sh ${autogen_opts[@]}
 	[[ "$use_configure" = "yes" ]] && $SRC/$dirname/configure ${configure_opts[@]}
-	${make} ${make_opts[@]}
-	${make} ${make_opts[@]} DESTDIR=$PKG install
+	pkgmake
+	pkgmake DESTDIR=$PKG install
 }
 
 if istrue $use_autocheck; then
