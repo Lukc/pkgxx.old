@@ -1,10 +1,20 @@
-#
-## Include for CMake
-#
-# Needs $name, $version, $release and $source
-# Can receive arguments from $cmake_opts, $dirname, $make, $make_opts 
-# and $separate_build_dir
-#
+#<
+# # Include for CMake
+# 
+# The `cmake` include file defines the `build()` function of a Pkgfile 
+# when included. It is meant to be used to automate the build of 
+# softwares using CMake as build system.
+# 
+# This include uses `pkgmake()` and takes `$separate_build_dir` into
+# account.
+# 
+# ## Important variables
+# 
+#   * `${cmake_opts[]}` can be used to give additional options to
+#     `cmake`. The path to the sources is not required, as 
+#     `$SRC/$dirname` is always used.
+# 
+#>
 
 if ! has cmake ${includes[@]}; then
 	# If we are here, this file has been requested for the tools it contains.
@@ -38,8 +48,6 @@ esac
 
 : ${separate_build_dir:="no"}
 
-: ${make:="pkgmake"}
-
 cmake_opts=(
 	${prefix:+-DPREFIX=$prefix}
 	${prefix:+-DCMAKE_INSTALL_PREFIX=$prefix}
@@ -59,8 +67,8 @@ build() {
 		cd __build__
 	fi
 	cmake $SRC/$dirname ${cmake_opts[@]}
-	$make ${make_opts[@]}
-	$make DESTDIR=$PKG ${make_opts[@]} install
+	pkgmake ${make_opts[@]}
+	pkgmake DESTDIR=$PKG ${make_opts[@]} install
 }
 
 # vim: syntax=sh shiftwidth=4 tabstop=4
