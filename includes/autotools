@@ -5,6 +5,9 @@
 # exist already. It can also define the `check()` function, if
 # `$use_autocheck` is set in the recipe to `true`.
 # 
+# This include uses `pkgmake()` and takes `$separate_build_dir` into
+# account.
+# 
 # ## Important variables ##
 # 
 #   * `$use_autogen` can be set to `true` or `false` to force the use

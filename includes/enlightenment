@@ -1,9 +1,30 @@
+#<
+# # Enlightenment include
+# 
+# This include automatically defines the version of a recipe to `devel`
+# and adds a new source from Enlightenment’s subversion repository.
+# 
+# This include also calls the `autotools` include, which will then
+# do most of the job. If you need to include `autotools` manually,
+# try to do it after `enlightenment`, or problems might happen.
+# 
+# ## Important variables
+# 
+#   * `$e_name` defines the name of the software on the subversion
+#     repository. It defaults to `$name`.
+#   * `$e_path` defines the directory on which to get the software
+#     on the subversion repository, inside `/svn/e`. It defaults
+#     to `trunk/$e_name`.
+# 
+# ## `autotools` variables
+# 
+# This include changes the default values of some variables used 
+# by the `autotools` include.
 #
-## Include for softwares in the enlightenment repository.
-#
-# Need $name, $release and $source
-# Can receive arguments from $e_name, $e_path, $autogen_opts and $make_opts
-#
+#   * `$use_configure` defaults to `no`.
+#   * `$use_autogen` defaults to `yes`.
+#   
+#>
 
 : ${e_name=$name}
 : ${e_path=trunk/$e_name}
