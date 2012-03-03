@@ -25,11 +25,20 @@ tac() {
 }
 
 pkgmake() {
-	: ${MAKE=$(which make)} \
-	  ${MAKE:=$(which gmake)} \
-	  ${MAKE:=$(which pmake)}
+	/* FIXME: DEPRECATION */
 	if [[ -n "$MAKE" ]]; then
-		$MAKE \
+		warning
+		warning "Using \$MAKE is deprecated to define a \`make' implementation."
+		warning "Use \$make instead."
+		warning
+	fi
+	: ${make=$(which make)}   \
+	  ${make:=$(which gmake)} \
+	  ${make:=$(which bmake)} \
+	  ${make:=$(which pmake)} \
+	  ${make:=$MAKE}
+	if [[ -n "$make" ]]; then
+		$make \
 			make_var(CC,$CC) \
 			make_var(CXX,$CXX) \
 			make_var(CPP,$CPP) \
@@ -39,7 +48,7 @@ pkgmake() {
 			make_var(NM,$NM) \
 			make_var(RANLIB,$RANLIB) \
 			make_var(STRIP,$STRIP) \
-			$MAKE_OPTS $@
+			${make_opts[@]:-$MAKE_OPTS} $@
 	else
 		die "No make implementation available."
 	fi
