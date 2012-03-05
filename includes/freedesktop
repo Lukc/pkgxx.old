@@ -1,38 +1,69 @@
+#<
+# # freedesktop include
 #
-## Include giving tools to allow easily following
-## Freedesktop.org specifications.
-#
+# This include gives tools to allow easily following Freedesktop 
+# specifications.
+# 
+# If you want to get the source and the last version of a software
+# on a Freedesktop server, use the `freedesktop.org` include.
+# 
+# ## Important variables
+# 
+# * `$menudir` is a variable currently used only in the `freedesktop`
+#   include. Is defines the directory in which the `.desktop` files
+#   will be created. It defaults to `$sharedir/applications`.
+# 
+# ## Available functions
+# 
+# This in the list of all available functions provided by this include.
+#>
+
+: ${menudir:=$sharedir/applications}
 
 make_desktop_entry() {
-	# Function which helps to create .desktop files, usually in 
-	# $prefix/applications/. See $menudir.
+	#<
+	# ### `make_desktop_entry()`
 	# 
-	# It needs at least one parameter to work, which is the executable name
-	# to be summoned. A second parameter is recommended, to have a complete 
-	# desktop entry, which is the list of the categories the executable is 
-	# in. (this list must be FreeDesktop compliant…)
+	# Function that helps to create `.desktop` files, usually in 
+	# `$sharedir/applications/`. Set `$menudir` to change this 
+	# directory.
+	# 
+	# `make_desktop_entry()` requires at least one parameter to
+	# work, which is the name of the executable to be summoned 
+	# by the applications using the `.desktop` files.
+	#
+	# However, it is highly recommended to also give a correct
+	# Freedesktop category as second parameter. A list of
+	# categories is also possible, as long as Freedesktop.org’s
+	# syntax it respected.
+	# 
+	# The optional third parameter is the “real” name of the
+	# application, if it differs from the executable name.
+	# 
+	# The fourth option is the icon of the application.
+	#>
 	
-	: ${desktop_exec:=$1} \
-	  ${desktop_caterogies:=$2} \
-	  ${desktop_name:=$3} \
-	  ${desktop_icon:=$4} \
-	  ${desktop_filename:=$5} \
-	  ${desktop_filename:=$desktop_name} \
+	: ${desktop_exec:=$1}                  \
+	  ${desktop_caterogies:=$2}            \
+	  ${desktop_name:=$3}                  \
+	  ${desktop_name:=$1}                  \
+	  ${desktop_icon:=$4}
+	
+	: ${desktop_filename:=$desktop_name}   \
 	  ${desktop_file:=${menudir}/$desktop_filename.desktop}
-	
-	[[ -z "${desktop_name}" ]] && desktop_name="${name}"
-	[[ -z "${desktop_icon}" ]] && desktop_name="${name}"
 	
 	if [[ -z "$desktop_exec" ]]; then
 		error "make_desktop_entry() needs a correct executable name."
 		error " | Without a correct exec name, the desktop entry can not be created."
 		return 1
 	fi
+	
 	if [[ -z "$desktop_categories" ]]; then
-		warning "No correct category given for the desktop entry creation."
+		warning "make_desktop_entry(): No correct category given for the desktop entry creation."
 	fi
 	
-	(
+	subinfo "Creating desktop file for ${desktop_name}."
+	{
 		echo "[Desktop Entry]"
 		echo "Name=${desktop_name}"
 		echo "Type=Application"
@@ -41,7 +72,7 @@ make_desktop_entry() {
 		echo "TryExec=${desktop_exec%%#}"
 		echo "Icon=${desktop_icon}"
 		echo "Categories=${desktop_categories}"
-	) > "${desktop_file}"
+	} > "${desktop_file}"
 }
 
 # vim: syntax=sh shiftwidth=4 tabstop=4

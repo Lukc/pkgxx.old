@@ -213,14 +213,6 @@ cas contraire.
 
 use_with sert à la même chose, mais en retournant \fI--with-pavillon\fP 
 et \fI--without-pavillon\fP.
-.TP
-\fBmake_desktop_entry\fP \fIexécutable\fP \fIcatégorie\fP \fInom\fP \fIicone\fP \fIfichier\fP
-Cette fonction sert à créer un fichier \fI.desktop\fP. Ce fichier sera
-place toujours \fI${menudir}/fichier.desktop\fP. Si fichier n’est pas 
-précisé, \fInom\fP sera utilisé à la place.
-
-\fIexécutable\fP et \fIcatégorie\fP sont obligatoires. Les autres
-paramètres ne sont pas indispensables.
 .SH VOIR AUSSI
 pkg++.conf(5), pkg++(8)
 .SH DROIT D’AUTEUR
