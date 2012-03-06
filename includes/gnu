@@ -1,12 +1,26 @@
-#
-## Include for GNU softwares
-#
-# Need $name and $version
-# $gnu_extension can change the extension of the tarball. It's default value is .tar.bz2.
-# $gnu_mirror is the GNU mirror on which tarballs are downloaded. It is mainly
-#+ here to allow any user to choose its GNU mirror, and not for packaging, 
-#+ even if it can be used in recipes.
-#
+#<
+# # Include for GNU servers
+# 
+# This include sets a new `${source[]}` and `$lastver` for softwares
+# hosted on a GNU server.
+# 
+# ## Important variables
+# 
+#   * `$gnu_mirror` can be used to specify a particular GNU server to
+#      use. It is meant to be set only in user-configuration.
+#   * `$gnu_name` is the name of the software on the server. Its 
+#     default value is `$name`.
+#   * `$gnu_dirname` is the name of the directory on the server. Its
+#     default value is `$gnu_name`.
+#   * `$gnu_version` is the exact version of the tarball on the 
+#     server. Its default value is `$version`.
+#   * `$gnu_extension` is the extension of the tarball. GNU servers
+#     usually only host `.tar.gz` or `.tar.bz2`, and sometimes 
+#     `.tar.xz`, but any other kind of archive is also possible.
+#     The default value of `$gnu_extension` is `.tar.bz2`. Just
+#     export it if you need to get a tarball that is in another
+#     format.
+#>
 
 : ${gnu_mirror:="ftp://ftp.gnu.org/gnu"}
 : ${gnu_name:="$name"}
