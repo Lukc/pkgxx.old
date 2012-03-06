@@ -1,13 +1,31 @@
+#<
+# # Include for the Freedesktop.org server
+# 
+# The `freedesktop.org` include defines the `${source[]}` of a software which
+# sources are on a freedesktop server.
+# 
+# ## Important variables
+# 
+#   * `$freedesktop_name` sets the name of the project on Freedesktop. It
+#     also defines the sub-domain of the project on `freedesktop.org`. Its
+#     default value is `$name`.
+#     eg. `freedesktop_name=foo` will add a source which URL begins by
+#     `http://foo.freedesktop.org`.
+#   * `$freedesktop_extension` sets the extension of the tarball. Its 
+#     default value is `.tar.gz`.
+#   * `$freedesktop_version` can be used if the version of the tarball
+#     on the server does not match `$version`. Its default value
+#     is `$version`.
+# 
+# ## TODO
 #
-## Include for Freedesktop.org softwares
-#
-# Need $name and $version
-# $freedesktop_extension can change the extension of the tarball. It's default value is .tar.gz.
-# $freedesktop_name is the name of the software on freedesktop. It’s default value is $name.
-# $freedesktop_version is the version of the software on freedesktop. It’s default value is $version.
-#
-# Include file made by Pingax <anthony@pingax.no-ip.info>
-#
+# This include may have to be updated. Additionally, `$lastver` is not
+# declared if missing.
+# 
+# ## Author
+# 
+# This include file was made by Pingax <anthony@pingax.no-ip.info>.
+#>
 
 : ${freedesktop_name:=$name}
 : ${freedesktop_version:=$version}
