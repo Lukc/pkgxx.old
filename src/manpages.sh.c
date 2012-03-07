@@ -15,17 +15,17 @@ compress_manpages() {
 		case "$PKGMK_MAN_COMPRESSION" in
 			"gz")
 				if [[ "$FILE" = "${FILE%%.gz}" ]]; then
-					gzip -9 "$FILE"
+					gzip "$FILE"
 				fi
 			;;
 			"bz2")
 				if [[ "$FILE" = "${FILE%%.bz2}" ]]; then
-					bzip2 -9 "$FILE"
+					bzip2 "$FILE"
 				fi
 			;;
 			"xz")
 				if [[ "$FILE" = "${FILE%%.xz}" ]]; then
-					xz -9 "$FILE"
+					xz "$FILE"
 				fi
 			;;
 		esac
