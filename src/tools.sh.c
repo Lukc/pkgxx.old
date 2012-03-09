@@ -56,7 +56,7 @@ pkgmake() {
 
 include() {
 	for FILE in $@; do
-		for DIR in $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
+		for DIR in $PKGMK_ROOT $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
 			if [[ -e $DIR/$FILE ]]; then
 				if . $DIR/$FILE; then
 					continue 2
