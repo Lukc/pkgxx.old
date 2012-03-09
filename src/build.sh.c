@@ -20,6 +20,20 @@ print_useflags() {
 	fi
 }
 
+get_split_data() {
+	/* 
+	 * This is not in getters.sh.c because it is only usable here.
+	 */
+	local SPLIT="${1}"
+	local VAR="${2}"
+	local VAR="$(eval "$(echo "\$${SPLIT}_${VAR}")")"
+	if [[ -z "$VAR" ]]; then
+		echo "$(eval "$(echo "\$${pkgname}_${VAR}")")"
+	else
+		echo "$VAR"
+	fi
+}
+
 build_package() {
 	/*
 	 * If the build is not successful, then it is not successful. Logic, 
@@ -144,25 +158,66 @@ build_package() {
 		error "Building '$name' failed."
 		exit E_BUILD
 	fi
-	/* 
-	 * We export the needed vars to allow splitting.
-	 */
-	export_splits
 	
 	/*
 	 * We think again to the poor user.
 	 */
 	info "Build result:"
-	for i in {1..${#PKG_NAMES}}; do
-		local PKG_ROOT
-		if [[ "$i" = 1 ]]; then
-			PKG_ROOT="$PKG"
+	for SPLIT in $name ${splits[@]}; do
+		
+		eval "
+			if [[ -z \"\${${SPLIT}_pkgname}\" ]]; then
+				if [[ ${SPLIT} == $name ]]; then
+					export ${SPLIT}_pkgname=\"${pkgname}\"
+				else
+					export ${SPLIT}_pkgname=\"${SPLIT}\"
+				fi
+			fi
+		"
+		
+		for VAR in name version release pkgname description longdesc license url; do
+			/* FIXME: Use get_split_data */
+			eval "
+				export split_${VAR}=\"\$${SPLIT}_${VAR}\"
+				if [[ -z \"\$split_${VAR}\" ]]; then
+					split_${VAR}=\"\${${VAR}}\"
+				fi
+			"
+		done
+		
+		for VAR in source depends build_depends archs kernels; do
+			eval "
+				export split_${VAR}
+				split_${VAR}=(\${${SPLIT}_${VAR}[@]})
+				if [[ \${#split_${VAR}} = 0 ]]; then
+					split_${VAR}=(\${${VAR}[@]})
+				fi
+			"
+		done
+		
+		if [[ "$split_pkgname" = "$pkgname" ]]; then
+			PKG_ROOT="${PKG}"
 		else
-			PKG_ROOT="$SPLITS/${PKG_NAMES[$i]}"
+			PKG_ROOT="${SPLITS}/$SPLIT"
 		fi
-		split_exec \
-			ARCH="$(target_arch)" \
-			KERNEL="$(target_kernel)" \
+		
+		pkgname="${split_pkgname}"              \
+		name="${split_name}"                    \
+		version="${split_version}"              \
+		release="${split_release}"              \
+		description="${split_description}"      \
+		longdesc="${split_longdesc}"            \
+		license="${split_license}"              \
+		url="${url}"                            \
+		depends=(${split_depends[@]})           \
+		builddepends=(${split_builddepends[@]}) \
+		usedepends=(${split_usedepends[@]})     \
+		archs=(${split_depends[@]})             \
+		kernels=(${split_kernels[@]})           \
+		PKG="${PKG_ROOT}"                       \
+		ARCH="$(target_arch)"                   \
+		KERNEL="$(target_kernel)"               \
+		TARGET="$(get_target)"                  \
 			${PKGMK_PACKAGE_MANAGER}:build
 	done
 	

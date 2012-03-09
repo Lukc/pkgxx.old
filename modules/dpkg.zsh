@@ -100,7 +100,7 @@ dpkg:arch() {
 		# Not sure for the others…
 	esac
 	#local ARCH=${PKGMK_ARCH:-$(uname -m)}
-	if has no-arch ${archs[@]}; then
+	if [[ "$PKGMK_ARCH" = noarch ]]; then
 		# “all” is the keyword for architecture-independent packages, 
 		# not “any”.
 		echo "all"
