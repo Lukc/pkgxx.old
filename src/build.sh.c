@@ -178,7 +178,7 @@ build_package() {
 	fi
 	
 	/*
-	 * If the user don’t want to keep explicitly the work dir, we remove 
+	 * If the user doesn’t want to keep explicitly the work dir, we remove 
 	 * it.
 	 */
 	if [[ "$PKGMK_KEEP_WORK" = "no" ]]; then
