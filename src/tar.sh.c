@@ -1,7 +1,7 @@
 /* 
  * Internal tar module.
  */
-untar_add(gtar bsdtar sltar)
+PKGMK_UNTAR_TOOLS=(${PKGMK_UNTAR_TOOLS[@]} gtar bsdtar sltar)
 
 gtar:unpack() {
 	local COMPRESS
