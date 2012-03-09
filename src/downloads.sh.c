@@ -1,9 +1,4 @@
 
-/* 
- * Very unclean, but works.
- */
-#define __SRC_UPTODATE info "'$1' already up to date." ; exit 0
-
 download_file() {
 	info "Getting '$1'."
 	
@@ -34,7 +29,9 @@ download_file() {
 				cd $name || die "Couldn't move to '$PKGMK_SOURCE_DIR/$name'."
 				if [[ "$(type ${PROTOCOL}:pull)" != "none" ]]; then
 					if ! $PROTOCOL:pull "$1" && [[ "$PKGMK_FORCE" != "yes" ]]; then
-						__SRC_UPTODATE
+						info "'$1' already up to date."
+						/* FIXME: This `exit 0` is the source of a lot of trouble. */
+						exit 0
 					fi
 				else
 					/* We move and re-clone… if possible. */
