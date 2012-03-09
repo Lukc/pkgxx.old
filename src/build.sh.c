@@ -172,9 +172,7 @@ build_package() {
 		 * We check if the package looks like what it should 
 		 * be.
 		 */
-		if [[ "$PKGMK_IGNORE_FOOTPRINT" = "yes" ]]; then
-			warning "Footprint ignored."
-		else
+		if [[ ! "$PKGMK_IGNORE_FOOTPRINT" = "yes" ]]; then
 			check_footprint
 		fi
 	fi
