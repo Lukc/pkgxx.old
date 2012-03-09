@@ -1,0 +1,44 @@
+#!/usr/bin/env zsh
+
+# This is here for the include/source tests.
+if [[ "$READ" = 1 ]]; then
+	return 42
+elif [[ "$READ" = 2 ]]; then
+	return 0
+fi
+
+if [[ -z "$PKGMK_VERSION" ]]; then
+	exec pkg++ $0
+fi
+
+function test_info {
+	# 1 and 2: return and expected value
+	# 3: Test number.
+	# 4: Test name.
+	(( $1 == $2 )) && \
+		info "Test $3 worked. [$4]" || \
+		error "Test $3 failed. [$4]"
+}
+
+export READ=1
+
+local none="$(type does_not_exist)"
+
+[[ "$none" = "none" ]]
+test_info $? 0 1 "type()          "
+
+source $PKGMK_PKGFILE
+test_info $? 42 2 "source()        "
+
+# Well, I had to take one.
+include gnu
+[[ -n "$source" ]]
+test_info $? 0 3 "include() {repo}"
+
+READ=2
+# include() won’t tell everything is fine if there is a non-zero return code.
+include Pkgfile-tools
+test_info $? 0 4 "include() {port}"
+
+exit 0
+
