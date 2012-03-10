@@ -20,20 +20,6 @@ print_useflags() {
 	fi
 }
 
-get_split_data() {
-	/* 
-	 * This is not in getters.sh.c because it is only usable here.
-	 */
-	local SPLIT="${1}"
-	local VAR="${2}"
-	local VAR="$(eval "$(echo "\$${SPLIT}_${VAR}")")"
-	if [[ -z "$VAR" ]]; then
-		echo "$(eval "$(echo "\$${pkgname}_${VAR}")")"
-	else
-		echo "$VAR"
-	fi
-}
-
 build_package() {
 	/*
 	 * If the build is not successful, then it is not successful. Logic, 

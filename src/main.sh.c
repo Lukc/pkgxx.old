@@ -1,7 +1,10 @@
 
-#include "splits.sh.h"
-
 #include "error.sh.h"
+
+/* We include zsh tools to display colors, as any civilised being would */
+autoload -U colors
+colors
+
 #include "display.sh.c"
 #include "getters.sh.c"
 #include "tools.sh.c"
@@ -16,107 +19,14 @@
 #include "manpages.sh.c"
 #include "work.sh.c"
 #include "interactions.sh.c"
+#include "splits.sh.c"
 
 #include "build.sh.c"
 #include "install.sh.c"
 #include "opts.sh.c"
+#include "clean.sh.c"
 
-/* We include zsh tools to display colors, as any civilised being would */
-autoload -U colors
-colors
-
-recursive() {
-	local ARGS FILE DIR
-	
-	/*
-	 * Hey, we don’t want to make a recursive fail.
-	 */
-	ARGS=("${@//--recursive/}")
-	ARGS=("${ARGS[@]//-r/}")
-	
-	/*
-	 * Now, for each directory that contains a Pkgfile, we move to it and
-	 * we launch pkg++ again, with it’s args.
-	 */
-	for FILE in `find $PKGMK_ROOT -name $PKGMK_PKGFILE_NAME | sort`; do
-		DIR="`dirname $FILE`/"
-		if [[ -d $DIR ]]; then
-			info "Entering directory '$DIR'."
-			(cd $DIR && $PKGMK_COMMAND ${ARGS[@]})
-			info "Leaving directory '$DIR'."
-		fi
-	done
-}
-
-list_splits() {
-	for SPLIT in $name ${splits[@]}; do
-		eval "
-			if [[ -z \"\${${SPLIT}_pkgname}\" ]]; then
-				if [[ ${SPLIT} == $name ]]; then
-					export ${SPLIT}_pkgname=\"${pkgname}\"
-				else
-					export ${SPLIT}_pkgname=\"${SPLIT}\"
-				fi
-			fi
-		"
-		
-		for VAR in name version release pkgname license; do
-			eval "
-				export split_${VAR}=\"\$${SPLIT}_${VAR}\"
-				if [[ -z \"\$split_${VAR}\" ]]; then
-					split_${VAR}=\"\${${VAR}}\"
-				fi
-			"
-		done
-		
-		for VAR in source archs kernels; do
-			eval "
-				export split_${VAR}
-				split_${VAR}=(\${${SPLIT}_${VAR}[@]})
-				if [[ \${#split_${VAR}} = 0 ]]; then
-					split_${VAR}=(\${${VAR}[@]})
-				fi
-			"
-		done
-		pkgname="${split_pkgname}"              \
-		name="${split_name}"                    \
-		version="${split_version}"              \
-		release="${split_release}"              \
-		license="${split_license}"              \
-		archs=(${split_depends[@]})             \
-		kernels=(${split_kernels[@]})           \
-		ARCH="$(target_arch)"                   \
-		KERNEL="$(target_kernel)"               \
-			${PKGMK_PACKAGE_MANAGER}:target
-	done
-}
-
-clean() {
-	/*
-	 * clean() removes the sources in $PKGMK_SOURCE_DIR and the package, if
-	 * it is in $PKGMK_PACKAGE_DIR.
-	 */
-	local FILE LOCAL_FILENAME
-	
-	for LOCAL_FILENAME in $(list_splits); do
-		if [[ -f "$LOCAL_FILENAME" ]]; then
-			info "Removing $LOCAL_FILENAME"
-			rm -f "$LOCAL_FILENAME"
-		fi
-	done
-	
-	for FILE in ${source[@]}; do
-		LOCAL_FILENAME=`get_filename $FILE`
-		if [[ -e $LOCAL_FILENAME && "$LOCAL_FILENAME" != "$FILE" ]]; then
-			info "Removing $LOCAL_FILENAME"
-			if [[ -d $LOCAL_FILENAME ]]; then
-				rm -r -f $LOCAL_FILENAME
-			else
-				rm -f $LOCAL_FILENAME
-			fi
-		fi
-	done
-}
+#include "recursive.sh.c"
 
 interrupted() {
 	echo ""
