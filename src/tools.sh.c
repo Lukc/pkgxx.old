@@ -54,23 +54,6 @@ pkgmake() {
 	fi
 }
 
-include() {
-	for FILE in $@; do
-		for DIR in $PKGMK_ROOT $PKGMK_ROOT/../includes $PKGMK_ROOT/../../includes ${PKGMK_INCLUDES_DIR}; do
-			if [[ -e $DIR/$FILE ]]; then
-				if . $DIR/$FILE; then
-					continue 2
-				else
-					error "An error occured while including \`$DIR/$FILE'."
-					return 1 /* Parsing failed. */
-				fi
-			fi
-		done
-		error "Include \`$FILE' was not found."
-		return 2 /* Not found. */
-	done
-}
-
 sedi() {
 	/* 
 	 * Emulates the sed -i feature.
