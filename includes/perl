@@ -7,7 +7,7 @@
 #   * `$name`
 #   * `$version`
 #   * `$release`
-#   * $source`
+#   * `$source`
 #
 # Can receive arguments from `$perl_opts` and `$make_opts`
 #>
