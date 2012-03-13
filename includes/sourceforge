@@ -1,15 +1,15 @@
-#
+#<
 ## Include for SourceForge softwares
 #
-# Need $name and $version
-# $sf_extension can change the extension of the tarball. It's default value is .tar.gz.
-# $sf_mirror is the SourceForge mirror on which tarballs are downloaded. It is mainly
-#+ here to allow any user to choose it's SourceForge mirror, and not for packaging, 
-#+ even if it can be used in recipes.
-# $sf_name and $sf_version can be used if $name and/or $version is different on
-#+ the SourceForge mirror.
-# $sf_version_separator can define a character between $sf_name and $sf_version 
-#+ other than "-".
+# ## Important variables
+#   * `$sf_extension` can change the extension of the tarball. It's default value is .tar.gz.
+#   * `$sf_mirror` is the SourceForge mirror on which tarballs are downloaded. It is mainly
+#     here to allow any user to choose it's SourceForge mirror, and not for packaging, 
+#     even if it can be used in recipes.
+#   * `$sf_name` and `$sf_version` can be used if `$name` and/or `$version` is different on
+#     the SourceForge mirror.
+#   * `$sf_version_separator` can define a character between `$sf_name` and `$sf_version` 
+#     other than "-".
 #
 
 : ${sf_mirror:="http://downloads.sourceforge.net"}
