@@ -1,4 +1,4 @@
-# 
+#< 
 # ## Include for autosplits (automatic splits)
 # 
 # ### Basic usage ###
@@ -17,17 +17,17 @@
 #   * autosplits=()
 #     This array contains the name of all automatic splits
 #     to be made by autosplit(). When this include file is
-#     sourced, each value of ${autosplits[]} is used to 
+#     sourced, each value of `${autosplits[]}` is used to 
 #     create a new split. The value is then added to
-#     ${splits[]} and <split>_pkgname is set.
+#     `${splits[]}` and <split>_pkgname is set.
 # 
 # This include file gives the following functions:
 # 
 #   * autosplit()
-#     This function depends on the ${autosplits[]} array.
-#     For each known value of ${autosplits[]}, it tries
+#     This function depends on the `${autosplits[]}` array.
+#     For each known value of `${autosplits[]}`, it tries
 #     to assign the good files to the good split.
-# 
+#> 
 
 splits=(${splits[@]} ${autosplits[@]})
 
