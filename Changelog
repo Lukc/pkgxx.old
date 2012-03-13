@@ -1,3 +1,8 @@
+0.13:
+	* The splits system has been updated and the new one has been
+	  implemented.
+	* Several minor internal modifications to clean the code.
+
 0.12:
 	* -lt,-gt,-le,-ge,-eq,-ne are now supported by vercmp() (and so by @{
 	  }@). In more, -sb has been added, which is equivalent to ~>.
