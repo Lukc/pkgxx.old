@@ -10,7 +10,7 @@
 #     the SourceForge mirror.
 #   * `$sf_version_separator` can define a character between `$sf_name` and `$sf_version` 
 #     other than "-".
-#
+#>
 
 : ${sf_mirror:="http://downloads.sourceforge.net"}
 
