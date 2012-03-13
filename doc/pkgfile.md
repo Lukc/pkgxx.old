@@ -172,7 +172,7 @@ Each of these variables behave exactly as the main ones.
 Supports contains a list of features the recipe offers. Its values
 can be: `cross`, `autosplits`.
 
-<{ get new_feature }>
+<{ get planned }>
 
 #### $url ####
 
