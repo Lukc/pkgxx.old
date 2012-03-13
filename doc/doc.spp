@@ -1,9 +1,15 @@
 
+<{set v0.14 \
+<div class="new-feature"> \
+	This feature was introduced in pkg++ 0.13 and 0.14. \
+</div> \
+}>
+
 <{set work-in-progress \
 <div class="work-in-progress">\
 	This page or section is still a work in progress.\
 	As such, it is very probably incomplete or imprecise.\
-</div>\
+</div> \
 }>
 
 <{set planned \

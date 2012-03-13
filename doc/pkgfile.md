@@ -155,6 +155,18 @@ patches, icons, etc. you need to build a software and its package.
 
 <{ get mandatory }>
 
+#### ${splits[]} ####
+
+${splits[]} is an array containing a list of split names. Those 
+names should contain only lowercase letters.
+
+Each split inherits all values from the main package, except for
+the name, which is by default the value given in ${splits[]}. To
+redefine a value of a split, define &lt;split&gt;\_&lt;variable&gt;.
+Each of these variables behave exactly as the main ones.
+
+<{ get v0.14 }>
+
 #### ${supports[]} ####
 
 Supports contains a list of features the recipe offers. Its values
