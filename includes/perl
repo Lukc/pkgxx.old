@@ -1,9 +1,16 @@
+#<
+# ## Include for Perl
 #
-## Include for Perl
+# This include automatize the build for perl modules.
 #
-# Need $name, $version, $release and $source
-# Can receive arguments from $perl_opts and $make_opts
+# ## Important variables
+#   * `$name`
+#   * `$version`
+#   * `$release`
+#   * $source`
 #
+# Can receive arguments from `$perl_opts` and `$make_opts`
+#>
 
 case $version in
 	devel|dev|trunk)
