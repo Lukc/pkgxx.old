@@ -160,7 +160,7 @@ patches, icons, etc. you need to build a software and its package.
 Supports contains a list of features the recipe offers. Its values
 can be: `cross`, `autosplits`.
 
-<{ get new_feature }>
+<{ get planned }>
 
 #### $url ####
 
