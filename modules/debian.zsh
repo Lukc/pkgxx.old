@@ -15,7 +15,7 @@ Debian:library() {
 	#
 	#   # Exemples
 	#   tre    -> libtre
-	#   libsdl -> sdl
+	#   libsdl -> libsdl
 	#>
 	pkgname="lib${pkgname}"
 	pkgname="${pkgname/^liblib/lib}"
