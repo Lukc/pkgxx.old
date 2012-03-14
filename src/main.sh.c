@@ -134,6 +134,18 @@ main() {
 	: ${pkgname:=$name}
 	
 	/* 
+	 * There, we try to use the classes. Classes are meant to make
+	 * packages be more compliant with distributions’s standards.
+	 */
+	if [[ -n "${class}" ]]; then
+		if [[ "$(type ${distribution}:${class})" != "none" ]]; then
+			${distribution}:${class} || warning "${distribution}:${class}() may have failed."
+		elif [[ "$(type ${distribution_family}:${class})" != "none" ]]; then
+			${distribution_family}:${class} || warning "${distribution_family}:${class}() may have failed."
+		fi
+	fi
+	
+	/* 
 	 * If ${name} contains '-', there will be problems later in build().
 	 * So, we just remove those '-'.
 	 */
