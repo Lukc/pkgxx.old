@@ -6,9 +6,9 @@
 # 
 #>
 
-Debian:library() {
+Debian:class:library() {
 	#<
-	# ## `Debian:library`
+	# ## `Debian:class:library`
 	# 
 	# Adds `lib` at the begining of `$pkgname`, if it does not already
 	# begins by the same string.
@@ -21,9 +21,9 @@ Debian:library() {
 	pkgname="${pkgname/^liblib/lib}"
 }
 
-Debian:documentation() {
+Debian:class:documentation() {
 	#<
-	# ## `Debian:documentation`
+	# ## `Debian:class:documentation`
 	# 
 	# Adds `-doc` at the end of `$pkgname` and removes duplicate `-doc`.
 	#>
@@ -31,9 +31,9 @@ Debian:documentation() {
 	pkgname="${pkgname/-doc-doc$/-doc}"
 }
 
-Debian:headers() {
+Debian:class:headers() {
 	#<
-	# ## `Debian:headers`
+	# ## `Debian:class:headers`
 	# 
 	# Adds `-dev` at the end of `$pkgname` and removes duplicate `-dev`.
 	#>
