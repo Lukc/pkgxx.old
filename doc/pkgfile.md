@@ -32,12 +32,11 @@ $class contains the “type” of software you packaged. The allowed
 values are: `library`, `documentation`, `man-pages`, `headers` or
 `sources`.
 
-This variable is not mandatory, and not having set it is not a
-problem.
-
 Some modules may use additional values.
 
-<{ get planned }>
+<{ get v0.14 }>
+<{ get new-feature }>
+<{ get recommended }>
 
 #### ${contributors[]} ####
 
