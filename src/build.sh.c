@@ -150,10 +150,11 @@ build_package() {
 	 */
 	info "Build result:"
 	for SPLIT in $name ${splits[@]}; do
+		SPLIT="${SPLIT//-/_}"
 		
 		eval "
 			if [[ -z \"\${${SPLIT}_pkgname}\" ]]; then
-				if [[ ${SPLIT} == $name ]]; then
+				if [[ \"${SPLIT}\" == \"${name//-/_}\" ]]; then
 					export ${SPLIT}_pkgname=\"${pkgname}\"
 				else
 					export ${SPLIT}_pkgname=\"${SPLIT}\"
@@ -181,7 +182,7 @@ build_package() {
 			"
 		done
 		
-		if [[ "$split_pkgname" = "$pkgname" ]]; then
+		if [[ "${SPLIT}" = "${name//-/_}" ]]; then
 			PKG_ROOT="${PKG}"
 		else
 			PKG_ROOT="${SPLITS}/$SPLIT"
