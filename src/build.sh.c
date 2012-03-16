@@ -182,6 +182,18 @@ build_package() {
 			"
 		done
 		
+		/* 
+		 * There, we try to use the classes. Classes are meant to make
+		 * packages be more compliant with distributions’s standards.
+		 */
+		if [[ -n "${split_class}" ]]; then
+			if [[ "$(type ${distribution}:class:${split_class})" != "none" ]]; then
+				${distribution}:class:${split_class} || warning "${distribution}:class:${split_class}() may have failed."
+			elif [[ "$(type ${distribution_family}:class:${split_class})" != "none" ]]; then
+				${distribution_family}:class:${split_class} || warning "${distribution_family}:class:${split_class}() may have failed."
+			fi
+		fi
+		
 		if [[ "${SPLIT}" = "${name//-/_}" ]]; then
 			PKG_ROOT="${PKG}"
 		else

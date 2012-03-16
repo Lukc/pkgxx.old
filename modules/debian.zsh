@@ -10,34 +10,34 @@ Debian:class:library() {
 	#<
 	# ## `Debian:class:library`
 	# 
-	# Adds `lib` at the begining of `$pkgname`, if it does not already
+	# Adds `lib` at the begining of `$split_pkgname`, if it does not already
 	# begins by the same string.
 	# 
 	#   # Examples
 	#   tre    -> libtre
 	#   libsdl -> libsdl
 	#>
-	pkgname="lib${pkgname}"
-	pkgname="${pkgname/^liblib/lib}"
+	split_pkgname="lib${split_pkgname}"
+	split_pkgname="${split_pkgname/^liblib/lib}"
 }
 
 Debian:class:documentation() {
 	#<
 	# ## `Debian:class:documentation`
 	# 
-	# Adds `-doc` at the end of `$pkgname` and removes duplicate `-doc`.
+	# Adds `-doc` at the end of `$split_pkgname` and removes duplicate `-doc`.
 	#>
-	pkgname="${pkgname}-doc"
-	pkgname="${pkgname/-doc-doc$/-doc}"
+	split_pkgname="${split_pkgname}-doc"
+	split_pkgname="${split_pkgname/-doc-doc$/-doc}"
 }
 
 Debian:class:headers() {
 	#<
 	# ## `Debian:class:headers`
 	# 
-	# Adds `-dev` at the end of `$pkgname` and removes duplicate `-dev`.
+	# Adds `-dev` at the end of `$split_pkgname` and removes duplicate `-dev`.
 	#>
-	pkgname="${pkgname}-dev"
-	pkgname="${pkgname/-dev-dev$/-dev}"
+	split_pkgname="${split_pkgname}-dev"
+	split_pkgname="${split_pkgname/-dev-dev$/-dev}"
 }
 

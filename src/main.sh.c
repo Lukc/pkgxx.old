@@ -134,18 +134,6 @@ main() {
 	: ${pkgname:=$name}
 	
 	/* 
-	 * There, we try to use the classes. Classes are meant to make
-	 * packages be more compliant with distributions’s standards.
-	 */
-	if [[ -n "${class}" ]]; then
-		if [[ "$(type ${distribution}:class:${class})" != "none" ]]; then
-			${distribution}:class:${class} || warning "${distribution}:class:${class}() may have failed."
-		elif [[ "$(type ${distribution_family}:class:${class})" != "none" ]]; then
-			${distribution_family}:class:${class} || warning "${distribution_family}:class:${class}() may have failed."
-		fi
-	fi
-	
-	/* 
 	 * Once the recipes are parsed and pkgname is exported, post-recipe
 	 * defaults are read.
 	 */
