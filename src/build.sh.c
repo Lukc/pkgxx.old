@@ -162,7 +162,7 @@ build_package() {
 			fi
 		"
 		
-		for VAR in name version release pkgname description longdesc license url slot; do
+		for VAR in name version release pkgname description longdesc license url slot class; do
 			/* FIXME: Use get_split_data */
 			eval "
 				export split_${VAR}=\"\$${SPLIT}_${VAR}\"
@@ -220,7 +220,9 @@ build_package() {
 		description="${split_description}"      \
 		longdesc="${split_longdesc}"            \
 		license="${split_license}"              \
-		url="${url}"                            \
+		url="${split_url}"                      \
+		class="${split_class}"                  \
+		slot="${split_slot}"                    \
 		depends=(${split_depends[@]})           \
 		builddepends=(${split_builddepends[@]}) \
 		usedepends=(${split_usedepends[@]})     \
