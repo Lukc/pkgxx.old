@@ -2,9 +2,22 @@
 #<
 # # debian.zsh
 # 
-# This module provides classes for Debian.
+# This module provides classes and slots management for Debian.
 # 
 #>
+
+Debian:slots() {
+	#<
+	# ## `Debian:slots`
+	# 
+	# Modifies `$split_pkgname` to add the `$deb_split_separator` and 
+	# `$split_slot` to its end.
+	# 
+	# `$deb_split_separator` has no default value (is empty).
+	#>
+	: ${deb_split_separator:=""}
+	split_pkgname="${split_pkgname}${deb_split_separator}${split_slot}"
+}
 
 Debian:class:library() {
 	#<

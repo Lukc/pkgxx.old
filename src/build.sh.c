@@ -162,7 +162,7 @@ build_package() {
 			fi
 		"
 		
-		for VAR in name version release pkgname description longdesc license url; do
+		for VAR in name version release pkgname description longdesc license url slot; do
 			/* FIXME: Use get_split_data */
 			eval "
 				export split_${VAR}=\"\$${SPLIT}_${VAR}\"
@@ -191,6 +191,19 @@ build_package() {
 				${distribution}:class:${split_class} || warning "${distribution}:class:${split_class}() may have failed."
 			elif [[ "$(type ${distribution_family}:class:${split_class})" != "none" ]]; then
 				${distribution_family}:class:${split_class} || warning "${distribution_family}:class:${split_class}() may have failed."
+			fi
+		fi
+		
+		/* 
+		 * This is to easy the use of slots on distributions using 
+		 * limited package managers and that use hacks to use slots
+		 * anyway.
+		 */
+		if [[ -n "${split_slot}" ]]; then
+			if [[ "$(type ${distribution}:slots" != "none" ]]; then
+				${distribution}:slots || warning "${distribution}:slots() may have failed."
+			elif [[ "$(type ${distribution_family}:slots)" != "none" ]]; then
+				${distribution_family}:slots || warning "${distribution_family}:slots() may have failed."
 			fi
 		fi
 		
