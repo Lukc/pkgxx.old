@@ -13,34 +13,80 @@
 # to the [modules reference](/doc/modules.xhtml).
 #>
 
+#<
+# ### Important variables
+# 
+# #### `$git_branch`
+# 
+# Contains the name of the branch to be checked out. The default value is
+# `master`.
+#>
+# master is the default, default branch.
+: ${git_branch:=master}
+
+#<
+# ### Functions
+#>
+
 git:clone() {
-	GIT_SSL_NO_VERIFY=true git clone `echo $1 | sed -e 's|^git+||'` $name
+	#<
+	# #### `git:clone()`
+	# 
+	# Clones the git repository. Ignore SSL warnings and takes care of
+	# `$git_branch`.
+	#>
+	GIT_SSL_NO_VERIFY=true git clone \
+		-b ${git_branch} \
+		`echo $1 | sed -e 's|^git+||'` $name
 }
 
 git:revision() {
+	#<
+	# #### `git:revision()`
+	# 
+	# Get the number of commits in a git repository, on branch 
+	# `$git_branch`.
+	#>
 	cd "$1"
+	git checkout ${git_branch}
 	git rev-list $(git branch | sed "/^\*/!d;s/^\* //") | wc -l
 }
 
 git:pull() {
+	#<
+	# #### `git:pull()`
+	# 
+	# Updates a git repository.
+	#>
+	git checkout ${git_branch}
 	if [[ "`git pull`" = "Already up-to-date." ]]; then
 		return 1
 	fi
 }
 
-# This special function provides a tool to check if a local repository is up
-#+ to date and to print a warning if not… when put in a nice $lastver.
 git:lastver() {
+	#<
+	# #### `git:lastver()`
+	# 
+	# Checks whether a local repository is up to date, compared to a
+	# remote repository.
+	# 
+	# Use it in `$lastver`.
+	# 
+	#     # Example
+	#     source=(git://pkgxx.org/pkgxx.git)
+	#     lastver="git:lastver"
+	#>
 	local last_sha current_sha
 	if [[ -e "$PKGMK_SOURCE_DIR/$name" ]]; then
 		cd $PKGMK_SOURCE_DIR/$name
 	else
-		#error "Can not check whether repository is up to date without a local clone."
+		# FIXME: Try to compare to any built package.
 		echo "$version"
 		return 1
 	fi
-	last_sha="$(git ls-remote "$1" -h refs/heads/master | sed -e 's|	*refs/heads/master$||')"
-	current_sha="$(git rev-list master | head -n 1)"
+	last_sha="$(git ls-remote "$1" -h refs/heads/$git_branch | sed -e 's|	*refs/heads/'"$git_branch"'$||')"
+	current_sha="$(git rev-list $git_branch | head -n 1)"
 	if [[ "$last_sha" != "$current_sha" ]]; then
 		echo "$version+1"
 	else
