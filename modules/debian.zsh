@@ -30,9 +30,9 @@ Debian:class:library() {
 	# Adds `lib` at the begining of `$split_pkgname`, if it does not already
 	# begins by the same string.
 	# 
-	#   # Examples
-	#   tre    -> libtre
-	#   libsdl -> libsdl
+	#     # Examples
+	#     tre    -> libtre
+	#     libsdl -> libsdl
 	#>
 	split_pkgname="lib${split_pkgname}"
 	split_pkgname="${split_pkgname/^liblib/lib}"
