@@ -157,7 +157,7 @@ also help you to understand the details quoted sooner.
 This build() is not portable (will not meet the guidelines of any 
 distribution) and is not very flexible, but it should build a correct
 package. If you did not understood what is written before this sentence, 
-reread it again and again until you understood, as the next of this 
+reread it again and again until you understand, as the next of this 
 tutorial details it.
 
 ## A better port ##
