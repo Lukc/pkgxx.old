@@ -200,7 +200,7 @@ build_package() {
 		 * anyway.
 		 */
 		if [[ -n "${split_slot}" ]]; then
-			if [[ "$(type ${distribution}:slots" != "none" ]]; then
+			if [[ "$(type ${distribution}:slots)" != "none" ]]; then
 				${distribution}:slots || warning "${distribution}:slots() may have failed."
 			elif [[ "$(type ${distribution_family}:slots)" != "none" ]]; then
 				${distribution_family}:slots || warning "${distribution_family}:slots() may have failed."
