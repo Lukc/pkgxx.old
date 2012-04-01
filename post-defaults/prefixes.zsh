@@ -10,7 +10,8 @@
 : ${libexecdir:="$eprefix/libexec"}
 : ${sharedir:="$prefix/share"}
 : ${datadir:="$prefix/share"}
-: ${docdir:="$data/doc/$name-$version"}
+: ${localedir:="$sharedir/locale"}
+: ${docdir:="$sharedir/doc/$name-$version"}
 if $Crux || $Slackware; then
 	: ${mandir:="$prefix/man"}
 else

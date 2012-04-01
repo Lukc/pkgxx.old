@@ -22,33 +22,9 @@ print_useflags() {
 
 autosplit() {
 	for SPLIT in ${AUTOSPLITS[@]}; do
-		/* 
-		 * FIXME: Useless builtins suck. Modularise it.
-		 */
-		case "$SPLIT" in
-			man)
-				pkgsplit man $mandir
-			;;
-			doc)
-				pkgsplit doc $docdir
-			;;
-			locales)
-				/*
-				 * The locales may be somewhere else if the
-				 * software does not uses the standard place
-				 * where to put locales. To avoid problems
-				 * with that, we use the variable $localesdir,
-				 * which is in such cases to be exported from
-				 * the Pkgfile.
-				 */
-				pkgsplit locales ${localesdir:-$sharedir/locale}
-			;;
-			*)
-				if [[ "$(type autosplits:${SPLIT})" != "none" ]]; then
-					autosplits:${SPLIT}
-				fi
-			;;
-		esac
+		if [[ "$(type autosplits:${SPLIT}:split)" != "none" ]]; then
+			autosplits:${SPLIT}:split
+		fi
 	done
 }
 
@@ -179,15 +155,25 @@ build_package() {
 	
 	/* 
 	 * FIXME: Maybe export of those variables should actually be done sooner,
-	 *        in cas the user wants a for S in ${splits[@]}, or something like
-	 *        that. Maybe we should also try to use the distro:class:* when
-	 *        available, if nothing else has been defined.
+	 *        in cas the packager wants a for S in ${splits[@]}, or something
+	 *        like that. Maybe we should also try to use the distro:class:*
+	 *        when available, if nothing else has been defined.
 	 */
-	splits=(${splits[@]} ${AUTOSPLITS[@]})
-	
 	for SPLIT in ${AUTOSPLITS[@]}; do
-		/* FIXME: Other variables? Distro/user rules? autosplits:${split}:variable()? */
-		eval "${SPLIT}_pkgname=\"${pkgname:-$name}-${SPLIT}\""
+		if [[ "$(type autosplits:${SPLIT}:splitable)" != "none" ]]; then
+			if autosplits:${SPLIT}:splitable ]]; then
+				splits=(${splits[@]} ${SPLIT})
+				
+				if [[ "$(type autosplits:${SPLIT}:setsplit)" != "none" ]]; then
+					autosplits:${SPLIT}:setsplit
+				else
+					/* This is kept for easy user-improvised splits */
+					eval "${SPLIT}_pkgname=\"${pkgname:-$name}-${SPLIT}\""
+				fi
+			fi
+		else
+			warning "Automatic split \`${SPLIT}' is not available."
+		fi
 	done
 	
 	autosplit
