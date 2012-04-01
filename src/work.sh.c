@@ -22,7 +22,7 @@ make_work_dir() {
 	 * Make a repository by split, one after the other.
 	 */
 	mkdir -p $SRC $PKG
-	for SPLIT in ${splits[@]}; do
+	for SPLIT in ${splits[@]} ${AUTOSPLITS[@]}; do
 		mkdir -p "$SPLITS/$SPLIT"
 	done
 	

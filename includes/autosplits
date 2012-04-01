@@ -1,81 +1,18 @@
-#< 
-# ## Include for autosplits (automatic splits)
-# 
-# ### Basic usage ###
-# 
-# autosplits=({man,doc,locales})
-# 
-# build() {
-# 	…
-# 	autosplit
-# }
-# 
-# ### Reference ###
-# 
-# The following variables may be exported:
-# 
-#   * autosplits=()
-#     This array contains the name of all automatic splits
-#     to be made by autosplit(). When this include file is
-#     sourced, each value of `${autosplits[]}` is used to 
-#     create a new split. The value is then added to
-#     `${splits[]}` and <split>_pkgname is set.
-# 
-# This include file gives the following functions:
-# 
-#   * autosplit()
-#     This function depends on the `${autosplits[]}` array.
-#     For each known value of `${autosplits[]}`, it tries
-#     to assign the good files to the good split.
-#> 
 
-splits=(${splits[@]} ${autosplits[@]})
+#<
+# ## Deprecated include: autosplits
+# 
+# This module is deprecated and no more documentation is available
+# outside the git repository because it was never released in
+# any stable version, and was removed soon in the unstable branch
+# (pkg++ 0.13.1 was released without it).
+# 
+# Automatic splits are now managed internally and using includes
+# is not required anymore.
+#>
 
-if [[ ${#autosplits} -gt 0 ]]; then
-	has splits ${iuse[@]} || iuse=(${iuse[@]} splits)
-fi
+warning
+warning "includes/autosplits is deprecated. This file will soon be removed"
+warning "from the repository. You’d better remove it by hand then."
+warning
 
-if use splits; then
-	for SPLIT in ${autosplits[@]}; do
-		case "$SPLIT" in
-			man)
-				man_pkgname="${pkgname:-$name}-man"
-			;;
-			doc)
-				doc_pkgname="${pkgname:-$name}-doc"
-			;;
-			locales)
-				locales_pkgname="${pkgname:-$name}-locales"
-			;;
-		esac
-	done
-fi
-
-autosplit() {
-	if ! use splits; then
-		# If we do not want splits, there should not be any
-		#+ problem, which implies a no-error return code.
-		return 0
-	fi
-	for SPLIT in ${autosplits[@]}; do
-		case "$SPLIT" in
-			man)
-				pkgsplit man $mandir
-			;;
-			doc)
-				pkgsplit doc $docdir
-			;;
-			locales)
-				# The locales may be somewhere else if the
-				#+ software does not uses the standard place
-				#+ where to put locales. To avoid problems
-				#+ with that, we use the variable $localesdir,
-				#+ which is in such cases to be exported from
-				#+ the Pkgfile.
-				pkgsplit locales ${localesdir:-$sharedir/locale}
-			;;
-		esac
-	done
-}
-
-# vim: syntax=sh shiftwidth=4 tabstop=4
