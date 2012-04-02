@@ -32,11 +32,20 @@ pkgmake() {
 		warning "Use \$make instead."
 		warning
 	fi
+	
 	: ${make=$(which make)}   \
 	  ${make:=$(which gmake)} \
 	  ${make:=$(which bmake)} \
 	  ${make:=$(which pmake)} \
 	  ${make:=$MAKE}
+	
+	if not USE=(${supports[@]}) use multithread; then
+		/* Note: fucking preprocessor */
+		while [[ "${make_opts[@]}" =~ -j[0-9] ]]; do
+			make_opts=(${make_opts[@]/-j[0-9]})
+		done
+	fi
+	
 	if [[ -n "$make" ]]; then
 		$make \
 			make_var(CC,$CC) \

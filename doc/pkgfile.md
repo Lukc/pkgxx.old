@@ -169,7 +169,7 @@ Each of these variables behave exactly as the main ones.
 #### ${supports[]} ####
 
 Supports contains a list of features the recipe offers. Its values
-can be: `cross`, `autosplits`.
+can be: `cross`, `multithread`.
 
 <{ get planned }>
 
