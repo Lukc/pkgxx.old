@@ -7,7 +7,7 @@
 # 
 # The module allows cloning and updating already cloned repositories.
 # 
-# The keyword to use to add monotone URLs in `${source[]}` is `darcs`.
+# The keyword to use to add Darcs URLs in `${source[]}` is `darcs`.
 # 
 # ### Notes
 # 
