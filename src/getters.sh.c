@@ -1,4 +1,24 @@
 
+get_arch() {
+	local arch="$(pm_arch)"
+	
+	case "$arch" in
+		arm*)                  arch=arm    ;;
+		i?86)                  arch=x86    ;;
+		mips*|loongson)        arch=mips   ;;
+		parisc*)               arch=hppa   ;;
+		"Power Macintosh")     arch=ppc    ;;
+		s390*)                 arch=s390   ;;
+		sh*)                   arch=sh     ;;
+		sparc*)                arch=sparc  ;;
+	esac
+	/* 
+	 * Known but ignored: alpha, ia64, m68k, ppc, ppc64, x86_64
+	 */
+	
+	echo "$arch"
+}
+
 get_protocol() {
 	/*
 	 * It just returns what is before the firsts “:” and “+”.
