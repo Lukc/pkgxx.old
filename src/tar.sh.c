@@ -9,8 +9,7 @@ gtar:unpack() {
 	case "$1" in
 		*.gz|*.Z|*.tgz) COMPRESS="z" ;;
 		*.bz2|*.tbz2) COMPRESS="j" ;;
-		*.xz|*.txz) COMPRESS="J" ;;
-		*.lzma) COMPRESS=" --lzma -" ;;
+		*.xz|*.txz|*.lzma) COMPRESS="J" ;;
 	esac
 	tar -C $2 -x${COMPRESS}f $1
 }
