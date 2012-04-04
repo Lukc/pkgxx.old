@@ -40,5 +40,8 @@ READ=2
 include Pkgfile-tools
 test_info $? 0 4 "include() {port}"
 
+[[ "$(type does_not/_exist)" = "none" ]]
+test_info $? 0 5 "type()          "
+
 exit 0
 

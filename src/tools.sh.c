@@ -13,7 +13,7 @@ source () {
 }
 
 type() {
-	builtin type -w "$1" | sed -e "s/${1//\//\\/\\/}: //"
+	builtin type -w "$1" | sed -e "s/${1//\//\\/}: //"
 }
 
 tac() {
