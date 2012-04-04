@@ -14,7 +14,7 @@ and Arch, nho, fpm, and maybe many more!"
 
 lastver="echo 0" # Nothing is greater than devel, so don’t try to get anything.
 
-name=pkg++
+name=pkgxx
 version=devel
 release=1
 source=(git://devel.upyum.com/pkgxx.git)
