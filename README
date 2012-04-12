@@ -106,16 +106,20 @@ pkg++ is buggy. Very buggy. But, keep hope, the bugs will
 very likely not be a problem for you. Main ones are listed
 here.
 
-  * Noarch packages might not be built as noarch, 
-    particularly in…
-  * … splits. They never worked correctly, even when they
-    worked. However, they are reimplemented in the 0.13/0.14
-    branch of pkg++.
-  * Documentation is quite rare. More than water in a desert.
-    This tends to be a little less true everyday, but there
-    is still much work to be done.
+  * Noarch packages might not be built as noarch.
+  * Documentation is quite rare. More than water in a 
+    desert. This tends to be a little less true everyday, 
+    but there is still much work to be done.
+  * Packages using VCS repositories tend to say the
+    packages are up to date when they are not.
 
 There may of course be more bugs that we may be unaware of.
 If you find a such a bug, please send me a message by mail
 or Jabber/XMPP at lukc@upyum.com for both protocols.
+
+## Contribute! ##
+
+pkg++ is always looking for potential new developers. If 
+you are interested in helping, you should join us on our
+XMPP channel (see `Bugs`).
 
