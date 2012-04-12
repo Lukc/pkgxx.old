@@ -5,7 +5,9 @@
 autoload -U colors
 colors
 
+#include "lang.sh.c"
 #include "display.sh.c"
+
 #include "getters.sh.c"
 #include "tools.sh.c"
 #include "tar.sh.c"

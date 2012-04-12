@@ -12,15 +12,24 @@
  */
 
 info() {
-	echo "${fg_bold[green]}--${fg_bold[white]} $@${reset_color}"
+	local str="$1"
+	shift 1
+	
+	lprintf "${fg_bold[green]}--${fg_bold[white]} ${str}${reset_color}" $@
 }
 
 warning() {
-	echo "${fg_bold[yellow]}-- WARNING: $@${reset_color}" >&2
+	local str="$1"
+	shift 1
+	
+	lprintf "${fg_bold[yellow]}-- WARNING: ${str}${reset_color}" $@ >&2
 }
 
 error() {
-	echo  "${fg_bold[red]}-- ERROR: $@${reset_color}" >&2
+	local str="$1"
+	shift 1
+	
+	lprintf  "${fg_bold[red]}-- ERROR: ${str}${reset_color}" $@ >&2
 }
 
 /* 
@@ -29,7 +38,10 @@ error() {
  */
 
 subinfo() {
-	echo "${fg_bold[blue]} --${fg_bold[white]} $@${reset_color}"
+	local str="$1"
+	shift 1
+	
+	lprintf "${fg_bold[blue]} --${fg_bold[white]} ${str}${reset_color}" $@
 }
 
 /*
@@ -38,8 +50,9 @@ subinfo() {
 
 ask() {
 	local variable="$1"
-	shift 1
-	echo -e "${fg_bold[magenta]}--${fg_bold[white]} $@${reset_color}"
+	local str="$2"
+	shift 2
+	lprintf "${fg_bold[magenta]}--${fg_bold[white]} ${str}${reset_color}" $@
 	echo -n " > "
 	read "$variable"
 }
