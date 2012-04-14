@@ -45,6 +45,8 @@ main() {
 	local FILE TARGET
 	export EXT=""
 	
+	load_locales
+	
 	parse_options "$@"
 	
 	/* 
@@ -60,7 +62,7 @@ main() {
 			if [[ -e "$DIR/$PKGMK_PROFILE" ]]; then
 				. "$PKGMK_PROFILES_DIR/$PKGMK_PROFILE"
 			else
-				error "Requested profile ($PKGMK_PROFILE) is not available."
+				error "$msg_unavailable_profile" "$PKGMK_PROFILE"
 				exit 1
 			fi
 		done
@@ -105,13 +107,13 @@ main() {
 	 */
 	for FILE in "$PKGMK_CONFFILE" "$PKGMK_PKGFILE"; do
 		if [[ ! -f "$FILE" ]]; then
-			error "File '$FILE' not found."
+			error "$msg_unavailable" "$FILE"
 			exit E_GENERAL
 		fi
 	done
 	
 	if [[ -z "${PKGMK_RECIPES[@]}" ]]; then
-		error "No way to parse any recipe has been found. Please install a recipe module."
+		error "$msg_no_recipe_format"
 		exit E_GENERAL
 	fi
 	
@@ -124,7 +126,7 @@ main() {
 		fi
 	done
 	if [[ -z "$PKGMK_RECIPE_FORMAT" ]]; then
-		error "'$PKGMK_PKGFILE' can not be parsed."
+		error "$msg_cannot_be_parsed" "$PKGMK_PKGFILE"
 		exit E_GENERAL
 	fi
 	source "$PKGMK_CONFFILE"
@@ -224,7 +226,7 @@ main() {
 		if [[ "$(type ${PKGMK_PACKAGE_MANAGER}:checkdeps)" != "none" ]]; then
 			/* It does have access to ${depends[*]}, ${build_depends[*]}, etc. */
 			if ! ${PKGMK_PACKAGE_MANAGER}:checkdeps; then
-				error "All dependencies where not found on your system."
+				error "$msg_missing_dependencies"
 				exit 1
 			fi
 		fi
@@ -273,14 +275,14 @@ main() {
 		download_source
 		check_file "$PKGMK_MD5SUM"
 		make_md5sum > $PKGMK_MD5SUM
-		info "Md5sum updated."
+		info "$md5sum_updated"
 	fi
 	
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]]; then
 		download_source
 		check_file "$PKGMK_SHA256SUM"
 		make_sha256sum > $PKGMK_SHA256SUM
-		info "Sha256sum updated."
+		info "$sha256sum_updated"
 	fi
 
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" || "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
@@ -295,7 +297,7 @@ main() {
 	if [[ "$PKGMK_EXTRACT_ONLY" = "yes" ]]; then
 		download_source
 		make_work_dir
-		info "Extracting sources of package '$name-$version'."
+		info "$msg_extracting_sources" "$name-$version"
 		unpack_source
 		exit 0
 	fi
@@ -305,9 +307,9 @@ main() {
 	 */
 	if [[ "$PKGMK_UP_TO_DATE" = "yes" ]]; then
 		if [[ "`build_needed`" = "yes" ]]; then
-			info "Package '$TARGET' is not up to date."
+			info "$msg_not_up_to_date" "$TARGET"
 		else
-			info "Package '$TARGET' is up to date."
+			info "$msg_up_to_date" "$TARGET"
 		fi
 		exit 0
 	fi
@@ -317,7 +319,7 @@ main() {
 	 * available in the package dir.
 	 */
 	if [[ "`build_needed`" = "no" && "$PKGMK_FORCE" = "no" && "$PKGMK_CHECK_MD5SUM" = "no" && "$version" != "devel" ]]; then
-		info "Package '$TARGET' is up to date."
+		info "$msg_up_to_date" "$TARGET"
 	else
 		interact_uses "${iuse[*]}"
 		download_source
@@ -346,8 +348,9 @@ main() {
 trap "interrupted" SIGHUP SIGINT SIGQUIT SIGTERM
 
 /*
- * Don’t want to manage other locales.
+ * Don’t want to manage other locales, for now.
  */
+export PKGMK_LOCALE="${LC_ALL:-$LANG}"
 export LC_ALL=POSIX
 
 /* 
@@ -372,6 +375,7 @@ PKGMK_PRDEFAULTS_DIRS=(_SHAREDIR/pkg++/post-defaults _SYSCONFDIR/pkg++/post-defa
 PKGMK_INCLUDES_DIR=_SHAREDIR"/pkg++/includes"
 PKGMK_MODULES_DIR=_SHAREDIR"/pkg++/modules"
 PKGMK_PROFILES_DIRS=(_SHAREDIR/pkg++/profiles _SYSCONFDIR/pkg++/profiles)
+PKGMK_LOCALES_DIR=_SHAREDIR"/pkg++/locales"
 PKGMK_PKGFILE_NAME="Pkgfile"
 PKGMK_PKGFILE=""
 PKGMK_RECIPE_FORMAT=""

@@ -513,7 +513,7 @@ man-install:
 	`INSTALL_F 0644 man/fr.pkgfile.5 pkgfile.5 \$\(MANDIR\)/fr.UTF-8/man5`
 
 # FIXME: The comment below is simple enough to understand the problem.
-pkgxx-install: pkgxx libexecdir has-install istrue-install
+pkgxx-install: pkgxx libexecdir has-install istrue-install locales-install
 	`DIR \$\(BINDIR\)`
 	`DIR \$\(SHAREDIR\)/pkg++/includes`
 	`DIR \$\(SHAREDIR\)/pkg++/defaults`
@@ -549,6 +549,13 @@ $(for module in `cd modules; ls *.zsh`; do
 	module=${module%.zsh}
 	echo "	`INSTALL 0644 modules/$module \$\(SHAREDIR\)/pkg++/modules`"
 	echo
+done)
+
+locales-install:
+	`DIR \$\(SHAREDIR\)/pkg++/locales`
+$(for locale in `cd locales; ls *.sh`; do
+	echo -ne "\t"
+	INSTALL 0644 locales/$locale \$\(SHAREDIR\)/pkg++/locales
 done)
 
 libexecdir:

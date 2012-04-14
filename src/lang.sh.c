@@ -30,4 +30,12 @@ lprintf () {
 	fi
 }
 
+load_locales () {
+	for LOCALE in en ${PKGMK_LOCALE%_*} ${PKGMK_LOCALE%.*} ${PKGMK_LOCALE}; do
+		if [[ -e "$PKGMK_LOCALES_DIR/$LOCALE.sh" ]]; then
+			. "$PKGMK_LOCALES_DIR/$LOCALE.sh"
+		fi
+	done
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
