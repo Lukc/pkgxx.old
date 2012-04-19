@@ -275,14 +275,14 @@ main() {
 		download_source
 		check_file "$PKGMK_MD5SUM"
 		make_md5sum > $PKGMK_MD5SUM
-		info "$md5sum_updated"
+		info "$msg_md5sum_updated"
 	fi
 	
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]]; then
 		download_source
 		check_file "$PKGMK_SHA256SUM"
 		make_sha256sum > $PKGMK_SHA256SUM
-		info "$sha256sum_updated"
+		info "$msg_sha256sum_updated"
 	fi
 
 	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" || "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
