@@ -1,4 +1,8 @@
 
+# Common
+msg_func_may_have_failed="%1() may have failed."
+
+# main.sh.c
 msg_md5sum_updated="Md5sum updated."
 msg_sha256sum_updated="Sha256sum updated."
 
@@ -12,4 +16,21 @@ msg_file_not_found="File \`%1' not found."
 msg_no_recipe_format="No way to parse any recipe has been found. Please install a recipe module."
 msg_cannot_be_parsed="\`%1' can not be parsed."
 msg_missing_dependencies="All dependencies where not found on your system."
+
+# build.sh.c
+msg_should_build_as_root="Packages should be built as root."
+
+msg_building_package="Building \`%1'%2."
+msg_build_success="Building \`%1' succeeded."
+msg_build_fail="Building \`%1' failed."
+
+msg_testing="Testing \`%1'."
+msg_tests_success="\`%1' was successfully tested."
+msg_tests_fail="Tests of \`%1' failed."
+
+msg_log_avail_at="Log available at: %1"
+
+msg_bad_autosplit="Automatic split \`%1' is not available."
+
+msg_build_result="Build result:"
 

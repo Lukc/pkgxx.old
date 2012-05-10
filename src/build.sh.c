@@ -53,14 +53,14 @@ build_package() {
 	 * errors.
 	 */
 	if [[ "$UID" != "0" ]]; then
-		warning "Packages should be built as root."
+		warning "$msg_should_build_as_root"
 	fi
 	
 	/*
 	 * Think to the poor user who would not know what is happening whithout
 	 * this small line.
 	 */
-	info "Building '$name'$(print_useflags)."
+	info "$msg_building_package" "$name" "$(print_useflags)"
 	
 	/*
 	 * And after though to the poor users, we can extract the sources, if
@@ -107,11 +107,11 @@ build_package() {
 	 *       a fail if it fails.
 	 */
 	if [[ $RETURN != 0 && "$PKGMK_CHECK" = "yes" ]]; then
-		info "Testing '$name'."
+		info "$msg_testing" "$name"
 		if check; then
-			info "'$name' successfully tested."
+			info "$msg_tests_success" "$name"
 		else
-			error "Tests of '$name' failed."
+			error "$msg_tests_fail" "$name"
 			exit E_BUILD
 		fi
 	fi
@@ -120,13 +120,13 @@ build_package() {
 	 * If something went wrong
 	 */
 	if [[ $RETURN != 0 ]]; then
-		error "Building '$name' failed."
+		error "$msg_build_failed" "$name"
 		if [[ "$PKGMK_KEEP_ERRLOGS" != "no" && -n "${errlogs[@]}" ]]; then
 			for PATTERN in ${errlogs[@]}; do
 				for FILE in $(cd $SRC; find . | egrep "${PATTERN}$"); do
 					local LOGFILE=$(echo "$FILE" | sed -e "s|/|.|g;s|^\.*||")
 					cp $SRC/$FILE $PKGMK_LOGS_DIR/$LOGFILE
-					error "Log available at: $PKGMK_LOGS_DIR/$LOGFILE"
+					error "$msg_log_avail_at" "$PKGMK_LOGS_DIR/$LOGFILE"
 				done
 			done
 		fi
@@ -149,7 +149,7 @@ build_package() {
 	 */
 	cd $PKG
 	if [[ "`find . | wc -l`" = 1 ]]; then
-		error "Building '$name' failed."
+		error "$msg_build_failed" "$name"
 		exit E_BUILD
 	fi
 	
@@ -172,7 +172,7 @@ build_package() {
 				fi
 			fi
 		else
-			warning "Automatic split \`${SPLIT}' is not available."
+			warning "$msg_bad_autosplit" "$SPLIT"
 		fi
 	done
 	
@@ -182,7 +182,7 @@ build_package() {
 	 * We think again to the poor user, as each build will display
 	 * a list of files.
 	 */
-	info "Build result:"
+	info "$msg_build_result"
 	
 	for SPLIT in $name ${splits[@]}; do
 		SPLIT="${SPLIT//-/_}"
@@ -223,9 +223,9 @@ build_package() {
 		 */
 		if [[ -n "${split_class}" ]]; then
 			if [[ "$(type ${distribution}:class:${split_class})" != "none" ]]; then
-				${distribution}:class:${split_class} || warning "${distribution}:class:${split_class}() may have failed."
+				${distribution}:class:${split_class} || warning "$msg_func_may_have_failed" "${distribution}:class:${split_class}"
 			elif [[ "$(type ${distribution_family}:class:${split_class})" != "none" ]]; then
-				${distribution_family}:class:${split_class} || warning "${distribution_family}:class:${split_class}() may have failed."
+				${distribution_family}:class:${split_class} || warning "$msg_func_may_have_failed" "${distribution_family}:class:${split_class}"
 			fi
 		fi
 		
@@ -236,9 +236,9 @@ build_package() {
 		 */
 		if [[ -n "${split_slot}" ]]; then
 			if [[ "$(type ${distribution}:slots)" != "none" ]]; then
-				${distribution}:slots || warning "${distribution}:slots() may have failed."
+				${distribution}:slots || warning "$msg_func_may_have_failed" "${distribution}:slots"
 			elif [[ "$(type ${distribution_family}:slots)" != "none" ]]; then
-				${distribution_family}:slots || warning "${distribution_family}:slots() may have failed."
+				${distribution_family}:slots || warning "$msg_func_may_have_failed" "${distribution_family}:slots"
 			fi
 		fi
 		
@@ -290,7 +290,7 @@ build_package() {
 	fi
 	
 	if [[ "$BUILD_SUCCESSFUL" = "yes" ]]; then
-		info "Building '$name' succeeded."
+		info "$msg_build_success" "$name"
 	else
 		if [[ -f $TARGET ]]; then
 		/*
@@ -302,7 +302,7 @@ build_package() {
 		/*
 		 * Uh… but if there is no package… uh… pkg++ probably failed.
 		 */
-		error "Building '$name' failed."
+		error "$msg_build_fail" "$name"
 		exit E_BUILD
 	fi
 }
