@@ -5,6 +5,10 @@ unpack_source() {
 	 */
 	local FILE LOCAL_FILENAME COMMAND
 	
+	if [[ -n "${source[@]}" ]]; then
+		info "Getting sources of '$name'."
+	fi
+	
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME="`get_filename $FILE`"
 		/*
@@ -23,7 +27,7 @@ unpack_source() {
 							error "Unpacking of '$FILE' failed."
 						fi
 					else
-						info "Copying $LOCAL_FILENAME."
+						subinfo "Copying $LOCAL_FILENAME."
 						cp -r "$LOCAL_FILENAME" "$SRC"
 					fi
 				;;

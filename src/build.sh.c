@@ -57,16 +57,16 @@ build_package() {
 	fi
 	
 	/*
-	 * Think to the poor user who would not know what is happening whithout
-	 * this small line.
-	 */
-	info "$msg_building_package" "$name" "$(print_useflags)"
-	
-	/*
 	 * And after though to the poor users, we can extract the sources, if
 	 * they need so.
 	 */
 	unpack_source
+	
+	/*
+	 * Think to the poor user who would not know what is happening whithout
+	 * this small line.
+	 */
+	info "$msg_building_package" "$name" "$(print_useflags)"
 	
 	/* 
 	 * Fail or not in case of bad return, and print or not debug messages.
