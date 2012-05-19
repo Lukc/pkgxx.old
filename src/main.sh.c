@@ -32,7 +32,7 @@ colors
 
 interrupted() {
 	echo ""
-	error "Interrupted."
+	error "$msg_interrupted"
 	
 	if [[ "$PKGMK_KEEP_WORK" = "no" ]]; then
 		rm -rf $PKGMK_WORK_DIR
