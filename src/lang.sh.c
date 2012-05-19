@@ -23,6 +23,14 @@ lprintf () {
 		done
 	fi
 	
+	while [[ "$str" =~ [^%]"%"[0-9]+ ]]; do
+		/*
+		 * FIXME: THIS IS WRONG. It just does not work up to 9, to 
+		 *        begin with. Also, %%X is expected to cause trouble.
+		 */
+		str="${str/\%[0-9]}"
+	done
+	
 	echo -n "$str"
 	
 	if $breakline; then
