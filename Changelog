@@ -1,3 +1,8 @@
+0.13.1:
+	* Translations have become possible. See locales/en.sh and pkg++’
+	  source code for more information. Documentation may still come
+	  later.
+
 0.13:
 	* The splits system has been updated and the new one has been
 	  implemented.
