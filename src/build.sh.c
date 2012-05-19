@@ -120,7 +120,7 @@ build_package() {
 	 * If something went wrong
 	 */
 	if [[ $RETURN != 0 ]]; then
-		error "$msg_build_failed" "$name"
+		error "$msg_build_fail" "$name"
 		if [[ "$PKGMK_KEEP_ERRLOGS" != "no" && -n "${errlogs[@]}" ]]; then
 			for PATTERN in ${errlogs[@]}; do
 				for FILE in $(cd $SRC; find . | egrep "${PATTERN}$"); do
