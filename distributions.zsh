@@ -1,17 +1,5 @@
 #!/usr/bin/env zsh
 
-checking_for_bin () {
-	echo -n "checking for $1... "
-	for i in `echo "$PATH" | sed "s|:| |g"`; do
-		if [[ -x $i/$1 ]]; then
-			echo "yes"
-			return 0
-		fi
-	done
-	echo "no"
-	return 1
-}
-
 DISTRIBUTIONS=(
 	# We put here only the most known distributions.
 	Crux Arch Slackware Frugalware   # KISS
