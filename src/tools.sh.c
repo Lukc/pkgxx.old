@@ -39,7 +39,7 @@ pkgmake() {
 	  ${make:=$(which pmake)} \
 	  ${make:=$MAKE}
 	
-	if not USE=(${supports[@]}) use multithread; then
+	if ! USE=(${supports[@]}) use multithread; then
 		/* Note: fucking preprocessor */
 		while [[ "${make_opts[@]}" =~ -j[0-9] ]]; do
 			make_opts=(${make_opts[@]/-j[0-9]})
