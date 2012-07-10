@@ -35,6 +35,7 @@ download_file() {
 					fi
 				else
 					/* We move and re-clone… if possible. */
+					cd ..
 					mv "$name" "$name.old"
 					download_file "$1"
 				fi
