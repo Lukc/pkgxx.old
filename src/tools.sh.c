@@ -256,18 +256,20 @@ target_libc () {
 	 * kernel and a *BSD libc, for example. It is the same for many other
 	 * OSes.
 	 */
-	local TRIPLET
 	local LIBC
+	
 	if [[ -n "$CHOST" ]]; then
-		TRIPLET=$CHOST
+		LIBC=$(echo "$CHOST" | cut -d- -f 4)
+
+		if [[ -z "$LIBC" ]]; then
+			LIBC=$(echo "$CHOST" | cut -d- -f 3)
+		fi
 	else
-		TRIPLET=1-2-$OSTYPE
+		/* If OSTYPE is only the OS (no libc), it will be given instead anyway */
+		LIBC=$(echo $OSTYPE | cut -d- -f 2)
 	fi
-	LIBC=$(echo $TRIPLET | cut -d- -f 4)
-	if [[ -z "$LIBC" ]]; then
-		LIBC=$(echo $TRIPLET | cut -d- -f 3)
-	fi
-	echo $LIBC
+	
+	echo "$LIBC"
 }
 
 pm_arch () {
