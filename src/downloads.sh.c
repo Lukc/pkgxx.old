@@ -55,7 +55,7 @@ download_source() {
 				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
 				exit E_DOWNLOAD
 			else
-				if [[ "$PKGMK_DOWNLOAD" = "yes" ]] || [[ "$version" = "devel" ]]; then
+				if [[ "$PKGMK_DOWNLOAD" = "yes" ]]; then
 					download_file $FILE
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
