@@ -8,7 +8,7 @@ Last build: <{ system LANG=C date }>
 # *Pkgfiles* reference #
 
 This file is here to list all the functions and variables you can
-both use, may it be by declaring them or using their value.
+use, may it be by declaring them or using their value.
 
 ## Variables ##
 
@@ -165,6 +165,25 @@ redefine a value of a split, define &lt;split&gt;\_&lt;variable&gt;.
 Each of these variables behave exactly as the main ones.
 
 <{ get v0.14 }>
+
+#### ${slots} ####
+
+Permits the definition of a *slot*. Slots are usually used on
+distributions such as Gentoo to install a package several times
+on the same system, with different versions. The best examples
+are the simultaneous installations of `python-2` and `python-3`
+or `gcc-4.5` and `gcc-4.6`.
+
+Slots are currently almost not used. An experimental support has
+been added to the `Debian` module. As `dpkg` does not support
+slots, it is mainly an experiment that only changes the package
+name (for now).
+
+It is important to note that currently, there is no package 
+manager supported by pkg++ that has slots management.
+
+<{ get new-feature }>
+<{ get v0.16 }>
 
 #### ${supports[]} ####
 
