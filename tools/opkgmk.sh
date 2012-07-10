@@ -50,18 +50,18 @@ done
 # 
 ### Composition of a .opk file:
 # 
-#package.opk (ar)
-#+- debian-binary (text)
-#+- control.tar.gz (tarball)
-#...+- control (text)
-#...+- preinst (script)
-#...+- postinst (script)
-#...+- prerm (script)
-#...+- postrm (script)
-#+- data.tar.gz (tarball)
-#...+- usr
-#......+- bin
-#.........+- opkg-hello (example program)
+# package.opk                  (ar)
+#  |- debian-binary            (text)
+#  |- control.tar.gz           (tarball)
+#  |   |- control              (YAML-like)
+#  |   |- preinst              (script)
+#  |   |- postinst             (script)
+#  |   |- prerm                (script)
+#  |   |- postrm               (script)
+#  |- data.tar.gz              (tarball)
+#      |- usr
+#          |- bin
+#              |- opkg-hello   (example program)
 
 mkdir -p /tmp/opkgmk-$$
 cd /tmp/opkgmk-$$
