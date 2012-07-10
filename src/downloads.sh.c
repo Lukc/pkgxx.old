@@ -28,10 +28,8 @@ download_file() {
 				/* We don’t check if it is writable, the dl tool will do its job */
 				cd $name || die "Couldn't move to '$PKGMK_SOURCE_DIR/$name'."
 				if [[ "$(type ${PROTOCOL}:pull)" != "none" ]]; then
-					if ! ${PROTOCOL}:pull "$1" && [[ "$PKGMK_FORCE" != "yes" ]]; then
+					if ! ${PROTOCOL}:pull "$1"; then
 						info "'$1' already up to date."
-						/* FIXME: This `exit 0` is the source of a lot of trouble. */
-						exit 0
 					fi
 				else
 					/* We move and re-clone… if possible. */
