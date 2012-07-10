@@ -79,7 +79,7 @@ dpkg:_control() {
 	fi
 	echo "Architecture: $(dpkg:arch)"
 	echo -n "Depends: "
-	dpkg:_list ${depends[@]}
+	dpkg:_list ${depends[@]} ${usedepends[@]}
 	if ((${#conflicts} >= 1)); then
 		echo -n "Conflicts: "
 		dpkg:_list ${conflicts[@]}

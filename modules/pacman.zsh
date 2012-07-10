@@ -76,7 +76,7 @@ pacman:_pkginfo() {
 	for GROUP in ${groups[@]}; do
 		echo "group = $GROUP"
 	done
-	for DEP in ${depends[@]}; do
+	for DEP in ${depends[@]} ${usedepends[@]}; do
 		echo "depend = $DEP"
 	done
 	for CONFLICT in ${conflicts[@]}; do
