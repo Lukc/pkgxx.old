@@ -280,15 +280,15 @@ pm_arch () {
 	 * No-arch packages must be of the form -noarch, instead of being of 
 	 * the form -x86 or whatever.
 	 */
-	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
-	if has "$PKGMK_PACKAGE_MANAGER" ${PKGMK_PM_NOARCH_SUPPORT[@]} \
-	&& (has no-arch ${archs[@]} || has no-kernel ${kernels[@]}); then
+	local TARGET_ARCH=$(target_arch)
+	local TARGET_KERNEL=$(target_kernel)
+	
+	if has "$PKGMK_PACKAGE_MANAGER" ${PKGMK_PM_NOARCH_SUPPORT[@]} && \
+	  (has no-arch ${archs[@]} || has no-kernel ${kernels[@]})
+	then
 		TARGET_ARCH=noarch ;
 	fi
-	case ${TARGET_ARCH} in
-		parisc*) TARGET_ARCH=hppa ;;
-		"Power Macintosh") TARGET_ARCH=ppc ;;
-	esac
+	
 	if [[ "$(type ${PKGMK_PACKAGE_MANAGER}:arch)" != none ]]; then
 		ARCH="${TARGET_ARCH}" KERNEL="${TARGET_KERNEL}" \
 			${PKGMK_PACKAGE_MANAGER}:arch
