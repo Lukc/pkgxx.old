@@ -5,8 +5,7 @@ msg_func_may_have_failed="%1() may have failed."
 # main.sh.c
 msg_interrupted="Interrupted."
 
-msg_md5sum_updated="Md5sum updated."
-msg_sha256sum_updated="Sha256sum updated."
+msg_control_sum_updated="%1 updated."
 
 msg_extracting_sources="Extracting sources of package \`%1'."
 

@@ -70,18 +70,13 @@ parse_options() {
 				fi
 				PKGMK_INSTALL_ROOT="$2"
 				shift ;;
-			-um|--update-md5sum)
-				PKGMK_UPDATE_MD5SUM="yes" ;;
-			-im|--ignore-md5sum)
-				PKGMK_IGNORE_MD5SUM="yes" ;;
-			-cm|--check-md5sum)
-				PKGMK_CHECK_MD5SUM="yes" ;;
-			-us|--update-sha256sum)
-				PKGMK_UPDATE_SHA256SUM="yes" ;;
-			-is|--ignore-sha256sum)
-				PKGMK_IGNORE_SHA256SUM="yes" ;;
-			-cs|--check-sha256sum)
-				PKGMK_CHECK_SHA256SUM="yes" ;;
+			/* m for md5sum, for Crux compatibility */
+			-um|-us|--update-sums)
+				PKGMK_UPDATE_CONTROL_SUMS="yes" ;;
+			-im|-is|--ignore-sums)
+				PKGMK_IGNORE_CONTROL_SUMS="yes" ;;
+			-cm|-cs|--check-sums)
+				PKGMK_CHECK_CONTROL_SUMS="yes" ;;
 			-ns|--no-strip)
 				PKGMK_NO_STRIP="yes" ;;
 			-f|--force)

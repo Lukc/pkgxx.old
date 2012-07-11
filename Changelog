@@ -2,6 +2,10 @@
 	* Translations have become possible. See locales/en.sh and pkg++’
 	  source code for more information. Documentation may still come
 	  later.
+	* The control sums system has been fully rewritten. It is now possible
+	  to add new control sums checks by adding them to
+	  PKGMK_CONTROL_SUMS[]. A module also need to be written. The only
+	  modules are currently md5sum and sha256sum.
 
 0.13:
 	* The splits system has been updated and the new one has been

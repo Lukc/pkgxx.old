@@ -154,8 +154,6 @@ main() {
 	 */
 	PKGMK_CHANGELOG="`get_metafile "$PKGMK_CHANGELOG"`"
 	PKGMK_FOOTPRINT="`get_metafile "$PKGMK_FOOTPRINT"`"
-	PKGMK_MD5SUM="`get_metafile "$PKGMK_MD5SUM"`"
-	PKGMK_SHA256SUM="`get_metafile "$PKGMK_SHA256SUM"`"
 	PKGMK_NOSTRIP="`get_metafile "$PKGMK_NOSTRIP"`"
 	PKGMK_POST_INSTALL="`get_metafile "$PKGMK_POST_INSTALL"`"
 	PKGMK_PRE_INSTALL="`get_metafile "$PKGMK_PRE_INSTALL"`"
@@ -212,14 +210,13 @@ main() {
 	 * and the use of it’s content.
 	 */
 	if ! (
-			istrue "$PKGMK_DOWNLOAD_ONLY"    || \
-			istrue "$PKGMK_EXTRACT_ONLY"     || \
-			istrue "$PKGMK_UP_TO_DATE"       || \
-			istrue "$PKGMK_CLEAN"            || \
-			istrue "$PKGMK_UPDATE_FOOTPRINT" || \
-			istrue "$PKGMK_UPDATE_MD5SUM"    || \
-			istrue "$PKGMK_UPDATE_SHA256SUM" || \
-			istrue "$PKGMK_CHECK_PKGFILE"    || \
+			istrue "$PKGMK_DOWNLOAD_ONLY"         || \
+			istrue "$PKGMK_EXTRACT_ONLY"          || \
+			istrue "$PKGMK_UP_TO_DATE"            || \
+			istrue "$PKGMK_CLEAN"                 || \
+			istrue "$PKGMK_UPDATE_FOOTPRINT"      || \
+			istrue "$PKGMK_UPDATE_CONTROL_SUMS"   || \
+			istrue "$PKGMK_CHECK_PKGFILE"         || \
 			istrue "$PKGMK_LIST_INCLUDES"
 	   ) && [[ "$PKGMK_CHECK_DEPENDS" = "yes" ]]
 	then
@@ -271,21 +268,14 @@ main() {
 		exit 0
 	fi
 	
-	if [[ "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
+	if [[ "$PKGMK_UPDATE_CONTROL_SUMS" = "yes" ]]; then
 		download_source
-		check_file "$PKGMK_MD5SUM"
-		make_md5sum > $PKGMK_MD5SUM
-		info "$msg_md5sum_updated"
-	fi
-	
-	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" ]]; then
-		download_source
-		check_file "$PKGMK_SHA256SUM"
-		make_sha256sum > $PKGMK_SHA256SUM
-		info "$msg_sha256sum_updated"
-	fi
-
-	if [[ "$PKGMK_UPDATE_SHA256SUM" = "yes" || "$PKGMK_UPDATE_MD5SUM" = "yes" ]]; then
+		
+		for ALG in ${PKGMK_CONTROL_SUMS[@]}; do
+			make_control_sum ${ALG} > "$(get_metafile .${ALG}sum)" && \
+				info "$msg_control_sum_updated" "${ALG}"
+		done
+		
 		exit 0
 	fi
 	
@@ -318,7 +308,7 @@ main() {
 	 * Basic users (n00bs) don’t need to rebuild a package that is
 	 * available in the package dir.
 	 */
-	if [[ "`build_needed`" = "no" && "$PKGMK_FORCE" = "no" && "$PKGMK_CHECK_MD5SUM" = "no" && "$version" != "devel" ]]; then
+	if [[ "`build_needed`" = "no" && "$PKGMK_FORCE" = "no" && "$PKGMK_CHECK_CONTROL_SUMS" = "no" && "$version" != "devel" ]]; then
 		info "$msg_up_to_date" "$TARGET"
 	else
 		interact_uses "${iuse[*]}"
@@ -382,8 +372,7 @@ PKGMK_RECIPE_FORMAT=""
 PKGMK_PROFILE=""
 PKGMK_CHANGELOG="ChangeLog"
 PKGMK_FOOTPRINT=".footprint"
-PKGMK_MD5SUM=".md5sum"
-PKGMK_SHA256SUM=".sha256sum"
+PKGMK_CONTROL_SUMS=(md5sum sha256sum)
 PKGMK_NOSTRIP=".nostrip"
 PKGMK_POST_INSTALL="post-install"
 PKGMK_PRE_INSTALL="pre-install"
@@ -415,12 +404,9 @@ PKGMK_IGNORE_FOOTPRINT="yes"
 PKGMK_IGNORE_NEW="no"
 PKGMK_FORCE="no"
 PKGMK_KEEP_WORK="no"
-PKGMK_UPDATE_MD5SUM="no"
-PKGMK_IGNORE_MD5SUM="no"
-PKGMK_CHECK_MD5SUM="no"
-PKGMK_UPDATE_SHA256SUM="no"
-PKGMK_IGNORE_SHA256SUM="no"
-PKGMK_CHECK_SHA256SUM="no"
+PKGMK_UPDATE_CONTROL_SUMS="no"
+PKGMK_IGNORE_CONTROL_SUMS="no"
+PKGMK_CHECK_CONTROL_SUMS="no"
 PKGMK_NO_STRIP="no"
 PKGMK_CLEAN="no"
 PKGMK_CHECK="no"
