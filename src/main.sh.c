@@ -272,7 +272,7 @@ main() {
 		download_source
 		
 		for ALG in ${PKGMK_CONTROL_SUMS[@]}; do
-			make_control_sum ${ALG} > "$(get_metafile .${ALG}sum)" && \
+			make_control_sum ${ALG} > "$(get_metafile .${ALG})" && \
 				info "$msg_control_sum_updated" "${ALG}"
 		done
 		
