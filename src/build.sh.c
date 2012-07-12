@@ -28,7 +28,7 @@ autosplit() {
 	done
 }
 
-build_package() {
+build_packages() {
 	/*
 	 * If the build is not successful, then it is not successful. Logic, 
 	 * isn’t it ?

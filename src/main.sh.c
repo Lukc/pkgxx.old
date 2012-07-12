@@ -319,7 +319,7 @@ main() {
 		 * with devel packages
 		 */
 		TARGET="$(get_target)"
-		build_package
+		build_packages
 		sign_packages
 	fi
 	
