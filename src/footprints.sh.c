@@ -13,11 +13,13 @@ check_footprint() {
 		if [[ -f $PKGMK_FOOTPRINT ]]; then
 			sort -k 3 $PKGMK_FOOTPRINT > $FILE.footprint.orig
 			diff -w -t -U 0 $FILE.footprint.orig $FILE.footprint | \
-				sed '/^@@/d' | \
-				sed '/^+++/d' | \
-				sed '/^---/d' | \
-				sed 's/^+/NEW       /g' | \
-				sed 's/^-/MISSING   /g' > $FILE.footprint.diff
+				sed '
+					/^@@/d
+					/^+++/d
+					/^---/d
+					s/^+/NEW       /g
+					s/^-/MISSING   /g
+				' > $FILE.footprint.diff
 			if [[ -s $FILE.footprint.diff ]] && [[ "$version" != "devel" ]]; then
 				if [[ "$PKGMK_IGNORE_NEW" = "yes" ]] && \
 				   [[ -z "$(egrep -l ^MISSING $FILE.footprint.diff)" ]]; then
@@ -53,11 +55,11 @@ update_footprint() {
 
 
 footprint_sed() {
-	sed \
-		-e "s|	lib/modules/`uname -r`/|	lib/modules/<kernel-version>/|g" \
-		-e "s|	link	to	| -> |" \
-		-e "s|	->	| -> |" \
-		$@
+	sed "
+		s|	lib/modules/`uname -r`/|	lib/modules/<kernel-version>/|g
+		s|	link	to	| -> |
+		s|	->	| -> |
+	" $@
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
