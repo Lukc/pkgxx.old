@@ -35,3 +35,6 @@ msg_bad_autosplit="Automatic split \`%1' is not available."
 
 msg_build_result="Build result:"
 
+# signatures.sh.c
+msg_signing="Signing \`%1'."
+

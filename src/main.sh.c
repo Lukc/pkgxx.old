@@ -22,6 +22,7 @@ colors
 #include "work.sh.c"
 #include "interactions.sh.c"
 #include "splits.sh.c"
+#include "signatures.sh.c"
 
 #include "build.sh.c"
 #include "install.sh.c"
@@ -319,6 +320,7 @@ main() {
 		 */
 		TARGET="$(get_target)"
 		build_package
+		sign_packages
 	fi
 	
 	/*
