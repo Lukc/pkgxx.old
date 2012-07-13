@@ -182,6 +182,7 @@ print_help () {
 	echo "  --mandir=DIR               man documentation [SHAREDIR/man]"
 	echo "  --libexecdir=DIR           program executables [EPREFIX/libexec]"
 	echo "  --sysconfdir=DIR           read-only single-machine data [/etc]"
+	echo "  --localstatedir=DIR        modifiable single-machine data [PREFIX/var]"
 	echo 
 	echo "System Informations:"
 	echo "  --package-manager=         Choose the package manager to use behind pkg++."
@@ -258,6 +259,9 @@ for arg in $@; do
 		--libexecdir=*)
 			LIBEXECDIR="`echo "$arg" | sed "s|--libexecdir=||"`"
 		;;
+		--localstatedir=*)
+			LOCALSTATEDIR="`echo "$arg" | sed "s|--localstatedir=||"`"
+		;;
 		--package-manager=*)
 			PACKAGE_MANAGER="`echo "$arg" | sed "s|--package-manager=||"`"
 		;;
@@ -280,6 +284,8 @@ done
 : ${MANDIR:=$SHAREDIR/man}
 : ${SYSCONFDIR:=/etc}
 : ${LIBEXECDIR:=$EPREFIX/libexec}
+: ${LOCALSTATEDIR:=$PREFIX/var}
+export LOCALSTATEDIR
 
 : ${EXPORT:=false}
 
@@ -380,6 +386,7 @@ fi
 CPPFLAGS="$CPPFLAGS -E -P -D_VERSION=\"$VERSION\""
 CPPFLAGS="$CPPFLAGS -D_SHAREDIR=\\\"$SHAREDIR\\\" -D_SYSCONFDIR=\\\"$SYSCONFDIR\\\""
 CPPFLAGS="$CPPFLAGS -D_LIBEXECDIR=\\\"$LIBEXECDIR\\\""
+CPPFLAGS="$CPPFLAGS -D_LOCALSTATEDIR=\\\"$LOCALSTATEDIR\\\""
 CPPFLAGS="$CPPFLAGS -include $PWD/src/error.sh.h"
 
 configure() {
@@ -435,6 +442,7 @@ DESTDIR =
 BINDIR = $EPREFIX/bin
 SHAREDIR = $SHAREDIR
 LIBEXECDIR = $LIBEXECDIR
+LOCALSTATEDIR = $LOCALSTATEDIR
 ETCDIR = $SYSCONFDIR
 MANDIR = $MANDIR
 
@@ -465,6 +473,7 @@ $(for module in `cd modules; ls *.zsh`; do
 	echo "	@sed -e \"s|@BINDIR@|\$(BINDIR)|\"\
 		-e \"s|@SHAREDIR@|\$(SHAREDIR)|\"\
 		-e \"s|@LIBEXECDIR@|\$(LIBEXECDIR)|\"\
+		-e \"s|@LOCALSTATEDIR@|\$(LOCALSTATEDIR)|\"\
 		-e \"s|@SYSCONFDIR@|\$(ETCDIR)|\"\
 		modules/$module.zsh > modules/$module"
 	echo "	@echo -e \"  \033[36m[MOD]\033[00m        \033[37mmodules/$module\033[00m\""
@@ -560,8 +569,8 @@ pkgfile-old2new.sh-install: pkgfile-old2new.sh
 	$(INSTALL 0755 "pkgfile-old2new.sh" \$\(LIBEXECDIR\)/pkg++)
 
 default-dirs:
-	`DIR /var/cache/pkg++/sources`
-	`DIR /var/cache/pkg++/packages`
+	`DIR $LOCALSTATEDIR/cache/pkg++/sources`
+	`DIR $LOCALSTATEDIR/cache/pkg++/packages`
 
 tools-install: has-install istrue-install pkgfile-old2new.sh-install
 
