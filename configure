@@ -180,6 +180,7 @@ print_help () {
 	echo "Fine tuning of the installation directories:"
 	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
 	echo "  --mandir=DIR               man documentation [SHAREDIR/man]"
+	echo "  --libexecdir=DIR           program executables [EPREFIX/libexec]"
 	echo "  --sysconfdir=DIR           read-only single-machine data [/etc]"
 	echo 
 	echo "System Informations:"
