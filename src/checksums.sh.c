@@ -7,7 +7,7 @@ make_control_sum() {
 		for FILE in ${source[@]}; do
 			local LOCAL_FILE="$(get_filename "$FILE")"
 			if [[ ! -d "$LOCAL_FILE" ]]; then
-				LOCAL_FILENAMES[$((${#LOCAL_FILENAMES[@]}+1))]="$(get_filename "$FILE")"
+				LOCAL_FILENAMES=(${LOCAL_FILENAMES[@]} "$(get_filename "$FILE")")
 			fi
 		done
 		
