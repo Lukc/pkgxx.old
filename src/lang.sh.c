@@ -46,4 +46,17 @@ load_locales () {
 	done
 }
 
+get_l10ned_var () {
+	/* Usage:
+	 * 	$1: string
+	 * 	$2: locale
+	 * 	$3: element of table
+	 */
+	if [[ -z "$3" ]]; then
+		eval "echo \${${1}_${2}}"
+	else
+		eval "echo \${${1}_${2}[${3}]}"
+	fi
+}
+
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */
