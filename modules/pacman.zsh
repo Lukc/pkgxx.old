@@ -155,17 +155,20 @@ pacman:build() {
 	metafiles=(.FILELIST .PKGINFO)
 	cd $PKG
 	
-	# Frugalware’s packages are very close from Crux’s 
+	# pacmen’s packages are very close from Crux’s 
 	# ones. The only difference is the presence of some 
 	# metadata files at the root of the archive.
 	# Three files are needed: .CHANGELOG, .FILELIST and
 	# .PKGINFO
+	# Note: .FILELISTs are present only in pacman-g2’s fpms.
 	
 	# We get the size of the future package’s content.
 	size="`du -cb . | tail -n 1 | awk '{print $1}'`"
 	
+	if [[ "$PKGMK_PACKAGE_MANAGER" = pacman-g2 ]]; then
 	# We write the files list in the future package.
-	find . | sed "s|\./||" | sort > $PKG/.FILELIST
+		find . | sed "s|\./||" | sort > $PKG/.FILELIST
+	fi
 	
 	# We write all other informations in the package.
 	pacman:_pkginfo > .PKGINFO
