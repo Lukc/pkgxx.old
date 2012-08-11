@@ -186,7 +186,7 @@ main() {
 	 * If -cp or --check-pkgfile, we just check the quality of the recipe.
 	 */
 	if [[ "$PKGMK_CHECK_PKGFILE" = "yes" ]]; then
-		check_pkgfile_only
+		check_pkgfile_full
 	fi
 	
 	/*
@@ -204,7 +204,7 @@ main() {
 		${PKGMK_PACKAGE_MANAGER}:checks
 	fi
 	
-	check_pkgfile
+	check_pkgfile_core || exit
 	
 	/* 
 	 * If the user wants a dependencies-check, we do it between the recipe check
