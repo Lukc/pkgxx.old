@@ -31,6 +31,8 @@
 : ${freedesktop_version:=$version}
 : ${freedesktop_extension:=".tar.gz"}
 
-source=(${source[@]} http://$freedesktop_name.freedesktop.org/releases/$freedesktop_name-$freedesktop_version$freedesktop_extension) 
+url=(http://freedesktop.org/wiki/Software/$freedesktop_name)
+source=(${source[@]} http://freedesktop.org/$freedesktop_name/releases/$freedesktop_name-$freedesktop_version$freedesktop_extension) 
+lastver=(lasttar http://freedesktop.org/software/$freedesktop_name/releases/)
 
 # vim: syntax=sh shiftwidth=4 tabstop=4
