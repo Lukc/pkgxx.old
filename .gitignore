@@ -1,0 +1,10 @@
+/Makefile
+/defaults/distributions
+/defaults/userland
+/man/fr.pkgfile.5
+/man/pkg++.8
+/man/pkg++.conf.5
+/man/pkgfile.5
+/pkg++
+/pkg++.conf
+/pkg++.tmp

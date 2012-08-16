@@ -49,17 +49,14 @@ Build package without checking footprint.
 .B "\-in, \-\-ignore\-new"
 Build package, ignore new files in a footprint missmatch.
 .TP
-.B "\-um, \-\-update\-md5sum"
-Update md5sum using the current source files.
+.B "\-us, \-\-update\-sums"
+Update all control sums using the current source files.
 .TP
-.B "\-im, \-\-ignore\-md5sum"
-Build package without checking md5sum first.
+.B "\-is, \-\-ignore\-sums"
+Build package without checking any control sum first.
 .TP
-.B "\-um, \-\-update\-sha256sum"
-Update sha256sum using the current source files.
-.TP
-.B "\-im, \-\-ignore\-sha256sum"
-Build package without checking sha256sum first.
+.B "\-cs, \-\-check\-sums"
+Only check the control sums validity. Do not build any package.
 .TP
 .B "\-ns, \-\-no\-strip"
 Do not strip executable binaries or libraries.
@@ -118,7 +115,8 @@ Used by pkg++ to make md5 and sha256 checksums, file copies, file moves, and a l
 .SH SEE ALSO
 pkg++.conf(5), pkgfile(5)
 .SH COPYRIGHT
-pkg++ is based on pkgmk. All the modifications are Copyright (c) 2010 Vandervelden Luka and are under the same License.
+pkg++ is based on pkgmk. All the modifications are Copyright (c) 2010-2012 pkg++ team and are under the same License as pkgmk.
+
 pkgmk (pkgutils) is Copyright (c) 2000-2005 Per Liden and Copyright (c) 2006-2007 CRUX team (http://crux.nu).
 pkgmk (pkgutils) is licensed through the GNU General Public License.
 Read the COPYING file for the complete license.

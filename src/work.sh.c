@@ -30,20 +30,8 @@ make_work_dir() {
 	 * We check md5 and sha256 control sums if possible. If the needed 
 	 * tools are not available, it is not possible.
 	 */
-	if [[ "$PKGMK_IGNORE_MD5SUM" = "no" ]]; then
-		if [[ "`type "$md5sum"`" != "none" ]]; then
-			check_md5sum
-		else
-			warning "'md5sum' command not found. md5sum verification ignored."
-		fi
-	fi
-	
-	if [[ "$PKGMK_IGNORE_SHA256SUM" = "no" ]]; then
-		if [[ "`type "$sha256sum"`" != "none" ]]; then
-			check_sha256sum
-		else
-			warning "'sha256sum' command not found. sha256sum verification ignored."
-		fi
+	if [[ "$PKGMK_IGNORE_CONTROL_SUMS" = "no" ]]; then
+		check_control_sums
 	fi
 }
 

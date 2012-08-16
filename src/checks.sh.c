@@ -44,35 +44,125 @@ check_kernel(){
 	fi
 }
 
-check_pkgfile() {
-	/*
-	 * We check if the recipe is valid and usable.
+check_portability() {
+	/* 
+	 * TODO: Checking for the libc could also be usefull.
 	 */
-	if [[ -z "$name" ]]; then
-		error "Variable 'name' not specified in $PKGMK_PKGFILE."
-		exit E_PKGFILE
-	elif [[ -z "$version" ]]; then
-		error "Variable 'version' not specified in $PKGMK_PKGFILE."
-		exit E_PKGFILE
-	elif [[ -z "$release" ]]; then
-		error "Variable 'release' not specified in $PKGMK_PKGFILE."
-		exit E_PKGFILE
-	elif [[ "`type build`" != "function" ]]; then
-		error "Function 'build' not specified in $PKGMK_PKGFILE."
-		exit E_PKGFILE
-	elif ! check_arch; then
-		error "This package is not made to work on your harware."
+	if ! check_arch; then
+		error "This package is not made to work on your hardware."
 		exit E_BAD_ARCH
 	elif ! check_kernel; then
 		error "This package is not made to work on your kernel."
 		exit E_BAD_KERNEL
 	fi
+}
+
+check_pkgfile_core() {
+	/*
+	 * We check if the recipe is valid and usable.
+	 */
+	local RETURN=0
+	
+	check_portability
+	
+	for variable in name version release; do
+		eval "
+			if [[ -z \"\${$variable}\" ]]; then
+				error \"Variable \\\`${variable}' not specified in \\\`$PKGMK_PKGFILE'.\"
+				RETURN=1
+			fi
+		"
+	done
+	
+	if [[ "`type build`" != "function" ]]; then
+		error "Function \`build' not specified in \`$PKGMK_PKGFILE'."
+		RETURN=1
+	fi
+	
 	if [[ "$PKGMK_CHECK" = "yes" ]]; then
 		if [[ "`type check`" != "function" ]]; then
-			warning "Function 'check' not specified in $PKGMK_PKGFILE."
+			warning "Function \`check' not specified in \`$PKGMK_PKGFILE'."
 			PKGMK_CHECK="no"
 		fi
 	fi
+	
+	return $RETURN
+}
+
+/*
+ * check_pkgfile_only() checks the Pkgfile and the presence of new variables 
+ * that were not included in Crux’s pkgmk.
+ * It gives many informations about the recipe itself, and so is very usefull
+ * for packagers.
+ */
+check_pkgfile_full() {
+	/*
+	 * $RETURN will store the error code returned by pkg++ at the end of 
+	 * the check.
+	 */
+	local RETURN
+	
+	check_pkgfile_core
+	RETURN=$?
+	
+	/* 
+	 * Those variables are not present in Crux’ Pkgfiles, but are used on
+	 * many package managers, and their presence is also sometimes mandatory.
+	 * Because of that, if one is not declared, a warning or an error is
+	 * displayed.
+	 */
+	for variable in description url packager maintainer license; do
+			/* FIXME: Maybe this should be errors? */
+		eval "
+			if [[ -z \"\${$variable}\" ]]; then
+				warning \"Variable \\\`${variable}' not specified in \\\`$PKGMK_PKGFILE'.\"
+				RETURN=1
+			fi
+		"
+	done
+	
+	/*
+	 * pre_build() and post_build() are not mandatory. They are 
+	 * only used to help packagers who want to use include files
+	 * but for who they are uncomplete.
+	 * build() however is mandatory.
+	 */
+	if [[ "`type build`" != "function" ]]; then
+		error "Function 'build' not specified in '$PKGMK_PKGFILE'."
+		RETURN=1
+	fi
+	
+	if istrue "$PKGMK_CHECK" && [[ "`type check`" != "function" ]]; then
+		/*
+		 * check() should be given in recipes, to allow a user
+		 * to know if everything will work, but this is not mandatory
+		 * and sometimes difficult to do.
+		 */
+		warning "Function 'check' not specified in '$PKGMK_PKGFILE'."
+		RETURN=1
+	fi
+	
+	if [[ -n "$lastver" ]]; then
+		local last_version="$(eval "$lastver" | sed -e 's/^[	 ]*//;s/[ 	]*$//')"
+		if [[ -n "$last_version" ]]; then
+			if @{ "$last_version" ">" "$version" }@ ; then
+				warning "Last version, '$last_version', is greater than the current version '$version'."
+				RETURN=2
+			fi
+		else
+			error "\$last_version did not return anything."
+			RETURN=3
+		fi
+	else
+		warning "Variable 'lastver' not specified in '$PKGMK_PKGFILE'."
+		RETURN=1
+	fi
+	
+	if [[ $RETURN = 0 ]]; then
+		info "Everything is in perfect order."
+	fi
+	
+	exit $RETURN
 }
 
 check_directory() {
@@ -136,110 +226,6 @@ check_config() {
 		echo "Valid values are: ${PKGMK_PACKAGE_MANAGERS[@]}."
 		exit E_INVALID_PM
 	fi
-}
-
-/*
- * check_pkgfile_only() checks the Pkgfile and the presence of new variables 
- * that were not included in Crux’s pkgmk.
- * It gives many informations about the recipe itself, and so is very usefull
- * for packagers.
- */
-check_pkgfile_only () {
-	/*
-	 * $RETURN will store the error code returned by pkg++ at the end of 
-	 * the check.
-	 */
-	RETURN=0
-	/*
-	 * $description, $url, $packager, $maintainer and $depends are not 
-	 * really Crux-compliant™. However, it is very useful and important
-	 * for some package managers, such as dpkg, rpm, pacman or other. So we
-	 * print an error here, but pkg++ will run even if these variables are 
-	 * not declared in the Pkgfile.
-	 */
-	if [[ -z "$description" ]]; then
-		error "Variable 'description' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$longdesc" ]]; then
-	/* 
-	 * Long descriptions are not mandatory, the short ones can be used 
-	 * instead if missing.
-	 */
-		error "Variable 'longdesc' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$url" ]]; then
-		error "Variable 'url' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$packager" ]]; then
-		error "Variable 'packager' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$maintainer" ]]; then
-		error "Variable 'maintainer' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$name" ]]; then
-		error "Variable 'name' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$version" ]]; then
-		error "Variable 'version' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$release" ]]; then
-		error "Variable 'release' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -z "$license" ]]; then
-		/*
-		 * License can be considered as only useful with unfree 
-		 * softwares or particulary restrictive licenses. As it is not
-		 * used by many package managers, we just print a warning and
-		 * don’t return any error code.
-		 */
-		warning "Variable 'license' not specified in '$PKGMK_PKGFILE'."
-	fi
-	/*
-	 * pre_build() and post_build() are not mandatory. They are 
-	 * only used to help packagers that want to use include files
-	 * but for who they are uncomplete.
-	 * build() however is mandatory.
-	 */
-	if [[ "`type build`" != "function" ]]; then
-		error "Function 'build' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if istrue "$PKGMK_CHECK" && [[ "`type check`" != "function" ]]; then
-		/*
-		 * check() should be given in recipes, to allow a user
-		 * to know if everything will work, but this is not mandatory
-		 * and sometimes difficult to do.
-		 */
-		warning "Function 'check' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ -n "$lastver" ]]; then
-		local last_version="$(eval "$lastver" | sed -e 's/^[	 ]*//;s/[ 	]*$//')"
-		if [[ -n "$last_version" ]]; then
-			if @{ "$last_version" ">" "$version" }@ ; then
-				warning "Last version, '$last_version', is greater than the current version '$version'."
-				RETURN=2
-			fi
-		else
-			error "\$last_version did not returned anything."
-			RETURN=3
-		fi
-	else
-		warning "Variable 'lastver' not specified in '$PKGMK_PKGFILE'."
-		RETURN=1
-	fi
-	if [[ $RETURN = 0 ]]; then
-		info "Everything is in perfect order."
-	fi
-	exit $RETURN
 }
 
 /* vim:set syntax=sh shiftwidth=4 tabstop=4: */

@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+if [[ -z "$PKGMK_VERSION" ]]; then
+	exec pkg++ $0
+fi
+
+function test_info {
+	# 1 and 2: return and expected value
+	# 3: Test number.
+	# 4: Test name.
+	(( $1 == $2 )) && \
+		info "Test $3 worked. [$4]" || \
+		error "Test $3 failed. [$4]"
+}
+
+description_aa_AA=ok
+test_table_aa_AA=(a b c)
+
+[[ "$(lprintf "%1 %2 %3" a b c)" = "a b c" ]]
+test_info $? 0 1 "lprintf             "
+
+[[ -n "$(get_l10ned_var description aa_AA)" ]]
+test_info $? 0 2 "get_l10ned_var      "
+
+[[ -n "$(get_l10ned_var test_table aa_AA 2)" ]]
+test_info $? 0 3 "get_l10ned_var table"
+
+exit 0
+

@@ -7,14 +7,14 @@ PKGXX ?= pkg++
 ZSH   ?= zsh
 
 # built is not in this list because it requires to be root and is currently subject to recurring failures.
-all: targets getters vercmp use tools
+all: targets getters vercmp use tools l10n
 
 pkgxx-version:
 	@[ "$$(pkg++ --version)" = "$$(../configure -V)" ] \
 		&& echo " -- Running tests for $$(pkg++ --version)" \
 		|| echo " -- pkg++ is not up to date. Please, re-install it."
 
-targets getters vercmp use tools: pkgxx-version
+targets getters vercmp use tools l10n: pkgxx-version
 	@echo '. ./test-config-io-only ; info "\033[32m[[ Running $@ tests ]] --"' | ${ZSH}
 	@${PKGXX} -cf test-config-io-only ./Pkgfile-$@
 

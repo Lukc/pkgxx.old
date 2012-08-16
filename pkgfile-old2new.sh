@@ -27,7 +27,7 @@
 #############################################################################
 
 # 
-# Use this script to convert old Crux’s Pkgfiles into modern pkg++’s Pkgfiles.
+# Use this script to convert old Crux’s Pkgfiles into modern pkg++’ Pkgfiles.
 # 
 
 die(){
@@ -40,21 +40,16 @@ if [[ -n "$1" ]]; then
 	[[ -r $1 ]] || \
 	die "The Pkgfile '$1' doesn't exist or is not readable."
 	. $1
-	description="`cat $1 | grep "\# Description:" | sed -e "s|\# Description:||"`"
-	description="`echo $description`"
-	packager="`cat $1 | grep "\# Packager:" | sed -e "s|\# Packager:||"`"
-	packager="`echo $packager`"
+	description="`cat $1 | grep "\# Description:" | sed -e "s|\# Description:||;s/^ *//;s/ *$//"`"
+	packager="`cat $1 | grep "\# Packager:" | sed -e "s|\# Packager:||;s/^ *//;s/ *$//"`"
 	if [[ -z "$packager" ]]; then
 		packager="$maintainer"
 	elif [[ -z "$maintainer" ]]; then
 		maintainer="$packager"
 	fi
-	maintainer="`cat $1 | grep "\# Maintainer:" | sed -e "s|\# Maintainer:||"`"
-	maintainer="`echo $maintainer`"
-	url="`cat $1 | grep "\# URL:" | sed -e "s|\# URL:||"`"
-	url="`echo $url`"
-	depends="`cat $1 | grep "\# Depends on:" | sed -e "s|\# Depends on:||" | sed -e "s|,| |g"`"
-	depends="`echo $depends`"
+	maintainer="`cat $1 | grep "\# Maintainer:" | sed -e "s|\# Maintainer:||;s/^ *//;s/ *$//"`"
+	url="`cat $1 | grep "\# URL:" | sed -e "s|\# URL:||;s/^ *//;s/ *$//"`"
+	depends="`cat $1 | grep "\# Depends on:" | sed -e "s|\# Depends on:||;s|,| |g;s/^ *//;s/ *$//"`"
 	echo "description=\"$description\""
 	echo "packager=\"$packager\""
 	echo "maintainer=\"$maintainer\""
@@ -91,5 +86,4 @@ if [[ -n "$1" ]]; then
 		whence -f build
 	fi
 fi
-
 

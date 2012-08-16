@@ -18,9 +18,13 @@ list_splits() {
 	 * This is currently used only in main().
 	 */
 	for SPLIT in $name ${splits[@]}; do
+		SPLIT="${SPLIT//-/_}"
+		
 		eval "
 			if [[ -z \"\${${SPLIT}_pkgname}\" ]]; then
-				if [[ ${SPLIT} == $name ]]; then
+				SPLIT="${SPLIT//-/_}"
+				
+				if [[ \"${SPLIT}\" == \"${name//-/_}\" ]]; then
 					export ${SPLIT}_pkgname=\"${pkgname}\"
 				else
 					export ${SPLIT}_pkgname=\"${SPLIT}\"
@@ -40,8 +44,9 @@ list_splits() {
 		for VAR in source archs kernels; do
 			eval "
 				export split_${VAR}
-				split_${VAR}=(\${${SPLIT}_${VAR}[@]})
-				if [[ \${#split_${VAR}} = 0 ]]; then
+				if [[ \"${SPLIT}\" == \"${name//-/_}\" || \${#split_${VAR}} = 0 ]]; then
+					split_${VAR}=(\${${SPLIT}_${VAR}[@]})
+				else
 					split_${VAR}=(\${${VAR}[@]})
 				fi
 			"

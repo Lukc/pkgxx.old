@@ -39,7 +39,7 @@ pkgmake() {
 	  ${make:=$(which pmake)} \
 	  ${make:=$MAKE}
 	
-	if not USE=(${supports[@]}) use multithread; then
+	if ! USE=(${supports[@]}) use multithread; then
 		/* Note: fucking preprocessor */
 		while [[ "${make_opts[@]}" =~ -j[0-9] ]]; do
 			make_opts=(${make_opts[@]/-j[0-9]})
@@ -256,18 +256,20 @@ target_libc () {
 	 * kernel and a *BSD libc, for example. It is the same for many other
 	 * OSes.
 	 */
-	local TRIPLET
 	local LIBC
+	
 	if [[ -n "$CHOST" ]]; then
-		TRIPLET=$CHOST
+		LIBC=$(echo "$CHOST" | cut -d- -f 4)
+
+		if [[ -z "$LIBC" ]]; then
+			LIBC=$(echo "$CHOST" | cut -d- -f 3)
+		fi
 	else
-		TRIPLET=1-2-$OSTYPE
+		/* If OSTYPE is only the OS (no libc), it will be given instead anyway */
+		LIBC=$(echo $OSTYPE | cut -d- -f 2)
 	fi
-	LIBC=$(echo $TRIPLET | cut -d- -f 4)
-	if [[ -z "$LIBC" ]]; then
-		LIBC=$(echo $TRIPLET | cut -d- -f 3)
-	fi
-	echo $LIBC
+	
+	echo "$LIBC"
 }
 
 pm_arch () {
@@ -278,15 +280,15 @@ pm_arch () {
 	 * No-arch packages must be of the form -noarch, instead of being of 
 	 * the form -x86 or whatever.
 	 */
-	local TARGET_ARCH=$(target_arch) TARGET_KERNEL=$(target_kernel)
-	if has "$PKGMK_PACKAGE_MANAGER" ${PKGMK_PM_NOARCH_SUPPORT[@]} \
-	&& (has no-arch ${archs[@]} || has no-kernel ${kernels[@]}); then
+	local TARGET_ARCH=$(target_arch)
+	local TARGET_KERNEL=$(target_kernel)
+	
+	if has "$PKGMK_PACKAGE_MANAGER" ${PKGMK_PM_NOARCH_SUPPORT[@]} && \
+	  (has no-arch ${archs[@]} || has no-kernel ${kernels[@]})
+	then
 		TARGET_ARCH=noarch ;
 	fi
-	case ${TARGET_ARCH} in
-		parisc*) TARGET_ARCH=hppa ;;
-		"Power Macintosh") TARGET_ARCH=ppc ;;
-	esac
+	
 	if [[ "$(type ${PKGMK_PACKAGE_MANAGER}:arch)" != none ]]; then
 		ARCH="${TARGET_ARCH}" KERNEL="${TARGET_KERNEL}" \
 			${PKGMK_PACKAGE_MANAGER}:arch

@@ -5,7 +5,7 @@ PKGMK_UNTAR_TOOLS=(${PKGMK_UNTAR_TOOLS[@]} gtar bsdtar sltar)
 
 gtar:unpack() {
 	local COMPRESS
-	info "Unpacking '$1'."
+	subinfo "Unpacking '$1'."
 	case "$1" in
 		*.gz|*.Z|*.tgz) COMPRESS="z" ;;
 		*.bz2|*.tbz2) COMPRESS="j" ;;
@@ -15,12 +15,12 @@ gtar:unpack() {
 }
 
 bsdtar:unpack() {
-	info "Unpacking '$1'."
+	subinfo "Unpacking '$1'."
 	bsdtar -p -o -C $2 -xf $1
 }
 
 sltar:unpack() {
-	info "Unpacking '$1'."
+	subinfo "Unpacking '$1'."
 	(
 		case "$1" in
 			*.gz|*.Z|*.tgz)

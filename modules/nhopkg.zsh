@@ -18,7 +18,8 @@ nhopkg:_nhoid () {
 	echo "# License:	$license"
 	echo "# Group:	${groups[0]}"
 	echo "# Arch:	$PKGMK_ARCH"
-	echo "# Dep(post):	${depends[@]}"
+	# FIXME: Are versions managed in dependencies?
+	echo "# Dep(post):	${depends[@]} ${usedepends[@]}"
 	echo "# Installed-Size:	$size"
 	# Hum…  we don’t keep that data, for now
 	echo "# Build-Duration:	0 min"

@@ -72,9 +72,9 @@ export MAKE_OPTS="-j$(($procs_number+1))"
 USE=(nls man info free -binary)
 
 # PKGMK_SOURCE_MIRRORS=()
-PKGMK_SOURCE_DIR="/var/cache/pkg++/sources"
-PKGMK_PACKAGE_DIR="/var/cache/pkg++/packages"
-PKGMK_LOGS_DIR="/var/log/pkg++"
+PKGMK_SOURCE_DIR="${LOCALSTATEDIR}/cache/pkg++/sources"
+PKGMK_PACKAGE_DIR="${LOCALSTATEDIR}/cache/pkg++/packages"
+PKGMK_LOGS_DIR="${LOCALSTATEDIR}/log/pkg++"
 PKGMK_WORK_DIR="/tmp/work-\$name"
 PKGMK_DOWNLOAD="yes"
 PKGMK_IGNORE_FOOTPRINT="yes"

@@ -41,7 +41,7 @@ dpkg:_list() {
 		local ver="$(echo "${1}" | sed -e "s/^$(depname "${1//\+/\\+}") *//")"
 		if [[ -n "$ver" ]]; then
 			case $ver in
-				">="*|"<="*|"=") ;;
+				">="*|"<="*|"=="*) ;;
 				">"*) ver="${ver/">"/">>"}" ;;
 				"<"*) ver="${ver/"<"/"<<"}" ;;
 				"="*) ver="${ver/"="/"=="}" ;;
@@ -79,7 +79,7 @@ dpkg:_control() {
 	fi
 	echo "Architecture: $(dpkg:arch)"
 	echo -n "Depends: "
-	dpkg:_list ${depends[@]}
+	dpkg:_list ${depends[@]} ${usedepends[@]}
 	if ((${#conflicts} >= 1)); then
 		echo -n "Conflicts: "
 		dpkg:_list ${conflicts[@]}

@@ -18,8 +18,8 @@ rpm:_spec() {
 	echo "Packager:  $packager"
 	echo "Group:     ${groups[@]}"
 	echo "BuildRoot: $buildroot"
-	if [[ -n "${depends[@]}" ]]; then
-		echo "Requires:  ${depends[@]}"
+	if [[ -n "${depends[@]}${usedepends[@]}" ]]; then
+		echo "Requires:  ${depends[@]} ${usedepends[@]}"
 	fi
 	echo
 	echo "%description"

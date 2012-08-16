@@ -28,7 +28,7 @@ autosplit() {
 	done
 }
 
-build_package() {
+build_packages() {
 	/*
 	 * If the build is not successful, then it is not successful. Logic, 
 	 * isn’t it ?
@@ -57,16 +57,16 @@ build_package() {
 	fi
 	
 	/*
-	 * Think to the poor user who would not know what is happening whithout
-	 * this small line.
-	 */
-	info "$msg_building_package" "$name" "$(print_useflags)"
-	
-	/*
 	 * And after though to the poor users, we can extract the sources, if
 	 * they need so.
 	 */
 	unpack_source
+	
+	/*
+	 * Think to the poor user who would not know what is happening whithout
+	 * this small line.
+	 */
+	info "$msg_building_package" "$name" "$(print_useflags)"
 	
 	/* 
 	 * Fail or not in case of bad return, and print or not debug messages.
@@ -120,7 +120,7 @@ build_package() {
 	 * If something went wrong
 	 */
 	if [[ $RETURN != 0 ]]; then
-		error "$msg_build_failed" "$name"
+		error "$msg_build_fail" "$name"
 		if [[ "$PKGMK_KEEP_ERRLOGS" != "no" && -n "${errlogs[@]}" ]]; then
 			for PATTERN in ${errlogs[@]}; do
 				for FILE in $(cd $SRC; find . | egrep "${PATTERN}$"); do

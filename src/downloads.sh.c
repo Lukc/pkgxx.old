@@ -28,13 +28,12 @@ download_file() {
 				/* We don’t check if it is writable, the dl tool will do its job */
 				cd $name || die "Couldn't move to '$PKGMK_SOURCE_DIR/$name'."
 				if [[ "$(type ${PROTOCOL}:pull)" != "none" ]]; then
-					if ! $PROTOCOL:pull "$1" && [[ "$PKGMK_FORCE" != "yes" ]]; then
+					if ! ${PROTOCOL}:pull "$1"; then
 						info "'$1' already up to date."
-						/* FIXME: This `exit 0` is the source of a lot of trouble. */
-						exit 0
 					fi
 				else
 					/* We move and re-clone… if possible. */
+					cd ..
 					mv "$name" "$name.old"
 					download_file "$1"
 				fi
@@ -56,7 +55,7 @@ download_source() {
 				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
 				exit E_DOWNLOAD
 			else
-				if [[ "$PKGMK_DOWNLOAD" = "yes" ]] || [[ "$version" = "devel" ]]; then
+				if [[ "$PKGMK_DOWNLOAD" = "yes" ]]; then
 					download_file $FILE
 				else
 					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
