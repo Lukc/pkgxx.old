@@ -12,7 +12,7 @@ make_control_sum() {
 		done
 		
 		[[ -n "$LOCAL_FILENAMES" && $(type ${ALGORITHM}:sum) != none ]] && \
-			${ALGORITHM}:sum ${LOCAL_FILENAMES[@]} | sort -k 2
+			${ALGORITHM}:sum ${LOCAL_FILENAMES[*]} | sort -k 2
 	fi
 }
 
