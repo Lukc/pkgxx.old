@@ -128,8 +128,10 @@ die() {
 	/* 
 	 * Display a given error message.
 	 */
-	/* $word is used for the transition… */
-	error "${?:+!$?!} $@"
+	local msg="$1"
+	shift 1
+
+	error "${?:+!$?!} $msg" $@
 	exit 1
 }
 
