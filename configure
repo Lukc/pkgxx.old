@@ -313,9 +313,9 @@ fi
 checking_for "zsh >= 4.3"
 if checking_for_bin zsh &> /dev/null; then
 	ZSH_VERSION=$(zsh --version | cut -d ' ' -f 2)
-	if	(( `echo $ZSH_VERSION | cut -d . -f 1` >= 4 )) && \
-		(( `echo $ZSH_VERSION | cut -d . -f 2` >= 3 ));
-	then
+	local major=$(echo $ZSH_VERSION | cut -d . -f 1)
+	local minor=$(echo $ZSH_VERSION | cut -d . -f 2)
+	if (( ($major == 4 && $minor >= 3) || $major >= 5 )); then
 		echo "yes"
 	else
 		echo "zsh is found, but is not up to date. pkg++ will surely work, but it is untested." >&2
