@@ -1,6 +1,6 @@
 
 download_file() {
-	info "Getting '$1'."
+	info "$msg_getting" "$1"
 	
 	PROTOCOL="`get_protocol $1`"
 	case $PROTOCOL in
@@ -17,19 +17,19 @@ download_file() {
 				if [[ "$(type ${PROTOCOL}:clone)" != "none" ]]; then
 					${PROTOCOL}:clone "$1"
 				else
-					error "pkg++ has no way to fetch sources via '${PROTOCOL}'."
+					error "$msg_cannot_fetch_through_protocol" "${PROTOCOL}"
 					exit E_DOWNLOAD
 				fi
 			elif [[ ! -d "$name" ]]; then
-				die "'$PKGMK_SOURCE_DIR/$name' already exists and is not a directory."
+				die "$msg_file_is_not_directory" "$PKGMK_SOURCE_DIR/$name"
 			elif [[ ! -r "$name" ]]; then
-				die "'$PKGMK_SOURCE_DIR/$name' is not readable."
+				die "$msg_file_not_readable" "$PKGMK_SOURCE_DIR/$name"
 			else
 				/* We don’t check if it is writable, the dl tool will do its job */
-				cd $name || die "Couldn't move to '$PKGMK_SOURCE_DIR/$name'."
+				cd $name || die "$msg_could_not_cd" "$PKGMK_SOURCE_DIR/$name"
 				if [[ "$(type ${PROTOCOL}:pull)" != "none" ]]; then
 					if ! ${PROTOCOL}:pull "$1"; then
-						info "'$1' already up to date."
+						info "$msg_already_u2d" "$1"
 					fi
 				else
 					/* We move and re-clone… if possible. */
@@ -52,13 +52,13 @@ download_source() {
 		LOCAL_FILENAME=`get_filename $FILE`
 		if [[ ! -e $LOCAL_FILENAME ]] || [[ "$version" = "devel" ]]; then
 			if [[ "$LOCAL_FILENAME" = "$FILE" ]]; then
-				error "Source file '$LOCAL_FILENAME' not found (can not be downloaded, URL not specified)."
+				error "$msg_localfile_not_found" "$LOCAL_FILENAME"
 				exit E_DOWNLOAD
 			else
 				if [[ "$PKGMK_DOWNLOAD" = "yes" ]]; then
 					download_file $FILE
 				else
-					error "Source file '$LOCAL_FILENAME' not found (use option -d to download)."
+					error "$msg_localfile_not_downloaded" "$LOCAL_FILENAME"
 					exit E_DOWNLOAD
 				fi
 			fi
