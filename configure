@@ -180,6 +180,7 @@ print_help () {
 	echo "Fine tuning of the installation directories:"
 	echo "  --sharedir=DIR             read-only architecture-independent data [PREFIX/share]"
 	echo "  --mandir=DIR               man documentation [SHAREDIR/man]"
+	echo "  --libdir=DIR               shell libraries [PREFIX/lib]"
 	echo "  --libexecdir=DIR           program executables [EPREFIX/libexec]"
 	echo "  --sysconfdir=DIR           read-only single-machine data [/etc]"
 	echo "  --localstatedir=DIR        modifiable single-machine data [PREFIX/var]"
@@ -256,6 +257,9 @@ for arg in $@; do
 		--sysconfdir=*)
 			SYSCONFDIR="`echo "$arg" | sed "s|--sysconfdir=||"`"
 		;;
+		--libdir=*)
+			LIBDIR="`echo "$arg" | sed "s|--libdir=||"`"
+		;;
 		--libexecdir=*)
 			LIBEXECDIR="`echo "$arg" | sed "s|--libexecdir=||"`"
 		;;
@@ -283,6 +287,7 @@ done
 : ${SHAREDIR:=$PREFIX/share}
 : ${MANDIR:=$SHAREDIR/man}
 : ${SYSCONFDIR:=/etc}
+: ${LIBDIR:=$PREFIX/lib}
 : ${LIBEXECDIR:=$EPREFIX/libexec}
 : ${LOCALSTATEDIR:=$PREFIX/var}
 export LOCALSTATEDIR
@@ -441,6 +446,7 @@ cat > Makefile << EOF
 DESTDIR = 
 BINDIR = $EPREFIX/bin
 SHAREDIR = $SHAREDIR
+LIBDIR = $LIBDIR
 LIBEXECDIR = $LIBEXECDIR
 LOCALSTATEDIR = $LOCALSTATEDIR
 ETCDIR = $SYSCONFDIR
@@ -470,24 +476,33 @@ defaults/distributions:
 $(for module in `cd modules; ls *.zsh`; do
 	module=${module%.zsh}
 	echo "modules/$module:"
+	echo "	@echo -e \"  \033[36m[MOD]\033[00m        \033[37mmodules/$module\033[00m\""
 	echo "	@sed -e \"s|@BINDIR@|\$(BINDIR)|\"\
 		-e \"s|@SHAREDIR@|\$(SHAREDIR)|\"\
 		-e \"s|@LIBEXECDIR@|\$(LIBEXECDIR)|\"\
 		-e \"s|@LOCALSTATEDIR@|\$(LOCALSTATEDIR)|\"\
 		-e \"s|@SYSCONFDIR@|\$(ETCDIR)|\"\
 		modules/$module.zsh > modules/$module"
-	echo "	@echo -e \"  \033[36m[MOD]\033[00m        \033[37mmodules/$module\033[00m\""
 	echo
 done)
 
 modules: $(cd modules; for i in `ls *.zsh | sed -e "s|\.zsh||"`; do echo -n "modules/$i "; done)
 
+$(for lib in `cd lib; ls *.zsh`; do
+	lib=${lib%.zsh}
+	echo "lib/$lib:"
+	echo "	@echo -e \"  \033[37m[LIB]\033[00m        \033[37mlib/$lib\033[00m\""
+	echo "	@sed -e \"s|@LIBDIR@|\$(LIBDIR)|\" \
+		lib/$lib.zsh > lib/$lib"
+	echo
+done)
+
+libraries: $(cd lib; for i in `ls *.zsh | sed -e "s|\.zsh||"`; do echo -n "lib/$i "; done)
+
 pkgxx: defaults/distributions
 	`BUILD main src .sh.c`
-	mv src/main pkg++.tmp
-#	cpp $CPPFLAGS -x c "src/main.sh.c" > "pkg++.tmp"
-	echo "#!/usr/bin/env zsh" > pkg++
-	cat pkg++.tmp | sed '/^\$\$/d' >> pkg++
+	@echo "#!/usr/bin/env zsh" > pkg++
+	@sed "s|@LIBDIR@|\$(LIBDIR)|;/^\$\$/d" src/main >> pkg++
 
 $(for i in has istrue; do
 	echo "$i:"
@@ -549,6 +564,14 @@ $(for module in `cd modules; ls *.zsh`; do
 	echo
 done)
 
+libraries-install: libraries
+	`DIR \$\(LIBDIR\)/libpkgxx`
+$(for lib in `cd lib; ls *.zsh`; do
+	lib=${lib%.zsh}
+	echo -n "\t"
+	INSTALL_F 0644 lib/$lib $lib.zsh \$\(LIBDIR\)/libpkgxx/
+done)
+
 locales-install:
 	`DIR \$\(SHAREDIR\)/pkg++/locales`
 $(for locale in `cd locales; ls *.sh`; do
@@ -574,11 +597,12 @@ default-dirs:
 
 tools-install: has-install istrue-install pkgfile-old2new.sh-install
 
-update: pkgxx-install man-install modules-install tools-install
+update: pkgxx-install man-install modules-install tools-install libraries-install
 
-install: pkgxx-install config-install man-install modules-install tools-install default-dirs
+install: pkgxx-install config-install man-install modules-install tools-install default-dirs libraries-install
 
 clean:
+	`REMOVE src/main`
 	`REMOVE pkg++`
 	`REMOVE pkg++.tmp`
 	`REMOVE pkg++.conf`
@@ -597,6 +621,9 @@ clean:
 	`REMOVE istrue`
 $(for module in `cd modules; ls *.zsh`; do
 	echo "	`REMOVE modules/${module%.zsh}`"
+done)
+$(for lib in `cd lib; ls *.zsh`; do
+	echo "	`REMOVE lib/${lib%.zsh}`"
 done)
 
 pkgfiles:

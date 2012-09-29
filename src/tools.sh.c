@@ -2,28 +2,6 @@
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
-source () {
-	local FILE="$1"
-	shift 1
-	if [[ "$(dirname "$FILE")" = "." ]]; then
-		. "./$FILE" $@
-	else
-		. "$FILE" $@
-	fi
-}
-
-type() {
-	builtin type -w "$1" | sed -e "s/${1//\//\\/}: //"
-}
-
-tac() {
-	if [[ -n "$tac" ]]; then
-		"$tac" $@
-	else
-		nl -ba $@ | sort -nr | cut -f2-
-	fi
-}
-
 pkgmake() {
 	/* FIXME: DEPRECATION */
 	if [[ -n "$MAKE" ]]; then
@@ -97,19 +75,6 @@ replace() {
 	sedi "s|${1//|/\|}|${2//|/\|}|" "$3"
 }
 
-which() {
-	local TARGET="$1"
-	/* Damned CPP, no ${PATH//:/ } here. :( */
-	for path in $(echo ${PATH} | sed -e "s|:| |g"); do
-		if [[ -x "$path/$TARGET" ]]; then
-			echo "$path/$TARGET"
-			return 0
-		fi
-	done
-	echo "$TARGET"
-	return 1
-}
-
 wcat() {
 	/*
 	 * Download and print a file to stdout.
@@ -133,34 +98,6 @@ die() {
 
 	error "${?:+!$?!} $msg" $@
 	exit 1
-}
-
-use() {
-	/*
-	 * Very important function that returns true if a use flag is used, and
-	 * false if it is not.
-	 */
-	local return=2
-	for flag in ${USE[@]}; do
-		if [[ "$flag" = "$1" ]] || [[ "$flag" = "+$1" ]]; then
-			return=0
-		elif [[ "$flag" = "-$1" ]]; then
-			return=1
-		fi
-	done
-	if (( $return == 2 )); then
-		local eval=$(eval "echo \${use_${1}[1]}")
-		if [[ "$eval" = 1 ]]; then
-			eval=0
-		elif [[ "$eval" = 0 ]]; then
-			/* Do not use because not specified otherwise anywhere */
-			eval=3
-		fi
-		if [[ -n "$eval" ]]; then
-			return $eval
-		fi
-	fi
-	return $return
 }
 
 use_enable() {
@@ -314,105 +251,6 @@ pm_kernel () {
 	echo ${TARGET_KERNEL}
 }
 
-vercmp () {
-	local comp=$2
-	local i=1
-	local version1=$(echo "$1" | sed -e "s/-/./g;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g").0
-	local version2=$(echo "$3" | sed -e "s/-/./;s/rc\([0-9]\)/.rc.\1/g;s/\.\././g")
-	
-	/* 
-	 * Traditional sh comparison operators should be supported, because
-	 * they don’t require to be quoted
-	 */
-	case "$comp" in
-		-gt)
-			comp=">"
-		;;
-		-ge)
-			comp=">="
-		;;
-		-lt)
-			comp="<"
-		;;
-		-le)
-			comp="<="
-		;;
-		-eq)
-			comp="=="
-		;;
-		-ne)
-			comp="!="
-		;;
-		-sb)
-			/* 
-			 * Standing for Same Branch.
-			 */
-			comp="~>"
-		;;
-	esac
-	
-	if [[ "$comp" != "~>" ]]; then
-		version2="$version2".0
-	fi
-	local v1=$(echo "$version1" | cut -d '.' -f $i)
-	local v2=$(echo "$version2" | cut -d '.' -f $i)
-	
-	alpha=-3
-	beta=-2
-	rc=-1
-	devel=99999 /* If you ever find a version greater than this, update */
-	while [[ -n "$v1" && -n "$v2" ]]; do
-		if ! (( $v1 == $v2 )); then
-			if [[ "$comp" =~ ("!="|"~=") ]]; then
-				return 0
-			elif [[ "$comp" == "~>" ]]; then
-				return 1
-			else
-				(( $v1 $comp $v2 ))
-				return $?
-			fi
-		fi
-		i=$(($i+1))
-		v1=$(echo "$version1" | cut -d "." -f $i)
-		v2=$(echo "$version2" | cut -d "." -f $i)
-		[[ -z "$v2" && "$comp" == "~>" ]] && return 0
-		[[ -n "$v1" && -z "$v2" ]] && v2=0
-		[[ -n "$v2" && -z "$v1" ]] && v1=0
-	done
-	/* If everything was equal. */
-	[[ "$comp" =~ ("!="|"~="|">"|"<") ]] && return 1 || return 0
-}
-
-@{ () {
-	case $# in
-		0|1|2)
-			error "@{ needs 3 parameters and to be closed."
-			return 1
-		;;
-		3)
-			error "@{ needs to be closed."
-			return 1
-		;;
-		4);;
-		*)
-			error "@{ needs only 3 parameters and to be closed."
-			return 1
-		;;
-	esac
-	/* This is debug to avoid having problems with vercmp. */
-	echo "$1$2$3" | (egrep -q "[ 	]") && {
-			error "@{: opts must not contain any space or tabulation."
-			return 1
-		}
-	for i in 1 2 3; do
-		eval "[[ -z \$$i ]]" && {
-			error "@{: empty opt (\$$i)."
-			return 1
-		}
-	done
-	vercmp "$1" "$2" "$3"
-}
-
 lastver () {
 	local lastver="$1"
 	shift 1
@@ -431,20 +269,6 @@ lasttar() {
 			grep "${tarname:=$name}-.*\.tar\(gz\|bz2\|xz\|lzma\|lzo\)*" | \
 			sed -e "s/.*${tarname}-//;s/\.tar\.\(gz\|bz2\|xz\|lzma\|lzo\).*//"
 	)
-}
-
-depname() {
-	/* 
-	 * What could be worse than finding a "gcc >= 4.6" in a… well, in 
-	 * something not able to manage dependencies. To avoid the awful 
-	 * previous situation, we give depname() to module maintainer, 
-	 * allowing them to get the name of their dependencies without
-	 * doing the job themselves (which we can’t call “maintaining”).
-	 * 
-	 * REMEMBER TO UPDATE THIS IF AND WHEN YOU CHANGE SOMETHING IN
-	 * THE depends[] SYNTAX.
-	 */
-	echo "$1" | sed -e "s/ .*//;s/(>|<|>=|<=|=|==|~>|~<|!=|~=).*//"
 }
 
 #undef make_var

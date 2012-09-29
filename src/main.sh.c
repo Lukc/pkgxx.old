@@ -46,6 +46,8 @@ main() {
 	local FILE TARGET
 	export EXT=""
 	
+	. @LIBDIR@/libpkgxx/main.zsh
+
 	load_locales
 	
 	parse_options "$@"
