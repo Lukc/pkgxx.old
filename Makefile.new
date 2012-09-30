@@ -50,9 +50,10 @@ CROSS :=
 
 # Well, files to produce, install, and so on.
 
-DEFAULTS  != ls defaults/  | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
-MODULES   != ls modules/   | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
-LIBRARIES != ls lib/       | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
+DEFAULTS  != ls defaults/       | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
+PDEFAULTS != ls post-defaults/  | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
+MODULES   != ls modules/        | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
+LIBRARIES != ls lib/            | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 
 # C
 
@@ -88,6 +89,9 @@ ${DESTDIR}${SYSCONFDIR}:
 
 ${DESTDIR}${SYSCONFDIR}/pkg++/defaults:
 	$Qmkdir -p "${DESTDIR}${SYSCONFDIR}/pkg++/defaults/"
+
+${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults:
+	$Qmkdir -p "${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults/"
 
 ${DESTDIR}${SHAREDIR}/pkg++/modules:
 	$Qmkdir -p "${DESTDIR}${SHAREDIR}/pkg++/modules/"
@@ -136,12 +140,18 @@ install-pkg++: ${DESTDIR}${BINDIR} pkg++
 	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}pkg++$r"
 	$Qinstall -m0755 pkg++ ${DESTDIR}${BINDIR}/pkg++
 
-install-defaults: ${DEFAULTS:C/^/install-defaults\//}
+install-defaults: ${DEFAULTS:C/^/install-defaults\//} ${PDEFAULTS:C/^/install-pdefaults\//}
 
 .for i in ${DEFAULTS}
-install-defaults/$i: defaults/$i.zsh
+install-defaults/$i: ${DESTDIR}${SYSCONFDIR}/pkg++/defaults defaults/$i.zsh
 	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}defaults/$i.zsh$r"
 	$Qinstall -m0644 defaults/$i.zsh ${DESTDIR}${SYSCONFDIR}/pkg++/defaults/$i.zsh
+.endfor
+
+.for i in ${PDEFAULTS}
+install-pdefaults/$i: ${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults post-defaults/$i.zsh
+	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}post-defaults/$i.zsh$r"
+	$Qinstall -m0644 post-defaults/$i.zsh ${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults/$i.zsh
 .endfor
 
 install-modules: ${MODULES:C/^/install-modules\//}
