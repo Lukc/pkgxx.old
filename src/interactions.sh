@@ -1,9 +1,6 @@
-
 ask_use() {
-	/* 
-	 * Function allowing to dynamically change a use flag in interactive
-	 * mode.
-	 */
+	# Function allowing to dynamically change a use flag in interactive
+	# mode.
 	local ANSWER=
 	local use="$1"
 	local desc="$(get_use_description "${use}")"
@@ -38,4 +35,4 @@ interact_uses() {
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

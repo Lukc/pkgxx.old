@@ -1,4 +1,3 @@
-
 print_useflags() {
 	local FLAGS=""
 	for use in ${iuse[*]}; do
@@ -29,49 +28,35 @@ autosplit() {
 }
 
 build_packages() {
-	/*
-	 * If the build is not successful, then it is not successful. Logic, 
-	 * isn’t it ?
-	 */
+	# If the build is not successful, then it is not successful. Logic, 
+	# isn’t it ?
 	local BUILD_SUCCESSFUL="no"
 	
-	/* 
-	 * We will need to give to `set` different parameters, depending on 
-	 * the current configuration.
-	 */
+	# We will need to give to `set` different parameters, depending on 
+	# the current configuration.
 	local SET_OPTIONS
 	
-	/*
-	 * We check if we can create $TARGET, or recreate it if it already 
-	 * exists. Then we make the work dir.
-	 */
+	# We check if we can create $TARGET, or recreate it if it already 
+	# exists. Then we make the work dir.
 	check_file "$TARGET"
 	make_work_dir
 	
-	/*
-	 * Non-root fakeroot builds sometimes make footprints and permissions 
-	 * errors.
-	 */
+	# Non-root fakeroot builds sometimes make footprints and permissions 
+	# errors.
 	if [[ "$UID" != "0" ]]; then
 		warning "$msg_should_build_as_root"
 	fi
 	
-	/*
-	 * And after though to the poor users, we can extract the sources, if
-	 * they need so.
-	 */
+	# And after though to the poor users, we can extract the sources, if
+	# they need so.
 	unpack_source
 	
-	/*
-	 * Think to the poor user who would not know what is happening whithout
-	 * this small line.
-	 */
+	# Think to the poor user who would not know what is happening whithout
+	# this small line.
 	info "$msg_building_package" "$name" "$(print_useflags)"
 	
-	/* 
-	 * Fail or not in case of bad return, and print or not debug messages.
-	 * See bellow for more informations.
-	 */
+	# Fail or not in case of bad return, and print or not debug messages.
+	# See bellow for more informations.
 	SET_OPTIONS=
 	if [[ "$PKGMK_NOFAIL" != "yes" ]]; then
 		SET_OPTIONS="${SET_OPTIONS:--}e"
@@ -81,12 +66,10 @@ build_packages() {
 	fi
 	
 	cd $SRC
-	/*
-	 * The package is built now.
-	 * set opts: -e is used to make any error fatal to the subshell.
-	 *           -x is used to make the subshell verbose. Any command will
-	 *              be displayed with a “+”.
-	 */
+	# The package is built now.
+	# set opts: -e is used to make any error fatal to the subshell.
+	#           -x is used to make the subshell verbose. Any command will
+	#              be displayed with a “+”.
 	if [[ "`type pre_build`" = "function" ]]; then
 		([[ -n "$SET_OPTIONS" ]] && set $SET_OPTIONS ; pre_build)
 	fi
@@ -100,25 +83,21 @@ build_packages() {
 		RETURN=$?
 	fi
 	
-	/*
-	 * If the user wants to use the check() functions, then we do it for 
-	 * them.
-	 * Note: check() can make pkg++ consider the package construction as 
-	 *       a fail if it fails.
-	 */
+	# If the user wants to use the check() functions, then we do it for 
+	# them.
+	# Note: check() can make pkg++ consider the package construction as 
+	#       a fail if it fails.
 	if [[ $RETURN != 0 && "$PKGMK_CHECK" = "yes" ]]; then
 		info "$msg_testing" "$name"
 		if check; then
 			info "$msg_tests_success" "$name"
 		else
 			error "$msg_tests_fail" "$name"
-			exit E_BUILD
+			exit $E_BUILD
 		fi
 	fi
 	
-	/*
-	 * If something went wrong
-	 */
+	# If something went wrong
 	if [[ $RETURN != 0 ]]; then
 		error "$msg_build_fail" "$name"
 		if [[ "$PKGMK_KEEP_ERRLOGS" != "no" && -n "${errlogs[@]}" ]]; then
@@ -132,33 +111,25 @@ build_packages() {
 		fi
 		return $RETURN
 	fi
-	/*
-	 * We strip the binaries/libraries if asked for.
-	 */
+	# We strip the binaries/libraries if asked for.
 	if [[ "$PKGMK_NO_STRIP" = "no" ]]; then
 		strip_files
 	fi
 	
-	/*
-	 * Manual pages compression.
-	 */
+	# Manual pages compression.
 	compress_manpages
 	
-	/*
-	 * We check here that the package is not empty.
-	 */
+	# We check here that the package is not empty.
 	cd $PKG
 	if [[ "`find . | wc -l`" = 1 ]]; then
 		error "$msg_build_failed" "$name"
-		exit E_BUILD
+		exit $E_BUILD
 	fi
 	
-	/* 
-	 * FIXME: Maybe export of those variables should actually be done sooner,
-	 *        in cas the packager wants a for S in ${splits[@]}, or something
-	 *        like that. Maybe we should also try to use the distro:class:*
-	 *        when available, if nothing else has been defined.
-	 */
+	# FIXME: Maybe export of those variables should actually be done sooner,
+	#        in cas the packager wants a for S in ${splits[@]}, or something
+	#        like that. Maybe we should also try to use the distro:class:*
+	#        when available, if nothing else has been defined.
 	for SPLIT in ${AUTOSPLITS[@]}; do
 		if [[ "$(type autosplits:${SPLIT}:splitable)" != "none" ]]; then
 			if autosplits:${SPLIT}:splitable ]]; then
@@ -167,7 +138,7 @@ build_packages() {
 				if [[ "$(type autosplits:${SPLIT}:setsplit)" != "none" ]]; then
 					autosplits:${SPLIT}:setsplit
 				else
-					/* This is kept for easy user-improvised splits */
+					# This is kept for easy user-improvised splits
 					eval "${SPLIT}_pkgname=\"${pkgname:-$name}-${SPLIT}\""
 				fi
 			fi
@@ -178,10 +149,8 @@ build_packages() {
 	
 	autosplit
 	
-	/*
-	 * We think again to the poor user, as each build will display
-	 * a list of files.
-	 */
+	# We think again to the poor user, as each build will display
+	# a list of files.
 	info "$msg_build_result"
 	
 	for SPLIT in $name ${splits[@]}; do
@@ -198,7 +167,7 @@ build_packages() {
 		"
 		
 		for VAR in name version release pkgname description longdesc license url slot class; do
-			/* FIXME: Use get_split_data */
+			# FIXME: Use get_split_data
 			eval "
 				export split_${VAR}=\"\$${SPLIT}_${VAR}\"
 				if [[ -z \"\$split_${VAR}\" ]]; then
@@ -217,10 +186,8 @@ build_packages() {
 			"
 		done
 		
-		/* 
-		 * There, we try to use the classes. Classes are meant to make
-		 * packages be more compliant with distributions’s standards.
-		 */
+		# There, we try to use the classes. Classes are meant to make
+		# packages be more compliant with distributions’s standards.
 		if [[ -n "${split_class}" ]]; then
 			if [[ "$(type ${distribution}:class:${split_class})" != "none" ]]; then
 				${distribution}:class:${split_class} || warning "$msg_func_may_have_failed" "${distribution}:class:${split_class}"
@@ -229,11 +196,9 @@ build_packages() {
 			fi
 		fi
 		
-		/* 
-		 * This is to easy the use of slots on distributions using 
-		 * limited package managers and that use hacks to use slots
-		 * anyway.
-		 */
+		# This is to easy the use of slots on distributions using 
+		# limited package managers and that use hacks to use slots
+		# anyway.
 		if [[ -n "${split_slot}" ]]; then
 			if [[ "$(type ${distribution}:slots)" != "none" ]]; then
 				${distribution}:slots || warning "$msg_func_may_have_failed" "${distribution}:slots"
@@ -272,19 +237,15 @@ build_packages() {
 	
 	if [[ $? = 0 ]]; then
 		BUILD_SUCCESSFUL="yes"
-		/*
-		 * We check if the package looks like what it should 
-		 * be.
-		 */
+		# We check if the package looks like what it should 
+		# be.
 		if [[ ! "$PKGMK_IGNORE_FOOTPRINT" = "yes" ]]; then
 			check_footprint
 		fi
 	fi
 	
-	/*
-	 * If the user doesn’t want to keep explicitly the work dir, we remove 
-	 * it.
-	 */
+	# If the user doesn’t want to keep explicitly the work dir, we remove 
+	# it.
 	if [[ "$PKGMK_KEEP_WORK" = "no" ]]; then
 		remove_work_dir
 	fi
@@ -293,25 +254,19 @@ build_packages() {
 		info "$msg_build_success" "$name"
 	else
 		if [[ -f $TARGET ]]; then
-		/*
-		 * We touch these files to don’t make pkg++ ignore the package
-		 * next time.
-		 */
+		# We touch these files to don’t make pkg++ ignore the package
+		# next time.
 			touch -r $PKGMK_ROOT/$PKGMK_PKGFILE $TARGET &> /dev/null
 		fi
-		/*
-		 * Uh… but if there is no package… uh… pkg++ probably failed.
-		 */
+		# Uh… but if there is no package… uh… pkg++ probably failed.
 		error "$msg_build_fail" "$name"
-		exit E_BUILD
+		exit $E_BUILD
 	fi
 }
 
 build_needed() {
-	/*
-	 * build_needed() just checks if $TARGET exists and if it is up to 
-	 * date.
-	 */
+	# build_needed() just checks if $TARGET exists and if it is up to 
+	# date.
 	local FILE RESULT
 	
 	RESULT="yes"
@@ -329,4 +284,4 @@ build_needed() {
 	echo $RESULT
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

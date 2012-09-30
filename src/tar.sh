@@ -1,6 +1,4 @@
-/* 
- * Internal tar module.
- */
+# Internal tar module.
 PKGMK_UNTAR_TOOLS=(${PKGMK_UNTAR_TOOLS[@]} gtar bsdtar sltar)
 
 gtar:unpack() {
@@ -71,18 +69,14 @@ tar:list() {
 				cut -d "	" -f 1,2,6,7,8
 		;;
 		bsdtar)
-			/* 
-			 * FIXME: Maybe there’s a way to remove the second sed?
-			 */
+			# FIXME: Maybe there’s a way to remove the second sed?
 			bsdtar tvf "$1" | \
 				sed 's|  *|	|g' | \
 				cut -d "	" -f 1,3,4,9,10,11,12 | \
 				sed 's|	|/|;s|	|/|;s|/|	|'
 		;;
 		sltar)
-			/* 
-			 * FIXME: Use a filter to give enough informations.
-			 */
+			# FIXME: Use a filter to give enough informations.
 			sltar t < "$1"
 		;;
 		*)

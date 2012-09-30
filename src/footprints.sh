@@ -1,4 +1,3 @@
-
 make_footprint() {
 	$PKGMK_PACKAGE_MANAGER:footprint
 }
@@ -43,7 +42,7 @@ check_footprint() {
 update_footprint() {
 	if [[ ! -f $TARGET ]]; then
 		error "Unable to update footprint. File '$TARGET' not found."
-		exit E_GENERAL
+		exit $E_GENERAL
 	fi
 	
 	check_file "$PKGMK_FOOTPRINT"
@@ -53,7 +52,6 @@ update_footprint() {
 	info "Footprint updated."
 }
 
-
 footprint_sed() {
 	sed "
 		s|	lib/modules/`uname -r`/|	lib/modules/<kernel-version>/|g
@@ -62,4 +60,4 @@ footprint_sed() {
 	" $@
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

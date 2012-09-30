@@ -500,9 +500,14 @@ done)
 libraries: $(cd lib; for i in `ls *.zsh | sed -e "s|\.zsh||"`; do echo -n "lib/$i "; done)
 
 pkgxx: defaults/distributions
-	`BUILD main src .sh.c`
 	@echo "#!/usr/bin/env zsh" > pkg++
-	@sed "s|@LIBDIR@|\$(LIBDIR)|;/^\$\$/d" src/main >> pkg++
+	@(cd src; sed "s|@LIBDIR@|\$(LIBDIR)|;s|@SHAREDIR@|\$(SHAREDIR)|; \
+	s|@SYSCONFDIR@|\$(ETCDIR)|;s|@LIBEXECDIR@|\$(LIBEXECDIR)|;/^\$\$/d" \
+	error.sh lang.sh display.sh getters.sh tools.sh tar.sh checks.sh \
+	includes.sh downloads.sh unpack.sh checksums.sh footprints.sh strip.sh \
+	manpages.sh work.sh interactions.sh splits.sh signatures.sh build.sh \
+	install.sh opts.sh clean.sh recursive.sh main.sh \
+	 >> ../pkg++)
 
 $(for i in has istrue; do
 	echo "$i:"

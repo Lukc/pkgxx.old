@@ -1,4 +1,3 @@
-
 make_control_sum() {
 	local FILE LOCAL_FILENAMES
 	local ALGORITHM="$1"
@@ -82,4 +81,4 @@ check_control_sums() {
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

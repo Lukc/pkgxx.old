@@ -1,6 +1,5 @@
-
 lprintf () {
-	/* `printf` `string` `[arguments]` */
+	# `printf` `string` `[arguments]`
 	
 	local breakline=true
 	
@@ -12,10 +11,8 @@ lprintf () {
 	local str="$1"
 	shift 1
 	
-	/* Note: The following lines do not allow us to use %x where x
-	 *       is a number in our strings. We shouldn’t need them, but
-	 *       if we do, we will need to rewrite the following six 
-	 *       lines, and make "%%" or "\%" appear like a simple "%". */
+	#       is a number in our strings. We shouldn’t need them, but
+	#       if we do, we will need to rewrite the following six 
 	if (( $# > 0 )); then
 		for n in {1..$#}; do
 			str="${str//\%$n/$1}"
@@ -24,10 +21,8 @@ lprintf () {
 	fi
 	
 	while [[ "$str" =~ [^%]"%"[0-9]+ ]]; do
-		/*
-		 * FIXME: THIS IS WRONG. It just does not work up to 9, to 
-		 *        begin with. Also, %%X is expected to cause trouble.
-		 */
+		# FIXME: THIS IS WRONG. It just does not work up to 9, to 
+		#        begin with. Also, %%X is expected to cause trouble.
 		str="${str/\%[0-9]}"
 	done
 	
@@ -47,11 +42,9 @@ load_locales () {
 }
 
 get_l10ned_var () {
-	/* Usage:
-	 * 	$1: string
-	 * 	$2: locale
-	 * 	$3: element of table
-	 */
+	# 	$1: string
+	# 	$2: locale
+	# 	$3: element of table
 	if [[ -z "$3" ]]; then
 		eval "echo \${${1}_${2}}"
 	else
@@ -59,4 +52,4 @@ get_l10ned_var () {
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

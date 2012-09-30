@@ -23,8 +23,10 @@ LIBEXECDIR   := ${EPREFIX}/libexec
 SYSCONFDIR   := /etc
 MANDIR       := ${SHAREDIR}/man
 
-# For verbosity
+# For debug
 Q := @
+# For verbosity
+VERBOSE ?= false
 
 # For a nice UI emitting beauty
 
@@ -102,12 +104,20 @@ tools/has: tools/has.c
 	@echo -e "${c_w} -- ${c_b}Building    ${c_w}tools/has$r"
 	$Q${CC} ${CFLAGS} tools/has.c -o tools/has
 
-# Rules - Preprocessing
+PKGXX_FILES != grep "^\#include \"[a-z.]*\"" src/main.sh | sed "s/\#include \"//;s/\"//"
+PKGXX_FILES += main.sh # Never forget that one…
 
-pkg++:
+pkg++: ${PKGXX_FILES:C/^/src\//}
 	@echo -e "${c_w} -- ${c_b}Building    ${c_w}pkg++$r"
-	$Qecho "#/usr/bin/env zsh" > pkg++
-	$Q${CPP} ${CPPFLAGS} src/main.sh.c | sed "s|@LIBDIR|${LIBDIR}|;/^\$$\$$/d;/^$$/d" >> pkg++
+	$Qecho "#!/usr/bin/env zsh" > pkg++
+.for f in ${PKGXX_FILES}
+#	Commented out because too verbose
+#	@echo -e "${c_w}     [${c_b}SED${c_w}]      ${c_w}$f"
+	$Qsed "s|@LIBDIR@|${LIBDIR}|;s|@SYSCONFDIR@|${SYSCONFDIR}|;\
+		s|@SHAREDIR@|${SHAREDIR}|;s|@LIBEXECDIR@|${LIBEXECDIR}|" \
+		src/$f >> pkg++
+.endfor
+#	$Q${CPP} ${CPPFLAGS} src/main.sh.c | ;/^\$$\$$/d;/^$$/d" >> pkg++
 
 config: pkg++.conf
 	@: # Well… cp config.sh config is not really wanted.
@@ -122,7 +132,7 @@ install-config: config ${DESTDIR}${SYSCONFDIR}
 	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}pkg++.conf$r"
 	$Qinstall -m0644 pkg++.conf ${DESTDIR}${SYSCONFDIR}/pkg++.conf
 
-install-pkg++: ${DESTDIR}${BINDIR}
+install-pkg++: ${DESTDIR}${BINDIR} pkg++
 	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}pkg++$r"
 	$Qinstall -m0755 pkg++ ${DESTDIR}${BINDIR}/pkg++
 

@@ -1,4 +1,3 @@
-
 sign_packages() {
 	if [[ -n "$PKGMK_KEY" ]]; then
 		for PKG in $(list_splits); do
@@ -8,4 +7,4 @@ sign_packages() {
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

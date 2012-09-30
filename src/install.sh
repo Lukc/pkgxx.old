@@ -1,4 +1,3 @@
-
 install_package() {
 	local COMMAND
 	
@@ -14,8 +13,8 @@ install_package() {
 		info "Installing '$TARGET' succeeded."
 	else
 		error "Installing '$TARGET' failed."
-		exit E_INSTALL
+		exit $E_INSTALL
 	fi
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

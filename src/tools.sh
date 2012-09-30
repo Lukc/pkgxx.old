@@ -1,9 +1,8 @@
-
 #define make_var(__VAR,__VAL) \
 	${__VAR:+__VAR=__VAL}
 
 pkgmake() {
-	/* FIXME: DEPRECATION */
+	# FIXME: DEPRECATION
 	if [[ -n "$MAKE" ]]; then
 		warning
 		warning "Using \$MAKE is deprecated to define a \`make' implementation."
@@ -18,7 +17,7 @@ pkgmake() {
 	  ${make:=$MAKE}
 	
 	if ! USE=(${supports[@]}) use multithread; then
-		/* Note: fucking preprocessor */
+		# Note: fucking preprocessor
 		while [[ "${make_opts[@]}" =~ -j[0-9] ]]; do
 			make_opts=(${make_opts[@]/-j[0-9]})
 		done
@@ -42,25 +41,21 @@ pkgmake() {
 }
 
 sedi() {
-	/* 
-	 * Emulates the sed -i feature.
-	 * Usage: sedi sed-script files
-	 * Note: Stollen from c4o. (Cruxports for OpenBSD)
-	 */
+	# Emulates the sed -i feature.
+	# Usage: sedi sed-script files
+	# Note: Stollen from c4o. (Cruxports for OpenBSD)
 	TMP1=$(mktemp sedi.XXXXXXXXXX) || die "mktemp [sedi] failed."
 	REGEX="$1"
 	shift
 	if istrue $sed_gnu; then
 		$sed "$REGEX" -i $@
 	else
-		/* 
-		 * Useless to try to use -isuffix, it could destroy a file 
-		 * that already exists, even if it is very few probable, or 
-		 * would need more code…
-		 */
+		# Useless to try to use -isuffix, it could destroy a file 
+		# that already exists, even if it is very few probable, or 
+		# would need more code…
 		for i in $*; do
 			sed "$REGEX" "$i" > $TMP1 || die "sed '$REGEX' '$i' [sedi] or redirection to '$TMP1' failed."
-			/* Preserve permissions, owner, etc. */
+			# Preserve permissions, owner, etc.
 			cat $TMP1 > "$i" || die "cat '$TMP1' [sedi] or redirection to '$i' failed."
 		done
 	fi
@@ -69,16 +64,12 @@ sedi() {
 }
 
 replace() {
-	/* 
-	 * Replaces pattern $1 by pattern $2 in file $3.
-	 */
+	# Replaces pattern $1 by pattern $2 in file $3.
 	sedi "s|${1//|/\|}|${2//|/\|}|" "$3"
 }
 
 wcat() {
-	/*
-	 * Download and print a file to stdout.
-	 */
+	# Download and print a file to stdout.
 	local i
 	for i in $@; do
 		if [[ "$(type ${PKGMK_DOWNLOAD_TOOL}:cat)" != none ]]; then
@@ -90,9 +81,7 @@ wcat() {
 }
 
 die() {
-	/* 
-	 * Display a given error message.
-	 */
+	# Display a given error message.
 	local msg="$1"
 	shift 1
 
@@ -101,14 +90,12 @@ die() {
 }
 
 use_enable() {
-	/*
-	 * For use with autotools. $(use_enable feature) will return
-	 * --enable-feature if the “feature” use flag is set, or
-	 * --disable-feature if it is not.
-	 * 
-	 * Note: $2 can give the name of the feature of the configure
-	 *       script, if it is not the same as the use flag.
-	 */
+	# For use with autotools. $(use_enable feature) will return
+	# --enable-feature if the “feature” use flag is set, or
+	# --disable-feature if it is not.
+	# 
+	# Note: $2 can give the name of the feature of the configure
+	#       script, if it is not the same as the use flag.
 	local flag=$1
 	local feature=${2:-$flag}
 	local value=${3:+=$3}
@@ -126,9 +113,7 @@ use_enable() {
 }
 
 use_with() {
-	/* 
-	 * Clone of use_enable(). See the function just before.
-	 */
+	# Clone of use_enable(). See the function just before.
 	local flag=$1
 	local feature=${2:-$flag}
 	local value=${3:+=$3}
@@ -150,9 +135,7 @@ pkgsplit() {
 	shift 1
 	cd $PKG
 	
-	/* 
-	 * We use tar to copy a complete tree.
-	 */
+	# We use tar to copy a complete tree.
 	for FILE in $@; do
 		if [[ -e ".$FILE" ]]; then
 			tar c ".$FILE" | (cd $SPLITS/$split ; tar x)
@@ -162,22 +145,18 @@ pkgsplit() {
 }
 
 target_arch () {
-	/* 
-	 * This function return the architecture depending on the triplet.
-	 * The triplet may be the CHOST or the MACHTYPE, thus allowing 
-	 * cross-compilation.
-	 */
+	# This function return the architecture depending on the triplet.
+	# The triplet may be the CHOST or the MACHTYPE, thus allowing 
+	# cross-compilation.
 	if [[ -n "$CHOST" ]]; then
 		echo $CHOST | cut -d- -f 1
 	else
-		echo $MACHTYPE /* We use the architecture zsh was built with… */
+		echo $MACHTYPE # We use the architecture zsh was built with…
 	fi
 }
 
 target_kernel () {
-	/* 
-	 * Same as target_arch(), but for the OSTYPE.
-	 */
+	# Same as target_arch(), but for the OSTYPE.
 	if [[ -n "$CHOST" ]]; then
 		echo $CHOST | cut -d- -f 3
 	else
@@ -186,15 +165,13 @@ target_kernel () {
 }
 
 target_libc () {
-	/* 
-	 * Same as target_arch() and target_kernel(), but for the last part
-	 * of the OSTYPE, which is not always present. If it is not present, 
-	 * it returns the third part of the triplet, which is often 
-	 * representative of the desired information. The “libc” and the 
-	 * kernel are often the same on *BSD systems, which have a *BSD 
-	 * kernel and a *BSD libc, for example. It is the same for many other
-	 * OSes.
-	 */
+	# Same as target_arch() and target_kernel(), but for the last part
+	# of the OSTYPE, which is not always present. If it is not present, 
+	# it returns the third part of the triplet, which is often 
+	# representative of the desired information. The “libc” and the 
+	# kernel are often the same on *BSD systems, which have a *BSD 
+	# kernel and a *BSD libc, for example. It is the same for many other
+	# OSes.
 	local LIBC
 	
 	if [[ -n "$CHOST" ]]; then
@@ -204,7 +181,7 @@ target_libc () {
 			LIBC=$(echo "$CHOST" | cut -d- -f 3)
 		fi
 	else
-		/* If OSTYPE is only the OS (no libc), it will be given instead anyway */
+		# If OSTYPE is only the OS (no libc), it will be given instead anyway
 		LIBC=$(echo $OSTYPE | cut -d- -f 2)
 	fi
 	
@@ -212,13 +189,11 @@ target_libc () {
 }
 
 pm_arch () {
-	/* 
-	 * This function returns a correct architecture for the current
-	 * package manager, using the triplet_arch() function.
-	 * 
-	 * No-arch packages must be of the form -noarch, instead of being of 
-	 * the form -x86 or whatever.
-	 */
+	# This function returns a correct architecture for the current
+	# package manager, using the triplet_arch() function.
+	# 
+	# No-arch packages must be of the form -noarch, instead of being of 
+	# the form -x86 or whatever.
 	local TARGET_ARCH=$(target_arch)
 	local TARGET_KERNEL=$(target_kernel)
 	
@@ -237,16 +212,14 @@ pm_arch () {
 }
 
 pm_kernel () {
-	/* 
-	 * Same as pm_arch() but for kernels.
-	 */
+	# Same as pm_arch() but for kernels.
 	local TARGET_KERNEL=$(target_kernel)
 	case ${TARGET_KERNEL} in
 		freebsd*) TARGET_KERNEL=FreeBSD ;;
 		openbsd*) TARGET_KERNEL=OpenBSD ;;
 		netbsd*) TARGET_KERNEL=NetBSD ;;
 		linux) TARGET_KERNEL=Linux ;;
-		/* Feel free to submit patches to complete this… */
+		# Feel free to submit patches to complete this…
 	esac
 	echo ${TARGET_KERNEL}
 }
@@ -267,10 +240,9 @@ lasttar() {
 	lastver $(
 		wcat "$1" | \
 			grep "${tarname:=$name}-.*\.tar\(gz\|bz2\|xz\|lzma\|lzo\)*" | \
-			sed -e "s/.*${tarname}-//;s/\.tar\.\(gz\|bz2\|xz\|lzma\|lzo\).*//"
 	)
 }
 
 #undef make_var
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

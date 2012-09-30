@@ -1,9 +1,6 @@
-
 clean() {
-	/*
-	 * clean() removes the sources in $PKGMK_SOURCE_DIR and the package, if
-	 * it is in $PKGMK_PACKAGE_DIR.
-	 */
+	# clean() removes the sources in $PKGMK_SOURCE_DIR and the package, if
+	# it is in $PKGMK_PACKAGE_DIR.
 	local FILE LOCAL_FILENAME
 	
 	for LOCAL_FILENAME in $(list_splits); do
@@ -26,4 +23,4 @@ clean() {
 	done
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

@@ -1,8 +1,5 @@
-
 get_split_data() {
-	/* 
-	 * This is used mainly in build().
-	 */
+	# This is used mainly in build().
 	local SPLIT="${1}"
 	local VAR="${2}"
 	local VAR="$(eval "$(echo "\$${SPLIT}_${VAR}")")"
@@ -14,9 +11,7 @@ get_split_data() {
 }
 
 list_splits() {
-	/* 
-	 * This is currently used only in main().
-	 */
+	# This is currently used only in main().
 	for SPLIT in $name ${splits[@]}; do
 		SPLIT="${SPLIT//-/_}"
 		
@@ -64,4 +59,4 @@ list_splits() {
 	done
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

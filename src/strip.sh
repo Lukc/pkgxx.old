@@ -1,4 +1,3 @@
-
 strip_files() {
 	local FILE FILTER
 	
@@ -31,4 +30,4 @@ strip_files() {
 	done
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:

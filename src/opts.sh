@@ -1,4 +1,3 @@
-
 print_help() {
 	echo "usage: `basename $PKGMK_COMMAND` [$PKGMK_PKGFILE_NAME] [options]"
 	echo "options:"
@@ -26,7 +25,7 @@ print_help() {
 	echo "  -cf,  --config-file <file>    use alternative configuration file"
 	echo "  -li,  --list-includes         list all inclusion files available"
 	echo "  -p,   --profile <profile>     load a predefined profile"
-/*	echo "  -pm,  --package-manager <pm>  set the package manager to use" */
+#	echo "  -pm,  --package-manager <pm>  set the package manager to use"
 	echo "  -dg,  --debug                 print debug informations while building packages."
 	echo "  -nf,  --no-fail               run pkg++ in the dangerous no-fail mode."
 	echo "  -v,   --version               print version and exit "
@@ -63,11 +62,11 @@ parse_options() {
 			-ir|--install-root)
 				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
-					exit E_GENERAL
+					exit $E_GENERAL
 				fi
 				PKGMK_INSTALL_ROOT="$2"
 				shift ;;
-			/* m for md5sum, for Crux compatibility */
+			# m for md5sum, for Crux compatibility
 			-um|-us|--update-sums)
 				PKGMK_UPDATE_CONTROL_SUMS="yes" ;;
 			-im|-is|--ignore-sums)
@@ -89,7 +88,7 @@ parse_options() {
 			-cf|--config-file)
 				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
-					exit E_GENERAL
+					exit $E_GENERAL
 				fi
 				PKGMK_CONFFILE="$2"
 				shift ;;
@@ -98,17 +97,15 @@ parse_options() {
 			-p|--profile)
 				if [[ -z "$2" ]]; then
 					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
-					exit E_GENERAL
+					exit $E_GENERAL
 				fi
 				PKGMK_PROFILE="$2"
 				shift ;;
-/*			-pm|--package-manager)
- *				if [[ -z "$2" ]]; then
- *					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
- *					exit E_GENERAL
- *				fi
- *				PKGMK_PACKAGE_MANAGER="$2"
- *				shift ;; */
+#				if [[ -z "$2" ]]; then
+#					echo "`basename $PKGMK_COMMAND`: option $1 requires an argument"
+#					exit $E_GENERAL
+#				fi
+#				PKGMK_PACKAGE_MANAGER="$2"
 			-dg|--debug)
 				PKGMK_DEBUG="yes" ;;
 			-nf|--no-fail)
@@ -122,12 +119,12 @@ parse_options() {
 			*)
 				if [[ -n "$PKGFILE" ]]; then
 					echo "`basename $PKGMK_COMMAND`: only one $PKGMK_PKGFILE_NAME can be given"
-					exit E_GENERAL
+					exit $E_GENERAL
 				elif [[ -r "$1" ]]; then
 					PKGFILE="$1"
 				else
 					echo "`basename $PKGMK_COMMAND`: invalid option $1"
-					exit E_GENERAL
+					exit $E_GENERAL
 				fi ;;
 		esac
 		shift
@@ -135,4 +132,4 @@ parse_options() {
 	PKGMK_PKGFILE="$PKGFILE"
 }
 
-/* vim:set syntax=sh shiftwidth=4 tabstop=4: */
+# vim:set syntax=sh shiftwidth=4 tabstop=4:
