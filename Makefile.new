@@ -32,6 +32,7 @@ VERBOSE ?= false
 
 bold = \033[01m
 c_w = ${bold}\033[37m
+c_m = ${bold}\033[35m
 c_b = ${bold}\033[34m
 c_y = ${bold}\033[33m
 c_g = ${bold}\033[32m
@@ -81,26 +82,13 @@ clean: clean-pkg++ clean-defaults clean-tools clean-modules
 
 # Directories (to generate at installation)
 
-${DESTDIR}${BINDIR}:
-	$Qmkdir -p "${DESTDIR}${BINDIR}"
+INSTALL_DIRS = ${BINDIR} ${SYSCONFDIR} ${SYSCONFDIR}/pkg++/defaults ${SYSCONFDIR}/pkg++/post-defaults ${SHAREDIR}/pkg++/modules ${LIBEXECDIR}/pkg++ ${LIBDIR}/libpkgxx
 
-${DESTDIR}${SYSCONFDIR}:
-	$Qmkdir -p "${DESTDIR}${SYSCONFDIR}"
-
-${DESTDIR}${SYSCONFDIR}/pkg++/defaults:
-	$Qmkdir -p "${DESTDIR}${SYSCONFDIR}/pkg++/defaults/"
-
-${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults:
-	$Qmkdir -p "${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults/"
-
-${DESTDIR}${SHAREDIR}/pkg++/modules:
-	$Qmkdir -p "${DESTDIR}${SHAREDIR}/pkg++/modules/"
-
-${DESTDIR}${LIBEXECDIR}/pkg++/has:
-	$Qmkdir -p "${DESTDIR}${LIBEXECDIR}/pkg++/has"
-
-${DESTDIR}${LIBDIR}/libpkgxx:
-	$Qmkdir -p "${DESTDIR}${LIBDIR}/libpkgxx"
+.for D in ${INSTALL_DIRS}
+${DESTDIR}$D:
+	@echo -e "${c_w} -- ${c_m}Creating    ${c_w}$D/$r"
+	$Qmkdir -p "${DESTDIR}$D"
+.endfor
 
 # Rules - Compilations
 
@@ -164,7 +152,7 @@ install-modules/$i: modules/$i.zsh ${DESTDIR}${SHAREDIR}/pkg++/modules
 
 install-tools: install-tools/has
 
-install-tools/has: tools/has ${DESTDIR}${LIBEXECDIR}/pkg++/has
+install-tools/has: tools/has ${DESTDIR}${LIBEXECDIR}/pkg++
 	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}tools/has$r"
 	$Qinstall -m0755 tools/has ${DESTDIR}${LIBEXECDIR}/pkg++/has
 
