@@ -4,7 +4,7 @@
 
 Copyright (c) 2000-2005 Per Liden
 Copyright (c) 2006-2010 by CRUX team (http://crux.nu)
-Copyright (c) 2010 Luka Vandervelden
+Copyright (c) 2010-2012 Luka Vandervelden
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ USA.
        Includes file
     ===================
 
-Copyright (c) 2010 Luka Vandervelden
+Copyright (c) 2010-2012 Luka Vandervelden
 
 All the include files are under a two clauses BSD licence.
 See the file BSD for the exact text of this licence.
@@ -32,7 +32,7 @@ See the file BSD for the exact text of this licence.
        Pkgfiles
     ==============
 
-Copyright (c) 2010 Luka Vandervelden
+Copyright (c) 2010-2012 Luka Vandervelden
 
 All the official recipes and Pkgfiles of pkg++ are under a 
 two clauses BSD licence.
