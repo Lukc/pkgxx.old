@@ -299,7 +299,7 @@ export LC_ALL=POSIX
 export PATH=$PATH:@LIBEXECDIR@/pkg++
 
 # Some RO functions that will never be modified during the execution.
-readonly PKGMK_VERSION=_VERSION
+readonly PKGMK_VERSION=@VERSION@
 readonly PKGMK_COMMAND="$0"
 readonly PKGMK_ROOT="$PWD"
 

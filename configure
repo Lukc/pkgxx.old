@@ -502,7 +502,8 @@ libraries: $(cd lib; for i in `ls *.zsh | sed -e "s|\.zsh||"`; do echo -n "lib/$
 pkgxx: defaults/distributions
 	@echo "#!/usr/bin/env zsh" > pkg++
 	@(cd src; sed "s|@LIBDIR@|\$(LIBDIR)|;s|@SHAREDIR@|\$(SHAREDIR)|; \
-	s|@SYSCONFDIR@|\$(ETCDIR)|;s|@LIBEXECDIR@|\$(LIBEXECDIR)|;/^\$\$/d" \
+	s|@SYSCONFDIR@|\$(ETCDIR)|;s|@LIBEXECDIR@|\$(LIBEXECDIR)|; \
+	s|@VERSION@|$VERSION|;\/^\$\$/d" \
 	error.sh lang.sh display.sh getters.sh tools.sh tar.sh checks.sh \
 	includes.sh downloads.sh unpack.sh checksums.sh footprints.sh strip.sh \
 	manpages.sh work.sh interactions.sh splits.sh signatures.sh build.sh \

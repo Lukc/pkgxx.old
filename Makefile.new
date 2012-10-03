@@ -106,7 +106,8 @@ pkg++: ${PKGXX_FILES:C/^/src\//}
 #	Commented out because too verbose
 #	@echo -e "${c_w}     [${c_b}SED${c_w}]      ${c_w}$f"
 	$Qsed "s|@LIBDIR@|${LIBDIR}|;s|@SYSCONFDIR@|${SYSCONFDIR}|;\
-		s|@SHAREDIR@|${SHAREDIR}|;s|@LIBEXECDIR@|${LIBEXECDIR}|" \
+		s|@SHAREDIR@|${SHAREDIR}|;s|@LIBEXECDIR@|${LIBEXECDIR}|;\
+		s|@VERSION@|${PKGXX_VERSION}|" \
 		src/$f >> pkg++
 .endfor
 #	$Q${CPP} ${CPPFLAGS} src/main.sh.c | ;/^\$$\$$/d;/^$$/d" >> pkg++
