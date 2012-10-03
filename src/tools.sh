@@ -1,5 +1,3 @@
-#define make_var(__VAR,__VAL) \
-	${__VAR:+__VAR=__VAL}
 
 pkgmake() {
 	# FIXME: DEPRECATION
@@ -25,15 +23,15 @@ pkgmake() {
 	
 	if [[ -n "$make" ]]; then
 		$make \
-			make_var(CC,$CC) \
-			make_var(CXX,$CXX) \
-			make_var(CPP,$CPP) \
-			make_var(AS,$AS) \
-			make_var(AR,$AR) \
-			make_var(LD,$LD) \
-			make_var(NM,$NM) \
-			make_var(RANLIB,$RANLIB) \
-			make_var(STRIP,$STRIP) \
+			${CC:+CC=$CC}              \
+			${CXX:+CXX=$CXX}           \
+			${CPP:+CPP=$CPP}           \
+			${AS:+AS=$AS}              \
+			${AR:+AR=$AR}              \
+			${LD:+LD=$LD}              \
+			${NM:+NM=$NM}              \
+			${RANLIB:+RANLIB=$RANLIB}  \
+			${STRIP:+STRIP=$STRIP}     \
 			${make_opts[@]:-$MAKE_OPTS} $@
 	else
 		die "No make implementation available."
