@@ -24,11 +24,10 @@ get_protocol() {
 get_filename() {
 	# Returns the name of the file/directory on the local file system.
 	if
-		[[ $1 =~ ^file:\/\/.* ]] || \
-		[[ $1 =~ ^[aA-zZ]:\/\/.* ]] || \
-		[[ $1 =~ ^[aA-zZ]\+.*:\/\/.* ]]
+		[[ $1 =~ ^[aA-zZ]+://.*/ ]] || \
+		[[ $1 =~ ^[aA-zZ]+[aA-zZ]+://.*/ ]]
 	then
-		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${match[2]}"
+		local NORMAL_RETURN="$PKGMK_SOURCE_DIR/${1#${MATCH}}"
 		local PROTOCOL="`get_protocol "$1"`"
 		case $PROTOCOL in
 			file)
