@@ -63,10 +63,6 @@ MANPAGES  != ls man/      | egrep '\.[0-9]\.in$$' | sed -e "s/\.in$$//"
 CC := ${CROSS}gcc
 CPP := ${CROSS}cpp
 CFLAGS := -O2 -pipe
-CPPFLAGS := -x c -E -P -D_VERSION=${PKGXX_VERSION} \
-            -D_SHAREDIR="${SHAREDIR}" -D_SYSCONFDIR="${SYSCONFDIR}" \
-            -D_LIBEXECDIR="${LIBEXECDIR}" \
-            -include ${SRC:!pwd!}/src/error.sh.h
 
 # Rules - Generic
 
@@ -80,7 +76,7 @@ install: update install-config
 
 update:  build install-pkg++ install-defaults install-tools install-modules install-lib install-man
 
-clean: clean-pkg++ clean-defaults clean-tools clean-modules clean-man
+clean: clean-pkg++ clean-defaults clean-tools clean-modules clean-man clean-config
 
 # Directories (to generate at installation)
 
@@ -121,7 +117,6 @@ pkg++: ${PKGXX_FILES:C/^/src\//}
 		s|@VERSION@|${PKGXX_VERSION}|" \
 		src/$f >> pkg++
 .endfor
-#	$Q${CPP} ${CPPFLAGS} src/main.sh.c | ;/^\$$\$$/d;/^$$/d" >> pkg++
 
 man: ${MANPAGES:C/^/man\//}
 
@@ -197,6 +192,10 @@ ${f:C/^/install-man\//}: ${DESTDIR}${MANDIR}/man${f:C/.*\.([0-9])/\1/} ${f:C/^/m
 clean-pkg++:
 	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}pkg++$r"
 	$Qrm -f pkg++
+
+clean-config:
+	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}pkg++.conf$r"
+	$Qrm -f pkg++.conf
 
 clean-defaults:
 
