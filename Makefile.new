@@ -32,6 +32,7 @@ VERBOSE ?= false
 
 bold = \033[01m
 c_w = ${bold}\033[37m
+c_c = ${bold}\033[36m
 c_m = ${bold}\033[35m
 c_b = ${bold}\033[34m
 c_y = ${bold}\033[33m
@@ -55,6 +56,7 @@ DEFAULTS  != ls defaults/       | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 PDEFAULTS != ls post-defaults/  | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 MODULES   != ls modules/        | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 LIBRARIES != ls lib/            | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
+MANPAGES  != ls man/      | egrep '\.[0-9]\.in$$' | sed -e "s/\.in$$//"
 
 # C
 
@@ -70,15 +72,15 @@ CPPFLAGS := -x c -E -P -D_VERSION=${PKGXX_VERSION} \
 
 all: build
 
-build: pkg++ tools
+build: pkg++ tools man
 
 tools: tools/has
 
 install: update install-config
 
-update:  build install-pkg++ install-defaults install-tools install-modules install-lib
+update:  build install-pkg++ install-defaults install-tools install-modules install-lib install-man
 
-clean: clean-pkg++ clean-defaults clean-tools clean-modules
+clean: clean-pkg++ clean-defaults clean-tools clean-modules clean-man
 
 # Directories (to generate at installation)
 
@@ -88,6 +90,15 @@ INSTALL_DIRS = ${BINDIR} ${SYSCONFDIR} ${SYSCONFDIR}/pkg++/defaults ${SYSCONFDIR
 ${DESTDIR}$D:
 	@echo -e "${c_w} -- ${c_m}Creating    ${c_w}$D/$r"
 	$Qmkdir -p "${DESTDIR}$D"
+.endfor
+
+# FIXME: This could be automated.
+MAN_DIRS = man5 man8
+
+.for D in ${MAN_DIRS}
+${DESTDIR}${MANDIR}/$D:
+	@echo -e "${c_w} -- ${c_m}Creating    ${c_w}${MANDIR}/$D$r"
+	$Qmkdir -p "${DESTDIR}${MANDIR}/$D"
 .endfor
 
 # Rules - Compilations
@@ -111,6 +122,14 @@ pkg++: ${PKGXX_FILES:C/^/src\//}
 		src/$f >> pkg++
 .endfor
 #	$Q${CPP} ${CPPFLAGS} src/main.sh.c | ;/^\$$\$$/d;/^$$/d" >> pkg++
+
+man: ${MANPAGES:C/^/man\//}
+
+.for f in ${MANPAGES}
+${f:C/^/man\//}:
+	@echo -e "${c_w} -- ${c_c}Building    ${c_w}${f}$r"
+	$Qsed "s|@VERSION@|${PKGXX_VERSION}|" man/$f.in > man/$f
+.endfor
 
 config: pkg++.conf
 	@: # Well… cp config.sh config is not really wanted.
@@ -165,6 +184,14 @@ install-lib/$i: lib/$i.zsh ${DESTDIR}${LIBDIR}/libpkgxx
 	$Qinstall -m0644 lib/$i.zsh ${DESTDIR}${LIBDIR}/libpkgxx/$i.zsh
 .endfor
 
+install-man: ${MANPAGES:C/^/install-man\//}
+
+.for f in ${MANPAGES}
+${f:C/^/install-man\//}: ${DESTDIR}${MANDIR}/man${f:C/.*\.([0-9])/\1/} ${f:C/^/man\//}
+	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}man/${f}$r"
+	$Qinstall -m0644 man/$f ${DESTDIR}${MANDIR}/man${f:C/.*\.([0-9])/\1/}
+.endfor
+
 # Cleaners
 
 clean-pkg++:
@@ -178,5 +205,15 @@ clean-modules:
 clean-tools:
 	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}tools/has$r"
 	$Qrm -f tools/has
+
+clean-lib:
+
+clean-man: ${MANPAGES:C/^/clean-man\//}
+
+.for f in ${MANPAGES}
+clean-man/$f:
+	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}man/$f$r"
+	$Qrm -f man/$f
+.endfor
 
 # End of Makefile
