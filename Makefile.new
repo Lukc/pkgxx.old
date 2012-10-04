@@ -84,7 +84,7 @@ INSTALL_DIRS = ${BINDIR} ${SYSCONFDIR} ${SYSCONFDIR}/pkg++/defaults ${SYSCONFDIR
 
 .for D in ${INSTALL_DIRS}
 ${DESTDIR}$D:
-	@echo -e "${c_w} -- ${c_m}Creating    ${c_w}$D/$r"
+	@echo -e "${c_w} -- ${c_m}Creating       ${c_w}$D/$r"
 	$Qmkdir -p "${DESTDIR}$D"
 .endfor
 
@@ -93,25 +93,25 @@ MAN_DIRS = man5 man8
 
 .for D in ${MAN_DIRS}
 ${DESTDIR}${MANDIR}/$D:
-	@echo -e "${c_w} -- ${c_m}Creating    ${c_w}${MANDIR}/$D$r"
+	@echo -e "${c_w} -- ${c_m}Creating       ${c_w}${MANDIR}/$D$r"
 	$Qmkdir -p "${DESTDIR}${MANDIR}/$D"
 .endfor
 
 # Rules - Compilations
 
 tools/has: tools/has.c
-	@echo -e "${c_w} -- ${c_b}Building    ${c_w}tools/has$r"
+	@echo -e "${c_w} -- ${c_b}Building       ${c_w}tools/has$r"
 	$Q${CC} ${CFLAGS} tools/has.c -o tools/has
 
 PKGXX_FILES != grep "^\#include \"[a-z.]*\"" src/main.sh | sed "s/\#include \"//;s/\"//"
 PKGXX_FILES += main.sh # Never forget that one…
 
 pkg++: ${PKGXX_FILES:C/^/src\//}
-	@echo -e "${c_w} -- ${c_b}Building    ${c_w}pkg++$r"
+	@echo -e "${c_w} -- ${c_b}Building       ${c_w}pkg++$r"
 	$Qecho "#!/usr/bin/env zsh" > pkg++
 .for f in ${PKGXX_FILES}
 #	Commented out because too verbose
-#	@echo -e "${c_w}     [${c_b}SED${c_w}]      ${c_w}$f"
+#	@echo -e "${c_w}     [${c_b}SED${c_w}]         ${c_w}$f"
 	$Qsed "s|@LIBDIR@|${LIBDIR}|;s|@SYSCONFDIR@|${SYSCONFDIR}|;\
 		s|@SHAREDIR@|${SHAREDIR}|;s|@LIBEXECDIR@|${LIBEXECDIR}|;\
 		s|@VERSION@|${PKGXX_VERSION}|" \
@@ -122,7 +122,7 @@ man: ${MANPAGES:C/^/man\//}
 
 .for f in ${MANPAGES}
 ${f:C/^/man\//}:
-	@echo -e "${c_w} -- ${c_c}Building    ${c_w}${f}$r"
+	@echo -e "${c_w} -- ${c_c}Building       ${c_w}${f}$r"
 	$Qsed "s|@VERSION@|${PKGXX_VERSION}|" man/$f.in > man/$f
 .endfor
 
@@ -130,30 +130,30 @@ config: pkg++.conf
 	@: # Well… cp config.sh config is not really wanted.
 
 pkg++.conf: pkg++.conf.in
-	@echo -e "${c_w} -- ${c_w}Auto-creating ${c_w}pkg++.conf$r"
+	@echo -e "${c_w} -- ${c_w}Auto-creating  ${c_w}pkg++.conf$r"
 	$Qsed -e 's/@MARCH@/${MARCH}/g;s/@PACKAGE_MANAGER@/${PACKAGE_MANAGER}/g' pkg++.conf.in > pkg++.conf
 
 # Rules - Installation
 
 install-config: config ${DESTDIR}${SYSCONFDIR}
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}pkg++.conf$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}pkg++.conf$r"
 	$Qinstall -m0644 pkg++.conf ${DESTDIR}${SYSCONFDIR}/pkg++.conf
 
 install-pkg++: ${DESTDIR}${BINDIR} pkg++
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}pkg++$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}pkg++$r"
 	$Qinstall -m0755 pkg++ ${DESTDIR}${BINDIR}/pkg++
 
 install-defaults: ${DEFAULTS:C/^/install-defaults\//} ${PDEFAULTS:C/^/install-pdefaults\//}
 
 .for i in ${DEFAULTS}
 install-defaults/$i: ${DESTDIR}${SYSCONFDIR}/pkg++/defaults defaults/$i.zsh
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}defaults/$i.zsh$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}defaults/$i.zsh$r"
 	$Qinstall -m0644 defaults/$i.zsh ${DESTDIR}${SYSCONFDIR}/pkg++/defaults/$i.zsh
 .endfor
 
 .for i in ${PDEFAULTS}
 install-pdefaults/$i: ${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults post-defaults/$i.zsh
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}post-defaults/$i.zsh$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}post-defaults/$i.zsh$r"
 	$Qinstall -m0644 post-defaults/$i.zsh ${DESTDIR}${SYSCONFDIR}/pkg++/post-defaults/$i.zsh
 .endfor
 
@@ -161,21 +161,21 @@ install-modules: ${MODULES:C/^/install-modules\//}
 
 .for i in ${MODULES}
 install-modules/$i: modules/$i.zsh ${DESTDIR}${SHAREDIR}/pkg++/modules
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}modules/$i.zsh$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}modules/$i.zsh$r"
 	$Qinstall -m0644 modules/$i.zsh ${DESTDIR}${SHAREDIR}/pkg++/modules/$i.zsh
 .endfor
 
 install-tools: install-tools/has
 
 install-tools/has: tools/has ${DESTDIR}${LIBEXECDIR}/pkg++
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}tools/has$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}tools/has$r"
 	$Qinstall -m0755 tools/has ${DESTDIR}${LIBEXECDIR}/pkg++/has
 
 install-lib: ${LIBRARIES:C/^/install-lib\//}
 
 .for i in ${LIBRARIES}
 install-lib/$i: lib/$i.zsh ${DESTDIR}${LIBDIR}/libpkgxx
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}lib/$i.zsh$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}lib/$i.zsh$r"
 	$Qinstall -m0644 lib/$i.zsh ${DESTDIR}${LIBDIR}/libpkgxx/$i.zsh
 .endfor
 
@@ -183,18 +183,18 @@ install-man: ${MANPAGES:C/^/install-man\//}
 
 .for f in ${MANPAGES}
 ${f:C/^/install-man\//}: ${DESTDIR}${MANDIR}/man${f:C/.*\.([0-9])/\1/} ${f:C/^/man\//}
-	@echo -e "${c_w} -- ${c_g}Installing  ${c_w}man/${f}$r"
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}man/${f}$r"
 	$Qinstall -m0644 man/$f ${DESTDIR}${MANDIR}/man${f:C/.*\.([0-9])/\1/}
 .endfor
 
 # Cleaners
 
 clean-pkg++:
-	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}pkg++$r"
+	@echo -e "${c_w} -- ${c_y}Removing       ${c_w}pkg++$r"
 	$Qrm -f pkg++
 
 clean-config:
-	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}pkg++.conf$r"
+	@echo -e "${c_w} -- ${c_y}Removing       ${c_w}pkg++.conf$r"
 	$Qrm -f pkg++.conf
 
 clean-defaults:
@@ -202,7 +202,7 @@ clean-defaults:
 clean-modules:
 
 clean-tools:
-	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}tools/has$r"
+	@echo -e "${c_w} -- ${c_y}Removing       ${c_w}tools/has$r"
 	$Qrm -f tools/has
 
 clean-lib:
@@ -211,7 +211,7 @@ clean-man: ${MANPAGES:C/^/clean-man\//}
 
 .for f in ${MANPAGES}
 clean-man/$f:
-	@echo -e "${c_w} -- ${c_y}Removing    ${c_w}man/$f$r"
+	@echo -e "${c_w} -- ${c_y}Removing       ${c_w}man/$f$r"
 	$Qrm -f man/$f
 .endfor
 
