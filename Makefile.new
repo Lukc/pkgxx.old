@@ -56,7 +56,11 @@ DEFAULTS  != ls defaults/       | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 PDEFAULTS != ls post-defaults/  | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 MODULES   != ls modules/        | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
 LIBRARIES != ls lib/            | egrep '\.zsh$$' | sed -e 's/\.zsh$$//'
-MANPAGES  != ls man/      | egrep '\.[0-9]\.in$$' | sed -e "s/\.in$$//"
+CTOOLS    != ls tools/          | egrep '\.c$$'   | sed -e 's/\.c$$//'
+
+# More unreadable stuff, to complete if needed.
+MANPAGES     != ls man/      | egrep '\.[0-9]\.in$$' | sed -e 's/\.in$$//'
+SCRIPTTOOLS  != ls tools/    | egrep '\.(sh|zsh|bash|dash|ash|lua|awk|sed)$$'
 
 # C
 
@@ -70,7 +74,7 @@ all: build
 
 build: pkg++ tools man
 
-tools: tools/has
+tools: ${CTOOLS:C/^/tools\//}
 
 install: update install-config
 
@@ -99,9 +103,11 @@ ${DESTDIR}${MANDIR}/$D:
 
 # Rules - Compilations
 
-tools/has: tools/has.c
-	@echo -e "${c_w} -- ${c_b}Building       ${c_w}tools/has$r"
-	$Q${CC} ${CFLAGS} tools/has.c -o tools/has
+.for t in ${CTOOLS}
+tools/$t: tools/$t.c
+	@echo -e "${c_w} -- ${c_b}Building       ${c_w}tools/$t$r"
+	$Q${CC} ${CFLAGS} tools/$t.c -o tools/$t
+.endfor
 
 PKGXX_FILES != grep "^\#include \"[a-z.]*\"" src/main.sh | sed "s/\#include \"//;s/\"//"
 PKGXX_FILES += main.sh # Never forget that one…
@@ -165,11 +171,13 @@ install-modules/$i: modules/$i.zsh ${DESTDIR}${SHAREDIR}/pkg++/modules
 	$Qinstall -m0644 modules/$i.zsh ${DESTDIR}${SHAREDIR}/pkg++/modules/$i.zsh
 .endfor
 
-install-tools: install-tools/has
+install-tools: ${CTOOLS:C/^/install-tools\//} ${SCRIPTTOOLS:C/^/install-tools\//}
 
-install-tools/has: tools/has ${DESTDIR}${LIBEXECDIR}/pkg++
-	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}tools/has$r"
-	$Qinstall -m0755 tools/has ${DESTDIR}${LIBEXECDIR}/pkg++/has
+.for t in ${CTOOLS} ${SCRIPTTOOLS}
+install-tools/$t: tools/$t ${DESTDIR}${LIBEXECDIR}/pkg++
+	@echo -e "${c_w} -- ${c_g}Installing     ${c_w}tools/$t$r"
+	$Qinstall -m0755 tools/$t ${DESTDIR}${LIBEXECDIR}/pkg++/$t
+.endfor
 
 install-lib: ${LIBRARIES:C/^/install-lib\//}
 
@@ -201,9 +209,13 @@ clean-defaults:
 
 clean-modules:
 
-clean-tools:
-	@echo -e "${c_w} -- ${c_y}Removing       ${c_w}tools/has$r"
-	$Qrm -f tools/has
+clean-tools: ${CTOOLS:C/^/clean-tools\//}
+
+.for t in ${CTOOLS}
+clean-tools/$t:
+	@echo -e "${c_w} -- ${c_y}Removing       ${c_w}tools/$t$r"
+	$Qrm -f tools/$t
+.endfor
 
 clean-lib:
 
