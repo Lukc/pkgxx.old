@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 REVISION="`git rev-list --all 2>/dev/null | wc -l | sed -e 's| *||g'`"
-VERSION="0.13.2-devel-$REVISION"
+VERSION="0.13.3-devel-$REVISION"
 
 dist () {
 	# FIXME: Put this somewhere else?

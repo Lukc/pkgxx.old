@@ -2,6 +2,8 @@
 	* tazpkg module added, though not yet tested.
 	* .FILELISTs are not added anymore in pacman’s packages. The
 	  file is required only by pacman-g2.
+	* Makefile.new was improved.
+	* The need of cpp to build pkg++ was removed.
 
 0.13.2
 	* Signature of packages added, though not yet tested.
