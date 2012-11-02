@@ -1,9 +1,9 @@
 
 # Common
-msg_func_may_have_failed="%1() may have failed."
-msg_file_is_not_directory="\`%1' existe déjà et n'est pas un répertoire."
+msg_func_may_have_failed="\`%1()' a dû échoué."
+ msg_file_is_not_directory="\`%1' existe déjà et n'est pas un répertoire."
 msg_file_not_readable="\`%1' ne peut être lu."
-msg_could_not_cd="Couldn't move to \`%1'."
+msg_could_not_cd="Ne peut pas être déplacé vers \`%1'."
 
 # main.sh.c
 msg_interrupted="Interrompu."
@@ -17,8 +17,8 @@ msg_up_to_date="Le paquet \`%1' est à jour."
 
 msg_unavailable_profile="Le profil demandé (\`%1') n'est pas disponible."
 msg_file_not_found="Fichier \`%1' non trouvé."
-msg_no_recipe_format="No way to parse any recipe has been found. Please install a recipe module."
-msg_cannot_be_parsed="\`%1' can not be parsed."
+msg_no_recipe_format="Aucun moyen d'analyser la recette n'a été trouvé. Veuillez installer au moins un module."
+msg_cannot_be_parsed="\`%1' ne peut être analysé."
 msg_missing_dependencies="Toutes les dépendances n'ont pu être trouvées sur votre système."
 
 # build.sh.c
