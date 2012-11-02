@@ -10,9 +10,9 @@ recursive() {
 	for FILE in `find $PKGMK_ROOT -name $PKGMK_PKGFILE_NAME | sort`; do
 		DIR="`dirname $FILE`/"
 		if [[ -d $DIR ]]; then
-			info "Entering directory '$DIR'."
+			info "$msg_entering_dir" "${DIR}"
 			(cd $DIR && $PKGMK_COMMAND ${ARGS[@]})
-			info "Leaving directory '$DIR'."
+			info "$msg_leaving_dir" "${DIR}"
 		fi
 	done
 }

@@ -13,7 +13,7 @@ clean() {
 	for FILE in ${source[@]}; do
 		LOCAL_FILENAME=`get_filename $FILE`
 		if [[ -e $LOCAL_FILENAME && "$LOCAL_FILENAME" != "$FILE" ]]; then
-			info "Removing $LOCAL_FILENAME"
+			info "$msg_removing_local_filename" "$LOCAL_FILENAME"
 			if [[ -d $LOCAL_FILENAME ]]; then
 				rm -r -f $LOCAL_FILENAME
 			else

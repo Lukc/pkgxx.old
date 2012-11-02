@@ -3,7 +3,7 @@ unpack_source() {
 	local FILE LOCAL_FILENAME COMMAND
 	
 	if [[ -n "${source[@]}" ]]; then
-		info "Getting sources of '$name'."
+		info "$msg_getting_sources" "${name}"
 	fi
 	
 	for FILE in ${source[@]}; do
@@ -19,7 +19,7 @@ unpack_source() {
 					local LOCAL_EXTENSION="${LOCAL_FILENAME##*\.}"
 					if [[ "$(type ${LOCAL_EXTENSION}:unpack)" != "none" ]]; then
 						if ! ${LOCAL_EXTENSION}:unpack "${LOCAL_FILENAME}" "${SRC}"; then
-							error "Unpacking of '$FILE' failed."
+							error "$msg_error_unpacking" "${FILE}"
 						fi
 					else
 						subinfo "Copying $LOCAL_FILENAME."
@@ -34,7 +34,7 @@ unpack_source() {
 			if [[ "$PKGMK_KEEP_WORK" = "no" ]]; then
 				rm -rf $PKGMK_WORK_DIR
 			fi
-			error "Building '$TARGET' failed."
+			error "$msg_build_failed" "${TARGET}"
 			exit $E_UNPACK
 		fi
 	done

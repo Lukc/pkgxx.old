@@ -3,16 +3,16 @@ install_package() {
 	
 	COMMAND=($($PKGMK_PACKAGE_MANAGER:install))
 	
-	info "Installing '$TARGET'."
+	info "$msg_installing_info" "${TARGET}"
 	
 	cd $PKGMK_ROOT
 	echo "${COMMAND[*]}"
 	${COMMAND[*]}
 	
 	if [[ $? = 0 ]]; then
-		info "Installing '$TARGET' succeeded."
+		info "$msg_success_install" "${TARGET}"
 	else
-		error "Installing '$TARGET' failed."
+		error "$msg_failure_install" "${TARGET}"
 		exit $E_INSTALL
 	fi
 }

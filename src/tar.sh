@@ -3,7 +3,7 @@ PKGMK_UNTAR_TOOLS=(${PKGMK_UNTAR_TOOLS[@]} gtar bsdtar sltar)
 
 gtar:unpack() {
 	local COMPRESS
-	subinfo "Unpacking '$1'."
+	subinfo "$msg_unpacking" "${1}"
 	case "$1" in
 		*.gz|*.Z|*.tgz) COMPRESS="z" ;;
 		*.bz2|*.tbz2) COMPRESS="j" ;;
@@ -13,12 +13,12 @@ gtar:unpack() {
 }
 
 bsdtar:unpack() {
-	subinfo "Unpacking '$1'."
+	subinfo "$msg_unpacking" "${1}"
 	bsdtar -p -o -C $2 -xf $1
 }
 
 sltar:unpack() {
-	subinfo "Unpacking '$1'."
+	subinfo "$msg_unpacking" "${1}"
 	(
 		case "$1" in
 			*.gz|*.Z|*.tgz)
@@ -83,7 +83,7 @@ tar:list() {
 			if [[ -n "$(type "${PKGMK_TARLIST_TOOL}:list" 2>/dev/null)" ]]; then
 				${PKGMK_TARLIST_TOOL}:list "$@"
 			else
-				die "Not supported tar implementation."
+				die "$msg_not_supported_tar_implementation"
 			fi
 		;;
 	esac

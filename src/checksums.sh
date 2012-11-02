@@ -30,11 +30,11 @@ check_control_sums() {
 					rm -rf $PKGMK_WORK_DIR
 				fi
 				
-				info "${ALG} not found."
+				info "$msg_algo_notfound" "${ALG}"
 				RETURN=E_CONTROL_SUM
 			fi
 			
-			warning "${ALG} not found, creating new."
+			warning "$msg_create_algo" "${ALG}"
 			make_control_sum ${ALG} > ${FILE_ORIGINAL}
 		else
 			make_control_sum ${ALG} > ${FILE}
@@ -50,7 +50,7 @@ check_control_sums() {
 				' > ${FILE}.diff
 			
 			if [[ -s ${FILE}.diff ]]; then
-				error "${ALG} mismatch found:"
+				error "$msg_algo_mismatch" "${ALG}"
 				cat ${FILE}.diff >&2
 				
 				if [[ "$PKGMK_KEEP_WORK" = "no" ]]; then
@@ -58,17 +58,17 @@ check_control_sums() {
 				fi
 				
 				if [[ "$PKGMK_CHECK_CONTROL_SUMS" = "yes" ]]; then
-					error "${ALG} not ok."
+					error "$msg_algo_notok" "${ALG}"
 					RETURN=E_CONTROL_SUM
 				fi
 				
-				error "Building \`$TARGET' failed."
+				error "$msg_build_failed" "${TARGET}"
 				RETURN=E_CONTROL_SUM
 			fi
 		fi
 		
 		if [[ "$PKGMK_CHECK_CONTROL_SUMS" = "yes" ]]; then
-			info "${ALG} ok."
+			info "$msg_algo_ok" "${ALG}"
 		fi
 	done
 	

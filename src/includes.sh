@@ -5,12 +5,12 @@ include() {
 				if . $DIR/$FILE; then
 					continue 2
 				else
-					error "An error occured while including \`$DIR/$FILE'."
+					error "msg_error_while_including" "${DIR/$FILE}"
 					return 1 # Parsing failed.
 				fi
 			fi
 		done
-		error "Include \`$FILE' was not found."
+		error "$msg_include_file_notfound" "${FILE}"
 		return 2 # Not found.
 	done
 }

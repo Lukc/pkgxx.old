@@ -17,7 +17,7 @@ ask_use() {
 				if [[ -n "$desc" ]]; then
 					info "$use - $desc"
 				else
-					info "There is no available information about use flag \`$1'"
+					info "$msg_no_userflag_info" "${1}"
 				fi
 			;;
 			*)
