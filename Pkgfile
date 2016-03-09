@@ -33,11 +33,12 @@ esac
 depends=(zsh)
 
 configure_opts=(
-	--prefix=${prefix:-/usr}
-	--sharedir=${sharedir:-$prefix/share}
-	--sysconfdir=${sysconfdir:-/etc}
-	--mandir=${mandir:-$sharedir/man}
-	--package-manager=${package_manager:-pkgutils}
+	--prefix=${prefix:=/usr}
+	--sharedir=${sharedir:=$prefix/share}
+	--sysconfdir=${sysconfdir:=/etc}
+	--mandir=${mandir:=$sharedir/man}
+	--localstatedir=${localstatedir:=/var}
+	--package-manager=${package_manager:=pkgutils}
 	--with-export # Well, it’s a package, not a user-install.
 )
 
