@@ -237,7 +237,7 @@ lasttar() {
 	local tarname="$2"
 	lastver $(
 		wcat "$1" | \
-			grep "${tarname:=$name}-.*\.tar\(gz\|bz2\|xz\|lzma\|lzo\)*" | \
+			grep "${tarname:=$name}-.*\.tar\(gz\|bz2\|xz\|lzma\|lzo\)*"
 	)
 }
 
