@@ -15,9 +15,7 @@ and Arch, nho, fpm, and maybe many more!"
 lastver="echo 0" # Nothing is greater than devel, so don’t try to get anything.
 
 name=pkgxx
-# “devel” is broken on at least dpkg.
-#version=devel
-version=0.13.4
+version=devel
 release=1
 source=(git://github.com/Lukc/pkgxx)
 config=(${sysconfdir:=/etc}/pkg++.conf)

@@ -48,7 +48,7 @@ git:revision() {
 	# `$git_branch`.
 	#>
 	cd "$1"
-	git checkout ${git_branch}
+	git checkout ${git_branch} &> /dev/null
 	git rev-list $(git branch | sed "/^\*/!d;s/^\* //") | wc -l
 }
 
