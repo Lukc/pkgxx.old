@@ -7,7 +7,11 @@
 : ${sbindir:="$eprefix/sbin"}
 : ${libdir:="$prefix/lib"}
 : ${includedir:="$prefix/include"}
-: ${libexecdir:="$eprefix/libexec"}
+if $Debian; then
+	: ${libexecdir:="${libdir}"}
+else
+	: ${libexecdir:="$eprefix/libexec"}
+fi
 : ${sharedir:="$prefix/share"}
 : ${datadir:="$prefix/share"}
 : ${localedir:="$sharedir/locale"}

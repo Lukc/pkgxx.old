@@ -47,6 +47,7 @@ build(){
 	./configure \
 		${configure_opts[@]}
 	pkgmake -B DESTDIR=$PKG install
+	rm $PKG${bindir}/pkg++.zwc
 }
 
 check(){

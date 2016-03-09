@@ -64,7 +64,7 @@ dpkg:_control() {
 		echo "Version: $version"
 	fi
 	
-	echo "Maintainer: $maintainer"
+	echo "Maintainer: $(echo "$maintainer" | sed 's/<[A-Z/]*: */</;s/ *AT */@/;s/ *DOT */./g')"
 	
 	if [[ -n "${groups[@]}" ]]; then
 		echo "Section: ${groups[0]}"
@@ -138,10 +138,15 @@ dpkg:build() {
 	fi
 	if [[ -e "$PKGMK_ROOT/$PKGMK_CHANGELOG" ]]; then
 		cp "$PKGMK_ROOT/$PKGMK_CHANGELOG" DEBIAN/changelog
+	else
+		warning "No Changelog found!"
 	fi
 	for FILE in ${config[@]}; do
-		[[ -e "$PKG/$FILE" ]] && echo "$FILE" >> DEBIAN/conffiles
+		if [[ ! "$FILE" =~ "^/etc" ]]; then
+			[[ -e "$PKG/$FILE" ]] && echo "$FILE" >> DEBIAN/conffiles
+		fi
 	done
+	(cd "$PKG"; find etc -type f) | sed "s|^|/|" >> DEBIAN/conffiles
 	cd ..
 	info "Building '$TARGET'."
 	dpkg-deb --build "$PKG"

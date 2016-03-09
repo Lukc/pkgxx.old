@@ -540,7 +540,7 @@ pkgxx-install: pkgxx libexecdir has-install istrue-install locales-install
 	`DIR \$\(SHAREDIR\)/pkg++/post-defaults`
 	`DIR \$\(ETCDIR\)/pkg++/post-defaults`
 	`INSTALL 0755 pkg++ \$\(BINDIR\)`
-	`ZCOMPILE '$(BINDIR)/pkg++'`
+	#`ZCOMPILE '$(BINDIR)/pkg++'`
 	`for include in $(ls includes/); do
 		INSTALL 0644 includes/$include \$\(SHAREDIR\)/pkg++/includes
 		echo -ne "\t"
@@ -559,7 +559,7 @@ pkgxx-install: pkgxx libexecdir has-install istrue-install locales-install
 	`INSTALL 0755 tools/xxrocks.lua		\$\(LIBEXECDIR\)/pkg++/`
 	`INSTALL 0755 tools/pkgbuild.bash	\$\(LIBEXECDIR\)/pkg++/`
 	if ! [ -e \$(DESTDIR)\$(BINDIR)/pkgxx ]; then \
-		ln -s \$(BINDIR)/pkg++ \$(DESTDIR)\$(BINDIR)/pkgxx; \
+		ln -s pkg++ \$(DESTDIR)\$(BINDIR)/pkgxx; \
 	fi
 
 modules-install: modules

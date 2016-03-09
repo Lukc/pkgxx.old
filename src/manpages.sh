@@ -8,14 +8,16 @@ compress_manpages() {
 	# FIXME: This is a temporary solution. Some `man` implementations
 	#        can support any kind of compression, but while pkg++
 	#        does not support compression/decompression modules
-	#        it has no use to try to add things in here. A global
+	#        it is no use to try to add things in here. A global
 	#        `manpages compression level` would be stupid with
 	#        separate modules.
-	: ${PKGMK_MANPAGES_COMPLEVEL:=6}
+	: ${PKGMK_MANPAGES_COMPLEVEL:=9}
 
 	# For each man page in the package, we run gzip or bzip2, depending on
 	# the user’s configuration.
-	find . -type f -path "man/man*#" -o -type f -path "*/man/*/man*/*" | while read FILE; do
+	find .$mandir
+	find .$mandir -type f
+	find ".${mandir}" -type f | while read FILE; do
 		case "$PKGMK_MAN_COMPRESSION" in
 			"gz")
 				if [[ "$FILE" = "${FILE%%.gz}" ]]; then
